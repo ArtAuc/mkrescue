@@ -6,15 +6,62 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>912</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QFrame" name="menuFrame">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="currentIndex">
+       <number>4</number>
+      </property>
+      <widget class="QWidget" name="homePage"/>
+      <widget class="QWidget" name="dogSheetsPage"/>
+      <widget class="QWidget" name="entryRegistryPage"/>
+      <widget class="QWidget" name="careRegistry"/>
+      <widget class="QWidget" name="redListPage"/>
+      <widget class="QWidget" name="lostPage"/>
+      <widget class="QWidget" name="adoptionDemandPage"/>
+      <widget class="QWidget" name="membersPage"/>
+      <widget class="QWidget" name="vetPage"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>912</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
