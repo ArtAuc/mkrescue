@@ -19,7 +19,7 @@
      <widget class="QFrame" name="menuFrame">
       <property name="minimumSize">
        <size>
-        <width>100</width>
+        <width>0</width>
         <height>0</height>
        </size>
       </property>
@@ -32,9 +32,21 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QTreeWidget" name="menuTree">
+         <property name="itemsExpandable">
+          <bool>false</bool>
+         </property>
+         <property name="animated">
+          <bool>true</bool>
+         </property>
+         <property name="headerHidden">
+          <bool>true</bool>
+         </property>
+         <property name="columnCount">
+          <number>1</number>
+         </property>
          <column>
           <property name="text">
-           <string/>
+           <string notr="true">1</string>
           </property>
          </column>
          <item>
@@ -103,7 +115,7 @@
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>8</number>
       </property>
       <widget class="QWidget" name="homePage"/>
       <widget class="QWidget" name="dogSheetsPage"/>

@@ -19,7 +19,7 @@ MainWindow::~MainWindow()
 void MainWindow::InitMenu()
 {
     QTreeWidget* tree = ui->menuTree;
-    connect(tree, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(ChangePage(QTreeWidgetItem *)));
+    connect(tree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(ChangePage(QTreeWidgetItem*)));
 }
 
 // Change selected page from stacked widget, based on the selected menu item
