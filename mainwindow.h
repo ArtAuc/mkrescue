@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QTreeWidgetItem>
+
+#include "database.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,5 +23,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    Database db;
 };
 #endif // MAINWINDOW_H
