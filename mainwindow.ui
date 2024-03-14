@@ -29,6 +29,72 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTreeWidget" name="menuTree">
+         <column>
+          <property name="text">
+           <string/>
+          </property>
+         </column>
+         <item>
+          <property name="text">
+           <string>Accueil</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Fiches chiens</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Registres</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Entrées/Sorties</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Garderie</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Adhérents</string>
+           </property>
+          </item>
+         </item>
+         <item>
+          <property name="text">
+           <string>Vétérinaire</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Autres</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Liste rouge adoptants</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Animaux perdus</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Demandes d'adoption</string>
+           </property>
+          </item>
+         </item>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
     <item>
@@ -37,12 +103,12 @@
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="homePage"/>
       <widget class="QWidget" name="dogSheetsPage"/>
       <widget class="QWidget" name="entryRegistryPage"/>
-      <widget class="QWidget" name="careRegistry"/>
+      <widget class="QWidget" name="careRegistryPage"/>
       <widget class="QWidget" name="redListPage"/>
       <widget class="QWidget" name="lostPage"/>
       <widget class="QWidget" name="adoptionDemandPage"/>
