@@ -9,10 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowState(Qt::WindowMaximized);
 
     InitMenu();
-    //ui->entryTable->verticalHeader()->setVisible(false);
-
-    db.ReorderEntryRegistry();
-    LoadEntryRegistry();
+    InitEntryRegistry();
 }
 
 MainWindow::~MainWindow()
@@ -24,6 +21,23 @@ void MainWindow::InitMenu()
 {
     QTreeWidget* tree = ui->menuTree;
     connect(tree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(ChangePage(QTreeWidgetItem*)));
+    ui->stackedWidget->setCurrentWidget(ui->homePage);
+}
+
+void MainWindow::InitEntryRegistry()
+{
+    ui->entryTable->verticalHeader()->setVisible(false);
+    db.ReorderEntryRegistry();
+
+    std::vector<QString> years = db.GetRegistryYears("Entry");
+
+    if (years.empty())
+        ui->yearEntryBox->addItem(QString::number(QDate::currentDate().year()));
+
+    else
+        for(QString y : years){
+            ui->yearEntryBox->addItem(y);
+        }
 }
 
 // Change selected page from stacked widget, based on the selected menu item
@@ -72,8 +86,6 @@ void MainWindow::LoadEntryRegistry()
     {
         int nb = table->rowCount();
         table->insertRow(nb);
-        for(int i = 0; i < 20; i++)
-            qDebug() << i << query.value(i);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_ES
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
         table->setItem(nb, 2, new QTableWidgetItem(query.value(2).toString() + "\n" + // prov_type

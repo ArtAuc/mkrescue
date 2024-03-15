@@ -16,6 +16,7 @@ public:
     void Create();
     void ReorderEntryRegistry();
     QSqlQuery GetEntryRegistry(QString year);
+    std::vector<QString> GetRegistryYears(QString type);
 
  private:
     QSqlDatabase _database;

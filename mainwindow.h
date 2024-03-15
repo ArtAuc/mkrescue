@@ -17,6 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void InitMenu();
+    void InitEntryRegistry();
     void LoadEntryRegistry();
 
 public slots:

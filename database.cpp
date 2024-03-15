@@ -160,3 +160,17 @@ QSqlQuery Database::GetEntryRegistry(QString year) {
 
     return query;
 }
+
+std::vector<QString> Database::GetRegistryYears(QString type) {
+    QSqlQuery query;
+    if (type == "Entry"){
+        query.exec("SELECT DISTINCT strftime('%Y', date_prov) FROM ES_Registry;");
+    }
+
+    std::vector<QString> years;
+    while(query.next()){
+        years.push_back(query.value(0).toString());
+    }
+
+    return years;
+}
