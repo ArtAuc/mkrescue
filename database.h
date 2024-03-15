@@ -14,6 +14,8 @@ public:
     ~Database();
 
     void Create();
+    void ReorderEntryRegistry();
+    QSqlQuery GetEntryRegistry(QString year);
 
  private:
     QSqlDatabase _database;

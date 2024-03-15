@@ -7,12 +7,11 @@ Database::Database()
     _database.open();
 
     Create();
-    _database.close();
-
 }
 
 Database::~Database()
 {
+    _database.close();
 }
 
 void Database::Create()
@@ -36,6 +35,7 @@ void Database::Create()
                "sex VARCHAR(10),"
                "sterilized BOOLEAN,"
                "chip VARCHAR(50),"
+               "description TEXT,"
                "birth DATE,"
                "compat_dog BOOLEAN,"
                "compat_cat BOOLEAN"
@@ -84,26 +84,79 @@ void Database::Create()
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
     query.exec("CREATE TABLE IF NOT EXISTS ES_registry ("
+               "id_ES INT,"
                "id_dog INT,"
+               "type_prov VARCHAR(50),"
                "date_prov DATE,"
                "id_people_prov INT,"
-               "destination1 VARCHAR(50),"
-               "id_people_dest1 INT,"
-               "destination2 VARCHAR(50),"
-               "id_people_dest2 INT,"
-               "destination3 VARCHAR(50),"
-               "id_people_dest3 INT,"
-               "destination4 VARCHAR(50),"
-               "id_people_dest4 INT,"
-               "destination5 VARCHAR(50),"
-               "id_people_dest5 INT,"
                "death_cause TEXT,"
                "FOREIGN KEY (id_people_prov) REFERENCES People(id_people),"
-               "FOREIGN KEY (id_people_dest1) REFERENCES People(id_people),"
-               "FOREIGN KEY (id_people_dest2) REFERENCES People(id_people),"
-               "FOREIGN KEY (id_people_dest3) REFERENCES People(id_people),"
-               "FOREIGN KEY (id_people_dest4) REFERENCES People(id_people),"
-               "FOREIGN KEY (id_people_dest5) REFERENCES People(id_people),"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
+    query.exec("CREATE TABLE IF NOT EXISTS Destinations ("
+               "id_dog INT,"
+               "id_people INT,"
+               "date DATE,"
+               "type VARCHAR(50),"
+               "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog),"
+               "FOREIGN KEY (id_people) REFERENCES People(id_people)"
+               ");");
+}
+
+
+// Reassociate E/S numbers according to chronology, by year
+void Database::ReorderEntryRegistry()
+{
+    QSqlQuery query;
+
+    query.exec("UPDATE ES_registry AS t1 "
+               "SET id_ES = ( "
+               "    SELECT COUNT(*) + 1 "
+               "    FROM ES_registry AS t2 "
+               "    WHERE strftime('%Y', t1.date_prov) = strftime('%Y', t2.date_prov) "
+               "          AND (strftime('%Y-%m-%d', t1.date_prov) > strftime('%Y-%m-%d', t2.date_prov) "
+               "               OR (strftime('%Y-%m-%d', t1.date_prov) = strftime('%Y-%m-%d', t2.date_prov) "
+               "                   AND t1.ROWID > t2.ROWID)"
+               "    ) "
+               "); ");
+}
+
+QSqlQuery Database::GetEntryRegistry(QString year) {
+    ReorderEntryRegistry();
+
+    QSqlQuery query;
+    QString queryString =
+        "SELECT ES_registry.id_ES, "
+        "       ES_registry.date_prov, "
+        "       ES_registry.type_prov, "
+        "       People_prov.last_name, "
+        "       People_prov.first_name, "
+        "       People_prov.address, "
+        "       People_prov.phone, "
+        "       People_prov.email, "
+        "       Dogs.sex, "
+        "       Dogs.chip, "
+        "       Dogs.name, "
+        "       Dogs.description, "
+        "       Dogs.birth, "
+        "       Destinations.date,  "
+        "       GROUP_CONCAT(Destinations.type || ';-;' || People_dest.last_name || ';-;' || People_dest.first_name || ';-;' || People_dest.address || ';-;' || People_dest.phone || ';-;' || People_dest.email, ';;;'), "
+        "       ES_registry.death_cause "
+        "FROM ES_registry "
+        "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
+        "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
+        "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
+        "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
+        //"WHERE strftime('%Y', ES_registry.date_prov) = :year "
+        "GROUP BY Dogs.id_dog "
+        "ORDER BY ES_registry.id_ES;";
+
+    query.prepare(queryString);
+    query.bindValue(":year", year);
+
+    if (!query.exec()) {
+        qDebug() << "Error executing query:" << query.lastError().text();
+    }
+
+    return query;
 }
