@@ -3,6 +3,7 @@
 
 #include <QTreeWidget>
 #include <QMouseEvent>
+#include <QPainter>
 
 class MenuTree : public QTreeWidget
 {
@@ -50,8 +51,20 @@ protected:
         QFont font = this->font();
         font.setPointSize(width() * 0.05);
         this->setFont(font);
+
+        int iconSize = width() * 0.08;
+        setIconSize(QSize(iconSize, iconSize));
     }
 
+    void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const override {
+        QTreeWidget::drawBranches(painter, rect, index);
+        if (!index.parent().isValid()) {
+            painter->save();
+            painter->setPen(palette().color(QPalette::Highlight));
+            painter->drawLine(rect.topLeft(), QPoint(rect.right(), rect.top()));
+            painter->restore();
+        }
+    }
 
 private:
     QTreeWidgetItem* lastHovered = nullptr;

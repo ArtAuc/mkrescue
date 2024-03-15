@@ -40,33 +40,33 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0);
-    if (txt == "Entrées/Sorties"){
+    if (txt == " Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
         ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->count() - 1);
         LoadEntryRegistry(QString::number(QDate::currentDate().year()));
     }
-    else if (txt == "Garderie")
+    else if (txt == " Garderie")
         stacked->setCurrentWidget(ui->careRegistryPage);
-    else if (txt == "Adhérents")
+    else if (txt == " Adhérents")
         stacked->setCurrentWidget(ui->membersPage);
-    else if (txt == "Liste rouge adoptants")
+    else if (txt == " Liste rouge adoptants")
         stacked->setCurrentWidget(ui->redListPage);
-    else if (txt == "Animaux perdus")
+    else if (txt == " Animaux perdus")
         stacked->setCurrentWidget(ui->lostPage);
-    else if (txt == "Demandes d'adoption")
+    else if (txt == " Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
     else{
         ui->menuTree->collapseAllExcept(txt);
-        if(txt == "Accueil")
+        if(txt == " Accueil")
             stacked->setCurrentWidget(ui->homePage);
-        else if (txt == "Fiches chiens")
+        else if (txt == " Fiches chiens")
             stacked->setCurrentWidget(ui->dogSheetsPage);
-        else if (txt == "Vétérinaire")
+        else if (txt == " Vétérinaire")
             stacked->setCurrentWidget(ui->vetPage);
     }
 
-    if (txt == "Registres"  || txt == "Autres")
+    if (txt == "  Registres"  || txt == " Autres")
         item->setExpanded(!item->isExpanded());
 }
 

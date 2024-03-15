@@ -24,24 +24,24 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="11.77027"
-     inkscape:cx="7.6463835"
-     inkscape:cy="37.08496"
+     inkscape:zoom="6.3703441"
+     inkscape:cx="21.505903"
+     inkscape:cy="21.898346"
      inkscape:window-width="1916"
-     inkscape:window-height="1006"
+     inkscape:window-height="1026"
      inkscape:window-x="0"
-     inkscape:window-y="72"
+     inkscape:window-y="52"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg6200" />
   <title
      id="title6196">Shape</title>
   <path
-     d="M46.768 58.676V8.673H32.55L32.61.33C32.553.36 5.874 12.26 5.874 12.26 1.558 14.324 0 17.332 0 21.425V61.73c0 6.425 5.16 11.69 11.104 11.693h35.783V66.02c-4.384-.537-4.384-6.795-.12-7.344zm-35.84 6.58c-3.92-.024-3.905-5.523 0-5.523h24.97c-1.736 1.287-1.623 4.328.236 5.524H10.927zm27.85-13.34H16.92l15.63-7.048V16.78h6.23v35.136h-.002z"
+     d="M 46.78445,57.378159 V 10.751339 H 34.531868 l 0.05171,-7.7796847 C 34.534453,2.9996287 11.543411,14.096146 11.543411,14.096146 7.8240308,16.020786 6.4814001,18.825687 6.4814001,22.64233 v 37.583624 c 0,5.991187 4.4467099,10.900697 9.5690439,10.903494 H 46.887 V 64.226295 C 43.10902,63.725553 43.10902,57.890091 46.783588,57.378159 Z M 15.898774,63.51388 c -3.378121,-0.02238 -3.365195,-5.150089 0,-5.150089 h 21.518284 c -1.496025,1.200102 -1.398644,4.035775 0.203378,5.151022 H 15.897912 Z M 39.898943,51.074591 H 21.062472 L 34.531868,44.502469 V 18.310958 h 5.368799 v 32.763633 z"
      fill-rule="evenodd"
      id="path6198"
-     style="fill:#a7b2c8;fill-opacity:1" />
+     style="fill:#a7b2c8;fill-opacity:1;stroke-width:0.896425" />
   <metadata
-     id="metadata7449">
+     id="metadata5899">
     <rdf:RDF>
       <cc:Work
          rdf:about="">

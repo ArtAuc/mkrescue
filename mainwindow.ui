@@ -29,7 +29,9 @@
       <property name="styleSheet">
        <string notr="true">QTreeView::branch{
 	image:none;
-}</string>
+}
+
+QTreeView::item { margin-top: 30px; }</string>
       </property>
       <property name="itemsExpandable">
        <bool>false</bool>
@@ -43,6 +45,12 @@
       <property name="columnCount">
        <number>1</number>
       </property>
+      <attribute name="headerCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="headerDefaultSectionSize">
+       <number>200</number>
+      </attribute>
       <column>
        <property name="text">
         <string/>
@@ -50,7 +58,7 @@
       </column>
       <item>
        <property name="text">
-        <string>Accueil</string>
+        <string> Accueil</string>
        </property>
        <property name="icon">
         <iconset>
@@ -60,7 +68,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Fiches chiens</string>
+        <string> Fiches chiens</string>
        </property>
        <property name="icon">
         <iconset>
@@ -70,7 +78,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Registres</string>
+        <string>  Registres</string>
        </property>
        <property name="icon">
         <iconset>
@@ -79,23 +87,50 @@
        </property>
        <item>
         <property name="text">
-         <string>Entrées/Sorties</string>
+         <string> Entrées/Sorties</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>45</red>
+           <green>57</green>
+           <blue>76</blue>
+          </color>
+         </brush>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Garderie</string>
+         <string> Garderie</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>45</red>
+           <green>57</green>
+           <blue>76</blue>
+          </color>
+         </brush>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Adhérents</string>
+         <string> Adhérents</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>45</red>
+           <green>57</green>
+           <blue>76</blue>
+          </color>
+         </brush>
         </property>
        </item>
       </item>
       <item>
        <property name="text">
-        <string>Vétérinaire</string>
+        <string> Vétérinaire</string>
        </property>
        <property name="icon">
         <iconset>
@@ -105,7 +140,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Autres</string>
+        <string> Autres</string>
        </property>
        <property name="icon">
         <iconset>
@@ -114,17 +149,44 @@
        </property>
        <item>
         <property name="text">
-         <string>Liste rouge adoptants</string>
+         <string> Liste rouge adoptants</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>45</red>
+           <green>57</green>
+           <blue>76</blue>
+          </color>
+         </brush>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Animaux perdus</string>
+         <string> Animaux perdus</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>45</red>
+           <green>57</green>
+           <blue>76</blue>
+          </color>
+         </brush>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Demandes d'adoption</string>
+         <string> Demandes d'adoption</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>45</red>
+           <green>57</green>
+           <blue>76</blue>
+          </color>
+         </brush>
         </property>
        </item>
       </item>
