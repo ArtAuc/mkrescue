@@ -147,7 +147,7 @@ QSqlQuery Database::GetEntryRegistry(QString year) {
         "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
         "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
-        //"WHERE strftime('%Y', ES_registry.date_prov) = :year "
+        "WHERE strftime('%Y', ES_registry.date_prov) = :year "
         "GROUP BY Dogs.id_dog "
         "ORDER BY ES_registry.id_ES;";
 

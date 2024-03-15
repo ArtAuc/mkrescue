@@ -38,6 +38,8 @@ void MainWindow::InitEntryRegistry()
         for(QString y : years){
             ui->yearEntryBox->addItem(y);
         }
+
+    connect(ui->yearEntryBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
 }
 
 // Change selected page from stacked widget, based on the selected menu item
@@ -47,7 +49,8 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     QString txt = item->text(0);
     if (txt == "Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
-        LoadEntryRegistry();
+        ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->count() - 1);
+        LoadEntryRegistry(QString::number(QDate::currentDate().year()));
     }
     else if (txt == "Garderie")
         stacked->setCurrentWidget(ui->careRegistryPage);
@@ -74,13 +77,13 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         item->setExpanded(!item->isExpanded());
 }
 
-void MainWindow::LoadEntryRegistry()
+void MainWindow::LoadEntryRegistry(QString year)
 {
     QTableWidget* table = ui->entryTable;
     table->clearContents();
     table->setRowCount(0);
 
-    QSqlQuery query = db.GetEntryRegistry("2024");
+    QSqlQuery query = db.GetEntryRegistry(year);
 
     while(query.next() && query.value(0).toString() != "")
     {

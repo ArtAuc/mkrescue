@@ -18,10 +18,10 @@ public:
     ~MainWindow();
     void InitMenu();
     void InitEntryRegistry();
-    void LoadEntryRegistry();
 
 public slots:
     void ChangePage(QTreeWidgetItem* item);
+    void LoadEntryRegistry(QString year);
 
 private:
     Ui::MainWindow *ui;
