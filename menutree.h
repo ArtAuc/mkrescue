@@ -4,9 +4,12 @@
 #include <QTreeWidget>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPropertyAnimation>
+#include <QTimer>
 
 class MenuTree : public QTreeWidget
 {
+    Q_OBJECT
 public:
     explicit MenuTree(QWidget *parent = nullptr) : QTreeWidget(parent) {
         connect(this, SIGNAL(itemClicked(QTreeWidgetItem*, int)), parent->parent(), SLOT(ChangePage(QTreeWidgetItem*)));
@@ -30,6 +33,20 @@ public:
         }
     }
 
+public slots:
+    void Toggle(){
+        QPropertyAnimation *animation = new QPropertyAnimation(this, "maximumWidth");
+        animation->setDuration(300);
+        if (width() > 0) {
+            animation->setStartValue(width());
+            animation->setEndValue(0);
+        } else {
+            animation->setStartValue(0);
+            animation->setEndValue(initialWidth); // Set the initial width when showing the menu
+        }
+        animation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+
 protected:
     void mouseMoveEvent(QMouseEvent *event) override {
         QTreeWidgetItem *item = itemAt(event->pos());
@@ -48,12 +65,14 @@ protected:
 
     void resizeEvent(QResizeEvent *event) override {
         QTreeWidget::resizeEvent(event);
-        QFont font = this->font();
-        font.setPointSize(width() * 0.05);
-        this->setFont(font);
+        if(width() > 50){
+            QFont font = this->font();
+            font.setPointSize(width() * 0.05);
+            this->setFont(font);
 
-        int iconSize = width() * 0.08;
-        setIconSize(QSize(iconSize, iconSize));
+            int iconSize = width() * 0.11;
+            setIconSize(QSize(iconSize, iconSize));
+        }
     }
 
     void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const override {
@@ -68,6 +87,7 @@ protected:
 
 private:
     QTreeWidgetItem* lastHovered = nullptr;
+    int initialWidth = 300;
 };
 
 #endif // MENUTREE_H

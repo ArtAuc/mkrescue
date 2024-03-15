@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowState(Qt::WindowMaximized);
     ui->stackedWidget->setCurrentWidget(ui->homePage);
 
+    connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
+
     InitEntryRegistry();
 }
 

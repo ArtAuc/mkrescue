@@ -4,6 +4,7 @@
 #include <QTreeWidgetItem>
 
 #include "database.h"
+#include "menutree.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
