@@ -16,7 +16,8 @@ SOURCES += \
 
 HEADERS += \
     database.h \
-    mainwindow.h
+    mainwindow.h \
+    menutree.h
 
 FORMS += \
     mainwindow.ui
@@ -25,3 +26,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=

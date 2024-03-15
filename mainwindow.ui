@@ -14,105 +14,120 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QFrame" name="menuFrame">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
+     <widget class="MenuTree" name="menuTree">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+      <property name="styleSheet">
+       <string notr="true">QTreeView::branch{
+	image:none;
+}</string>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+      <property name="itemsExpandable">
+       <bool>false</bool>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="animated">
+       <bool>true</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>true</bool>
+      </property>
+      <property name="columnCount">
+       <number>1</number>
+      </property>
+      <column>
+       <property name="text">
+        <string/>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Accueil</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>media/home_gray.svg</normaloff>
+         <selectedoff>media/home_white.svg</selectedoff>media/home_gray.svg</iconset>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Fiches chiens</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>media/dog_gray.svg</normaloff>
+         <selectedoff>media/dog_white.svg</selectedoff>media/dog_gray.svg</iconset>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Registres</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>media/registry_gray.svg</normaloff>
+         <selectedoff>media/registry_white.svg</selectedoff>media/registry_gray.svg</iconset>
+       </property>
        <item>
-        <widget class="QTreeWidget" name="menuTree">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="itemsExpandable">
-          <bool>false</bool>
-         </property>
-         <property name="animated">
-          <bool>true</bool>
-         </property>
-         <property name="headerHidden">
-          <bool>true</bool>
-         </property>
-         <property name="columnCount">
-          <number>1</number>
-         </property>
-         <column>
-          <property name="text">
-           <string notr="true">1</string>
-          </property>
-         </column>
-         <item>
-          <property name="text">
-           <string>Accueil</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Fiches chiens</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Registres</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Entrées/Sorties</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Garderie</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Adhérents</string>
-           </property>
-          </item>
-         </item>
-         <item>
-          <property name="text">
-           <string>Vétérinaire</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Autres</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Liste rouge adoptants</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Animaux perdus</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Demandes d'adoption</string>
-           </property>
-          </item>
-         </item>
-        </widget>
+        <property name="text">
+         <string>Entrées/Sorties</string>
+        </property>
        </item>
-      </layout>
+       <item>
+        <property name="text">
+         <string>Garderie</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Adhérents</string>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>Vétérinaire</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>media/nurse_gray.svg</normaloff>
+         <selectedoff>media/nurse_white.svg</selectedoff>media/nurse_gray.svg</iconset>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Autres</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>media/circle_gray.svg</normaloff>
+         <selectedoff>media/circle_white.svg</selectedoff>media/circle_gray.svg</iconset>
+       </property>
+       <item>
+        <property name="text">
+         <string>Liste rouge adoptants</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Animaux perdus</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Demandes d'adoption</string>
+        </property>
+       </item>
+      </item>
      </widget>
     </item>
     <item>
@@ -121,7 +136,7 @@
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="homePage"/>
       <widget class="QWidget" name="dogSheetsPage"/>
@@ -288,8 +303,14 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MenuTree</class>
+   <extends>QTreeWidget</extends>
+   <header>menutree.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

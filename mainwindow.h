@@ -16,7 +16,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void InitMenu();
     void InitEntryRegistry();
 
 public slots:

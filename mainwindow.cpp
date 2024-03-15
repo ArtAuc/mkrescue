@@ -7,21 +7,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
+    ui->stackedWidget->setCurrentWidget(ui->homePage);
 
-    InitMenu();
     InitEntryRegistry();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::InitMenu()
-{
-    QTreeWidget* tree = ui->menuTree;
-    connect(tree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(ChangePage(QTreeWidgetItem*)));
-    ui->stackedWidget->setCurrentWidget(ui->homePage);
 }
 
 void MainWindow::InitEntryRegistry()
@@ -64,7 +57,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
     else{
-        ui->menuTree->collapseAll();
+        ui->menuTree->collapseAllExcept(txt);
         if(txt == "Accueil")
             stacked->setCurrentWidget(ui->homePage);
         else if (txt == "Fiches chiens")
@@ -73,7 +66,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
             stacked->setCurrentWidget(ui->vetPage);
     }
 
-    if (txt == "Registres" || txt == "Autres")
+    if (txt == "Registres"  || txt == "Autres")
         item->setExpanded(!item->isExpanded());
 }
 
