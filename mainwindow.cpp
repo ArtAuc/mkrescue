@@ -7,11 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->homePage);
+    ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
 
     InitEntryRegistry();
+    LoadEntryRegistry("2024");
 }
 
 MainWindow::~MainWindow()
@@ -26,13 +27,13 @@ void MainWindow::InitEntryRegistry()
 
     std::vector<QString> years = db.GetRegistryYears("Entry");
 
-    if (years.empty())
-        ui->yearEntryBox->addItem(QString::number(QDate::currentDate().year()));
 
-    else
-        for(QString y : years){
+    for(QString y : years){
+        if(y != QString::number(QDate::currentDate().year()))
             ui->yearEntryBox->addItem(y);
-        }
+    }
+
+    ui->yearEntryBox->addItem(QString::number(QDate::currentDate().year()));
 
     connect(ui->yearEntryBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
 }
@@ -78,6 +79,8 @@ void MainWindow::LoadEntryRegistry(QString year)
     table->clearContents();
     table->setRowCount(0);
 
+    ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->findText(year));
+
     QSqlQuery query = db.GetEntryRegistry(year);
 
     while(query.next() && query.value(0).toString() != "")
@@ -91,30 +94,33 @@ void MainWindow::LoadEntryRegistry(QString year)
                                                   query.value(5).toString() + "\n" + // prov_address
                                                   query.value(6).toString() + "\n" + // prov_phone
                                                   query.value(7).toString())); //prov_email
-        table->setItem(nb, 3, new QTableWidgetItem("Chien " + query.value(8).toString())); // sex
+        table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(8).toString())); // sex
         table->setItem(nb, 4, new QTableWidgetItem(query.value(9).toString() + "\n" +
                                                   query.value(10).toString())); // identification
         table->setItem(nb, 5, new QTableWidgetItem(query.value(11).toString())); // description
         table->setItem(nb, 6, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // birth
-        table->setItem(nb, 7, new QTableWidgetItem(query.value(13).toDate().toString("dd/MM/yyyy"))); // date_dest
-        QStringList destinations = query.value(14).toString().split(";;;");
-        QTableWidgetItem* item = new QTableWidgetItem();
-        for (QString d : destinations){
+        QStringList destinations = query.value(13).toString().split(";;;");
+
+        for (int i = 0; i < destinations.size(); i++){
+            QString d = destinations[i];
             if (d != ""){
+                if(i > 0)
+                    table->insertRow(nb + i);
+
                 QStringList p = d.split(";-;");
-                QString toAppend = p[0] + "\n" + // prov_type
-                        p[1] + " " + p[2] + "\n" + //prov_lastname + prov_firstname
-                        p[3] + "\n" + // prov_address
-                        p[4] + "\n" + // prov_phone
-                        p[5]; //prov_email
-                item->setText(item->text() + toAppend + "\n\n");
+                table->setItem(nb + i, 7, new QTableWidgetItem(QDate::fromString(p[0], "yyyy-MM-dd").toString("dd/MM/yyyy"))); // date_dest
+
+                QString destString = p[1] + "\n" + // dest_type
+                        p[2] + " " + p[3] + "\n" + //dest_lastname + dest_firstname
+                        p[4] + "\n" + // dest_address
+                        p[5] + "\n" + // dest_phone
+                        p[6]; //dest_email
+                table->setItem(nb + i, 8, new QTableWidgetItem(destString));
             }
         }
 
-        table->setItem(nb, 8, item);
-
-        table->setItem(nb, 9, new QTableWidgetItem(query.value(15).toString())); // death_cause
+        table->setItem(nb, 9, new QTableWidgetItem(query.value(14).toString())); // death_cause
     }
 
-
+    ui->entryRegistryPage->resizeEvent(nullptr);
 }

@@ -310,7 +310,7 @@ border-style:none;</string>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
-        <widget class="QWidget" name="entryRegistryPage">
+        <widget class="EntryRegistry" name="entryRegistryPage">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <layout class="QHBoxLayout" name="entryLabelLayout">
@@ -363,6 +363,9 @@ border-style:none;</string>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="verticalScrollBarPolicy">
              <enum>Qt::ScrollBarAsNeeded</enum>
             </property>
@@ -373,14 +376,23 @@ border-style:none;</string>
              <set>QAbstractItemView::NoEditTriggers</set>
             </property>
             <property name="alternatingRowColors">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderMinimumSectionSize">
+             <number>0</number>
+            </attribute>
             <attribute name="horizontalHeaderDefaultSectionSize">
              <number>90</number>
             </attribute>
             <column>
              <property name="text">
-              <string> </string>
+              <string>#</string>
              </property>
             </column>
             <column>
@@ -410,7 +422,7 @@ border-style:none;</string>
             </column>
             <column>
              <property name="text">
-              <string>Date de naissance</string>
+              <string>Naissance</string>
              </property>
             </column>
             <column>
@@ -481,6 +493,12 @@ border-style:none;</string>
    <class>MenuTree</class>
    <extends>QTreeWidget</extends>
    <header>menutree.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EntryRegistry</class>
+   <extends>QWidget</extends>
+   <header>entryregistry.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

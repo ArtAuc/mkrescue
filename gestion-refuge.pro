@@ -11,11 +11,13 @@ CONFIG += c++17
 
 SOURCES += \
     database.cpp \
+    entryregistry.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     database.h \
+    entryregistry.h \
     mainwindow.h \
     menutree.h
 
