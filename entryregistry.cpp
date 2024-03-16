@@ -1,8 +1,12 @@
 #include "entryregistry.h"
 
+QString tableStylesheet = "QTableWidget { gridline-color: #dadcdf; color: #333}"
+                          "QTableWidget::item:selected { background-color: #3A4A64; }";
+
 EntryRegistry::EntryRegistry(QWidget *parent)
     : QWidget{parent}
 {
+
 }
 
 void EntryRegistry::showEvent(QShowEvent* event) {
@@ -19,14 +23,16 @@ void EntryRegistry::showEvent(QShowEvent* event) {
     }
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
+        // Header
         for(int i = 0; i < table->columnCount(); i++)
             table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
 
-
         table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
 
+        table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #212834; color: white; font-weight: bold; }");
+
         // Center-align text for certain columns
-        for(int col : {0, 1, 3, 4, 6, 7}){
+        for(int col = 0; col < table->columnCount(); col++){
             for(int row = 0; row < table->rowCount(); row++)
                 table->item(row,col)->setTextAlignment(Qt::AlignCenter);
         }
@@ -35,18 +41,19 @@ void EntryRegistry::showEvent(QShowEvent* event) {
         int row = 0;
         bool gray = true;
         while(row < table->rowCount()) {
-            QColor color = gray ? Qt::gray : Qt::white;
-            ColorRow(row, color);
+            ColorRow(row, gray);
             row++;
 
             // For multiple destinations
             while(row < table->rowCount() && table->item(row, 0)->text() == ""){
-                ColorRow(row, color);
+                ColorRow(row, gray);
                 row++;
             }
 
             gray = !gray;
         }
+
+
     }
 
     resizeEvent(nullptr);
@@ -62,8 +69,10 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
         float fontSize = std::max(width() * 0.007, (double) 7);
         font.setPointSize(fontSize);
         table->setFont(font);
+        table->horizontalHeader()->setFont(font);
 
-        table->setStyleSheet("QTableWidget::item { padding-bottom: " + QString::number(table->width() / 100) + "px;padding-top: " + QString::number(table->width() / 100) + "px;}");
+        table->setStyleSheet(tableStylesheet + "QTableWidget::item { padding-bottom: " + QString::number(table->width() / 100) + "px;padding-top: " + QString::number(table->width() / 100) + "px;}");
+
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
@@ -81,15 +90,39 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
             }
         }
 
+        // Disable labels if window is too narrow
+        bool scrollable = table->horizontalScrollBar()->isVisible();
+        label1->setVisible(!scrollable);
+        label2->setVisible(!scrollable);
+        label3->setVisible(!scrollable);
+
         // Supcategories labels' widths according to table's width
         label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
         label2->setMaximumWidth(table->columnWidth(3) + table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
         label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8) + table->columnWidth(9));
+
+
+        font.setPointSize(fontSize * 2);
+        label1->setFont(font);
+        label2->setFont(font);
+        label3->setFont(font);
     }
 }
 
-void EntryRegistry::ColorRow(int row, QColor color){
-    for (int col = 0; col < table->columnCount(); ++col)
+void EntryRegistry::ColorRow(int row, bool gray){
+    // Entry
+    QColor color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
+    for (int col = 0; col < 3; ++col)
+        table->item(row, col)->setBackground(color);
+
+    // Animal
+    color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
+    for (int col = 3; col < 7; ++col)
+        table->item(row, col)->setBackground(color);
+
+    // Exit
+    color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
+    for (int col = 7; col < table->columnCount(); ++col)
         table->item(row, col)->setBackground(color);
 
 }

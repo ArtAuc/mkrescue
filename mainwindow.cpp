@@ -133,3 +133,9 @@ void MainWindow::LoadEntryRegistry(QString year)
 
     ui->entryRegistryPage->showEvent(nullptr);
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event){
+    QFont font = ui->titleLabel->font();
+    font.setPointSize(0.02 * ui->stackedWidget->width());
+    ui->titleLabel->setFont(font);
+}

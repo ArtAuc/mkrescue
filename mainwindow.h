@@ -18,6 +18,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void InitEntryRegistry();
+    void resizeEvent(QResizeEvent *event) override;
 
 public slots:
     void ChangePage(QTreeWidgetItem* item);
