@@ -6,7 +6,6 @@ QString tableStylesheet = "QTableWidget { gridline-color: #dadcdf; color: #333}"
 EntryRegistry::EntryRegistry(QWidget *parent)
     : QWidget{parent}
 {
-
 }
 
 void EntryRegistry::showEvent(QShowEvent* event) {
@@ -27,7 +26,11 @@ void EntryRegistry::showEvent(QShowEvent* event) {
         for(int i = 0; i < table->columnCount(); i++)
             table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
 
+        table->horizontalHeaderItem(1)->setText("Date\nd'entrée");
         table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
+        table->horizontalHeaderItem(6)->setText("Date de\nnaissance");
+        table->horizontalHeaderItem(7)->setText("Date de\nsortie");
+        table->horizontalHeaderItem(9)->setText("Cause de\nla mort");
 
         table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #212834; color: white; font-weight: bold; }");
 
@@ -53,17 +56,26 @@ void EntryRegistry::showEvent(QShowEvent* event) {
             gray = !gray;
         }
 
-
+        // Bold first column #
+        if(table->item(0,0) != nullptr){
+            QFont font(table->item(0, 0)->font());
+            font.setBold(true);
+            for(int row = 0; row < table->rowCount(); row++)
+                table->item(row, 0)->setFont(font);
+        }
     }
-
-    resizeEvent(nullptr);
 }
-
 
 void EntryRegistry::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
+        // Resize modify buttons
+        float iconSize = width() * 0.04;
+        for (QToolButton* but : table->findChildren<QToolButton*>()){
+            but->setIconSize(QSize(iconSize, iconSize));
+        }
+
 
         QFont font = table->font();
         float fontSize = std::max(width() * 0.007, (double) 7);
@@ -79,13 +91,13 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
 
         float sumWidth = 0;
 
-        for (int col = 0; col < table->columnCount(); ++col) {
+        for (int col = 0; col < table->columnCount(); ++col) { // Do not modify edit button's width
             sumWidth += table->columnWidth(col);
         }
 
-        float factor = 0.95 * table->width() / sumWidth; // Allows to occupy the whole width of the window
+        float factor = 0.99 * table->width() / sumWidth; // Allows to occupy the whole width of the window
         if(factor > 1){
-            for (int col = 0; col < table->columnCount(); ++col) {
+            for (int col = 0; col < table->columnCount() - 1; ++col) {
                 table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
             }
         }
@@ -110,19 +122,7 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
 }
 
 void EntryRegistry::ColorRow(int row, bool gray){
-    // Entry
     QColor color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
-    for (int col = 0; col < 3; ++col)
+    for (int col = 0; col < table->columnCount() - 1; ++col)
         table->item(row, col)->setBackground(color);
-
-    // Animal
-    color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
-    for (int col = 3; col < 7; ++col)
-        table->item(row, col)->setBackground(color);
-
-    // Exit
-    color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
-    for (int col = 7; col < table->columnCount(); ++col)
-        table->item(row, col)->setBackground(color);
-
 }

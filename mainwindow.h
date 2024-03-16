@@ -23,9 +23,11 @@ public:
 public slots:
     void ChangePage(QTreeWidgetItem* item);
     void LoadEntryRegistry(QString year);
+    void ToggleModifyButtons();
 
 private:
     Ui::MainWindow *ui;
     Database db;
+    QList<QToolButton*> modifyButtons;
 };
 #endif // MAINWINDOW_H

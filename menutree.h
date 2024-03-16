@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QTimer>
+#include <QToolButton>
 
 class MenuTree : public QTreeWidget
 {

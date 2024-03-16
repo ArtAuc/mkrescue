@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
+    connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
 
     InitEntryRegistry();
     LoadEntryRegistry("2024");
@@ -44,6 +45,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0);
+
     if (txt == " Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
         ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->count() - 1);
@@ -87,6 +89,8 @@ void MainWindow::LoadEntryRegistry(QString year)
 
     QSqlQuery query = db.GetEntryRegistry(year);
 
+    modifyButtons.clear();
+
     while(query.next() && query.value(0).toString() != "")
     {
         int nb = table->rowCount();
@@ -129,13 +133,37 @@ void MainWindow::LoadEntryRegistry(QString year)
         }
 
         table->setItem(nb, 9, new QTableWidgetItem(query.value(14).toString())); // death_cause
+
+        table->setItem(nb, 10, new QTableWidgetItem(""));
+
+        // Modify icon
+        QToolButton* modifyButton = new QToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->item(nb, 10)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 10, modifyButton);
+
+        connect(modifyButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+
+        modifyButtons.append(modifyButton);
     }
 
     ui->entryRegistryPage->showEvent(nullptr);
+    ui->entryRegistryPage->resizeEvent(nullptr);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event){
     QFont font = ui->titleLabel->font();
     font.setPointSize(0.02 * ui->stackedWidget->width());
     ui->titleLabel->setFont(font);
+}
+
+void MainWindow::ToggleModifyButtons()
+{
+    for(QToolButton* but : modifyButtons){
+        but->setIcon(QIcon());
+        QTimer::singleShot(300, [but](){but->setIcon(QIcon("media/modify.svg"));});
+    }
+
 }

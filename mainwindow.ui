@@ -501,7 +501,7 @@ color:#212834;</string>
             </column>
             <column>
              <property name="text">
-              <string>Date</string>
+              <string>Date entrée</string>
              </property>
             </column>
             <column>
@@ -526,12 +526,12 @@ color:#212834;</string>
             </column>
             <column>
              <property name="text">
-              <string>Naissance</string>
+              <string>Date de naissance</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Date</string>
+              <string>Date sortie</string>
              </property>
             </column>
             <column>
@@ -541,7 +541,12 @@ color:#212834;</string>
             </column>
             <column>
              <property name="text">
-              <string>Cause de mort</string>
+              <string>Cause de la mort</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string/>
              </property>
             </column>
            </widget>

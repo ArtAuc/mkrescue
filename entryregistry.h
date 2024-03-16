@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QHeaderView>
 #include <QScrollBar>
-
+#include <QToolButton>
 
 class EntryRegistry : public QWidget
 {
@@ -16,15 +16,12 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     void showEvent( QShowEvent* event ) override;
 
-signals:
-
 private:
     void ColorRow(int row, bool gray);
 
 private:
     QTableWidget* table = nullptr;
     QLabel* label1 = nullptr, *label2 = nullptr, *label3 = nullptr;
-
 };
 
 #endif // ENTRYREGISTRY_H
