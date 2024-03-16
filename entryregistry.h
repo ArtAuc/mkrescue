@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <QLabel>
 #include <QHeaderView>
+#include <QScrollBar>
 
 
 class EntryRegistry : public QWidget

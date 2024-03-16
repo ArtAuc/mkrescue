@@ -72,6 +72,9 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     if (txt == "  Registres"  || txt == " Autres")
         item->setExpanded(!item->isExpanded());
+
+    else
+        ui->titleLabel->setText(txt.trimmed());
 }
 
 void MainWindow::LoadEntryRegistry(QString year)
