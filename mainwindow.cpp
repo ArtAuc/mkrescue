@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
     ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
+    ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
 
@@ -127,5 +128,5 @@ void MainWindow::LoadEntryRegistry(QString year)
         table->setItem(nb, 9, new QTableWidgetItem(query.value(14).toString())); // death_cause
     }
 
-    ui->entryRegistryPage->resizeEvent(nullptr);
+    ui->entryRegistryPage->showEvent(nullptr);
 }

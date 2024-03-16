@@ -18,24 +18,10 @@ void EntryRegistry::showEvent(QShowEvent* event) {
             label3 = qobject_cast<QLabel*>(child);
     }
 
-    resizeEvent(nullptr);
-}
-
-
-void EntryRegistry::resizeEvent(QResizeEvent *event){
-    QWidget::resizeEvent(event);
-
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
-
-        QFont font = table->font();
-        float fontSize = std::max(width() * 0.007, (double) 7);
-        font.setPointSize(fontSize);
-        table->setFont(font);
-
         for(int i = 0; i < table->columnCount(); i++)
             table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
 
-        table->setStyleSheet("QTableWidget::item { padding-bottom: " + QString::number(table->width() / 100) + "px;padding-top: " + QString::number(table->width() / 100) + "px;}");
 
         table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
 
@@ -44,29 +30,6 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
             for(int row = 0; row < table->rowCount(); row++)
                 table->item(row,col)->setTextAlignment(Qt::AlignCenter);
         }
-
-        table->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignCenter); // date_entry
-        table->horizontalHeaderItem(3)->setTextAlignment(Qt::AlignCenter); // sex
-
-        table->resizeColumnsToContents();
-        table->resizeRowsToContents();
-
-
-        float sumWidth = 0;
-
-        for (int col = 0; col < table->columnCount(); ++col) {
-            sumWidth += table->columnWidth(col);
-        }
-
-        float factor = 0.95 * table->width() / sumWidth; // Allows to occupy the whole width of the window
-        if(factor > 1){
-            for (int col = 0; col < table->columnCount(); ++col) {
-                table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
-            }
-        }
-
-
-        label1->setMaximumWidth(width());
 
         // Alternating row color
         int row = 0;
@@ -84,6 +47,44 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
 
             gray = !gray;
         }
+    }
+
+    resizeEvent(nullptr);
+}
+
+
+void EntryRegistry::resizeEvent(QResizeEvent *event){
+    QWidget::resizeEvent(event);
+
+    if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
+
+        QFont font = table->font();
+        float fontSize = std::max(width() * 0.007, (double) 7);
+        font.setPointSize(fontSize);
+        table->setFont(font);
+
+        table->setStyleSheet("QTableWidget::item { padding-bottom: " + QString::number(table->width() / 100) + "px;padding-top: " + QString::number(table->width() / 100) + "px;}");
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+
+        float sumWidth = 0;
+
+        for (int col = 0; col < table->columnCount(); ++col) {
+            sumWidth += table->columnWidth(col);
+        }
+
+        float factor = 0.95 * table->width() / sumWidth; // Allows to occupy the whole width of the window
+        if(factor > 1){
+            for (int col = 0; col < table->columnCount(); ++col) {
+                table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
+            }
+        }
+
+        // Supcategories labels' widths according to table's width
+        label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
+        label2->setMaximumWidth(table->columnWidth(3) + table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
+        label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8) + table->columnWidth(9));
     }
 }
 
