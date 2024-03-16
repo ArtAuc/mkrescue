@@ -28,19 +28,23 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
 
         QFont font = table->font();
-        float fontSize = std::max(width() * 0.01, (double) 7);
+        float fontSize = std::max(width() * 0.007, (double) 7);
         font.setPointSize(fontSize);
         table->setFont(font);
 
         for(int i = 0; i < table->columnCount(); i++)
             table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
 
-        ResizeAuto();
-
-        table->setStyleSheet("QTableWidget::item { padding-bottom: " + QString::number(table->width() / 100) + "px;padding-top: " + QString::number(table->width() / 100) + "px; }");
+        table->setStyleSheet("QTableWidget::item { padding-bottom: " + QString::number(table->width() / 100) + "px;padding-top: " + QString::number(table->width() / 100) + "px;}");
 
         table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
-        table->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignCenter); // #
+
+        // Center-align text for certain columns
+        for(int col : {0, 1, 3, 4, 6, 7}){
+            for(int row = 0; row < table->rowCount(); row++)
+                table->item(row,col)->setTextAlignment(Qt::AlignCenter);
+        }
+
         table->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignCenter); // date_entry
         table->horizontalHeaderItem(3)->setTextAlignment(Qt::AlignCenter); // sex
 
@@ -62,13 +66,29 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
         }
 
 
-
         label1->setMaximumWidth(width());
+
+        // Alternating row color
+        int row = 0;
+        bool gray = true;
+        while(row < table->rowCount()) {
+            QColor color = gray ? Qt::gray : Qt::white;
+            ColorRow(row, color);
+            row++;
+
+            // For multiple destinations
+            while(row < table->rowCount() && table->item(row, 0)->text() == ""){
+                ColorRow(row, color);
+                row++;
+            }
+
+            gray = !gray;
+        }
     }
 }
 
-void EntryRegistry::ResizeAuto()
-{
-    if(table != nullptr){
-    }
+void EntryRegistry::ColorRow(int row, QColor color){
+    for (int col = 0; col < table->columnCount(); ++col)
+        table->item(row, col)->setBackground(color);
+
 }

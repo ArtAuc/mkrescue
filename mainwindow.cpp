@@ -104,8 +104,13 @@ void MainWindow::LoadEntryRegistry(QString year)
         for (int i = 0; i < destinations.size(); i++){
             QString d = destinations[i];
             if (d != ""){
-                if(i > 0)
+                if(i > 0){
                     table->insertRow(nb + i);
+                    for (int col = 0; col < table->columnCount(); ++col) {
+                        QTableWidgetItem *emptyItem = new QTableWidgetItem();
+                        table->setItem(nb + i, col, emptyItem);
+                    }
+                }
 
                 QStringList p = d.split(";-;");
                 table->setItem(nb + i, 7, new QTableWidgetItem(QDate::fromString(p[0], "yyyy-MM-dd").toString("dd/MM/yyyy"))); // date_dest

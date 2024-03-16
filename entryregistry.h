@@ -14,9 +14,11 @@ public:
     explicit EntryRegistry(QWidget *parent = nullptr);
     void resizeEvent(QResizeEvent *event) override;
     void showEvent( QShowEvent* event ) override;
-    void ResizeAuto();
 
 signals:
+
+private:
+    void ColorRow(int row, QColor color);
 
 private:
     QTableWidget* table = nullptr;
