@@ -17,12 +17,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void InitEntryRegistry();
+    void InitRegistry(QString type);
     void resizeEvent(QResizeEvent *event) override;
 
 public slots:
     void ChangePage(QTreeWidgetItem* item);
     void LoadEntryRegistry(QString year, QString search = "");
+    void LoadCareRegistry(QString year, QString search = "");
     void ToggleModifyButtons();
     void Search(QString search);
 

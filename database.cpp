@@ -70,7 +70,9 @@ void Database::Create()
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
     query.exec("CREATE TABLE IF NOT EXISTS Care_registry ("
-               "id_people INT,"
+               "id_care INT"
+               "id_people_prov INT,"
+               "id_people_dest INT,"
                "id_dog INT,"
                "entry_date DATE,"
                "exit_date DATE,"
@@ -121,6 +123,22 @@ void Database::ReorderEntryRegistry()
                "); ");
 }
 
+void Database::ReorderCareRegistry(){
+    QSqlQuery query;
+
+    query.exec("UPDATE Care_registry AS t1 "
+               "SET id_care = ( "
+               "    SELECT COUNT(*) + 1 "
+               "    FROM Care_registry AS t2 "
+               "    WHERE strftime('%Y', t1.entry_date) = strftime('%Y', t2.entry_date) "
+               "          AND (strftime('%Y-%m-%d', t1.entry_date) > strftime('%Y-%m-%d', t2.entry_date) "
+               "               OR (strftime('%Y-%m-%d', t1.entry_date) = strftime('%Y-%m-%d', t2.entry_date) "
+               "                   AND t1.ROWID > t2.ROWID)"
+               "    ) "
+               "); ");
+
+}
+
 QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
     ReorderEntryRegistry();
 
@@ -147,15 +165,66 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
         "WHERE strftime('%Y', ES_registry.date_prov) = :year "
-        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search OR People_prov.email LIKE :search "
-        "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search OR People_dest.email LIKE :search "
-        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search)"
+        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search "
+        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
+        QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
+        ")"
         "GROUP BY Dogs.id_dog "
         "ORDER BY ES_registry.id_ES;";
 
     query.prepare(queryString);
     query.bindValue(":year", year);
     query.bindValue(":search", search + "%");
+    query.bindValue(":searchb", "%" + search + "%");
+
+
+    if (!query.exec()) {
+        qDebug() << "Error executing query:" << query.lastError().text();
+    }
+
+    return query;
+}
+
+QSqlQuery Database::GetCareRegistry(QString year, QString search) {
+    ReorderEntryRegistry();
+
+    QSqlQuery query;
+    QString queryString =
+        "SELECT Care_registry.id_care, "
+        "       Care_registry.entry_date, "
+        "       People_prov.last_name, "
+        "       People_prov.first_name, "
+        "       People_prov.address, "
+        "       People_prov.phone, "
+        "       People_prov.email, "
+        "       Dogs.sex, "
+        "       Dogs.chip, "
+        "       Dogs.name, "
+        "       Dogs.description, "
+        "       Dogs.birth, "
+        "       Care_registry.exit_date, "
+        "       People_dest.last_name, "
+        "       People_dest.first_name, "
+        "       People_dest.address, "
+        "       People_dest.phone, "
+        "       People_dest.email "
+        "FROM Care_registry "
+        "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
+        "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
+        "LEFT JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
+        /*"WHERE strftime('%Y', Care_registry.date_prov) = :year "
+        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search "
+        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
+        QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
+        ")"*/
+        "ORDER BY Care_registry.id_care;";
+
+    query.prepare(queryString);
+    query.bindValue(":year", year);
+    query.bindValue(":search", search + "%");
+    query.bindValue(":searchb", "%" + search + "%");
 
 
     if (!query.exec()) {
@@ -169,6 +238,10 @@ std::vector<QString> Database::GetRegistryYears(QString type) {
     QSqlQuery query;
     if (type == "Entry"){
         query.exec("SELECT DISTINCT strftime('%Y', date_prov) FROM ES_Registry;");
+    }
+
+    else if (type == "Care"){
+        query.exec("SELECT DISTINCT strftime('%Y', date_prov) FROM Care_Registry;");
     }
 
     std::vector<QString> years;

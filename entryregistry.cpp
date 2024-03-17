@@ -23,6 +23,7 @@ void EntryRegistry::showEvent(QShowEvent* event) {
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
         // Header
+        table->verticalHeader()->setVisible(false);
         for(int i = 0; i < table->columnCount(); i++)
             table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
 
@@ -71,7 +72,7 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
         // Resize modify buttons
-        float iconSize = width() * 0.04;
+        float iconSize = width() * 0.03;
         for (QToolButton* but : table->findChildren<QToolButton*>()){
             but->setIconSize(QSize(iconSize, iconSize));
         }
@@ -91,13 +92,13 @@ void EntryRegistry::resizeEvent(QResizeEvent *event){
 
         float sumWidth = 0;
 
-        for (int col = 0; col < table->columnCount(); ++col) { // Do not modify edit button's width
+        for (int col = 0; col < table->columnCount(); ++col) {
             sumWidth += table->columnWidth(col);
         }
 
         float factor = 0.99 * table->width() / sumWidth; // Allows to occupy the whole width of the window
         if(factor > 1){
-            for (int col = 0; col < table->columnCount() - 1; ++col) {
+            for (int col = 0; col < table->columnCount(); ++col) {
                 table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
             }
         }

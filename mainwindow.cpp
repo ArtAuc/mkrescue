@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
 
-    InitEntryRegistry();
+    InitRegistry("Entry");
+    InitRegistry("Care");
     LoadEntryRegistry("2024");
 }
 
@@ -23,22 +24,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::InitEntryRegistry()
+void MainWindow::InitRegistry(QString type)
 {
-    ui->entryTable->verticalHeader()->setVisible(false);
-    db.ReorderEntryRegistry();
+    type == "Entry" ? db.ReorderEntryRegistry() : db.ReorderCareRegistry();
 
-    std::vector<QString> years = db.GetRegistryYears("Entry");
+    std::vector<QString> years = db.GetRegistryYears(type);
 
+    QComboBox* box = type == "Entry" ? ui->yearEntryBox : ui->yearCareBox;
 
     for(QString y : years){
         if(y != QString::number(QDate::currentDate().year()))
-            ui->yearEntryBox->addItem(y);
+            box->addItem(y);
     }
 
-    ui->yearEntryBox->addItem(QString::number(QDate::currentDate().year()));
+    box->addItem(QString::number(QDate::currentDate().year()));
 
-    connect(ui->yearEntryBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
+    connect(box, SIGNAL(currentTextChanged(QString)), this, type == "Entry" ? SLOT(LoadEntryRegistry(QString)) : SLOT(LoadCareRegistry(QString)));
 }
 
 // Change selected page from stacked widget, based on the selected menu item
@@ -52,8 +53,11 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->count() - 1);
         LoadEntryRegistry(QString::number(QDate::currentDate().year()));
     }
-    else if (txt == " Garderie")
+    else if (txt == " Garderie"){
         stacked->setCurrentWidget(ui->careRegistryPage);
+        ui->yearCareBox->setCurrentIndex(ui->yearCareBox->count() - 1);
+        LoadCareRegistry(QString::number(QDate::currentDate().year()));
+    }
     else if (txt == " Adhérents")
         stacked->setCurrentWidget(ui->membersPage);
     else if (txt == " Liste rouge adoptants")
@@ -154,7 +158,64 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
     ui->entryRegistryPage->resizeEvent(nullptr);
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event){
+void MainWindow::LoadCareRegistry(QString year, QString search)
+{
+    QTableWidget* table = ui->careTable;
+    table->clearContents();
+    table->setRowCount(0);
+
+    ui->yearCareBox->setCurrentIndex(ui->yearCareBox->findText(year));
+
+    QSqlQuery query = db.GetCareRegistry(year, search);
+
+    modifyButtons.clear();
+
+
+    while(query.next() && query.value(0).toString() != "")
+    {
+        int nb = table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_care
+        table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // entry_date
+        table->setItem(nb, 2, new QTableWidgetItem(query.value(2).toString() + " " + query.value(3).toString() + "\n" + //prov_lastname + prov_firstname
+                                                  query.value(4).toString() + "\n" + // prov_address
+                                                  query.value(5).toString() + "\n" + // prov_phone
+                                                  query.value(6).toString())); //prov_email
+        table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(7).toString())); // sex
+        table->setItem(nb, 4, new QTableWidgetItem(query.value(8).toString() + "\n" +
+                                                  query.value(9).toString())); // identification
+        table->setItem(nb, 5, new QTableWidgetItem(query.value(10).toString())); // description
+        table->setItem(nb, 6, new QTableWidgetItem(query.value(11).toDate().toString("dd/MM/yyyy"))); // birth
+        table->setItem(nb, 7, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // exit_date
+        table->setItem(nb, 8, new QTableWidgetItem(query.value(13).toString() + " " + query.value(14).toString() + "\n" + //dest_lastname + dest_firstname
+                                                  query.value(15).toString() + "\n" + // dest_address
+                                                  query.value(16).toString() + "\n" + // dest_phone
+                                                  query.value(17).toString())); //dest_email
+
+        table->setItem(nb, 9, new QTableWidgetItem(""));
+
+        // Modify icon
+        QToolButton* modifyButton = new QToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        qDebug() << "c";
+
+        table->item(nb, 9)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 9, modifyButton);
+
+        connect(modifyButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+
+        modifyButtons.append(modifyButton);
+    }
+
+    /*ui->entryRegistryPage->showEvent(nullptr);
+    ui->entryRegistryPage->resizeEvent(nullptr);*/
+
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
     QFont font = ui->titleLabel->font();
     font.setPointSize(0.02 * ui->stackedWidget->width());
     ui->titleLabel->setFont(font);
