@@ -44,14 +44,15 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0);
 
+    QComboBox* box = ui->yearBox;
+    QObject::disconnect(box, nullptr, this, nullptr);
+
     if (txt == " Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
-        ui->yearBox->setCurrentIndex(ui->yearBox->count() - 1);
         LoadEntryRegistry(QString::number(QDate::currentDate().year()));
     }
     else if (txt == " Garderie"){
         stacked->setCurrentWidget(ui->careRegistryPage);
-        ui->yearBox->setCurrentIndex(ui->yearBox->count() - 1);
         LoadCareRegistry(QString::number(QDate::currentDate().year()));
     }
     else if (txt == " Adhérents")
@@ -101,13 +102,15 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
     box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     box->adjustSize();
 
-    connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
 
     QTableWidget* table = ui->entryTable;
     table->clearContents();
     table->setRowCount(0);
 
     ui->yearBox->setCurrentIndex(ui->yearBox->findText(year));
+
+    connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
+
 
     QSqlQuery query = db.GetEntryRegistry(year, search);
 
@@ -212,7 +215,6 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
     table->setRowCount(0);
 
     ui->yearBox->setCurrentIndex(ui->yearBox->findText(year));
-
     connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadCareRegistry(QString)));
 
     QSqlQuery query = db.GetCareRegistry(year, search);
