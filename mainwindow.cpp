@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
     connect(ui->addEntryButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
+    connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
+    connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
 
     InitRegistry("Entry");
     ui->entryRegistryPage->SetType("entry");
@@ -129,8 +131,12 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->setItem(nb, 6, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // birth
         QStringList destinations = query.value(13).toString().split(";;;");
 
+        QString destString = "";
+        QString dateString = "";
+
         for (int i = 0; i < destinations.size(); i++){
             QString d = destinations[i];
+
             if (d != ""){
                 if(i > 0){
                     table->insertRow(nb + i);
@@ -141,15 +147,17 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
                 }
 
                 QStringList p = d.split(";-;");
-                table->setItem(nb + i, 7, new QTableWidgetItem(QDate::fromString(p[0], "yyyy-MM-dd").toString("dd/MM/yyyy"))); // date_dest
+                dateString = QDate::fromString(p[0], "yyyy-MM-dd").toString("dd/MM/yyyy");
 
-                QString destString = p[1] + "\n" + // dest_type
+                destString = p[1] + "\n" + // dest_type
                         p[2] + " " + p[3] + "\n" + //dest_lastname + dest_firstname
                         p[4].replace("\\n", "\n") + "\n" + // dest_address
                         p[5] + "\n" + // dest_phone
                         p[6]; //dest_email
-                table->setItem(nb + i, 8, new QTableWidgetItem(destString));
             }
+
+            table->setItem(nb + i, 7, new QTableWidgetItem(dateString)); // date_dest
+            table->setItem(nb + i, 8, new QTableWidgetItem(destString));
         }
 
         table->setItem(nb, 9, new QTableWidgetItem(query.value(14).toString())); // death_cause
