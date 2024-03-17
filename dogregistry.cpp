@@ -105,15 +105,10 @@ void DogRegistry::resizeEvent(QResizeEvent *event){
             }
         }
 
-        // Disable labels if window is too narrow
-        bool scrollable = table->horizontalScrollBar()->isVisible();
-        label1->setVisible(!scrollable);
-        label2->setVisible(!scrollable);
-        label3->setVisible(!scrollable);
-
         // Supcategories labels' widths according to table's width
         label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
         label2->setMaximumWidth(table->columnWidth(3) + table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
+
 
         type == "care" ?
             label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8)) :
@@ -125,6 +120,12 @@ void DogRegistry::resizeEvent(QResizeEvent *event){
         label1->setFont(font);
         label2->setFont(font);
         label3->setFont(font);
+
+        // Disable labels if window is too narrow
+        bool scrollable = sumWidth > width() ;
+        label1->setVisible(!scrollable);
+        label2->setVisible(!scrollable);
+        label3->setVisible(!scrollable);
     }
 }
 

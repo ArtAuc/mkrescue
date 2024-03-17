@@ -51,6 +51,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     if (txt == " Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
         LoadEntryRegistry(QString::number(QDate::currentDate().year()));
+        ui->entryRegistryPage->resizeEvent(nullptr);
     }
     else if (txt == " Garderie"){
         stacked->setCurrentWidget(ui->careRegistryPage);

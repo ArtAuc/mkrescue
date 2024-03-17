@@ -610,7 +610,7 @@ color:#212834;</string>
                 <item>
                  <widget class="QTabWidget" name="entryTabWidget">
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>1</number>
                   </property>
                   <widget class="QWidget" name="entryTab1">
                    <attribute name="title">
@@ -1005,6 +1005,37 @@ color:#212834;</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>menuTree</tabstop>
+  <tabstop>menuButton</tabstop>
+  <tabstop>yearBox</tabstop>
+  <tabstop>searchLine</tabstop>
+  <tabstop>entryTabWidget</tabstop>
+  <tabstop>entryDateEdit</tabstop>
+  <tabstop>entryTypeBox</tabstop>
+  <tabstop>firstNameAbandonEdit</tabstop>
+  <tabstop>poundPlaceEdit</tabstop>
+  <tabstop>lastNameAbandonEdit</tabstop>
+  <tabstop>phoneAbandonEdit</tabstop>
+  <tabstop>emailAbandonEdit</tabstop>
+  <tabstop>addressAbandonEdit</tabstop>
+  <tabstop>address2AbandonEdit</tabstop>
+  <tabstop>postalCodeAbandonEdit</tabstop>
+  <tabstop>cityAbandonEdit</tabstop>
+  <tabstop>dogNameEdit</tabstop>
+  <tabstop>chipEdit</tabstop>
+  <tabstop>sexBox</tabstop>
+  <tabstop>birthDateEdit</tabstop>
+  <tabstop>breedEdit</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>submitButton</tabstop>
+  <tabstop>exportEntryButton</tabstop>
+  <tabstop>careTable</tabstop>
+  <tabstop>entryTable</tabstop>
+  <tabstop>addEntryButton</tabstop>
+  <tabstop>addCareButton</tabstop>
+  <tabstop>exportCareButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
