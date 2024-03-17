@@ -135,6 +135,8 @@ void EditPage::QuitEdit()
 {
     QStackedWidget* stackedWidget = qobject_cast<QStackedWidget*>(parent());
     stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
+
+    RefreshMainWindow(lastType);
 }
 
 // Returns id_people newly created, or already existent
@@ -148,7 +150,7 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
         QString oldAddress = query.value(2).toString();
         QString id = query.value(0).toString();
         if((oldPhone == infos[2] && oldPhone != "")
-                || (oldAddress == infos[3] && oldAddress != "")){
+                || (oldAddress == infos[3] && oldAddress != "") || (oldAddress == "" && oldPhone == "")){
 
             // Update if new
             query.exec("UPDATE People "

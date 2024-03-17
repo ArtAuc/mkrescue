@@ -331,3 +331,8 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
     ui->editPage->Edit(type, infos);
 }
+
+void MainWindow::RefreshRegistry(QString type){
+    if(type == "entry")
+        LoadEntryRegistry(ui->yearBox->currentText());
+}

@@ -28,6 +28,7 @@ public slots:
     void ToggleModifyButtons();
     void Search(QString search);
     void TriggerEdit(QString type, QStringList necessary);
+    void RefreshRegistry(QString type);
 
 private:
     Ui::MainWindow *ui;

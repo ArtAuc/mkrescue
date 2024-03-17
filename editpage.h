@@ -23,6 +23,9 @@ public slots:
     void SaveEdit();
     void QuitEdit();
 
+signals:
+    void RefreshMainWindow(QString type);
+
 private:
     void ClearAllPages();
     void SwitchPage(QString pageName);
