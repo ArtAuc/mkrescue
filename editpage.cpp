@@ -7,7 +7,6 @@ EditPage::EditPage(QWidget *parent)
 }
 
 void EditPage::AddEntry(){
-
     Edit("entry", {});
 }
 
@@ -192,34 +191,20 @@ void EditPage::QuitEdit()
 QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name, first_name, phone, email, address
     QSqlQuery query;
 
-    // Matching first_name and last_name
-    query.exec("SELECT id_people, phone, email FROM People "
+    qDebug() << infos;
+
+    query.exec("SELECT id_people FROM People "
                "WHERE last_name = '" + infos[0] + "' "
-               "AND first_name = '" + infos[1] + "';");
-    if (query.next()){
-        QString oldPhone = query.value(1).toString();
-        QString oldAddress = query.value(2).toString();
-        QString id = query.value(0).toString();
-        if((oldPhone == infos[2] && oldPhone != "")
-                || (oldAddress == infos[3] && oldAddress != "") || (oldAddress == "" && oldPhone == "")){
+               "AND first_name = '" + infos[1] + "' "
+               "AND phone = '" + infos[2] + "' "
+               "AND email = '" + infos[3] + "' "
+               "AND address = '" + infos[4] + "'");
 
-            // Update if new
-            query.exec("UPDATE People "
-                           "SET phone = '" + infos[2] + "' "
-                           "WHERE id_people = " + id +
-                           ";");
-            query.exec("UPDATE People "
-                           "SET email = '" + infos[3] + "' "
-                           "WHERE id_people = " + id +
-                           ";");
+    if (query.next())
+        return query.value(0).toString();
 
-            return id;
-        }
-    }
 
     query.clear();
-
-    // TODO : Match phone numbers
 
     query.exec("SELECT MAX(id_people) + 1 FROM People;");
 
@@ -232,6 +217,8 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
     query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                "VALUES ('" + newId + "', '" + infos[0] + "', '" + infos[1] + "', '" + infos[4] + "', '" + infos[2] + "', '" + infos[3] + "')");
 
+    qDebug() << newId;
+
     return newId;
 }
 
@@ -239,23 +226,15 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
 QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, sex, description, birth
     QSqlQuery query;
 
-    // Matching chip
-    if(infos[1].length() == 15){
-        query.exec("SELECT id_dog FROM Dogs "
-                   "WHERE chip = '" + infos[1] + "';");
-        if (query.next()){
-            QString id = query.value(0).toString();
+    query.exec("SELECT id_dog FROM Dogs "
+                   "WHERE chip = '" + infos[1] + "' "
+                   "AND name = '" + infos[0] + "' "
+                   "AND sex = '" + infos[2] + "' "
+                   "AND description = '" + infos[3] + "' "
+                   "AND birth = '" + infos[4] + "'");
 
-            query.exec("UPDATE Dogs "
-                          "SET name = '" + infos[0] + "', "
-                          "sex = '" + infos[2] + "', "
-                          "description = '" + infos[3] + "', "
-                          "birth = '" + infos[4] + "' "
-                          "WHERE chip = '" + infos[1] + "'");
-
-            return id;
-        }
-    }
+    if (query.next())
+        return query.value(0).toString();
 
 
     query.clear();
