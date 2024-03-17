@@ -128,8 +128,8 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
                                                   query.value(6).toString() + "\n" + // prov_phone
                                                   query.value(7).toString()))); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(8).toString())); // sex
-        table->setItem(nb, 4, new QTableWidgetItem(query.value(9).toString() + "\n" +
-                                                  query.value(10).toString())); // identification
+        table->setItem(nb, 4, new QTableWidgetItem(ClearUselessBreaks(query.value(9).toString() + "\n" +
+                                                  query.value(10).toString()))); // identification
         table->setItem(nb, 5, new QTableWidgetItem(query.value(11).toString())); // description
         table->setItem(nb, 6, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // birth
         QStringList destinations = query.value(13).toString().split(";;;");
@@ -233,8 +233,8 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
                                                   query.value(5).toString() + "\n" + // prov_phone
                                                   query.value(6).toString()))); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(7).toString())); // sex
-        table->setItem(nb, 4, new QTableWidgetItem(query.value(8).toString() + "\n" +
-                                                  query.value(9).toString())); // identification
+        table->setItem(nb, 4, new QTableWidgetItem(ClearUselessBreaks(query.value(8).toString() + "\n" +
+                                                  query.value(9).toString()))); // identification
         table->setItem(nb, 5, new QTableWidgetItem(query.value(10).toString())); // description
         table->setItem(nb, 6, new QTableWidgetItem(query.value(11).toDate().toString("dd/MM/yyyy"))); // birth
         table->setItem(nb, 7, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // exit_date
@@ -265,6 +265,8 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
+    ui->menuTree->SetInitialWidth(width() * 0.15);
+
     QFont font = ui->titleLabel->font();
     font.setPointSize(0.02 * ui->stackedWidget->width());
     ui->titleLabel->setFont(font);

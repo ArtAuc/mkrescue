@@ -34,11 +34,20 @@ public:
         }
     }
 
+    void SetInitialWidth(int initialWidth){
+        if (width() > 0)
+            setMaximumWidth(initialWidth);
+
+        this->initialWidth = initialWidth;
+    }
+
+
 public slots:
     void Toggle(){
         QPropertyAnimation *animation = new QPropertyAnimation(this, "maximumWidth");
         animation->setDuration(300);
         if (width() > 0) {
+            initialWidth = width();
             animation->setStartValue(width());
             animation->setEndValue(0);
         } else {
@@ -47,6 +56,7 @@ public slots:
         }
         animation->start(QAbstractAnimation::DeleteWhenStopped);
     }
+
 
 protected:
     void mouseMoveEvent(QMouseEvent *event) override {
@@ -85,6 +95,7 @@ protected:
             painter->restore();
         }
     }
+
 
 private:
     QTreeWidgetItem* lastHovered = nullptr;
