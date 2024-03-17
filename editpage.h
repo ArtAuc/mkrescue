@@ -32,6 +32,7 @@ private:
     void ClearAllPages();
     void SwitchPage(QString pageName);
     QString lastType;
+    int currentId = -1;
 };
 
 #endif // EDITPAGE_H

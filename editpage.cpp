@@ -7,6 +7,7 @@ EditPage::EditPage(QWidget *parent)
 }
 
 void EditPage::AddEntry(){
+    currentId = -1;
     Edit("entry", {});
 }
 
@@ -58,6 +59,8 @@ void EditPage::Edit(QString type, QStringList infos){
 
 
         if(infos.size() > 14){
+            currentId = infos[0].toInt();
+
             // Entrée
             SetField("entryDateEdit", infos[1]);
             SetField("entryTypeBox", infos[2]);
@@ -148,22 +151,16 @@ void EditPage::SaveEdit()
                                                        }));
 
 
-        query.exec("SELECT id_ES "
-                   "FROM ES_Registry "
-                   "WHERE id_dog = '" + id_dog + "' "
-                   "AND date_prov = '" + date_prov + "';");
-
-
         QString queryString;
-        if(query.next()){
+        if(currentId >= 0){ // Modifying
             queryString = "UPDATE ES_Registry "
                           "SET id_dog = '" + id_dog + "', "
                           "date_prov = '" + date_prov + "', "
                           "id_people_prov = " + id_people_prov + ", "
                           "type_prov = '" + GetField("entryTypeBox") + "' "
-                          "WHERE id_ES = '" + query.value(0).toString() + "';";
+                          "WHERE id_ES = '" + QString::number(currentId) + "';";
         }
-        else
+        else // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
                               "VALUES (" +
                               id_dog + ", '" +
@@ -191,8 +188,6 @@ void EditPage::QuitEdit()
 QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name, first_name, phone, email, address
     QSqlQuery query;
 
-    qDebug() << infos;
-
     query.exec("SELECT id_people FROM People "
                "WHERE last_name = '" + infos[0] + "' "
                "AND first_name = '" + infos[1] + "' "
@@ -216,8 +211,6 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
 
     query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                "VALUES ('" + newId + "', '" + infos[0] + "', '" + infos[1] + "', '" + infos[4] + "', '" + infos[2] + "', '" + infos[3] + "')");
-
-    qDebug() << newId;
 
     return newId;
 }
