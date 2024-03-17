@@ -20,9 +20,11 @@ void DogRegistry::showEvent(QShowEvent* event) {
             label2 = qobject_cast<QLabel*>(child);
         else if (child->objectName() == type + "Label3")
             label3 = qobject_cast<QLabel*>(child);
+        else if (child->objectName() == type + "AddButton")
+            addButton = qobject_cast<QToolButton*>(child);
     }
 
-    if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
+    if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr && addButton != nullptr){
         // Headers
         table->verticalHeader()->setVisible(false);
         for(int i = 0; i < table->columnCount(); i++)
@@ -66,18 +68,23 @@ void DogRegistry::showEvent(QShowEvent* event) {
             for(int row = 0; row < table->rowCount(); row++)
                 table->item(row, 0)->setFont(font);
         }
+
+        addButton->setIcon(QIcon("media/add.svg"));
+        addButton->setStyleSheet("background-color:#5596ae;"
+                                 "border:none;");
     }
 }
 
 void DogRegistry::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
 
-    if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
+    if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr && addButton != nullptr){
         // Resize modify buttons
         float iconSize = width() * 0.03;
         for (QToolButton* but : table->findChildren<QToolButton*>()){
             but->setIconSize(QSize(iconSize, iconSize));
         }
+
 
 
         QFont font = table->font();
@@ -103,7 +110,7 @@ void DogRegistry::resizeEvent(QResizeEvent *event){
             for (int col = 0; col < table->columnCount(); ++col) {
                 table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
             }
-        }
+        }        
 
         // Supcategories labels' widths according to table's width
         label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
@@ -126,6 +133,9 @@ void DogRegistry::resizeEvent(QResizeEvent *event){
         label1->setVisible(!scrollable);
         label2->setVisible(!scrollable);
         label3->setVisible(!scrollable);
+
+        addButton->setFixedSize(QSize(std::max(table->columnWidth(table->columnCount() - 1), int(0.03 * width())), fontSize * 4));
+        addButton->setIconSize(0.7 * QSize(iconSize, iconSize));
     }
 }
 

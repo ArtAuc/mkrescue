@@ -392,7 +392,7 @@ QComboBox {
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
@@ -483,9 +483,9 @@ color:#212834;</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="addEntryButton">
+             <widget class="QToolButton" name="entryAddButton">
               <property name="text">
-               <string>Ajouter</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -592,7 +592,7 @@ color:#212834;</string>
             </column>
             <column>
              <property name="text">
-              <string/>
+              <string>   </string>
              </property>
             </column>
            </widget>
@@ -610,7 +610,7 @@ color:#212834;</string>
                 <item>
                  <widget class="QTabWidget" name="entryTabWidget">
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="entryTab1">
                    <attribute name="title">
@@ -853,9 +853,9 @@ color:#212834;</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="addCareButton">
+             <widget class="QToolButton" name="careAddButton">
               <property name="text">
-               <string>Ajouter</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1032,8 +1032,8 @@ color:#212834;</string>
   <tabstop>exportEntryButton</tabstop>
   <tabstop>careTable</tabstop>
   <tabstop>entryTable</tabstop>
-  <tabstop>addEntryButton</tabstop>
-  <tabstop>addCareButton</tabstop>
+  <tabstop>entryAddButton</tabstop>
+  <tabstop>careAddButton</tabstop>
   <tabstop>exportCareButton</tabstop>
  </tabstops>
  <resources/>

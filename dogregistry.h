@@ -24,6 +24,7 @@ private:
 private:
     QTableWidget* table = nullptr;
     QLabel* label1 = nullptr, *label2 = nullptr, *label3 = nullptr;
+    QToolButton* addButton = nullptr;
     QString type;
 };
 
