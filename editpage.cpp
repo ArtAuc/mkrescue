@@ -117,8 +117,8 @@ void EditPage::SaveEdit()
         }
         else
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
-                              "VALUES ("
-                              "1, '" +
+                              "VALUES (" +
+                              id_dog + ", '" +
                                 entreeTab->findChild<QComboBox*>("entryTypeBox")->currentText() + "', '" +
                                 date_prov + "', " +
                                 id_people_prov +

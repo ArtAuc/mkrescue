@@ -70,13 +70,14 @@ void Database::Create()
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
     query.exec("CREATE TABLE IF NOT EXISTS Care_registry ("
-               "id_care INT"
+               "id_care INT,"
                "id_people_prov INT,"
                "id_people_dest INT,"
                "id_dog INT,"
                "entry_date DATE,"
-               "exit_date DATE,"
-               "FOREIGN KEY (id_people) REFERENCES People(id_people),"
+               "exit_date DATE, "
+               "FOREIGN KEY (id_people_prov) REFERENCES People(id_people),"
+               "FOREIGN KEY (id_people_dest) REFERENCES People(id_people),"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
     query.exec("CREATE TABLE IF NOT EXISTS Vet ("
@@ -216,16 +217,15 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
         "WHERE strftime('%Y', Care_registry.entry_date) = :year "
         "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
         "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search "
-        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
+        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search " +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
-        ")"
+        ") "
         "ORDER BY Care_registry.id_care;";
 
     query.prepare(queryString);
     query.bindValue(":year", year);
     query.bindValue(":search", search + "%");
     query.bindValue(":searchb", "%" + search + "%");
-
 
     if (!query.exec()) {
         qDebug() << "Error executing query:" << query.lastError().text();
