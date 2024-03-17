@@ -7,7 +7,7 @@ EditPage::EditPage(QWidget *parent)
 }
 
 void EditPage::AddEntry(){
-    Edit("entry", ";");
+    Edit("entry", {});
 }
 
 void EditPage::SwitchPage(QString pageName){
@@ -15,23 +15,37 @@ void EditPage::SwitchPage(QString pageName){
         findChild<QStackedWidget*>("editStacked")->setCurrentWidget(findChild<QWidget*>(pageName));
 }
 
-void EditPage::Edit(QString type, QString infos){
+void EditPage::Edit(QString type, QStringList infos){
     ClearAllPages();
-    if(type == "entry"){ // infos = id_ES;date_prov
+    if(type == "entry"){
         SwitchPage("editEntryPage");
-
-        QString id_ES = infos.split(";")[0];
-        QString date_prov = infos.split(";")[1];
-
-        QSqlQuery query;
-        query.exec("SELECT * FROM ES_Registry WHERE date_prov = " + date_prov + " AND id_ES = " + id_ES);
 
         QWidget* entreeTab = findChild<QWidget*>("entryTab1");
 
+        qDebug() << infos;
 
-        if(query.next()){
+        if(infos.size() > 0){
             // Entrée
-            entreeTab->findChild<QDateEdit*>("entryDateEdit")->setDate(QDate::fromString(query.value(3).toString(), "yyyy-MM-dd"));
+
+            entreeTab->findChild<QDateEdit*>("entryDateEdit")->setDate(QDate::fromString(infos[1], "yyyy-MM-dd"));
+            entreeTab->findChild<QComboBox*>("entryTypeBox")->setCurrentText(infos[2]);
+            entreeTab->findChild<QLineEdit*>("lastNameAbandonEdit")->setText(infos[3]);
+            entreeTab->findChild<QLineEdit*>("firstNameAbandonEdit")->setText(infos[4]);
+
+            QStringList addressList = infos[5].split(infos[5].contains("\\n") ? "\\n" : "\n");
+            if(addressList.size() < 3)
+                qDebug() << "Wrong address format";
+
+            else{
+                entreeTab->findChild<QLineEdit*>("addressAbandonEdit")->setText(addressList[0]);
+                entreeTab->findChild<QLineEdit*>("address2AbandonEdit")->setText(addressList[1]);
+
+                entreeTab->findChild<QLineEdit*>("cityAbandonEdit")->setText(addressList[addressList.size() - 1].split(" ")[0]);
+                entreeTab->findChild<QLineEdit*>("postalCodeAbandonEdit")->setText(addressList[addressList.size() - 1].split(" ")[1]);
+            }
+
+            entreeTab->findChild<QLineEdit*>("phoneAbandonEdit")->setText(infos[6]);
+            entreeTab->findChild<QLineEdit*>("emailAbandonEdit")->setText(infos[7]);
         }
     }
 }
@@ -59,7 +73,7 @@ void EditPage::ChangeEntryType(QString type)
                 widget->objectName() == "lastNameAbandonEdit" ||
                 widget->objectName() == "phoneAbandonEdit" ||
                 widget->objectName() == "emailAbandonEdit" ||
-                widget->objectName() == "addressAbandonEdit_2" ||
+                widget->objectName() == "addressAbandonEdit" ||
                 widget->objectName() == "address2AbandonEdit" ||
                 widget->objectName() == "postalCodeAbandonEdit" ||
                 widget->objectName() == "cityAbandonEdit") // Abandoned

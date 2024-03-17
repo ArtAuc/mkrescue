@@ -119,7 +119,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
         table->setItem(nb, 2, new QTableWidgetItem(query.value(2).toString() + "\n" + // prov_type
                                                   query.value(3).toString() + " " + query.value(4).toString() + "\n" + //prov_lastname + prov_firstname
-                                                  query.value(5).toString() + "\n" + // prov_address
+                                                  query.value(5).toString().replace("\\n", "\n") + "\n" + // prov_address
                                                   query.value(6).toString() + "\n" + // prov_phone
                                                   query.value(7).toString())); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(8).toString())); // sex
@@ -145,7 +145,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
                 QString destString = p[1] + "\n" + // dest_type
                         p[2] + " " + p[3] + "\n" + //dest_lastname + dest_firstname
-                        p[4] + "\n" + // dest_address
+                        p[4].replace("\\n", "\n") + "\n" + // dest_address
                         p[5] + "\n" + // dest_phone
                         p[6]; //dest_email
                 table->setItem(nb + i, 8, new QTableWidgetItem(destString));
@@ -164,7 +164,11 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->item(nb, 10)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 10, modifyButton);
 
-        connect(modifyButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+        QStringList necessary = {{query.value(0).toString(), query.value(1).toString()}};
+
+        connect(modifyButton, &QToolButton::clicked, this, [=](){
+            TriggerEdit("entry", necessary);
+        });
 
         modifyButtons.append(modifyButton);
     }
@@ -215,7 +219,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_care
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // entry_date
         table->setItem(nb, 2, new QTableWidgetItem(query.value(2).toString() + " " + query.value(3).toString() + "\n" + //prov_lastname + prov_firstname
-                                                  query.value(4).toString() + "\n" + // prov_address
+                                                  query.value(4).toString().replace("\\n", "\n") + "\n" + // prov_address
                                                   query.value(5).toString() + "\n" + // prov_phone
                                                   query.value(6).toString())); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(7).toString())); // sex
@@ -225,7 +229,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->setItem(nb, 6, new QTableWidgetItem(query.value(11).toDate().toString("dd/MM/yyyy"))); // birth
         table->setItem(nb, 7, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // exit_date
         table->setItem(nb, 8, new QTableWidgetItem(query.value(13).toString() + " " + query.value(14).toString() + "\n" + //dest_lastname + dest_firstname
-                                                  query.value(15).toString() + "\n" + // dest_address
+                                                  query.value(15).toString().replace("\\n", "\n") + "\n" + // dest_address
                                                   query.value(16).toString() + "\n" + // dest_phone
                                                   query.value(17).toString())); //dest_email
 
@@ -239,7 +243,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->item(nb, 9)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 9, modifyButton);
 
-        connect(modifyButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+        //connect(modifyButton, SIGNAL(clicked(bool)), this, [=](){TriggerEdit("care", QList())});
 
         modifyButtons.append(modifyButton);
     }
@@ -279,4 +283,41 @@ void MainWindow::Search(QString search){
 
     else if(pageName == "careRegistryPage")
         LoadCareRegistry(ui->yearBox->currentText(), search);
+}
+
+void MainWindow::TriggerEdit(QString type, QStringList necessary){
+    QSqlQuery query;
+
+    if(type == "entry")
+        query.exec("SELECT ES_registry.id_ES, "
+                    "ES_registry.date_prov, "
+                    "ES_registry.type_prov, "
+                    "People_prov.last_name, "
+                    "People_prov.first_name, "
+                    "People_prov.address, "
+                    "People_prov.phone, "
+                    "People_prov.email, "
+                    "Dogs.sex, "
+                    "Dogs.chip, "
+                    "Dogs.name, "
+                    "Dogs.description, "
+                    "Dogs.birth, "
+                    "GROUP_CONCAT(Destinations.date || ';-;' || Destinations.type || ';-;' || People_dest.last_name || ';-;' || People_dest.first_name || ';-;' || People_dest.address || ';-;' || People_dest.phone || ';-;' || People_dest.email, ';;;'), "
+                    "ES_registry.death_cause "
+                    "FROM ES_registry "
+                    "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
+                    "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
+                    "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
+                    "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
+                    "WHERE id_ES = " + necessary[0] + " AND date_prov = '" + necessary[1] + "'"
+                    "GROUP BY Dogs.id_dog ");
+
+    query.next();
+
+    QStringList infos;
+    for(int i = 0; i < query.record().count(); i++)
+        infos.append(query.value(i).toString());
+
+
+    ui->editPage->Edit(type, infos);
 }

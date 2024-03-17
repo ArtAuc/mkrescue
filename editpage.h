@@ -16,7 +16,7 @@ public:
 
 public slots:
     void AddEntry();
-    void Edit(QString type, QString infos);
+    void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
 
 private:

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QTreeWidgetItem>
+#include <QSqlRecord>
 
 #include "database.h"
 #include "menutree.h"
@@ -26,10 +27,12 @@ public slots:
     void LoadCareRegistry(QString year, QString search = "");
     void ToggleModifyButtons();
     void Search(QString search);
+    void TriggerEdit(QString type, QStringList necessary);
 
 private:
     Ui::MainWindow *ui;
     Database db;
     QList<QToolButton*> modifyButtons;
+    int rowClicked;
 };
 #endif // MAINWINDOW_H
