@@ -31,6 +31,9 @@ public slots:
     void RefreshRegistry(QString type);
 
 private:
+    QString ClearUselessBreaks(QString s);
+
+private:
     Ui::MainWindow *ui;
     Database db;
     QList<QToolButton*> modifyButtons;

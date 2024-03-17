@@ -22,6 +22,8 @@ public slots:
     void ChangeEntryType(QString type);
     void SaveEdit();
     void QuitEdit();
+    void SetField(QString name, QString value);
+    QString GetField(QString name);
 
 signals:
     void RefreshMainWindow(QString type);

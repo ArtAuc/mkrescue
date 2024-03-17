@@ -610,7 +610,7 @@ color:#212834;</string>
                 <item>
                  <widget class="QTabWidget" name="entryTabWidget">
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>1</number>
                   </property>
                   <widget class="QWidget" name="entryTab1">
                    <attribute name="title">
@@ -706,6 +706,34 @@ color:#212834;</string>
                    <attribute name="title">
                     <string>Animal</string>
                    </attribute>
+                   <layout class="QGridLayout" name="gridLayout_2">
+                    <item row="1" column="0">
+                     <widget class="QComboBox" name="sexBox">
+                      <item>
+                       <property name="text">
+                        <string>Mâle</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Femelle</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLineEdit" name="dogNameEdit"/>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLineEdit" name="chipEdit"/>
+                    </item>
+                    <item row="2" column="0" colspan="2">
+                     <widget class="QLineEdit" name="breedEdit"/>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QDateEdit" name="birthDateEdit"/>
+                    </item>
+                   </layout>
                   </widget>
                   <widget class="QWidget" name="entryTab3">
                    <attribute name="title">

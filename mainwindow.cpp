@@ -122,11 +122,11 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_ES
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
-        table->setItem(nb, 2, new QTableWidgetItem(query.value(2).toString() + "\n" + // prov_type
+        table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + "\n" + // prov_type
                                                   query.value(3).toString() + " " + query.value(4).toString() + "\n" + //prov_lastname + prov_firstname
                                                   query.value(5).toString().replace("\\n", "\n") + "\n" + // prov_address
                                                   query.value(6).toString() + "\n" + // prov_phone
-                                                  query.value(7).toString())); //prov_email
+                                                  query.value(7).toString()))); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(8).toString())); // sex
         table->setItem(nb, 4, new QTableWidgetItem(query.value(9).toString() + "\n" +
                                                   query.value(10).toString())); // identification
@@ -160,7 +160,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
             }
 
             table->setItem(nb + i, 7, new QTableWidgetItem(dateString)); // date_dest
-            table->setItem(nb + i, 8, new QTableWidgetItem(destString));
+            table->setItem(nb + i, 8, new QTableWidgetItem(ClearUselessBreaks(destString)));
         }
 
         table->setItem(nb, 9, new QTableWidgetItem(query.value(14).toString())); // death_cause
@@ -228,20 +228,20 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_care
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // entry_date
-        table->setItem(nb, 2, new QTableWidgetItem(query.value(2).toString() + " " + query.value(3).toString() + "\n" + //prov_lastname + prov_firstname
+        table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + " " + query.value(3).toString() + "\n" + //prov_lastname + prov_firstname
                                                   query.value(4).toString().replace("\\n", "\n") + "\n" + // prov_address
                                                   query.value(5).toString() + "\n" + // prov_phone
-                                                  query.value(6).toString())); //prov_email
+                                                  query.value(6).toString()))); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(7).toString())); // sex
         table->setItem(nb, 4, new QTableWidgetItem(query.value(8).toString() + "\n" +
                                                   query.value(9).toString())); // identification
         table->setItem(nb, 5, new QTableWidgetItem(query.value(10).toString())); // description
         table->setItem(nb, 6, new QTableWidgetItem(query.value(11).toDate().toString("dd/MM/yyyy"))); // birth
         table->setItem(nb, 7, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // exit_date
-        table->setItem(nb, 8, new QTableWidgetItem(query.value(13).toString() + " " + query.value(14).toString() + "\n" + //dest_lastname + dest_firstname
+        table->setItem(nb, 8, new QTableWidgetItem(ClearUselessBreaks(query.value(13).toString() + " " + query.value(14).toString() + "\n" + //dest_lastname + dest_firstname
                                                   query.value(15).toString().replace("\\n", "\n") + "\n" + // dest_address
                                                   query.value(16).toString() + "\n" + // dest_phone
-                                                  query.value(17).toString())); //dest_email
+                                                  query.value(17).toString()))); //dest_email
 
         table->setItem(nb, 9, new QTableWidgetItem(""));
 
@@ -335,4 +335,11 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 void MainWindow::RefreshRegistry(QString type){
     if(type == "entry")
         LoadEntryRegistry(ui->yearBox->currentText());
+}
+
+QString MainWindow::ClearUselessBreaks(QString s){
+    while(s.contains("\n\n"))
+        s = s.replace("\n\n", "\n");
+    s = s.trimmed();
+    return s;
 }
