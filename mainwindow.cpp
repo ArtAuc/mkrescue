@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->careRegistryPage);
+    ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
 
-    LoadCareRegistry("2024");
+    LoadEntryRegistry("2024");
 }
 
 MainWindow::~MainWindow()
@@ -34,18 +34,6 @@ void MainWindow::InitRegistry(QString type)
 {
     type == "Entry" ? db.ReorderEntryRegistry() : db.ReorderCareRegistry();
 
-    std::vector<QString> years = db.GetRegistryYears(type);
-
-    QComboBox* box = type == "Entry" ? ui->yearEntryBox : ui->yearCareBox;
-
-    for(QString y : years){
-        if(y != QString::number(QDate::currentDate().year()))
-            box->addItem(y);
-    }
-
-    box->addItem(QString::number(QDate::currentDate().year()));
-
-    connect(box, SIGNAL(currentTextChanged(QString)), this, type == "Entry" ? SLOT(LoadEntryRegistry(QString)) : SLOT(LoadCareRegistry(QString)));
 }
 
 // Change selected page from stacked widget, based on the selected menu item
@@ -56,12 +44,12 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     if (txt == " Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
-        ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->count() - 1);
+        ui->yearBox->setCurrentIndex(ui->yearBox->count() - 1);
         LoadEntryRegistry(QString::number(QDate::currentDate().year()));
     }
     else if (txt == " Garderie"){
         stacked->setCurrentWidget(ui->careRegistryPage);
-        ui->yearCareBox->setCurrentIndex(ui->yearCareBox->count() - 1);
+        ui->yearBox->setCurrentIndex(ui->yearBox->count() - 1);
         LoadCareRegistry(QString::number(QDate::currentDate().year()));
     }
     else if (txt == " Adhérents")
@@ -92,11 +80,30 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
 void MainWindow::LoadEntryRegistry(QString year, QString search)
 {
+    // Init yearBox
+    std::vector<QString> years = db.GetRegistryYears("entry");
+
+    QComboBox* box = ui->yearBox;
+    QObject::disconnect(box, nullptr, this, nullptr);
+    box->clear();
+
+    for(QString y : years){
+        if(y != QString::number(QDate::currentDate().year()))
+            box->addItem(y);
+    }
+
+    box->addItem(QString::number(QDate::currentDate().year()));
+
+    box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    box->adjustSize();
+
+    connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
+
     QTableWidget* table = ui->entryTable;
     table->clearContents();
     table->setRowCount(0);
 
-    ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->findText(year));
+    ui->yearBox->setCurrentIndex(ui->yearBox->findText(year));
 
     QSqlQuery query = db.GetEntryRegistry(year, search);
 
@@ -165,12 +172,32 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 }
 
 void MainWindow::LoadCareRegistry(QString year, QString search)
-{
+{   
+    // Init yearBox
+    std::vector<QString> years = db.GetRegistryYears("care");
+
+    QComboBox* box = ui->yearBox;
+    QObject::disconnect(box, nullptr, this, nullptr);
+    box->clear();
+
+    for(QString y : years){
+        if(y != QString::number(QDate::currentDate().year()))
+            box->addItem(y);
+    }
+
+    box->addItem(QString::number(QDate::currentDate().year()));
+
+    box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    box->adjustSize();
+
+
     QTableWidget* table = ui->careTable;
     table->clearContents();
     table->setRowCount(0);
 
-    ui->yearCareBox->setCurrentIndex(ui->yearCareBox->findText(year));
+    ui->yearBox->setCurrentIndex(ui->yearBox->findText(year));
+
+    connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadCareRegistry(QString)));
 
     QSqlQuery query = db.GetCareRegistry(year, search);
 
@@ -223,6 +250,13 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QFont font = ui->titleLabel->font();
     font.setPointSize(0.02 * ui->stackedWidget->width());
     ui->titleLabel->setFont(font);
+
+    QFont comboboxFont = ui->yearBox->font();
+    comboboxFont.setPointSizeF(0.015 * ui->stackedWidget->width());
+    ui->yearBox->setFont(comboboxFont);
+
+    QSize textSize = ui->yearBox->fontMetrics().size(Qt::TextSingleLine, ui->yearBox->currentText());
+    ui->yearBox->setFixedSize(textSize + QSize(35, 35));
 }
 
 void MainWindow::ToggleModifyButtons()
@@ -237,8 +271,8 @@ void MainWindow::ToggleModifyButtons()
 void MainWindow::Search(QString search){
     QString pageName = ui->stackedWidget->currentWidget()->objectName();
     if(pageName == "entryRegistryPage")
-        LoadEntryRegistry(ui->yearEntryBox->currentText(), search);
+        LoadEntryRegistry(ui->yearBox->currentText(), search);
 
     else if(pageName == "careRegistryPage")
-        LoadCareRegistry(ui->yearEntryBox->currentText(), search);
+        LoadCareRegistry(ui->yearBox->currentText(), search);
 }

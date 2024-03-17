@@ -337,6 +337,38 @@ border-style:none;</string>
          </widget>
         </item>
         <item>
+         <widget class="QComboBox" name="yearBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>20</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QComboBox::drop-down {
+    width: 0px;
+    border: none;
+}
+
+QComboBox {
+	background-color:white;
+	color:#333;
+    border: 1px solid gray;
+    border-radius: 10px;
+	margin:10px;
+    padding: 5px;
+    text-align: center;
+}
+</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -360,7 +392,7 @@ border-style:none;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
@@ -369,6 +401,13 @@ border-style:none;</string>
           <property name="spacing">
            <number>0</number>
           </property>
+          <item>
+           <widget class="QPushButton" name="exportEntryButton">
+            <property name="text">
+             <string>Exporter en PDF</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="entryLabelLayout">
             <property name="spacing">
@@ -440,6 +479,13 @@ color:#212834;</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="addEntryButton">
+              <property name="text">
+               <string>Ajouter</string>
               </property>
              </widget>
             </item>
@@ -551,34 +597,17 @@ color:#212834;</string>
             </column>
            </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="bottomEntryLayout">
-            <item>
-             <widget class="QComboBox" name="yearEntryBox"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="addEntryButton">
-              <property name="text">
-               <string>Ajouter</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="exportEntryButton">
-              <property name="text">
-               <string>Exporter en PDF</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
         <widget class="DogRegistry" name="careRegistryPage">
          <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
+          <item>
+           <widget class="QPushButton" name="exportCareButton">
+            <property name="text">
+             <string>Exporter en PDF</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="careLabelLayout">
             <property name="spacing">
@@ -650,6 +679,13 @@ color:#212834;</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="addCareButton">
+              <property name="text">
+               <string>Ajouter</string>
               </property>
              </widget>
             </item>
@@ -755,27 +791,6 @@ color:#212834;</string>
              </property>
             </column>
            </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="bottomEntryLayout_3">
-            <item>
-             <widget class="QComboBox" name="yearCareBox"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="addEntryButton_3">
-              <property name="text">
-               <string>Ajouter</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="exportEntryButton_3">
-              <property name="text">
-               <string>Exporter en PDF</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
          </layout>
         </widget>
