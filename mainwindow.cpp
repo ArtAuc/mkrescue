@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
+    connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshRegistry(QString)));
 
     InitRegistry("Entry");
     ui->entryRegistryPage->SetType("entry");
@@ -122,11 +123,19 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_ES
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
-        table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + "\n" + // prov_type
-                                                  query.value(3).toString() + " " + query.value(4).toString() + "\n" + //prov_lastname + prov_firstname
-                                                  query.value(5).toString().replace("\\n", "\n") + "\n" + // prov_address
-                                                  query.value(6).toString() + "\n" + // prov_phone
-                                                  query.value(7).toString()))); //prov_email
+        QStringList prov_type = query.value(2).toString().split(";-;");
+        if(prov_type[0] == "Fourrière"){
+            table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
+                                                      prov_type[1]))); //place
+
+        }
+        else if (prov_type[0] == "Abandon")
+            table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
+                                                      query.value(3).toString() + " " + query.value(4).toString() + "\n" + //prov_lastname + prov_firstname
+                                                      query.value(5).toString().replace("\\n", "\n") + "\n" + // prov_address
+                                                      query.value(6).toString() + "\n" + // prov_phone
+                                                      query.value(7).toString()))); //prov_email
+
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(8).toString())); // sex
         table->setItem(nb, 4, new QTableWidgetItem(ClearUselessBreaks(query.value(9).toString() + "\n" +
                                                   query.value(10).toString()))); // identification
@@ -337,6 +346,9 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 void MainWindow::RefreshRegistry(QString type){
     if(type == "entry")
         LoadEntryRegistry(ui->yearBox->currentText());
+
+    else if(type == "care")
+        LoadCareRegistry(ui->yearBox->currentText());
 }
 
 QString MainWindow::ClearUselessBreaks(QString s){

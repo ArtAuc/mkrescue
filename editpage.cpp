@@ -63,24 +63,33 @@ void EditPage::Edit(QString type, QStringList infos){
 
             // Entrée
             SetField("entryDateEdit", infos[1]);
-            SetField("entryTypeBox", infos[2]);
-            SetField("lastNameAbandonEdit", infos[3]);
-            SetField("firstNameAbandonEdit", infos[4]);
 
-            QStringList addressList = infos[5].split(infos[5].contains("\\n") ? "\\n" : "\n");
-            if(addressList.size() < 3)
-                qDebug() << "Wrong address format";
+            QString type_prov = infos[2].split(";-;")[0];
+            SetField("entryTypeBox", type_prov);
 
-            else{
-                SetField("addressAbandonEdit", addressList[0]);
-                SetField("address2AbandonEdit", addressList[1]);
-
-                SetField("cityAbandonEdit", addressList[addressList.size() - 1].split(" ")[0]);
-                SetField("postalCodeAbandonEdit", addressList[addressList.size() - 1].split(" ")[1]);
+            if(type_prov == "Fourrière"){
+                SetField("poundPlaceEdit", infos[2].split(";-;")[1]);
             }
 
-            SetField("phoneAbandonEdit", infos[6]);
-            SetField("emailAbandonEdit", infos[7]);
+            else{
+                SetField("lastNameAbandonEdit", infos[3]);
+                SetField("firstNameAbandonEdit", infos[4]);
+
+                QStringList addressList = infos[5].split(infos[5].contains("\\n") ? "\\n" : "\n");
+                if(addressList.size() < 3)
+                    qDebug() << "Wrong address format";
+
+                else{
+                    SetField("addressAbandonEdit", addressList[0]);
+                    SetField("address2AbandonEdit", addressList[1]);
+
+                    SetField("cityAbandonEdit", addressList[addressList.size() - 1].split(" ")[0]);
+                    SetField("postalCodeAbandonEdit", addressList[addressList.size() - 1].split(" ")[1]);
+                }
+
+                SetField("phoneAbandonEdit", infos[6]);
+                SetField("emailAbandonEdit", infos[7]);
+            }
 
             // Animal
             SetField("dogNameEdit", infos[10]);
@@ -132,7 +141,10 @@ void EditPage::SaveEdit()
     if(lastType == "entry"){
         // Entrée
         QString date_prov = GetField("entryDateEdit");
-        QString id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit"),
+        QString type_prov = GetField("entryTypeBox");
+        QString id_people_prov = "1";
+        if(GetField("entryTypeBox") == "Abandon")
+            id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit"),
                                     GetField("firstNameAbandonEdit"),
                                     GetField("phoneAbandonEdit"),
                                     GetField("emailAbandonEdit"),
@@ -140,6 +152,10 @@ void EditPage::SaveEdit()
                                     GetField("address2AbandonEdit") + "\n" +
                                     GetField("postalCodeAbandonEdit") + " " +
                                     GetField("cityAbandonEdit")}));
+
+        else{ // Fourrière
+            type_prov += ";-;" + GetField("poundPlaceEdit");
+        }
 
         // Animal
         QString id_dog = CreateDogIfNeeded(QStringList({
@@ -157,18 +173,27 @@ void EditPage::SaveEdit()
                           "SET id_dog = '" + id_dog + "', "
                           "date_prov = '" + date_prov + "', "
                           "id_people_prov = " + id_people_prov + ", "
-                          "type_prov = '" + GetField("entryTypeBox") + "' "
+                          "type_prov = '" + type_prov + "' "
                           "WHERE id_ES = '" + QString::number(currentId) + "';";
         }
         else // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
                               "VALUES (" +
                               id_dog + ", '" +
-                                GetField("entryTypeBox") + "', '" +
+                                type_prov + "', '" +
                                 date_prov + "', " +
                                 id_people_prov +
                               ", '' "
                               ");";
+
+        qDebug() << "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
+                    "VALUES (" +
+                    id_dog + ", '" +
+                      type_prov + "', '" +
+                      date_prov + "', " +
+                      id_people_prov +
+                    ", '' "
+                    ");";
 
         query.exec(queryString);
     }
@@ -181,7 +206,7 @@ void EditPage::QuitEdit()
     QStackedWidget* stackedWidget = qobject_cast<QStackedWidget*>(parent());
     stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
 
-    RefreshMainWindow(lastType);
+    emit RefreshMainWindow(lastType);
 }
 
 // Returns id_people newly created, or already existent

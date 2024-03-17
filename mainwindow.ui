@@ -610,7 +610,7 @@ color:#212834;</string>
                 <item>
                  <widget class="QTabWidget" name="entryTabWidget">
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="entryTab1">
                    <attribute name="title">
