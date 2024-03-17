@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
+    connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
 
     InitEntryRegistry();
     LoadEntryRegistry("2024");
@@ -79,7 +80,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->titleLabel->setText(txt.trimmed());
 }
 
-void MainWindow::LoadEntryRegistry(QString year)
+void MainWindow::LoadEntryRegistry(QString year, QString search)
 {
     QTableWidget* table = ui->entryTable;
     table->clearContents();
@@ -87,7 +88,7 @@ void MainWindow::LoadEntryRegistry(QString year)
 
     ui->yearEntryBox->setCurrentIndex(ui->yearEntryBox->findText(year));
 
-    QSqlQuery query = db.GetEntryRegistry(year);
+    QSqlQuery query = db.GetEntryRegistry(year, search);
 
     modifyButtons.clear();
 
@@ -163,7 +164,12 @@ void MainWindow::ToggleModifyButtons()
 {
     for(QToolButton* but : modifyButtons){
         but->setIcon(QIcon());
-        QTimer::singleShot(300, [but](){but->setIcon(QIcon("media/modify.svg"));});
+        QTimer::singleShot(310, [but](){but->setIcon(QIcon("media/modify.svg"));});
     }
 
+}
+
+void MainWindow::Search(QString search){
+    if(ui->stackedWidget->currentWidget()->objectName() == "entryRegistryPage")
+        LoadEntryRegistry(ui->yearEntryBox->currentText(), search);
 }

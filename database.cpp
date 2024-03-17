@@ -121,7 +121,7 @@ void Database::ReorderEntryRegistry()
                "); ");
 }
 
-QSqlQuery Database::GetEntryRegistry(QString year) {
+QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
     ReorderEntryRegistry();
 
     QSqlQuery query;
@@ -147,11 +147,16 @@ QSqlQuery Database::GetEntryRegistry(QString year) {
         "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
         "WHERE strftime('%Y', ES_registry.date_prov) = :year "
+        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search OR People_prov.email LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search OR People_dest.email LIKE :search "
+        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search)"
         "GROUP BY Dogs.id_dog "
         "ORDER BY ES_registry.id_ES;";
 
     query.prepare(queryString);
     query.bindValue(":year", year);
+    query.bindValue(":search", search + "%");
+
 
     if (!query.exec()) {
         qDebug() << "Error executing query:" << query.lastError().text();

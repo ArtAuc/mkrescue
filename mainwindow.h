@@ -22,8 +22,9 @@ public:
 
 public slots:
     void ChangePage(QTreeWidgetItem* item);
-    void LoadEntryRegistry(QString year);
+    void LoadEntryRegistry(QString year, QString search = "");
     void ToggleModifyButtons();
+    void Search(QString search);
 
 private:
     Ui::MainWindow *ui;
