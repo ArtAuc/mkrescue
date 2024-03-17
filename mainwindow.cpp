@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
+    connect(ui->addEntryButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
+    connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
 
     InitRegistry("Entry");
     ui->entryRegistryPage->SetType("entry");
@@ -32,8 +34,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::InitRegistry(QString type)
 {
-    type == "Entry" ? db.ReorderEntryRegistry() : db.ReorderCareRegistry();
-
 }
 
 // Change selected page from stacked widget, based on the selected menu item
@@ -80,6 +80,8 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
 void MainWindow::LoadEntryRegistry(QString year, QString search)
 {
+    db.ReorderEntryRegistry();
+
     // Init yearBox
     std::vector<QString> years = db.GetRegistryYears("entry");
 
@@ -173,6 +175,8 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
 void MainWindow::LoadCareRegistry(QString year, QString search)
 {   
+    db.ReorderCareRegistry();
+
     // Init yearBox
     std::vector<QString> years = db.GetRegistryYears("care");
 

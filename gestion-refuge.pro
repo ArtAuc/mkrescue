@@ -12,12 +12,14 @@ CONFIG += c++17
 SOURCES += \
     database.cpp \
     dogregistry.cpp \
+    editpage.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     database.h \
     dogregistry.h \
+    editpage.h \
     mainwindow.h \
     menutree.h
 

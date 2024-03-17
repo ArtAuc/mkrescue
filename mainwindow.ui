@@ -599,36 +599,125 @@ color:#212834;</string>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="editPage">
+        <widget class="EditPage" name="editPage">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <widget class="QWidget" name="editEntryPage">
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="QTabWidget" name="entryTabWidget">
-                <property name="currentIndex">
-                 <number>0</number>
-                </property>
-                <widget class="QWidget" name="entryTab1">
-                 <attribute name="title">
-                  <string>Entrée</string>
-                 </attribute>
-                </widget>
-                <widget class="QWidget" name="entryTab2">
-                 <attribute name="title">
-                  <string>Animal</string>
-                 </attribute>
-                </widget>
-                <widget class="QWidget" name="entryTab3">
-                 <attribute name="title">
-                  <string>Sortie</string>
-                 </attribute>
-                </widget>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <item>
+                 <widget class="QTabWidget" name="entryTabWidget">
+                  <property name="currentIndex">
+                   <number>0</number>
+                  </property>
+                  <widget class="QWidget" name="entryTab1">
+                   <attribute name="title">
+                    <string>Entrée</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout">
+                    <item row="0" column="1">
+                     <widget class="QDateEdit" name="entryDateEdit"/>
+                    </item>
+                    <item row="8" column="1" colspan="2">
+                     <widget class="QLineEdit" name="emailAbandonEdit">
+                      <property name="text">
+                       <string>Mail</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QLineEdit" name="poundPlaceEdit">
+                      <property name="enabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="text">
+                       <string>Lieu (fourrière)</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="10" column="1">
+                     <widget class="QLineEdit" name="postalCodeAbandonEdit">
+                      <property name="text">
+                       <string>Code postal</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="2">
+                     <widget class="QLineEdit" name="lastNameAbandonEdit">
+                      <property name="text">
+                       <string>Nom</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="1">
+                     <widget class="QLineEdit" name="firstNameAbandonEdit">
+                      <property name="text">
+                       <string>Prénom</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QComboBox" name="entryTypeBox">
+                      <item>
+                       <property name="text">
+                        <string>Abandon</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Fourrière</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                    <item row="10" column="2">
+                     <widget class="QLineEdit" name="cityAbandonEdit">
+                      <property name="text">
+                       <string>Ville</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="1">
+                     <widget class="QLineEdit" name="addressAbandonEdit_2">
+                      <property name="text">
+                       <string>Adresse</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="2">
+                     <widget class="QLineEdit" name="address2AbandonEdit">
+                      <property name="text">
+                       <string>Adresse 2</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="1" colspan="2">
+                     <widget class="QLineEdit" name="phoneAbandonEdit">
+                      <property name="text">
+                       <string>Téléphone</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="entryTab2">
+                   <attribute name="title">
+                    <string>Animal</string>
+                   </attribute>
+                  </widget>
+                  <widget class="QWidget" name="entryTab3">
+                   <attribute name="title">
+                    <string>Sortie</string>
+                   </attribute>
+                  </widget>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
                 <item>
                  <widget class="QPushButton" name="cancelButton">
                   <property name="text">
@@ -879,6 +968,12 @@ color:#212834;</string>
    <class>DogRegistry</class>
    <extends>QWidget</extends>
    <header>dogregistry.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditPage</class>
+   <extends>QWidget</extends>
+   <header>editpage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

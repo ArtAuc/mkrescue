@@ -114,7 +114,11 @@ void DogRegistry::resizeEvent(QResizeEvent *event){
         // Supcategories labels' widths according to table's width
         label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
         label2->setMaximumWidth(table->columnWidth(3) + table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
-        label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8));
+
+        type == "care" ?
+            label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8)) :
+            label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8) + table->columnWidth(9));
+
 
 
         font.setPointSize(fontSize * 2);
