@@ -364,7 +364,7 @@ border-style:none;</string>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
-        <widget class="EntryRegistry" name="entryRegistryPage">
+        <widget class="DogRegistry" name="entryRegistryPage">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
            <number>0</number>
@@ -574,8 +574,11 @@ color:#212834;</string>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="careRegistryPage">
+        <widget class="DogRegistry" name="careRegistryPage">
          <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="careLabelLayout">
             <property name="spacing">
@@ -805,9 +808,9 @@ color:#212834;</string>
    <header>menutree.h</header>
   </customwidget>
   <customwidget>
-   <class>EntryRegistry</class>
+   <class>DogRegistry</class>
    <extends>QWidget</extends>
-   <header>entryregistry.h</header>
+   <header>dogregistry.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

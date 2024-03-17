@@ -7,16 +7,22 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
-    ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
+    ui->stackedWidget->setCurrentWidget(ui->careRegistryPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
 
     InitRegistry("Entry");
+    ui->entryRegistryPage->SetType("entry");
+    ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
+
     InitRegistry("Care");
-    LoadEntryRegistry("2024");
+    ui->careRegistryPage->SetType("care");
+    ui->careLabelLayout->setAlignment(Qt::AlignLeft);
+
+
+    LoadCareRegistry("2024");
 }
 
 MainWindow::~MainWindow()
@@ -199,8 +205,6 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
-        qDebug() << "c";
-
         table->item(nb, 9)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 9, modifyButton);
 
@@ -209,8 +213,8 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         modifyButtons.append(modifyButton);
     }
 
-    /*ui->entryRegistryPage->showEvent(nullptr);
-    ui->entryRegistryPage->resizeEvent(nullptr);*/
+    ui->careRegistryPage->showEvent(nullptr);
+    ui->careRegistryPage->resizeEvent(nullptr);
 
 }
 
@@ -231,6 +235,10 @@ void MainWindow::ToggleModifyButtons()
 }
 
 void MainWindow::Search(QString search){
-    if(ui->stackedWidget->currentWidget()->objectName() == "entryRegistryPage")
+    QString pageName = ui->stackedWidget->currentWidget()->objectName();
+    if(pageName == "entryRegistryPage")
         LoadEntryRegistry(ui->yearEntryBox->currentText(), search);
+
+    else if(pageName == "careRegistryPage")
+        LoadCareRegistry(ui->yearEntryBox->currentText(), search);
 }
