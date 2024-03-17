@@ -125,8 +125,6 @@ void EditPage::SaveEdit()
                               ", '' "
                               ");";
 
-        qDebug() << queryString;
-
         query.exec(queryString);
     }
 
@@ -146,38 +144,37 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
                "WHERE last_name = '" + infos[0] + "' "
                "AND first_name = '" + infos[1] + "';");
     if (query.next()){
-        if(query.value(1).toString() == ""
-                || query.value(2).toString() == ""
-                || infos[2] == ""
-                || infos[3] == ""
-                || query.value(1).toString() == infos[2]
-                || query.value(2).toString() == infos[3])
+        QString oldPhone = query.value(1).toString();
+        QString oldAddress = query.value(2).toString();
+        QString id = query.value(0).toString();
+        if((oldPhone == infos[2] && oldPhone != "")
+                || (oldAddress == infos[3] && oldAddress != "")){
 
             // Update if new
-            if(query.value(1).toString() == "")
-                query.exec("UPDATE People "
-                           "SET phone = '" + infos[2] +
-                           "';");
-            if(query.value(2).toString() == "")
-                query.exec("UPDATE People "
-                           "SET email = '" + infos[3] +
-                           "';");
+            query.exec("UPDATE People "
+                           "SET phone = '" + infos[2] + "' "
+                           "WHERE id_people = " + id +
+                           ";");
+            query.exec("UPDATE People "
+                           "SET email = '" + infos[3] + "' "
+                           "WHERE id_people = " + id +
+                           ";");
 
-            return query.value(0).toString();
+            return id;
+        }
     }
 
     query.clear();
 
     query.exec("SELECT MAX(id_people) + 1 FROM People;");
 
-    QString newId;
-    if (query.next() && query.value(0).toString() != "")
-        newId = query.value(0).toString();
-    else
+    query.next();
+    QString newId = query.value(0).toString();
+    if (newId == "")
         newId = "1";
 
 
-    query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email)"
+    query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                "VALUES ('" + newId + "', '" + infos[0] + "', '" + infos[1] + "', '" + infos[4] + "', '" + infos[2] + "', '" + infos[3] + "')");
 
     return newId;
