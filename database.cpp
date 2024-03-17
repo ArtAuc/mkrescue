@@ -213,12 +213,12 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
         "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
         "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
         "LEFT JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
-        /*"WHERE strftime('%Y', Care_registry.date_prov) = :year "
+        "WHERE strftime('%Y', Care_registry.entry_date) = :year "
         "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
         "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
-        ")"*/
+        ")"
         "ORDER BY Care_registry.id_care;";
 
     query.prepare(queryString);
