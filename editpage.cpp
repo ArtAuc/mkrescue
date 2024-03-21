@@ -100,6 +100,7 @@ void EditPage::Edit(QString type, QStringList infos){
 
 
             // Sortie
+            SetField("deathCauseEdit", infos[14]);
         }
     }
 }
@@ -166,6 +167,9 @@ void EditPage::SaveEdit()
                                                            GetField("birthDateEdit")
                                                        }));
 
+        // Sortie
+        QString death_cause = GetField("deathCauseEdit");
+
 
         QString queryString;
         if(currentId >= 0){ // Modifying
@@ -173,7 +177,8 @@ void EditPage::SaveEdit()
                           "SET id_dog = '" + id_dog + "', "
                           "date_prov = '" + date_prov + "', "
                           "id_people_prov = " + id_people_prov + ", "
-                          "type_prov = '" + type_prov + "' "
+                          "type_prov = '" + type_prov + "', "
+                          "death_cause = '" + death_cause + "' "
                           "WHERE id_ES = '" + QString::number(currentId) + "';";
         }
         else // Creating
@@ -185,15 +190,6 @@ void EditPage::SaveEdit()
                                 id_people_prov +
                               ", '' "
                               ");";
-
-        qDebug() << "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
-                    "VALUES (" +
-                    id_dog + ", '" +
-                      type_prov + "', '" +
-                      date_prov + "', " +
-                      id_people_prov +
-                    ", '' "
-                    ");";
 
         query.exec(queryString);
     }

@@ -743,6 +743,18 @@ color:#212834;</string>
                    <attribute name="title">
                     <string>Sortie</string>
                    </attribute>
+                   <layout class="QFormLayout" name="formLayout">
+                    <item row="0" column="1">
+                     <widget class="QPushButton" name="addDestButton">
+                      <property name="text">
+                       <string>Ajouter Sortie</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QLineEdit" name="deathCauseEdit"/>
+                    </item>
+                   </layout>
                   </widget>
                  </widget>
                 </item>
