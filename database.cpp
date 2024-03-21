@@ -29,6 +29,9 @@ void Database::Create()
                "phone VARCHAR(20),"
                "email VARCHAR(255)"
                ");");
+    query.exec("INSERT INTO People (id_people) "
+               "VALUES (-1)"
+               ";");
     query.exec("CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"
                "name VARCHAR(255),"

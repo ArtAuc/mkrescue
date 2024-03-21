@@ -142,7 +142,7 @@ void EditPage::SaveEdit()
         // Entrée
         QString date_prov = GetField("entryDateEdit");
         QString type_prov = GetField("entryTypeBox");
-        QString id_people_prov = "1";
+        QString id_people_prov = "-1";
         if(GetField("entryTypeBox") == "Abandon")
             id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit"),
                                     GetField("firstNameAbandonEdit"),
