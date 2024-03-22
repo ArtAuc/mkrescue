@@ -7,6 +7,9 @@
 #include <QDateEdit>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QLayout>
+#include <QSpinBox>
+#include <QLabel>
 
 class EditPage : public QWidget
 {

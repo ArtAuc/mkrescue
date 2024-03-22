@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1251</width>
-    <height>664</height>
+    <height>675</height>
    </rect>
   </property>
   <property name="palette">
@@ -57,10 +57,7 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
+   <layout class="QFormLayout" name="formLayout_2">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -73,7 +70,7 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
+    <item row="0" column="0">
      <widget class="MenuTree" name="menuTree">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -247,7 +244,7 @@ QTreeView::item { margin-top: 30px; }</string>
       </item>
      </widget>
     </item>
-    <item>
+    <item row="0" column="1">
      <layout class="QVBoxLayout" name="mainVerticalLayout">
       <property name="spacing">
        <number>6</number>
@@ -601,48 +598,114 @@ color:#212834;</string>
         </widget>
         <widget class="EditPage" name="editPage">
          <property name="styleSheet">
-          <string notr="true">QWidget{
+          <string notr="true">QTabWidget, QStackedWidget{
 	border:none;
 	background-color:white;
+}
+
+QLabel{
+	margin:0;
+	margin-bottom:1px;
+	color:#555;
+	font-weight:bold;
+	qproperty-alignment: AlignBottom
 }
 
 QLineEdit, QDateTimeEdit, QComboBox {
 	border: 2px solid #e7e9ed;
 	border-radius: 5px;
-	margin:10px;
 }
-</string>
+
+QPushButton{
+	background-color:white;
+	border:none;
+}
+
+QComboBox {
+	color:black;
+	background-color:white;
+}
+
+QComboBox QAbstractItemView {
+	background-color: white;
+    color: black;
+}
+
+QTabBar{
+	font-weight:bold;
+	background-color:#3b4b64;
+	color:white;
+}
+
+QTabBar::tab{
+	padding:20px;
+	border:none;
+}
+
+QTabBar::tab:selected {
+	border:2px solid #3b4b64;
+    background-color: white;;
+	color:#333;
+}</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
-          <property name="leftMargin">
-           <number>200</number>
-          </property>
-          <property name="topMargin">
-           <number>50</number>
-          </property>
-          <property name="rightMargin">
-           <number>200</number>
-          </property>
-          <property name="bottomMargin">
-           <number>50</number>
-          </property>
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <widget class="QWidget" name="entryEditPage">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
-                <item>
-                 <widget class="QTabWidget" name="entryTabWidget">
-                  <property name="currentIndex">
-                   <number>0</number>
+               <widget class="QTabWidget" name="entryTabWidget">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="tabPosition">
+                 <enum>QTabWidget::North</enum>
+                </property>
+                <property name="tabShape">
+                 <enum>QTabWidget::Rounded</enum>
+                </property>
+                <property name="currentIndex">
+                 <number>1</number>
+                </property>
+                <property name="tabBarAutoHide">
+                 <bool>false</bool>
+                </property>
+                <widget class="QWidget" name="entryTab1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <attribute name="title">
+                  <string>Entrée</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <property name="horizontalSpacing">
+                   <number>30</number>
                   </property>
-                  <widget class="QWidget" name="entryTab1">
-                   <attribute name="title">
-                    <string>Entrée</string>
-                   </attribute>
-                   <layout class="QGridLayout" name="gridLayout">
-                    <item row="0" column="1">
+                  <property name="verticalSpacing">
+                   <number>10</number>
+                  </property>
+                  <item row="0" column="1">
+                   <layout class="QVBoxLayout" name="entryDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="entryDateEditLabel">
+                      <property name="text">
+                       <string>DATE D'ENTRÉE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QDateEdit" name="entryDateEdit">
                       <property name="calendarPopup">
                        <bool>true</bool>
@@ -652,64 +715,91 @@ QLineEdit, QDateTimeEdit, QComboBox {
                       </property>
                      </widget>
                     </item>
-                    <item row="8" column="1" colspan="2">
-                     <widget class="QLineEdit" name="emailAbandonEdit">
+                   </layout>
+                  </item>
+                  <item row="7" column="2">
+                   <layout class="QVBoxLayout" name="lastNameAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="lastNameAbandonEditLabel">
                       <property name="text">
-                       <string>Mail</string>
-                      </property>
-                      <property name="placeholderText">
-                       <string>Email</string>
+                       <string>NOM</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="2">
-                     <widget class="QLineEdit" name="poundPlaceEdit">
-                      <property name="enabled">
-                       <bool>true</bool>
-                      </property>
-                      <property name="text">
-                       <string>Lieu (fourrière)</string>
-                      </property>
-                      <property name="placeholderText">
-                       <string>Lieu</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="10" column="1">
-                     <widget class="QLineEdit" name="postalCodeAbandonEdit">
-                      <property name="text">
-                       <string>Code postal</string>
-                      </property>
-                      <property name="placeholderText">
-                       <string>Code postal</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="5" column="2">
+                    <item>
                      <widget class="QLineEdit" name="lastNameAbandonEdit">
                       <property name="text">
                        <string>Nom</string>
                       </property>
-                      <property name="placeholderText">
-                       <string>Nom</string>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="12" column="1" colspan="2">
+                   <layout class="QVBoxLayout" name="emailAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="emailAbandonEditLabel">
+                      <property name="text">
+                       <string>EMAIL</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="5" column="1">
+                    <item>
+                     <widget class="QLineEdit" name="emailAbandonEdit">
+                      <property name="text">
+                       <string>Mail</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="7" column="1">
+                   <layout class="QVBoxLayout" name="firstNameAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="firstNameAbandonEditLabel">
+                      <property name="text">
+                       <string>PRÉNOM</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QLineEdit" name="firstNameAbandonEdit">
                       <property name="text">
                        <string>Prénom</string>
                       </property>
-                      <property name="placeholderText">
-                       <string>Prénom</string>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="14" column="1">
+                   <layout class="QVBoxLayout" name="addressAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="addressAbandonEditLabel">
+                      <property name="text">
+                       <string>ADRESSE</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="0" column="2">
-                     <widget class="QComboBox" name="entryTypeBox">
-                      <property name="placeholderText">
-                       <string>Type d'entrée</string>
+                    <item>
+                     <widget class="QLineEdit" name="addressAbandonEdit">
+                      <property name="text">
+                       <string>Adresse</string>
                       </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="2">
+                   <layout class="QVBoxLayout" name="entryTypeBoxLayout">
+                    <item>
+                     <widget class="QLabel" name="entryTypeBoxLabel">
+                      <property name="text">
+                       <string>TYPE D'ENTRÉE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="entryTypeBox">
                       <item>
                        <property name="text">
                         <string>Abandon</string>
@@ -722,27 +812,72 @@ QLineEdit, QDateTimeEdit, QComboBox {
                       </item>
                      </widget>
                     </item>
-                    <item row="10" column="2">
+                   </layout>
+                  </item>
+                  <item row="10" column="1" colspan="2">
+                   <layout class="QVBoxLayout" name="phoneAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="phoneAbandonEditLabel">
+                      <property name="text">
+                       <string>TÉLÉPHONE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="phoneAbandonEdit">
+                      <property name="text">
+                       <string>Téléphone</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="16" column="1">
+                   <layout class="QVBoxLayout" name="postalCodeAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="postalCodeAbandonEditLabel">
+                      <property name="text">
+                       <string>CODE POSTAL</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="postalCodeAbandonEdit">
+                      <property name="text">
+                       <string>Code postal</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="16" column="2">
+                   <layout class="QVBoxLayout" name="cityAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="cityAbandonEditLabel">
+                      <property name="text">
+                       <string>VILLE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QLineEdit" name="cityAbandonEdit">
                       <property name="text">
                        <string>Ville</string>
                       </property>
-                      <property name="placeholderText">
-                       <string>Ville</string>
-                      </property>
                      </widget>
                     </item>
-                    <item row="9" column="1">
-                     <widget class="QLineEdit" name="addressAbandonEdit">
+                   </layout>
+                  </item>
+                  <item row="14" column="2">
+                   <layout class="QVBoxLayout" name="address2AbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="address2AbandonEditLabel">
                       <property name="text">
-                       <string>Adresse</string>
-                      </property>
-                      <property name="placeholderText">
-                       <string>Adresse</string>
+                       <string>COMPLÉMENT D'ADRESSE</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="9" column="2">
+                    <item>
                      <widget class="QLineEdit" name="address2AbandonEdit">
                       <property name="styleSheet">
                        <string notr="true"/>
@@ -750,29 +885,96 @@ QLineEdit, QDateTimeEdit, QComboBox {
                       <property name="text">
                        <string>Adresse 2</string>
                       </property>
-                      <property name="placeholderText">
-                       <string>Complément d'adresse</string>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="2">
+                   <layout class="QVBoxLayout" name="poundPlaceEditLayout">
+                    <item>
+                     <widget class="QLabel" name="poundPlaceEditLabel">
+                      <property name="text">
+                       <string>LIEU</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="6" column="1" colspan="2">
-                     <widget class="QLineEdit" name="phoneAbandonEdit">
-                      <property name="text">
-                       <string>Téléphone</string>
+                    <item>
+                     <widget class="QLineEdit" name="poundPlaceEdit">
+                      <property name="enabled">
+                       <bool>true</bool>
                       </property>
-                      <property name="placeholderText">
-                       <string>Téléphone</string>
+                      <property name="text">
+                       <string>Lieu (fourrière)</string>
                       </property>
                      </widget>
                     </item>
                    </layout>
-                  </widget>
-                  <widget class="QWidget" name="entryTab2">
-                   <attribute name="title">
-                    <string>Animal</string>
-                   </attribute>
-                   <layout class="QGridLayout" name="gridLayout_2">
-                    <item row="1" column="0">
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="entryTab2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <attribute name="title">
+                  <string>Animal</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="1" column="1">
+                   <layout class="QVBoxLayout" name="chipEditLayout">
+                    <item>
+                     <widget class="QLabel" name="chipEditLabel">
+                      <property name="text">
+                       <string>N° D'IDENTIFICATION</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="chipEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="0">
+                   <layout class="QVBoxLayout" name="dogNameEditLayout">
+                    <item>
+                     <widget class="QLabel" name="dogNameEditLabel">
+                      <property name="text">
+                       <string>NOM</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="dogNameEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="5" column="0" colspan="2">
+                   <layout class="QVBoxLayout" name="breedEditLayout">
+                    <item>
+                     <widget class="QLabel" name="breedEditLabel">
+                      <property name="text">
+                       <string>DESCRIPTION</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="breedEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="0">
+                   <layout class="QVBoxLayout" name="sexBoxLayout">
+                    <item>
+                     <widget class="QLabel" name="sexBoxLabel">
+                      <property name="text">
+                       <string>SEXE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QComboBox" name="sexBox">
                       <item>
                        <property name="text">
@@ -786,40 +988,60 @@ QLineEdit, QDateTimeEdit, QComboBox {
                       </item>
                      </widget>
                     </item>
-                    <item row="0" column="0">
-                     <widget class="QLineEdit" name="dogNameEdit"/>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QLineEdit" name="chipEdit"/>
-                    </item>
-                    <item row="2" column="0" colspan="2">
-                     <widget class="QLineEdit" name="breedEdit"/>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QDateEdit" name="birthDateEdit"/>
-                    </item>
                    </layout>
-                  </widget>
-                  <widget class="QWidget" name="entryTab3">
-                   <attribute name="title">
-                    <string>Sortie</string>
-                   </attribute>
-                   <layout class="QFormLayout" name="formLayout">
-                    <item row="0" column="1">
-                     <widget class="QPushButton" name="addDestButton">
+                  </item>
+                  <item row="3" column="1">
+                   <layout class="QVBoxLayout" name="birthDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="birthDateEditLabel">
                       <property name="text">
-                       <string>Ajouter Sortie</string>
+                       <string>DATE DE NAISSANCE</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="1">
+                    <item>
+                     <widget class="QDateEdit" name="birthDateEdit">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="entryTab3">
+                 <attribute name="title">
+                  <string>Sortie</string>
+                 </attribute>
+                 <layout class="QFormLayout" name="formLayout">
+                  <item row="0" column="1">
+                   <widget class="QPushButton" name="addDestButton">
+                    <property name="text">
+                     <string>Ajouter Sortie</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <layout class="QVBoxLayout" name="deathCauseEditLayout">
+                    <item>
+                     <widget class="QLabel" name="deathCauseEditLabel">
+                      <property name="text">
+                       <string>CAUSE DE LA MORT</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QLineEdit" name="deathCauseEdit"/>
                     </item>
                    </layout>
-                  </widget>
-                 </widget>
-                </item>
-               </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -838,6 +1060,22 @@ QLineEdit, QDateTimeEdit, QComboBox {
                  </widget>
                 </item>
                </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -1087,11 +1325,10 @@ color:#212834;</string>
   <tabstop>menuButton</tabstop>
   <tabstop>yearBox</tabstop>
   <tabstop>searchLine</tabstop>
-  <tabstop>entryTabWidget</tabstop>
   <tabstop>entryDateEdit</tabstop>
   <tabstop>entryTypeBox</tabstop>
-  <tabstop>firstNameAbandonEdit</tabstop>
   <tabstop>poundPlaceEdit</tabstop>
+  <tabstop>firstNameAbandonEdit</tabstop>
   <tabstop>lastNameAbandonEdit</tabstop>
   <tabstop>phoneAbandonEdit</tabstop>
   <tabstop>emailAbandonEdit</tabstop>
@@ -1099,19 +1336,15 @@ color:#212834;</string>
   <tabstop>address2AbandonEdit</tabstop>
   <tabstop>postalCodeAbandonEdit</tabstop>
   <tabstop>cityAbandonEdit</tabstop>
-  <tabstop>dogNameEdit</tabstop>
-  <tabstop>chipEdit</tabstop>
-  <tabstop>sexBox</tabstop>
-  <tabstop>birthDateEdit</tabstop>
-  <tabstop>breedEdit</tabstop>
+  <tabstop>addDestButton</tabstop>
   <tabstop>cancelButton</tabstop>
   <tabstop>submitButton</tabstop>
-  <tabstop>exportEntryButton</tabstop>
-  <tabstop>careTable</tabstop>
+  <tabstop>exportCareButton</tabstop>
+  <tabstop>careAddButton</tabstop>
   <tabstop>entryTable</tabstop>
   <tabstop>entryAddButton</tabstop>
-  <tabstop>careAddButton</tabstop>
-  <tabstop>exportCareButton</tabstop>
+  <tabstop>exportEntryButton</tabstop>
+  <tabstop>careTable</tabstop>
  </tabstops>
  <resources/>
  <connections/>

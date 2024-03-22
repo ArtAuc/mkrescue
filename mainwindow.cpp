@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careRegistryPage->SetType("care");
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
-
     LoadEntryRegistry("2024");
 }
 

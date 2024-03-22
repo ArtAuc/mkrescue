@@ -123,16 +123,16 @@ void EditPage::ChangeEntryType(QString type)
 {
     QWidget* entreeTab = findChild<QWidget*>("entryTab1");
     for (auto widget : entreeTab->findChildren<QWidget*>()) {
-        if(widget->objectName() == "poundPlaceEdit") // Pound
+        if(widget->objectName().startsWith("poundPlaceEdit")) // Pound
             widget->setVisible(type != "Abandon");
-        else if(widget->objectName() == "firstNameAbandonEdit" ||
-                widget->objectName() == "lastNameAbandonEdit" ||
-                widget->objectName() == "phoneAbandonEdit" ||
-                widget->objectName() == "emailAbandonEdit" ||
-                widget->objectName() == "addressAbandonEdit" ||
-                widget->objectName() == "address2AbandonEdit" ||
-                widget->objectName() == "postalCodeAbandonEdit" ||
-                widget->objectName() == "cityAbandonEdit") // Abandoned
+        else if(widget->objectName().startsWith("firstNameAbandonEdit") ||
+                widget->objectName().startsWith("lastNameAbandonEdit") ||
+                widget->objectName().startsWith("phoneAbandonEdit") ||
+                widget->objectName().startsWith("emailAbandonEdit")||
+                widget->objectName().startsWith("addressAbandonEdit") ||
+                widget->objectName().startsWith("address2AbandonEdit") ||
+                widget->objectName().startsWith("postalCodeAbandonEdit") ||
+                widget->objectName().startsWith("cityAbandonEdit")) // Abandoned
             widget->setVisible(type == "Abandon");
     }
 }
@@ -274,12 +274,29 @@ void EditPage::resizeEvent(QResizeEvent *event){
 
     if(children.size() > 0){
         QFont font = children[0]->font();
-        float fontSize = std::max(width() * 0.01, (double) 10);
+        float fontSize = std::max(width() * 0.007, (double) 10);
         font.setPointSize(fontSize);
 
         for(QWidget* c : children){
-            c->setFont(font);
-            c->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+            if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c))){
+                c->setFont(font);
+                c->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+            }
+
+            else if (qobject_cast<QLabel*>(c))
+                c->setFont(font);
         }
     }
+
+    // Margins besides the form
+    QMargins margins = layout()->contentsMargins();
+    margins.setLeft(0.2 * width());
+    margins.setRight(0.2 * width());
+    layout()->setContentsMargins(margins);
+
+    // Tab header
+    QTabBar* bar = findChild<QWidget*>(lastType + "EditPage")->findChild<QTabBar*>();
+    QFont font = bar->font();
+    font.setPointSize(width() * 0.02);
+    bar->setFont(font);
 }
