@@ -114,11 +114,12 @@ void EditPage::Edit(QString type, QStringList infos){
 
             for (int i = 0; i < destinations.size(); i++){
                 QString d = destinations[i];
-                QString iString = QString::number(destinationsNumber);
+
 
                 if (d != ""){
                     destinationsNumber += 1;
                     AddDestPage();
+                    QString iString = QString::number(destinationsNumber);
 
                     QStringList p = d.split("___");
 
