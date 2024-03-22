@@ -31,7 +31,7 @@ public slots:
     void ChangeEntryType(QString type);
     void SaveEdit();
     void QuitEdit();
-    void SetField(QString name, QString value);
+    void SetField(QString name, QString value, QWidget* parent = nullptr);
     QString GetField(QString name, QWidget* parent = nullptr);
     void PrevDestPage();
     void NextDestPage();

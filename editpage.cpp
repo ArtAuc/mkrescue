@@ -17,8 +17,11 @@ void EditPage::SwitchPage(QString pageName){
     findChild<QStackedWidget*>("editStacked")->setCurrentWidget(findChild<QWidget*>(pageName));
 }
 
-void EditPage::SetField(QString name, QString value){
-    QObject *childObject = findChild<QWidget*>(name);
+void EditPage::SetField(QString name, QString value, QWidget* parent){
+    if(parent == nullptr)
+        parent = this;
+
+    QObject *childObject = parent->findChild<QWidget*>(name);
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
@@ -105,7 +108,36 @@ void EditPage::Edit(QString type, QStringList infos){
 
 
             // Sortie
-            SetField("deathCauseEdit", infos[14]);
+
+            QStringList destinations = infos[13].split("_-_");
+            QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+
+            for (int i = 0; i < destinations.size(); i++){
+                QString d = destinations[i];
+                QString iString = QString::number(destinationsNumber);
+
+                if (d != ""){
+                    destinationsNumber += 1;
+                    AddDestPage();
+
+                    QStringList p = d.split("___");
+
+                    SetField("destTypeBox" + iString, p[1], destStacked);
+                    SetField("destDateEdit" + iString, p[0], destStacked);
+                    SetField("lastNameDestEdit" + iString, p[2], destStacked);
+                    SetField("firstNameDestEdit" + iString, p[3], destStacked);
+                    QStringList splitAddress = p[4].split("\n");
+                    if(splitAddress.count() == 4){
+                        SetField("addressDestEdit" + iString, splitAddress[0], destStacked);
+                        SetField("address2DestEdit" + iString, splitAddress[1], destStacked);
+                        SetField("postalCodeDestEdit" + iString, splitAddress[2], destStacked);
+                        SetField("cityDestEdit" + iString, splitAddress[3], destStacked);
+                    }
+
+                    SetField("phoneDestEdit" + iString, p[5], destStacked);
+                    SetField("emailDestEdit" + iString, p[6], destStacked);
+                }
+            }
         }
     }
 }
@@ -186,7 +218,6 @@ void EditPage::SaveEdit()
 
         // Sortie
         QStringList death_causes, id_peoples, dates, types;
-        std::vector<int> peopleIndices; // To know which dates correspond to people
 
         QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
         for(int i = 1; i < destStacked->count() + 1; i++){
@@ -199,10 +230,12 @@ void EditPage::SaveEdit()
                 if(type == "Mort"){
                     death_causes.append(GetField("deathCauseEdit" + iString, destStacked));
                     // TODO : Add a Destination for death
+                    id_peoples.append("-1");
                 }
 
                 else if(type == "Entrée au refuge"){
                     // TODO : Add custom data about the shelter
+                    id_peoples.append("-1");
                 }
 
                 else{
@@ -214,7 +247,6 @@ void EditPage::SaveEdit()
                                                         GetField("address2DestEdit" + iString, destStacked) + "\n" +
                                                         GetField("postalCodeDestEdit" + iString, destStacked) + " " +
                                                         GetField("cityDestEdit" + iString, destStacked)})));
-                    peopleIndices.push_back(i - 1);
                 }
             }
         }
@@ -258,9 +290,10 @@ void EditPage::SaveEdit()
                        "VALUES (" +
                        id_dog + ", " +
                        id_peoples[i] + ", '" +
-                       dates[peopleIndices[i]] + "', '" +
-                       types[peopleIndices[i]] + "');");
+                       dates[i] + "', '" +
+                       types[i] + "');");
         }
+
     }
 
 
@@ -433,9 +466,8 @@ void EditPage::NextDestPage(){
     if(currentPage < destStacked->count()){
         currentPage += 1;
         destStacked->setCurrentIndex(currentPage - 1);
+        UpdateDestinationPages(destStacked->widget(currentPage - 1)->findChild<QComboBox*>()->currentText());
     }
-
-    UpdateDestinationPages(destStacked->widget(currentPage - 1)->findChild<QComboBox*>()->currentText());
 }
 
 void EditPage::AddDestPage(){
