@@ -115,7 +115,6 @@ void EditPage::Edit(QString type, QStringList infos){
             for (int i = 0; i < destinations.size(); i++){
                 QString d = destinations[i];
 
-
                 if (d != ""){
                     destinationsNumber += 1;
                     AddDestPage();

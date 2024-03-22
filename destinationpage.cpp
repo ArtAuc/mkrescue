@@ -74,7 +74,7 @@ DestinationPage::DestinationPage(QString pageNumber){
     destTypeBox->addItem("");
     destTypeBox->addItem("Adoption");
     destTypeBox->addItem("Propriétaire");
-    destTypeBox->addItem("Famille d'accueil");
+    destTypeBox->addItem("Famille d’accueil");
     destTypeBox->addItem("Entrée au refuge");
     destTypeBox->addItem("Mort");
     destBoxLayout->addWidget(destBoxLabel);
@@ -143,7 +143,7 @@ void DestinationPage::ChangeDestType(QString type){
             widget->objectName().startsWith("address2DestEdit") ||
             widget->objectName().startsWith("postalCodeDestEdit") ||
             widget->objectName().startsWith("cityDestEdit")){
-            widget->setVisible(type == "Adoption" || type == "Famille d'accueil" || type == "Propriétaire");
+            widget->setVisible(type == "Adoption" || type == "Famille d’accueil" || type == "Propriétaire");
         }
 
         else if(widget->objectName().startsWith("destDateEdit"))
