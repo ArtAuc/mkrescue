@@ -109,36 +109,48 @@ void EditPage::Edit(QString type, QStringList infos){
 void EditPage::ClearAllPages()
 {
     for (QWidget* widget : findChildren<QWidget*>()) {
-        if (QDateEdit *dateEdit = qobject_cast<QDateEdit *>(widget))
+        if (QDateEdit *dateEdit = qobject_cast<QDateEdit*>(widget))
             dateEdit->setDate(QDate::currentDate());
-        else if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(widget))
+        else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget))
             lineEdit->clear();
-        else if (QComboBox *box = qobject_cast<QComboBox *>(widget))
-            box->setCurrentText("Abandon");
+        else if (QComboBox *box = qobject_cast<QComboBox*>(widget))
+            box->setCurrentIndex(0);
     }
     ChangeEntryType("Abandon");
-    ChangeDestType("");
+
+
+    // Destinations ES
+    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+    while (destStacked->count() > 0) {
+        QWidget* widget = destStacked->widget(0);
+        destStacked->removeWidget(widget);
+        delete widget;
+    }
+
+    destinationsNumber = 0;
+    AddDestPage();
 }
 
 void EditPage::ChangeDestType(QString type){
-    for(QWidget* widget : findChild<QWidget*>("entryTab3")->findChildren<QWidget*>()){
-        if(widget->objectName().startsWith("firstNameDestEdit") ||
-            widget->objectName().startsWith("lastNameDestEdit") ||
-            widget->objectName().startsWith("phoneDestEdit") ||
-            widget->objectName().startsWith("emailDestEdit")||
-            widget->objectName().startsWith("addressDestEdit") ||
-            widget->objectName().startsWith("address2DestEdit") ||
-            widget->objectName().startsWith("postalCodeDestEdit") ||
-            widget->objectName().startsWith("cityDestEdit")){
-            widget->setVisible(type == "Adoption" || type == "Famille d'accueil" || type == "Propriétaire");
-        }
+    // Update dest pages accordingly
+    /*QString currentDestType = findChild<QComboBox*>("destTypeBox")->currentText();
+    int currentPage = findChild<QStackedWidget*>("destStackedWidget")->currentIndex() + 1;
 
-        else if(widget->objectName().startsWith("destDateEdit"))
-            widget->setVisible(type != "");
-
-        else if(widget->objectName().startsWith("deathCauseEdit"))
-            widget->setVisible(type == "Mort");
+    if(currentDestType == ""){
+        destinationsNumber = currentPage;
     }
+
+    else if(currentPage == destinationsNumber){
+        // Create new dest page
+        destinationsNumber += 1;
+
+        QStackedWidget* stacked = findChild<QStackedWidget*>("destStackedWidget");
+        DestinationPage* newPage = new DestinationPage(stacked);
+        stacked->insertWidget(destinationsNumber - 1, newPage);
+    }
+
+
+    UpdateDestinationPages();*/
 }
 
 void EditPage::ChangeEntryType(QString type)
@@ -320,4 +332,82 @@ void EditPage::resizeEvent(QResizeEvent *event){
     QFont font = bar->font();
     font.setPointSize(width() * 0.02);
     bar->setFont(font);
+}
+
+void EditPage::UpdateDestinationPages(QString type){
+    // Update stacked widget
+    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+    int currentPage = destStacked->currentIndex() + 1;
+
+    if(type != ""){
+        if(currentPage >= destinationsNumber){
+            destinationsNumber += 1;
+            AddDestPage();
+        }
+    }
+
+    else{
+        // Clear pages after current
+        destinationsNumber = currentPage - 1;
+
+        for(int i = currentPage + 1; i < destStacked->count(); i++){
+            destStacked->removeWidget(destStacked->widget(i));
+        }
+    }
+
+    // Update buttons
+    QToolButton* prevButton = findChild<QToolButton*>("prevDestButton");
+    QToolButton* nextButton = findChild<QToolButton*>("nextDestButton");
+
+    if (currentPage <= 1){ // Gray prev button
+        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect(prevButton);
+        effect->setColor(Qt::gray);
+        prevButton->setGraphicsEffect(effect);
+    }
+
+    else
+        prevButton->setGraphicsEffect(nullptr);
+
+    if (currentPage > destinationsNumber){ // Gray next button
+        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect(nextButton);
+        effect->setColor(Qt::gray);
+        nextButton->setGraphicsEffect(effect);
+    }
+
+    else
+        nextButton->setGraphicsEffect(nullptr);
+
+}
+
+void EditPage::PrevDestPage(){
+    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+    int currentPage = destStacked->currentIndex() + 1;
+
+    if(currentPage > 1){
+        currentPage -= 1;
+        destStacked->setCurrentIndex(currentPage - 1);
+    }
+
+    UpdateDestinationPages(destStacked->widget(currentPage - 1)->findChild<QComboBox*>()->currentText());
+}
+
+void EditPage::NextDestPage(){
+    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+    int currentPage = destStacked->currentIndex() + 1;
+
+    if(currentPage < destStacked->count()){
+        currentPage += 1;
+        destStacked->setCurrentIndex(currentPage - 1);
+    }
+
+    UpdateDestinationPages(destStacked->widget(currentPage - 1)->findChild<QComboBox*>()->currentText());
+}
+
+void EditPage::AddDestPage(){
+    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+    DestinationPage* page = new DestinationPage();
+    destStacked->insertWidget(destinationsNumber, page);
+    page->ChangeDestType("");
+    connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
+    connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), page, SLOT(ChangeDestType(QString)));
 }

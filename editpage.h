@@ -10,6 +10,10 @@
 #include <QLayout>
 #include <QSpinBox>
 #include <QLabel>
+#include <QToolButton>
+#include <QGraphicsColorizeEffect>
+
+#include "destinationpage.h"
 
 class EditPage : public QWidget
 {
@@ -29,6 +33,9 @@ public slots:
     void QuitEdit();
     void SetField(QString name, QString value);
     QString GetField(QString name);
+    void PrevDestPage();
+    void NextDestPage();
+    void UpdateDestinationPages(QString type = "");
 
 signals:
     void RefreshMainWindow(QString type);
@@ -36,8 +43,10 @@ signals:
 private:
     void ClearAllPages();
     void SwitchPage(QString pageName);
+    void AddDestPage();
     QString lastType;
     int currentId = -1;
+    int destinationsNumber = 0;
 };
 
 #endif // EDITPAGE_H

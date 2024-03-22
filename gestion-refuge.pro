@@ -11,6 +11,7 @@ CONFIG += c++17
 
 SOURCES += \
     database.cpp \
+    destinationpage.cpp \
     dogregistry.cpp \
     editpage.cpp \
     main.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     database.h \
+    destinationpage.h \
     dogregistry.h \
     editpage.h \
     mainwindow.h \
