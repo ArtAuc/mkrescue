@@ -240,11 +240,15 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
 std::vector<QString> Database::GetRegistryYears(QString type) {
     QSqlQuery query;
     if (type == "entry"){
-        query.exec("SELECT DISTINCT strftime('%Y', date_prov) FROM ES_Registry;");
+        query.exec("SELECT DISTINCT strftime('%Y', date_prov) AS year "
+                   "FROM ES_Registry "
+                   "ORDER BY year ASC;");
     }
 
     else if (type == "care"){
-        query.exec("SELECT DISTINCT strftime('%Y', entry_date) FROM Care_Registry;");
+        query.exec("SELECT DISTINCT strftime('%Y', entry_date) AS year "
+                   "FROM Care_registry "
+                   "ORDER BY year ASC;");
     }
 
     std::vector<QString> years;

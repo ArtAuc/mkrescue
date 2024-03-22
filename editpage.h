@@ -15,6 +15,7 @@ public:
     explicit EditPage(QWidget *parent = nullptr);
     QString CreatePersonIfNeeded(QStringList infos);
     QString CreateDogIfNeeded(QStringList infos);
+    void resizeEvent(QResizeEvent *event) override;
 
 public slots:
     void AddEntry();

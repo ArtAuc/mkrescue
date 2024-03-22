@@ -12,8 +12,9 @@ void EditPage::AddEntry(){
 }
 
 void EditPage::SwitchPage(QString pageName){
-        qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);
-        findChild<QStackedWidget*>("editStacked")->setCurrentWidget(findChild<QWidget*>(pageName));
+    resizeEvent(nullptr);
+    qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);
+    findChild<QStackedWidget*>("editStacked")->setCurrentWidget(findChild<QWidget*>(pageName));
 }
 
 void EditPage::SetField(QString name, QString value){
@@ -54,7 +55,7 @@ void EditPage::Edit(QString type, QStringList infos){
     ClearAllPages();
 
     if(type == "entry"){
-        SwitchPage("editEntryPage");
+        SwitchPage("entryEditPage");
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
 
 
@@ -83,8 +84,8 @@ void EditPage::Edit(QString type, QStringList infos){
                     SetField("addressAbandonEdit", addressList[0]);
                     SetField("address2AbandonEdit", addressList[1]);
 
-                    SetField("cityAbandonEdit", addressList[addressList.size() - 1].split(" ")[0]);
-                    SetField("postalCodeAbandonEdit", addressList[addressList.size() - 1].split(" ")[1]);
+                    SetField("cityAbandonEdit", addressList[addressList.size() - 1].split(" ")[1]);
+                    SetField("postalCodeAbandonEdit", addressList[addressList.size() - 1].split(" ")[0]);
                 }
 
                 SetField("phoneAbandonEdit", infos[6]);
@@ -172,6 +173,7 @@ void EditPage::SaveEdit()
 
 
         QString queryString;
+        qDebug() << currentId;
         if(currentId >= 0){ // Modifying
             queryString = "UPDATE ES_Registry "
                           "SET id_dog = '" + id_dog + "', "
@@ -265,4 +267,19 @@ QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, s
                "VALUES ('" + newId + "', '" + infos[0] + "', '" + infos[2] + "', '" + infos[1] + "', '" + infos[3] + "', '" + infos[4] + "')");
 
     return newId;
+}
+
+void EditPage::resizeEvent(QResizeEvent *event){
+    QList<QWidget*> children = findChild<QWidget*>(lastType + "EditPage")->findChildren<QWidget*>();
+
+    if(children.size() > 0){
+        QFont font = children[0]->font();
+        float fontSize = std::max(width() * 0.01, (double) 10);
+        font.setPointSize(fontSize);
+
+        for(QWidget* c : children){
+            c->setFont(font);
+            c->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+        }
+    }
 }

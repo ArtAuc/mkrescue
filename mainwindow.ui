@@ -600,17 +600,42 @@ color:#212834;</string>
          </layout>
         </widget>
         <widget class="EditPage" name="editPage">
+         <property name="styleSheet">
+          <string notr="true">QWidget{
+	border:none;
+	background-color:white;
+}
+
+QLineEdit, QDateTimeEdit, QComboBox {
+	border: 2px solid #e7e9ed;
+	border-radius: 5px;
+	margin:10px;
+}
+</string>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="leftMargin">
+           <number>200</number>
+          </property>
+          <property name="topMargin">
+           <number>50</number>
+          </property>
+          <property name="rightMargin">
+           <number>200</number>
+          </property>
+          <property name="bottomMargin">
+           <number>50</number>
+          </property>
           <item>
            <widget class="QStackedWidget" name="editStacked">
-            <widget class="QWidget" name="editEntryPage">
+            <widget class="QWidget" name="entryEditPage">
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_2">
                 <item>
                  <widget class="QTabWidget" name="entryTabWidget">
                   <property name="currentIndex">
-                   <number>2</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="entryTab1">
                    <attribute name="title">
@@ -619,6 +644,9 @@ color:#212834;</string>
                    <layout class="QGridLayout" name="gridLayout">
                     <item row="0" column="1">
                      <widget class="QDateEdit" name="entryDateEdit">
+                      <property name="calendarPopup">
+                       <bool>true</bool>
+                      </property>
                       <property name="currentSectionIndex">
                        <number>0</number>
                       </property>
@@ -628,6 +656,9 @@ color:#212834;</string>
                      <widget class="QLineEdit" name="emailAbandonEdit">
                       <property name="text">
                        <string>Mail</string>
+                      </property>
+                      <property name="placeholderText">
+                       <string>Email</string>
                       </property>
                      </widget>
                     </item>
@@ -639,11 +670,17 @@ color:#212834;</string>
                       <property name="text">
                        <string>Lieu (fourrière)</string>
                       </property>
+                      <property name="placeholderText">
+                       <string>Lieu</string>
+                      </property>
                      </widget>
                     </item>
                     <item row="10" column="1">
                      <widget class="QLineEdit" name="postalCodeAbandonEdit">
                       <property name="text">
+                       <string>Code postal</string>
+                      </property>
+                      <property name="placeholderText">
                        <string>Code postal</string>
                       </property>
                      </widget>
@@ -653,6 +690,9 @@ color:#212834;</string>
                       <property name="text">
                        <string>Nom</string>
                       </property>
+                      <property name="placeholderText">
+                       <string>Nom</string>
+                      </property>
                      </widget>
                     </item>
                     <item row="5" column="1">
@@ -660,10 +700,16 @@ color:#212834;</string>
                       <property name="text">
                        <string>Prénom</string>
                       </property>
+                      <property name="placeholderText">
+                       <string>Prénom</string>
+                      </property>
                      </widget>
                     </item>
                     <item row="0" column="2">
                      <widget class="QComboBox" name="entryTypeBox">
+                      <property name="placeholderText">
+                       <string>Type d'entrée</string>
+                      </property>
                       <item>
                        <property name="text">
                         <string>Abandon</string>
@@ -681,6 +727,9 @@ color:#212834;</string>
                       <property name="text">
                        <string>Ville</string>
                       </property>
+                      <property name="placeholderText">
+                       <string>Ville</string>
+                      </property>
                      </widget>
                     </item>
                     <item row="9" column="1">
@@ -688,18 +737,30 @@ color:#212834;</string>
                       <property name="text">
                        <string>Adresse</string>
                       </property>
+                      <property name="placeholderText">
+                       <string>Adresse</string>
+                      </property>
                      </widget>
                     </item>
                     <item row="9" column="2">
                      <widget class="QLineEdit" name="address2AbandonEdit">
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
                       <property name="text">
                        <string>Adresse 2</string>
+                      </property>
+                      <property name="placeholderText">
+                       <string>Complément d'adresse</string>
                       </property>
                      </widget>
                     </item>
                     <item row="6" column="1" colspan="2">
                      <widget class="QLineEdit" name="phoneAbandonEdit">
                       <property name="text">
+                       <string>Téléphone</string>
+                      </property>
+                      <property name="placeholderText">
                        <string>Téléphone</string>
                       </property>
                      </widget>
@@ -780,7 +841,7 @@ color:#212834;</string>
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="editCarePage"/>
+            <widget class="QWidget" name="careEditPage"/>
            </widget>
           </item>
          </layout>
