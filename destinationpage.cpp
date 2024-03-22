@@ -1,125 +1,126 @@
 #include "destinationpage.h"
 
-DestinationPage::DestinationPage(QWidget* parent) : QWidget(parent) {
-       QGridLayout *gridLayout = new QGridLayout(this);
+DestinationPage::DestinationPage(QWidget* parent) : QWidget(parent) {}
 
-       QVBoxLayout *firstNameDestEditLayout = new QVBoxLayout();
-       QLabel *firstNameDestEditLabel = new QLabel("PRÉNOM");
-       QLineEdit *firstNameDestEdit = new QLineEdit("Prénom");
-       firstNameDestEditLayout->addWidget(firstNameDestEditLabel);
-       firstNameDestEditLayout->addWidget(firstNameDestEdit);
-       gridLayout->addLayout(firstNameDestEditLayout, 1, 0);
+DestinationPage::DestinationPage(int pageNumber){
+    QGridLayout *gridLayout = new QGridLayout(this);
 
-       QVBoxLayout *addressDestEditLayout = new QVBoxLayout();
-       QLabel *addressDestEditLabel = new QLabel("ADRESSE");
-       QLineEdit *addressDestEdit = new QLineEdit("Adresse");
-       addressDestEditLayout->addWidget(addressDestEditLabel);
-       addressDestEditLayout->addWidget(addressDestEdit);
-       gridLayout->addLayout(addressDestEditLayout, 4, 0);
+    QVBoxLayout *firstNameDestEditLayout = new QVBoxLayout();
+    QLabel *firstNameDestEditLabel = new QLabel("PRÉNOM");
+    QLineEdit *firstNameDestEdit = new QLineEdit();
+    firstNameDestEditLayout->addWidget(firstNameDestEditLabel);
+    firstNameDestEditLayout->addWidget(firstNameDestEdit);
+    gridLayout->addLayout(firstNameDestEditLayout, 1, 0);
 
-       QVBoxLayout *destDateEditLayout = new QVBoxLayout();
-       QLabel *destDateEditLabel = new QLabel("DATE");
-       QDateEdit *destDateEdit = new QDateEdit();
-       destDateEditLayout->addWidget(destDateEditLabel);
-       destDateEditLayout->addWidget(destDateEdit);
-       gridLayout->addLayout(destDateEditLayout, 0, 1);
+    QVBoxLayout *addressDestEditLayout = new QVBoxLayout();
+    QLabel *addressDestEditLabel = new QLabel("ADRESSE");
+    QLineEdit *addressDestEdit = new QLineEdit();
+    addressDestEditLayout->addWidget(addressDestEditLabel);
+    addressDestEditLayout->addWidget(addressDestEdit);
+    gridLayout->addLayout(addressDestEditLayout, 4, 0);
 
-       QVBoxLayout *postalCodeDestEditLayout = new QVBoxLayout();
-       QLabel *postalCodeDestEditLabel = new QLabel("CODE POSTAL");
-       QLineEdit *postalCodeDestEdit = new QLineEdit("Code postal");
-       postalCodeDestEditLayout->addWidget(postalCodeDestEditLabel);
-       postalCodeDestEditLayout->addWidget(postalCodeDestEdit);
-       gridLayout->addLayout(postalCodeDestEditLayout, 5, 1);
+    QVBoxLayout *destDateEditLayout = new QVBoxLayout();
+    QLabel *destDateEditLabel = new QLabel("DATE");
+    QDateEdit *destDateEdit = new QDateEdit(QDate::currentDate());
+    destDateEditLayout->addWidget(destDateEditLabel);
+    destDateEditLayout->addWidget(destDateEdit);
+    gridLayout->addLayout(destDateEditLayout, 0, 1);
 
-       QVBoxLayout *cityDestEditLayout = new QVBoxLayout();
-       QLabel *cityDestEditLabel = new QLabel("VILLE");
-       QLineEdit *cityDestEdit = new QLineEdit("Ville");
-       cityDestEditLayout->addWidget(cityDestEditLabel);
-       cityDestEditLayout->addWidget(cityDestEdit);
-       gridLayout->addLayout(cityDestEditLayout, 5, 0);
+    QVBoxLayout *postalCodeDestEditLayout = new QVBoxLayout();
+    QLabel *postalCodeDestEditLabel = new QLabel("CODE POSTAL");
+    QLineEdit *postalCodeDestEdit = new QLineEdit();
+    postalCodeDestEditLayout->addWidget(postalCodeDestEditLabel);
+    postalCodeDestEditLayout->addWidget(postalCodeDestEdit);
+    gridLayout->addLayout(postalCodeDestEditLayout, 5, 1);
 
-       QVBoxLayout *lastNameDestEditLayout = new QVBoxLayout();
-       QLabel *lastNameDestEditLabel = new QLabel("NOM");
-       QLineEdit *lastNameDestEdit = new QLineEdit("Nom");
-       lastNameDestEditLayout->addWidget(lastNameDestEditLabel);
-       lastNameDestEditLayout->addWidget(lastNameDestEdit);
-       gridLayout->addLayout(lastNameDestEditLayout, 1, 1);
+    QVBoxLayout *cityDestEditLayout = new QVBoxLayout();
+    QLabel *cityDestEditLabel = new QLabel("VILLE");
+    QLineEdit *cityDestEdit = new QLineEdit();
+    cityDestEditLayout->addWidget(cityDestEditLabel);
+    cityDestEditLayout->addWidget(cityDestEdit);
+    gridLayout->addLayout(cityDestEditLayout, 5, 0);
 
-       QVBoxLayout *deathCauseEditLayout = new QVBoxLayout();
-       QLabel *deathCauseEditLabel = new QLabel("CAUSE DE LA MORT");
-       QLineEdit *deathCauseEdit = new QLineEdit();
-       deathCauseEditLayout->addWidget(deathCauseEditLabel);
-       deathCauseEditLayout->addWidget(deathCauseEdit);
-       gridLayout->addLayout(deathCauseEditLayout, 6, 0);
+    QVBoxLayout *lastNameDestEditLayout = new QVBoxLayout();
+    QLabel *lastNameDestEditLabel = new QLabel("NOM");
+    QLineEdit *lastNameDestEdit = new QLineEdit();
+    lastNameDestEditLayout->addWidget(lastNameDestEditLabel);
+    lastNameDestEditLayout->addWidget(lastNameDestEdit);
+    gridLayout->addLayout(lastNameDestEditLayout, 1, 1);
 
-       QVBoxLayout *phoneDestEditLayout = new QVBoxLayout();
-       QLabel *phoneDestEditLabel = new QLabel("TÉLÉPHONE");
-       QLineEdit *phoneDestEdit = new QLineEdit("Téléphone");
-       phoneDestEditLayout->addWidget(phoneDestEditLabel);
-       phoneDestEditLayout->addWidget(phoneDestEdit);
-       gridLayout->addLayout(phoneDestEditLayout, 2, 0, 1, 2);
+    QVBoxLayout *deathCauseEditLayout = new QVBoxLayout();
+    QLabel *deathCauseEditLabel = new QLabel("CAUSE DE LA MORT");
+    QLineEdit *deathCauseEdit = new QLineEdit();
+    deathCauseEditLayout->addWidget(deathCauseEditLabel);
+    deathCauseEditLayout->addWidget(deathCauseEdit);
+    gridLayout->addLayout(deathCauseEditLayout, 6, 0);
 
-       QVBoxLayout *emailDestEditLayout = new QVBoxLayout();
-       QLabel *emailDestEditLabel = new QLabel("EMAIL");
-       QLineEdit *emailDestEdit = new QLineEdit("Mail");
-       emailDestEditLayout->addWidget(emailDestEditLabel);
-       emailDestEditLayout->addWidget(emailDestEdit);
-       gridLayout->addLayout(emailDestEditLayout, 3, 0, 1, 2);
+    QVBoxLayout *phoneDestEditLayout = new QVBoxLayout();
+    QLabel *phoneDestEditLabel = new QLabel("TÉLÉPHONE");
+    QLineEdit *phoneDestEdit = new QLineEdit();
+    phoneDestEditLayout->addWidget(phoneDestEditLabel);
+    phoneDestEditLayout->addWidget(phoneDestEdit);
+    gridLayout->addLayout(phoneDestEditLayout, 2, 0, 1, 2);
 
-       QVBoxLayout *destBoxLayout = new QVBoxLayout();
-       QLabel *destBoxLabel = new QLabel("SORTIE N°");
-       QComboBox *destTypeBox = new QComboBox();
-       destTypeBox->addItem("");
-       destTypeBox->addItem("Adoption");
-       destTypeBox->addItem("Propriétaire");
-       destTypeBox->addItem("Famille d'accueil");
-       destTypeBox->addItem("Entrée au refuge");
-       destTypeBox->addItem("Mort");
-       destBoxLayout->addWidget(destBoxLabel);
-       destBoxLayout->addWidget(destTypeBox);
-       gridLayout->addLayout(destBoxLayout, 0, 0);
+    QVBoxLayout *emailDestEditLayout = new QVBoxLayout();
+    QLabel *emailDestEditLabel = new QLabel("EMAIL");
+    QLineEdit *emailDestEdit = new QLineEdit();
+    emailDestEditLayout->addWidget(emailDestEditLabel);
+    emailDestEditLayout->addWidget(emailDestEdit);
+    gridLayout->addLayout(emailDestEditLayout, 3, 0, 1, 2);
 
-       QVBoxLayout *address2DestEditLayout = new QVBoxLayout();
-       QLabel *address2DestEditLabel = new QLabel("COMPLÉMENT D'ADRESSE");
-       QLineEdit *address2DestEdit = new QLineEdit("Adresse 2");
-       address2DestEditLayout->addWidget(address2DestEditLabel);
-       address2DestEditLayout->addWidget(address2DestEdit);
-       gridLayout->addLayout(address2DestEditLayout, 4, 1);
+    QVBoxLayout *destBoxLayout = new QVBoxLayout();
+    QLabel *destBoxLabel = new QLabel("SORTIE N°" + QString::number(pageNumber));
+    QComboBox *destTypeBox = new QComboBox();
+    destTypeBox->addItem("");
+    destTypeBox->addItem("Adoption");
+    destTypeBox->addItem("Propriétaire");
+    destTypeBox->addItem("Famille d'accueil");
+    destTypeBox->addItem("Entrée au refuge");
+    destTypeBox->addItem("Mort");
+    destBoxLayout->addWidget(destBoxLabel);
+    destBoxLayout->addWidget(destTypeBox);
+    gridLayout->addLayout(destBoxLayout, 0, 0);
 
-       firstNameDestEdit->setObjectName("firstNameDestEdit");
-       firstNameDestEditLabel->setObjectName("firstNameDestEditLabel");
+    QVBoxLayout *address2DestEditLayout = new QVBoxLayout();
+    QLabel *address2DestEditLabel = new QLabel("COMPLÉMENT D'ADRESSE");
+    QLineEdit *address2DestEdit = new QLineEdit("Adresse 2");
+    address2DestEditLayout->addWidget(address2DestEditLabel);
+    address2DestEditLayout->addWidget(address2DestEdit);
+    gridLayout->addLayout(address2DestEditLayout, 4, 1);
 
-       addressDestEdit->setObjectName("addressDestEdit");
-       addressDestEditLabel->setObjectName("addressDestEditLabel");
+    firstNameDestEdit->setObjectName("firstNameDestEdit");
+    firstNameDestEditLabel->setObjectName("firstNameDestEditLabel");
 
-       destDateEdit->setObjectName("destDateEdit");
-       destDateEditLabel->setObjectName("destDateEditLabel");
+    addressDestEdit->setObjectName("addressDestEdit");
+    addressDestEditLabel->setObjectName("addressDestEditLabel");
 
-       postalCodeDestEdit->setObjectName("postalCodeDestEdit");
-       postalCodeDestEditLabel->setObjectName("postalCodeDestEditLabel");
+    destDateEdit->setObjectName("destDateEdit");
+    destDateEditLabel->setObjectName("destDateEditLabel");
 
-       cityDestEdit->setObjectName("cityDestEdit");
-       cityDestEditLabel->setObjectName("cityDestEditLabel");
+    postalCodeDestEdit->setObjectName("postalCodeDestEdit");
+    postalCodeDestEditLabel->setObjectName("postalCodeDestEditLabel");
 
-       lastNameDestEdit->setObjectName("lastNameDestEdit");
-       lastNameDestEditLabel->setObjectName("lastNameDestEditLabel");
+    cityDestEdit->setObjectName("cityDestEdit");
+    cityDestEditLabel->setObjectName("cityDestEditLabel");
 
-       deathCauseEdit->setObjectName("deathCauseEdit");
-       deathCauseEditLabel->setObjectName("deathCauseEditLabel");
+    lastNameDestEdit->setObjectName("lastNameDestEdit");
+    lastNameDestEditLabel->setObjectName("lastNameDestEditLabel");
 
-       phoneDestEdit->setObjectName("phoneDestEdit");
-       phoneDestEditLabel->setObjectName("phoneDestEditLabel");
+    deathCauseEdit->setObjectName("deathCauseEdit");
+    deathCauseEditLabel->setObjectName("deathCauseEditLabel");
 
-       emailDestEdit->setObjectName("emailDestEdit");
-       emailDestEditLabel->setObjectName("emailDestEditLabel");
+    phoneDestEdit->setObjectName("phoneDestEdit");
+    phoneDestEditLabel->setObjectName("phoneDestEditLabel");
 
-       destTypeBox->setObjectName("destTypeBox");
-       destBoxLabel->setObjectName("destBoxLabel");
+    emailDestEdit->setObjectName("emailDestEdit");
+    emailDestEditLabel->setObjectName("emailDestEditLabel");
 
-       address2DestEdit->setObjectName("address2DestEdit");
-       address2DestEditLabel->setObjectName("address2DestEditLabel");
+    destTypeBox->setObjectName("destTypeBox");
+    destBoxLabel->setObjectName("destBoxLabel");
 
-   }
+    address2DestEdit->setObjectName("address2DestEdit");
+    address2DestEditLabel->setObjectName("address2DestEditLabel");
+}
 
 void DestinationPage::ChangeDestType(QString type){
     for(QWidget* widget : findChildren<QWidget*>()){

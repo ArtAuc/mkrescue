@@ -340,7 +340,7 @@ void EditPage::UpdateDestinationPages(QString type){
     int currentPage = destStacked->currentIndex() + 1;
 
     if(type != ""){
-        if(currentPage >= destinationsNumber){
+        if(currentPage > destinationsNumber){
             destinationsNumber += 1;
             AddDestPage();
         }
@@ -350,10 +350,10 @@ void EditPage::UpdateDestinationPages(QString type){
         // Clear pages after current
         destinationsNumber = currentPage - 1;
 
-        for(int i = currentPage + 1; i < destStacked->count(); i++){
+        for (int i = destStacked->count() - 1; i >= currentPage; i--)
             destStacked->removeWidget(destStacked->widget(i));
-        }
     }
+
 
     // Update buttons
     QToolButton* prevButton = findChild<QToolButton*>("prevDestButton");
@@ -405,7 +405,7 @@ void EditPage::NextDestPage(){
 
 void EditPage::AddDestPage(){
     QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
-    DestinationPage* page = new DestinationPage();
+    DestinationPage* page = new DestinationPage(destinationsNumber + 1);
     destStacked->insertWidget(destinationsNumber, page);
     page->ChangeDestType("");
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
