@@ -24,6 +24,7 @@ public slots:
     void AddEntry();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
+    void ChangeDestType(QString type);
     void SaveEdit();
     void QuitEdit();
     void SetField(QString name, QString value);

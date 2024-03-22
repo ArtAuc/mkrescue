@@ -108,7 +108,7 @@ void EditPage::Edit(QString type, QStringList infos){
 
 void EditPage::ClearAllPages()
 {
-    for (auto widget : findChildren<QWidget*>()) {
+    for (QWidget* widget : findChildren<QWidget*>()) {
         if (QDateEdit *dateEdit = qobject_cast<QDateEdit *>(widget))
             dateEdit->setDate(QDate::currentDate());
         else if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(widget))
@@ -117,12 +117,34 @@ void EditPage::ClearAllPages()
             box->setCurrentText("Abandon");
     }
     ChangeEntryType("Abandon");
+    ChangeDestType("");
+}
+
+void EditPage::ChangeDestType(QString type){
+    for(QWidget* widget : findChild<QWidget*>("entryTab3")->findChildren<QWidget*>()){
+        if(widget->objectName().startsWith("firstNameDestEdit") ||
+            widget->objectName().startsWith("lastNameDestEdit") ||
+            widget->objectName().startsWith("phoneDestEdit") ||
+            widget->objectName().startsWith("emailDestEdit")||
+            widget->objectName().startsWith("addressDestEdit") ||
+            widget->objectName().startsWith("address2DestEdit") ||
+            widget->objectName().startsWith("postalCodeDestEdit") ||
+            widget->objectName().startsWith("cityDestEdit")){
+            widget->setVisible(type == "Adoption" || type == "Famille d'accueil" || type == "Propriétaire");
+        }
+
+        else if(widget->objectName().startsWith("destDateEdit"))
+            widget->setVisible(type != "");
+
+        else if(widget->objectName().startsWith("deathCauseEdit"))
+            widget->setVisible(type == "Mort");
+    }
 }
 
 void EditPage::ChangeEntryType(QString type)
 {
     QWidget* entreeTab = findChild<QWidget*>("entryTab1");
-    for (auto widget : entreeTab->findChildren<QWidget*>()) {
+    for (QWidget* widget : entreeTab->findChildren<QWidget*>()) {
         if(widget->objectName().startsWith("poundPlaceEdit")) // Pound
             widget->setVisible(type != "Abandon");
         else if(widget->objectName().startsWith("firstNameAbandonEdit") ||
@@ -173,7 +195,6 @@ void EditPage::SaveEdit()
 
 
         QString queryString;
-        qDebug() << currentId;
         if(currentId >= 0){ // Modifying
             queryString = "UPDATE ES_Registry "
                           "SET id_dog = '" + id_dog + "', "

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1251</width>
-    <height>675</height>
+    <height>739</height>
    </rect>
   </property>
   <property name="palette">
@@ -598,7 +598,7 @@ color:#212834;</string>
         </widget>
         <widget class="EditPage" name="editPage">
          <property name="styleSheet">
-          <string notr="true">QTabWidget, QStackedWidget{
+          <string notr="true">QTabWidget, QStackedWidget, QScrollArea{
 	border:none;
 	background-color:white;
 }
@@ -674,7 +674,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>2</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -717,7 +717,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="7" column="2">
+                  <item row="6" column="2">
                    <layout class="QVBoxLayout" name="lastNameAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="lastNameAbandonEditLabel">
@@ -735,7 +735,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="12" column="1" colspan="2">
+                  <item row="11" column="1" colspan="2">
                    <layout class="QVBoxLayout" name="emailAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="emailAbandonEditLabel">
@@ -753,7 +753,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="7" column="1">
+                  <item row="6" column="1">
                    <layout class="QVBoxLayout" name="firstNameAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="firstNameAbandonEditLabel">
@@ -771,7 +771,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="14" column="1">
+                  <item row="13" column="1">
                    <layout class="QVBoxLayout" name="addressAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="addressAbandonEditLabel">
@@ -814,7 +814,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="10" column="1" colspan="2">
+                  <item row="9" column="1" colspan="2">
                    <layout class="QVBoxLayout" name="phoneAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="phoneAbandonEditLabel">
@@ -832,7 +832,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="16" column="1">
+                  <item row="15" column="1">
                    <layout class="QVBoxLayout" name="postalCodeAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="postalCodeAbandonEditLabel">
@@ -850,7 +850,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="16" column="2">
+                  <item row="15" column="2">
                    <layout class="QVBoxLayout" name="cityAbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="cityAbandonEditLabel">
@@ -868,7 +868,7 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="14" column="2">
+                  <item row="13" column="2">
                    <layout class="QVBoxLayout" name="address2AbandonEditLayout">
                     <item>
                      <widget class="QLabel" name="address2AbandonEditLabel">
@@ -1017,27 +1017,266 @@ QTabBar::tab:selected {
                  <attribute name="title">
                   <string>Sortie</string>
                  </attribute>
-                 <layout class="QFormLayout" name="formLayout">
-                  <item row="0" column="1">
-                   <widget class="QPushButton" name="addDestButton">
-                    <property name="text">
-                     <string>Ajouter Sortie</string>
+                 <layout class="QVBoxLayout" name="verticalLayout_11">
+                  <item>
+                   <widget class="QScrollArea" name="scrollArea">
+                    <property name="widgetResizable">
+                     <bool>true</bool>
                     </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>919</width>
+                       <height>466</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">background-color:white;</string>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_7">
+                      <item>
+                       <widget class="QFrame" name="destTemplate">
+                        <property name="frameShape">
+                         <enum>QFrame::StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                        <layout class="QGridLayout" name="gridLayout_4">
+                         <item row="4" column="1">
+                          <layout class="QVBoxLayout" name="address2DestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="address2DestEditLabel_3">
+                             <property name="text">
+                              <string>COMPLÉMENT D'ADRESSE</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="address2DestEdit_3">
+                             <property name="styleSheet">
+                              <string notr="true"/>
+                             </property>
+                             <property name="text">
+                              <string>Adresse 2</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="5" column="1">
+                          <layout class="QVBoxLayout" name="postalCodeDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="postalCodeDestEditLabel_3">
+                             <property name="text">
+                              <string>CODE POSTAL</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="postalCodeDestEdit_3">
+                             <property name="text">
+                              <string>Code postal</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="6" column="0">
+                          <layout class="QVBoxLayout" name="deathCauseEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="deathCauseEditLabel_3">
+                             <property name="text">
+                              <string>CAUSE DE LA MORT</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="deathCauseEdit_3"/>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="3" column="0" colspan="2">
+                          <layout class="QVBoxLayout" name="emailDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="emailDestEditLabel_3">
+                             <property name="text">
+                              <string>EMAIL</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="emailDestEdit_3">
+                             <property name="text">
+                              <string>Mail</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="5" column="0">
+                          <layout class="QVBoxLayout" name="cityDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="cityDestEditLabel_3">
+                             <property name="text">
+                              <string>VILLE</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="cityDestEdit_3">
+                             <property name="text">
+                              <string>Ville</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="4" column="0">
+                          <layout class="QVBoxLayout" name="addressDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="addressDestEditLabel_3">
+                             <property name="text">
+                              <string>ADRESSE</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="addressDestEdit_3">
+                             <property name="text">
+                              <string>Adresse</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="1" column="1">
+                          <layout class="QVBoxLayout" name="lastNameDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="lastNameDestEditLabel_3">
+                             <property name="text">
+                              <string>NOM</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lastNameDestEdit_3">
+                             <property name="text">
+                              <string>Nom</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="0" column="1">
+                          <layout class="QVBoxLayout" name="destDateEditLayout">
+                           <item>
+                            <widget class="QLabel" name="destDateEditLabel">
+                             <property name="text">
+                              <string>DATE</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QDateEdit" name="destDateEdit"/>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="0" column="0">
+                          <layout class="QVBoxLayout" name="destBoxLayout_3">
+                           <item>
+                            <widget class="QLabel" name="destBoxLabel_3">
+                             <property name="text">
+                              <string>Sortie n°1</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QComboBox" name="destTypeBox">
+                             <item>
+                              <property name="text">
+                               <string/>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>Adoption</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>Propriétaire</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>Famille d'accueil</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>Entrée au refuge</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>Mort</string>
+                              </property>
+                             </item>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="2" column="0" colspan="2">
+                          <layout class="QVBoxLayout" name="phoneDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="phoneDestEditLabel_3">
+                             <property name="text">
+                              <string>TÉLÉPHONE</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="phoneDestEdit_3">
+                             <property name="text">
+                              <string>Téléphone</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="1" column="0">
+                          <layout class="QVBoxLayout" name="firstNameDestEditLayout_3">
+                           <item>
+                            <widget class="QLabel" name="firstNameDestEditLabel_3">
+                             <property name="text">
+                              <string>PRÉNOM</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="firstNameDestEdit_3">
+                             <property name="text">
+                              <string>Prénom</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
                    </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <layout class="QVBoxLayout" name="deathCauseEditLayout">
-                    <item>
-                     <widget class="QLabel" name="deathCauseEditLabel">
-                      <property name="text">
-                       <string>CAUSE DE LA MORT</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="deathCauseEdit"/>
-                    </item>
-                   </layout>
                   </item>
                  </layout>
                 </widget>
@@ -1060,22 +1299,6 @@ QTabBar::tab:selected {
                  </widget>
                 </item>
                </layout>
-              </item>
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Expanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>
@@ -1336,7 +1559,6 @@ color:#212834;</string>
   <tabstop>address2AbandonEdit</tabstop>
   <tabstop>postalCodeAbandonEdit</tabstop>
   <tabstop>cityAbandonEdit</tabstop>
-  <tabstop>addDestButton</tabstop>
   <tabstop>cancelButton</tabstop>
   <tabstop>submitButton</tabstop>
   <tabstop>exportCareButton</tabstop>

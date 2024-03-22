@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
     connect(ui->entryAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
+    connect(ui->destTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeDestType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
     connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshRegistry(QString)));
