@@ -146,7 +146,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
                                                   query.value(10).toString()))); // identification
         table->setItem(nb, 5, new QTableWidgetItem(query.value(11).toString())); // description
         table->setItem(nb, 6, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // birth
-        QStringList destinations = query.value(13).toString().split(";;;");
+        QStringList destinations = query.value(13).toString().split("_-_");
 
         QString destString = "";
         QString dateString = "";
@@ -163,7 +163,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
                     }
                 }
 
-                QStringList p = d.split(";-;");
+                QStringList p = d.split("___");
                 dateString = QDate::fromString(p[0], "yyyy-MM-dd").toString("dd/MM/yyyy");
 
                 destString = p[1] + "\n" + // dest_type
@@ -328,7 +328,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     "Dogs.name, "
                     "Dogs.description, "
                     "Dogs.birth, "
-                    "GROUP_CONCAT(Destinations.date || ';-;' || Destinations.type || ';-;' || People_dest.last_name || ';-;' || People_dest.first_name || ';-;' || People_dest.address || ';-;' || People_dest.phone || ';-;' || People_dest.email, ';;;'), "
+                    "GROUP_CONCAT(Destinations.date || '___' || Destinations.type || '___' || People_dest.last_name || '___' || People_dest.first_name || '___' || People_dest.address || '___' || People_dest.phone || '___' || People_dest.email, '_-_'), "
                     "ES_registry.death_cause "
                     "FROM ES_registry "
                     "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "

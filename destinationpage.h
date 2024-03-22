@@ -14,7 +14,7 @@ class DestinationPage : public QWidget {
     Q_OBJECT
 public:
     explicit DestinationPage(QWidget *parent = nullptr);
-    DestinationPage(int pageNumber);
+    DestinationPage(QString pageNumber);
 
 public slots:
     void ChangeDestType(QString type);

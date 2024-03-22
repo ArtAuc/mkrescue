@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QGraphicsColorizeEffect>
+#include <QSqlError>
 
 #include "destinationpage.h"
 
@@ -28,11 +29,10 @@ public slots:
     void AddEntry();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
-    void ChangeDestType(QString type);
     void SaveEdit();
     void QuitEdit();
     void SetField(QString name, QString value);
-    QString GetField(QString name);
+    QString GetField(QString name, QWidget* parent = nullptr);
     void PrevDestPage();
     void NextDestPage();
     void UpdateDestinationPages(QString type = "");

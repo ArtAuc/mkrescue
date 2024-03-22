@@ -2,7 +2,7 @@
 
 DestinationPage::DestinationPage(QWidget* parent) : QWidget(parent) {}
 
-DestinationPage::DestinationPage(int pageNumber){
+DestinationPage::DestinationPage(QString pageNumber){
     QGridLayout *gridLayout = new QGridLayout(this);
 
     QVBoxLayout *firstNameDestEditLayout = new QVBoxLayout();
@@ -69,7 +69,7 @@ DestinationPage::DestinationPage(int pageNumber){
     gridLayout->addLayout(emailDestEditLayout, 3, 0, 1, 2);
 
     QVBoxLayout *destBoxLayout = new QVBoxLayout();
-    QLabel *destBoxLabel = new QLabel("SORTIE N°" + QString::number(pageNumber));
+    QLabel *destBoxLabel = new QLabel("SORTIE N°" + pageNumber);
     QComboBox *destTypeBox = new QComboBox();
     destTypeBox->addItem("");
     destTypeBox->addItem("Adoption");
@@ -83,43 +83,54 @@ DestinationPage::DestinationPage(int pageNumber){
 
     QVBoxLayout *address2DestEditLayout = new QVBoxLayout();
     QLabel *address2DestEditLabel = new QLabel("COMPLÉMENT D'ADRESSE");
-    QLineEdit *address2DestEdit = new QLineEdit("Adresse 2");
+    QLineEdit *address2DestEdit = new QLineEdit("");
     address2DestEditLayout->addWidget(address2DestEditLabel);
     address2DestEditLayout->addWidget(address2DestEdit);
     gridLayout->addLayout(address2DestEditLayout, 4, 1);
 
-    firstNameDestEdit->setObjectName("firstNameDestEdit");
-    firstNameDestEditLabel->setObjectName("firstNameDestEditLabel");
+    firstNameDestEdit->setObjectName("firstNameDestEdit" + pageNumber);
+    firstNameDestEditLabel->setObjectName("firstNameDestEditLabel" + pageNumber);
 
-    addressDestEdit->setObjectName("addressDestEdit");
-    addressDestEditLabel->setObjectName("addressDestEditLabel");
+    addressDestEdit->setObjectName("addressDestEdit" + pageNumber);
+    addressDestEditLabel->setObjectName("addressDestEditLabel" + pageNumber);
 
-    destDateEdit->setObjectName("destDateEdit");
-    destDateEditLabel->setObjectName("destDateEditLabel");
+    destDateEdit->setObjectName("destDateEdit" + pageNumber);
+    destDateEditLabel->setObjectName("destDateEditLabel" + pageNumber);
 
-    postalCodeDestEdit->setObjectName("postalCodeDestEdit");
-    postalCodeDestEditLabel->setObjectName("postalCodeDestEditLabel");
+    postalCodeDestEdit->setObjectName("postalCodeDestEdit" + pageNumber);
+    postalCodeDestEditLabel->setObjectName("postalCodeDestEditLabel" + pageNumber);
 
-    cityDestEdit->setObjectName("cityDestEdit");
-    cityDestEditLabel->setObjectName("cityDestEditLabel");
+    cityDestEdit->setObjectName("cityDestEdit" + pageNumber);
+    cityDestEditLabel->setObjectName("cityDestEditLabel" + pageNumber);
 
-    lastNameDestEdit->setObjectName("lastNameDestEdit");
-    lastNameDestEditLabel->setObjectName("lastNameDestEditLabel");
+    lastNameDestEdit->setObjectName("lastNameDestEdit" + pageNumber);
+    lastNameDestEditLabel->setObjectName("lastNameDestEditLabel" + pageNumber);
 
-    deathCauseEdit->setObjectName("deathCauseEdit");
-    deathCauseEditLabel->setObjectName("deathCauseEditLabel");
+    deathCauseEdit->setObjectName("deathCauseEdit" + pageNumber);
+    deathCauseEditLabel->setObjectName("deathCauseEditLabel" + pageNumber);
 
-    phoneDestEdit->setObjectName("phoneDestEdit");
-    phoneDestEditLabel->setObjectName("phoneDestEditLabel");
+    phoneDestEdit->setObjectName("phoneDestEdit" + pageNumber);
+    phoneDestEditLabel->setObjectName("phoneDestEditLabel" + pageNumber);
 
-    emailDestEdit->setObjectName("emailDestEdit");
-    emailDestEditLabel->setObjectName("emailDestEditLabel");
+    emailDestEdit->setObjectName("emailDestEdit" + pageNumber);
+    emailDestEditLabel->setObjectName("emailDestEditLabel" + pageNumber);
 
-    destTypeBox->setObjectName("destTypeBox");
-    destBoxLabel->setObjectName("destBoxLabel");
+    destTypeBox->setObjectName("destTypeBox" + pageNumber);
+    destBoxLabel->setObjectName("destBoxLabel" + pageNumber);
 
-    address2DestEdit->setObjectName("address2DestEdit");
-    address2DestEditLabel->setObjectName("address2DestEditLabel");
+    address2DestEdit->setObjectName("address2DestEdit" + pageNumber);
+    address2DestEditLabel->setObjectName("address2DestEditLabel" + pageNumber);
+
+    //Set tab order
+    QWidget::setTabOrder(firstNameDestEdit, lastNameDestEdit);
+    QWidget::setTabOrder(lastNameDestEdit, phoneDestEdit);
+    QWidget::setTabOrder(phoneDestEdit, emailDestEdit);
+    QWidget::setTabOrder(emailDestEdit, destDateEdit);
+    QWidget::setTabOrder(destDateEdit, firstNameDestEdit);
+    QWidget::setTabOrder(cityDestEdit, addressDestEdit);
+    QWidget::setTabOrder(addressDestEdit, postalCodeDestEdit);
+    QWidget::setTabOrder(postalCodeDestEdit, deathCauseEdit);
+    QWidget::setTabOrder(deathCauseEdit, destTypeBox);
 }
 
 void DestinationPage::ChangeDestType(QString type){

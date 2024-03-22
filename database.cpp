@@ -161,7 +161,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "       Dogs.name, "
         "       Dogs.description, "
         "       Dogs.birth, "
-        "       GROUP_CONCAT(Destinations.date || ';-;' || Destinations.type || ';-;' || People_dest.last_name || ';-;' || People_dest.first_name || ';-;' || People_dest.address || ';-;' || People_dest.phone || ';-;' || People_dest.email, ';;;'), "
+        "       GROUP_CONCAT(Destinations.date || '___' || Destinations.type || '___' || People_dest.last_name || '___' || People_dest.first_name || '___' || People_dest.address || '___' || People_dest.phone || '___' || People_dest.email, '_-_'), "
         "       ES_registry.death_cause "
         "FROM ES_registry "
         "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
