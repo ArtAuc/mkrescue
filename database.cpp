@@ -289,8 +289,72 @@ void Database::Clean(){
 }
 
 void Database::CleanDogs(){
-    // Clean red list
+    QSqlQuery query;
 
+    query.exec("SELECT DISTINCT id_dog "
+               "FROM Dogs");
+
+    QStringList id_dogs;
+    while(query.next()){
+        id_dogs.append(query.value(0).toString());
+    }
+
+    for(QString id : id_dogs){
+        query.prepare("SELECT COUNT(*) "
+                      "FROM ES_Registry "
+                      "WHERE id_dog = :id;");
+        query.bindValue(":id", id);
+        query.exec();
+        query.next();
+
+        if(query.value(0).toInt() == 0){
+            // Delete from Dogs
+            query.prepare("DELETE FROM Dogs "
+                          "WHERE id_dog = :id;");
+            query.bindValue(":id", id);
+            query.exec();
+
+            // Delete Destinations
+            query.prepare("DELETE FROM Destinations "
+                          "WHERE id_dog = :id;");
+            query.bindValue(":id", id);
+            query.exec();
+        }
+    }
+
+    // Clean Red_list abandons
+    query.exec("SELECT reason "
+               "FROM Red_list "
+               "WHERE reason LIKE 'Abandon de % le __/__/____';");
+
+    QStringList reasons;
+
+    while(query.next())
+        reasons.append(query.value(0).toString());
+
+
+    for(QString r : reasons){
+        QString sub = r.right(r.length() - 11);
+        sub.replace(" le ", " ");
+        QString dogName = sub.split(" ")[0];
+        QString date = QDate::fromString(sub.split(" ")[1], "dd/MM/yyyy").toString("yyyy-MM-dd");
+        query.prepare("SELECT COUNT(*) "
+                   "FROM ES_Registry "
+                   "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
+                   "WHERE date_prov = :date "
+                   "AND Dogs.name = :name;");
+        query.bindValue(":date", date);
+        query.bindValue(":name", dogName);
+        query.exec();
+        qDebug() << query.executedQuery() << sub;
+        query.next();
+        if(query.value(0).toInt() == 0){
+            query.prepare("DELETE FROM Red_list "
+                       "WHERE reason = :reason");
+            query.bindValue(":reason", r);
+            query.exec();
+        }
+    }
 }
 
 void Database::CleanPeople(){
@@ -313,7 +377,7 @@ void Database::CleanPeople(){
         bool used = false;
 
         for (QString s : queryStrings){
-            query.prepare("SELECT COUNT(*) FROM " + s + " = :id");
+            query.prepare("SELECT COUNT(*) FROM " + s + " = :id;");
             query.bindValue(":id", id);
 
             query.exec();
