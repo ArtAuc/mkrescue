@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
+    ui->stackedWidget->setCurrentWidget(ui->redListPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -21,26 +21,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshRegistry(QString)));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
+    connect(ui->editPage, SIGNAL(AbandonRedList(QString, QString)), this, SLOT(AddToRedList(QString, QString)));
 
 
-    InitRegistry("Entry");
     ui->entryRegistryPage->SetType("entry");
     ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
 
-    InitRegistry("Care");
     ui->careRegistryPage->SetType("care");
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
-    LoadEntryRegistry("2024");
+    LoadRedList();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::InitRegistry(QString type)
-{
 }
 
 // Change selected page from stacked widget, based on the selected menu item
@@ -63,8 +58,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     }
     else if (txt == " Adhérents")
         stacked->setCurrentWidget(ui->membersPage);
-    else if (txt == " Liste rouge adoptants")
+    else if (txt == " Liste rouge adoptants"){
         stacked->setCurrentWidget(ui->redListPage);
+        LoadRedList();
+    }
     else if (txt == " Animaux perdus")
         stacked->setCurrentWidget(ui->lostPage);
     else if (txt == " Demandes d'adoption")
@@ -128,7 +125,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_ES
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
-        QStringList prov_type = query.value(2).toString().split(";-;");
+        QStringList prov_type = query.value(2).toString().split("___");
         if(prov_type[0] == "Fourrière"){
             table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
                                                       prov_type[1]))); //place
@@ -277,6 +274,36 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
 
 }
 
+
+void MainWindow::LoadRedList(QString search){
+    QTableWidget* table = ui->redListTable;
+    table->clearContents();
+    table->setRowCount(0);
+
+    QSqlQuery query = db.GetRedList(search);
+
+    while(query.next()){
+        int nb = table->rowCount();
+        qDebug() << table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString() + " " + query.value(1).toString())); // last_name + first_name
+        table->setItem(nb, 1, new QTableWidgetItem(query.value(2).toString())); // phone
+
+        QStringList reasons = query.value(3).toString().split("___");
+        QString reasonsString = "";
+
+        for (QString r : reasons){
+            reasonsString += r;
+            reasonsString += "\n";
+        }
+        table->setItem(nb, 2, new QTableWidgetItem(reasonsString));
+
+    }
+
+    ui->redListPage->showEvent(nullptr);
+    ui->redListPage->resizeEvent(nullptr);
+}
+
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     ui->menuTree->SetInitialWidth(width() * 0.15);
@@ -309,6 +336,9 @@ void MainWindow::Search(QString search){
 
     else if(pageName == "careRegistryPage")
         LoadCareRegistry(ui->yearBox->currentText(), search);
+
+    else if (pageName == "redListPage")
+        LoadRedList(search);
 }
 
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
@@ -361,4 +391,15 @@ QString MainWindow::ClearUselessBreaks(QString s){
         s = s.replace("\n\n", "\n");
     s = s.trimmed();
     return s;
+}
+
+
+void MainWindow::AddToRedList(QString id_people, QString reason){
+    QSqlQuery query;
+    if(id_people.toInt() >= 0){
+        query.exec("INSERT INTO Red_list (id_people, reason) "
+                   "VALUES (" +
+                   id_people + ", '" +
+                   reason + "');");
+    }
 }

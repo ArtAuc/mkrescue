@@ -18,6 +18,7 @@ public:
     void ReorderCareRegistry();
     QSqlQuery GetEntryRegistry(QString year, QString search);
     QSqlQuery GetCareRegistry(QString year, QString search);
+    QSqlQuery GetRedList(QString search);
     std::vector<QString> GetRegistryYears(QString type);
 
     void CleanDogs(); // TODO : Remove dog entries that are used by noone

@@ -193,7 +193,8 @@ void EditPage::SaveEdit()
         QString date_prov = GetField("entryDateEdit");
         QString type_prov = GetField("entryTypeBox");
         QString id_people_prov = "-1";
-        if(GetField("entryTypeBox") == "Abandon")
+        QString dogName =  GetField("dogNameEdit");
+        if(GetField("entryTypeBox") == "Abandon"){
             id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit"),
                                     GetField("firstNameAbandonEdit"),
                                     GetField("phoneAbandonEdit"),
@@ -202,6 +203,9 @@ void EditPage::SaveEdit()
                                     GetField("address2AbandonEdit") + "\n" +
                                     GetField("postalCodeAbandonEdit") + " " +
                                     GetField("cityAbandonEdit")}));
+            if(dogName != "")
+                emit AbandonRedList(id_people_prov, "Abandon de " + dogName + " le " + QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        }
 
         else{ // Fourrière
             type_prov += "___" + GetField("poundPlaceEdit");
@@ -209,7 +213,7 @@ void EditPage::SaveEdit()
 
         // Animal
         QString id_dog = CreateDogIfNeeded(QStringList({
-                                                           GetField("dogNameEdit"),
+                                                           dogName,
                                                            GetField("chipEdit"),
                                                            GetField("sexBox"),
                                                            GetField("breedEdit"),

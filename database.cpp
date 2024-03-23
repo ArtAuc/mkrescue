@@ -260,3 +260,23 @@ std::vector<QString> Database::GetRegistryYears(QString type) {
 
     return years;
 }
+
+QSqlQuery Database::GetRedList(QString search) {
+    QSqlQuery query;
+    QString queryString = "SELECT People.last_name, "
+                          "People.first_name, "
+                          "People.phone, "
+                          "Red_list.reason "
+                          "FROM People "
+                          "JOIN Red_list ON People.id_people = Red_list.id_people "
+                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search);";
+
+    query.prepare(queryString);
+    query.bindValue(":search", search + "%");
+
+    if (!query.exec()) {
+        qDebug() << "Error executing query:" << query.lastError().text();
+    }
+
+    return query;
+}

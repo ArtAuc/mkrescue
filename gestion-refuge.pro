@@ -15,7 +15,8 @@ SOURCES += \
     dogregistry.cpp \
     editpage.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    registry.cpp
 
 HEADERS += \
     database.h \
@@ -23,7 +24,8 @@ HEADERS += \
     dogregistry.h \
     editpage.h \
     mainwindow.h \
-    menutree.h
+    menutree.h \
+    registry.h
 
 FORMS += \
     mainwindow.ui

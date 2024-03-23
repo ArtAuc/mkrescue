@@ -18,17 +18,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void InitRegistry(QString type);
     void resizeEvent(QResizeEvent *event) override;
 
 public slots:
     void ChangePage(QTreeWidgetItem* item);
     void LoadEntryRegistry(QString year, QString search = "");
     void LoadCareRegistry(QString year, QString search = "");
+    void LoadRedList(QString search = "");
     void ToggleModifyButtons();
     void Search(QString search);
     void TriggerEdit(QString type, QStringList necessary);
     void RefreshRegistry(QString type);
+    void AddToRedList(QString id_people, QString reason);
 
 private:
     QString ClearUselessBreaks(QString s);

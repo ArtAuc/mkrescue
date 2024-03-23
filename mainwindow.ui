@@ -54,7 +54,17 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QTableWidget {
+	gridline-color: #dadcdf; color: #333;
+}
+
+QTableWidget::item:selected {
+	background-color: #3A4A64;
+ }
+
+QHeaderView::section {
+	background-color: #212834; color: white; font-weight: bold; 
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QFormLayout" name="formLayout_2">
@@ -389,7 +399,7 @@ QComboBox {
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>5</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
@@ -675,7 +685,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>2</number>
+                 <number>0</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -697,58 +707,19 @@ QTabBar::tab:selected {
                   <property name="verticalSpacing">
                    <number>10</number>
                   </property>
-                  <item row="0" column="1">
-                   <layout class="QVBoxLayout" name="entryDateEditLayout">
+                  <item row="15" column="2">
+                   <layout class="QVBoxLayout" name="cityAbandonEditLayout">
                     <item>
-                     <widget class="QLabel" name="entryDateEditLabel">
+                     <widget class="QLabel" name="cityAbandonEditLabel">
                       <property name="text">
-                       <string>DATE D'ENTRÉE</string>
+                       <string>VILLE</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDateEdit" name="entryDateEdit">
-                      <property name="calendarPopup">
-                       <bool>true</bool>
-                      </property>
-                      <property name="currentSectionIndex">
-                       <number>0</number>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="6" column="2">
-                   <layout class="QVBoxLayout" name="lastNameAbandonEditLayout">
-                    <item>
-                     <widget class="QLabel" name="lastNameAbandonEditLabel">
+                     <widget class="QLineEdit" name="cityAbandonEdit">
                       <property name="text">
-                       <string>NOM</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="lastNameAbandonEdit">
-                      <property name="text">
-                       <string>Nom</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="11" column="1" colspan="2">
-                   <layout class="QVBoxLayout" name="emailAbandonEditLayout">
-                    <item>
-                     <widget class="QLabel" name="emailAbandonEditLabel">
-                      <property name="text">
-                       <string>EMAIL</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="emailAbandonEdit">
-                      <property name="text">
-                       <string>Mail</string>
+                       <string>Ville</string>
                       </property>
                      </widget>
                     </item>
@@ -772,67 +743,6 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="13" column="1">
-                   <layout class="QVBoxLayout" name="addressAbandonEditLayout">
-                    <item>
-                     <widget class="QLabel" name="addressAbandonEditLabel">
-                      <property name="text">
-                       <string>ADRESSE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="addressAbandonEdit">
-                      <property name="text">
-                       <string>Adresse</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="0" column="2">
-                   <layout class="QVBoxLayout" name="entryTypeBoxLayout">
-                    <item>
-                     <widget class="QLabel" name="entryTypeBoxLabel">
-                      <property name="text">
-                       <string>TYPE D'ENTRÉE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="entryTypeBox">
-                      <item>
-                       <property name="text">
-                        <string>Abandon</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>Fourrière</string>
-                       </property>
-                      </item>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="9" column="1" colspan="2">
-                   <layout class="QVBoxLayout" name="phoneAbandonEditLayout">
-                    <item>
-                     <widget class="QLabel" name="phoneAbandonEditLabel">
-                      <property name="text">
-                       <string>TÉLÉPHONE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="phoneAbandonEdit">
-                      <property name="text">
-                       <string>Téléphone</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
                   <item row="15" column="1">
                    <layout class="QVBoxLayout" name="postalCodeAbandonEditLayout">
                     <item>
@@ -851,19 +761,19 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="15" column="2">
-                   <layout class="QVBoxLayout" name="cityAbandonEditLayout">
+                  <item row="6" column="2">
+                   <layout class="QVBoxLayout" name="lastNameAbandonEditLayout">
                     <item>
-                     <widget class="QLabel" name="cityAbandonEditLabel">
+                     <widget class="QLabel" name="lastNameAbandonEditLabel">
                       <property name="text">
-                       <string>VILLE</string>
+                       <string>NOM</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="cityAbandonEdit">
+                     <widget class="QLineEdit" name="lastNameAbandonEdit">
                       <property name="text">
-                       <string>Ville</string>
+                       <string>Nom</string>
                       </property>
                      </widget>
                     </item>
@@ -890,7 +800,107 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="3" column="2">
+                  <item row="11" column="1" colspan="2">
+                   <layout class="QVBoxLayout" name="emailAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="emailAbandonEditLabel">
+                      <property name="text">
+                       <string>EMAIL</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="emailAbandonEdit">
+                      <property name="text">
+                       <string>Mail</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="13" column="1">
+                   <layout class="QVBoxLayout" name="addressAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="addressAbandonEditLabel">
+                      <property name="text">
+                       <string>ADRESSE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="addressAbandonEdit">
+                      <property name="text">
+                       <string>Adresse</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="9" column="1" colspan="2">
+                   <layout class="QVBoxLayout" name="phoneAbandonEditLayout">
+                    <item>
+                     <widget class="QLabel" name="phoneAbandonEditLabel">
+                      <property name="text">
+                       <string>TÉLÉPHONE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="phoneAbandonEdit">
+                      <property name="text">
+                       <string>Téléphone</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="1">
+                   <layout class="QVBoxLayout" name="entryTypeBoxLayout">
+                    <item>
+                     <widget class="QLabel" name="entryTypeBoxLabel">
+                      <property name="text">
+                       <string>TYPE D'ENTRÉE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="entryTypeBox">
+                      <item>
+                       <property name="text">
+                        <string>Abandon</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Fourrière</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="2">
+                   <layout class="QVBoxLayout" name="entryDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="entryDateEditLabel">
+                      <property name="text">
+                       <string>DATE D'ENTRÉE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDateEdit" name="entryDateEdit">
+                      <property name="calendarPopup">
+                       <bool>true</bool>
+                      </property>
+                      <property name="currentSectionIndex">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="1" colspan="2">
                    <layout class="QVBoxLayout" name="poundPlaceEditLayout">
                     <item>
                      <widget class="QLabel" name="poundPlaceEditLabel">
@@ -1301,7 +1311,81 @@ color:#212834;</string>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="redListPage"/>
+        <widget class="Registry" name="redListPage">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QToolButton" name="redListAddButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="redListTable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAsNeeded</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAsNeeded</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>false</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderMinimumSectionSize">
+             <number>0</number>
+            </attribute>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>90</number>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Nom</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Numéro de téléphone</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Motif</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
         <widget class="QWidget" name="lostPage"/>
         <widget class="QWidget" name="adoptionDemandPage"/>
         <widget class="QWidget" name="membersPage"/>
@@ -1339,6 +1423,12 @@ color:#212834;</string>
    <class>EditPage</class>
    <extends>QWidget</extends>
    <header>editpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Registry</class>
+   <extends>QWidget</extends>
+   <header location="global">registry.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

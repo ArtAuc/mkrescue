@@ -1,15 +1,10 @@
 #ifndef DOGREGISTRY_H
 #define DOGREGISTRY_H
 
-#include <QWidget>
-#include <QTableWidget>
-#include <QLabel>
-#include <QHeaderView>
-#include <QScrollBar>
-#include <QToolButton>
+#include "registry.h"
 
 
-class DogRegistry : public QWidget
+class DogRegistry : public Registry
 {
     Q_OBJECT
 public:
@@ -19,12 +14,7 @@ public:
     void SetType(QString type){this->type = type;}
 
 private:
-    void ColorRow(int row, bool gray);
-
-private:
-    QTableWidget* table = nullptr;
     QLabel* label1 = nullptr, *label2 = nullptr, *label3 = nullptr;
-    QToolButton* addButton = nullptr;
     QString type;
 };
 

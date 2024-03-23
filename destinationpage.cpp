@@ -121,14 +121,14 @@ DestinationPage::DestinationPage(QString pageNumber){
     address2DestEdit->setObjectName("address2DestEdit" + pageNumber);
     address2DestEditLabel->setObjectName("address2DestEditLabel" + pageNumber);
 
-    //Set tab order
+    QWidget::setTabOrder(destDateEdit, firstNameDestEdit);
     QWidget::setTabOrder(firstNameDestEdit, lastNameDestEdit);
     QWidget::setTabOrder(lastNameDestEdit, phoneDestEdit);
     QWidget::setTabOrder(phoneDestEdit, emailDestEdit);
-    QWidget::setTabOrder(emailDestEdit, destDateEdit);
-    QWidget::setTabOrder(destDateEdit, firstNameDestEdit);
-    QWidget::setTabOrder(cityDestEdit, addressDestEdit);
-    QWidget::setTabOrder(addressDestEdit, postalCodeDestEdit);
+    QWidget::setTabOrder(emailDestEdit, addressDestEdit);
+    QWidget::setTabOrder(addressDestEdit, address2DestEdit);
+    QWidget::setTabOrder(address2DestEdit, cityDestEdit);
+    QWidget::setTabOrder(cityDestEdit, postalCodeDestEdit);
     QWidget::setTabOrder(postalCodeDestEdit, deathCauseEdit);
     QWidget::setTabOrder(deathCauseEdit, destTypeBox);
 }
