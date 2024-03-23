@@ -266,10 +266,11 @@ QSqlQuery Database::GetRedList(QString search) {
     QString queryString = "SELECT People.last_name, "
                           "People.first_name, "
                           "People.phone, "
-                          "Red_list.reason "
+                          "GROUP_CONCAT(Red_list.reason, '___') "
                           "FROM People "
                           "JOIN Red_list ON People.id_people = Red_list.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search);";
+                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search) "
+                          "GROUP BY People.id_people;";
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");

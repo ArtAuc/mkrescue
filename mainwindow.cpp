@@ -284,7 +284,6 @@ void MainWindow::LoadRedList(QString search){
 
     while(query.next()){
         int nb = table->rowCount();
-        qDebug() << table->rowCount();
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString() + " " + query.value(1).toString())); // last_name + first_name
         table->setItem(nb, 1, new QTableWidgetItem(query.value(2).toString())); // phone
@@ -296,7 +295,7 @@ void MainWindow::LoadRedList(QString search){
             reasonsString += r;
             reasonsString += "\n";
         }
-        table->setItem(nb, 2, new QTableWidgetItem(reasonsString));
+        table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(reasonsString)));
 
     }
 
