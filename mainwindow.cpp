@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
     LoadEntryRegistry("2024");
+
+    Clean();
 }
 
 MainWindow::~MainWindow()
@@ -199,7 +201,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->item(nb, 10)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 10, modifyButton);
 
-        QStringList necessary = {{query.value(0).toString(), query.value(1).toString()}};
+        QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
         connect(modifyButton, &QToolButton::clicked, this, [=](){
             TriggerEdit("entry", necessary);
@@ -274,6 +276,9 @@ void MainWindow::LoadRedList(QString search){
     table->clearContents();
     table->setRowCount(0);
 
+    modifyButtons.clear();
+    db.MakeRedList();
+
     QSqlQuery query = db.GetRedList(search);
 
     while(query.next()){
@@ -291,6 +296,23 @@ void MainWindow::LoadRedList(QString search){
         }
         table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(reasonsString)));
 
+        // Delete icon
+        table->setItem(nb, 3, new QTableWidgetItem(""));
+        QToolButton* deleteButton = new QToolButton(table);
+        deleteButton->setIcon(QIcon("media/trash.svg"));
+        deleteButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->item(nb, 3)->setBackground(QColor("#984800"));
+        table->setCellWidget(nb, 3, deleteButton);
+
+        QStringList necessary = {query.value(4).toString()};
+
+        connect(deleteButton, &QToolButton::clicked, this, [=](){
+            TriggerEdit("redList", necessary);
+        });
+
+        modifyButtons.append(deleteButton);
+
     }
 
     ui->redListPage->showEvent(nullptr);
@@ -299,6 +321,7 @@ void MainWindow::LoadRedList(QString search){
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
+    QMainWindow::resizeEvent(event);
     ui->menuTree->SetInitialWidth(width() * 0.15);
 
     QFont font = ui->titleLabel->font();
@@ -337,7 +360,7 @@ void MainWindow::Search(QString search){
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
     QSqlQuery query;
 
-    if(type == "entry")
+    if(type == "entry"){
         query.exec("SELECT ES_registry.id_ES, "
                     "ES_registry.date_prov, "
                     "ES_registry.type_prov, "
@@ -361,14 +384,30 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     "WHERE id_ES = " + necessary[0] + " AND date_prov = '" + necessary[1] + "'"
                     "GROUP BY Dogs.id_dog ");
 
-    query.next();
+        query.next();
 
-    QStringList infos;
-    for(int i = 0; i < query.record().count(); i++)
-        infos.append(query.value(i).toString());
+        QStringList infos;
+        for(int i = 0; i < query.record().count(); i++)
+            infos.append(query.value(i).toString());
 
 
-    ui->editPage->Edit(type, infos);
+        ui->editPage->Edit(type, infos);
+    }
+
+    else if (type == "redList"){
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, "Confirmation de suppression", "Voulez-vous supprimer cette personne de la liste rouge ?",
+                                                      QMessageBox::Yes | QMessageBox::No);
+
+            if(reply == QMessageBox::Yes){
+                query.prepare("DELETE FROM Red_list "
+                           "WHERE id_people = :id;");
+                query.bindValue(":id", necessary[0]);
+                query.exec();
+
+                LoadRedList();
+            }
+    }
 }
 
 void MainWindow::RefreshPage(QString type){

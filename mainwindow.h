@@ -3,6 +3,7 @@
 
 #include <QTreeWidgetItem>
 #include <QSqlRecord>
+#include <QMessageBox>
 
 #include "database.h"
 #include "menutree.h"
