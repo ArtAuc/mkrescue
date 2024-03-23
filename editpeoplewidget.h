@@ -8,6 +8,13 @@
 #include <QLineEdit>
 #include <QDateEdit>
 #include <QComboBox>
+#include <QSqlQuery>
+#include <QStringListModel>
+#include <QCompleter>
+#include <QStandardItem>
+#include <QAbstractItemView>
+#include <QMouseEvent>
+#include <QPainter>
 
 
 class EditPeopleWidget : public QWidget
@@ -16,9 +23,11 @@ class EditPeopleWidget : public QWidget
 public:
     explicit EditPeopleWidget(QWidget *parent = nullptr);
     EditPeopleWidget(QString nameEnd);
+    void showEvent(QShowEvent *event) override;
 
-signals:
-
+public slots:
+    void FillOtherFields(QModelIndex index);
+    void PreviewOtherFields(QModelIndex index = QModelIndex());
 };
 
 #endif // EDITPEOPLEWIDGET_H

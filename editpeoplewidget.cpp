@@ -8,13 +8,14 @@ EditPeopleWidget::EditPeopleWidget(QWidget *parent)
 
 EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     QGridLayout *gridLayout = new QGridLayout(this);
+    gridLayout->setContentsMargins(0, 0, 0, 0);
 
     QVBoxLayout *firstNameEditLayout = new QVBoxLayout();
     QLabel *firstNameEditLabel = new QLabel("PRÉNOM");
     QLineEdit *firstNameEdit = new QLineEdit();
     firstNameEditLayout->addWidget(firstNameEditLabel);
     firstNameEditLayout->addWidget(firstNameEdit);
-    gridLayout->addLayout(firstNameEditLayout, 0, 0);
+    gridLayout->addLayout(firstNameEditLayout, 0, 1);
 
     QVBoxLayout *addressEditLayout = new QVBoxLayout();
     QLabel *addressEditLabel = new QLabel("ADRESSE");
@@ -22,6 +23,13 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     addressEditLayout->addWidget(addressEditLabel);
     addressEditLayout->addWidget(addressEdit);
     gridLayout->addLayout(addressEditLayout, 3, 0);
+
+    QVBoxLayout *address2EditLayout = new QVBoxLayout();
+    QLabel *address2EditLabel = new QLabel("COMPLÉMENT D'ADRESSE");
+    QLineEdit *address2Edit = new QLineEdit();
+    address2EditLayout->addWidget(address2EditLabel);
+    address2EditLayout->addWidget(address2Edit);
+    gridLayout->addLayout(address2EditLayout, 3, 1);
 
     QVBoxLayout *postalCodeEditLayout = new QVBoxLayout();
     QLabel *postalCodeEditLabel = new QLabel("CODE POSTAL");
@@ -42,7 +50,7 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     QLineEdit *lastNameEdit = new QLineEdit();
     lastNameEditLayout->addWidget(lastNameEditLabel);
     lastNameEditLayout->addWidget(lastNameEdit);
-    gridLayout->addLayout(lastNameEditLayout, 0, 1);
+    gridLayout->addLayout(lastNameEditLayout, 0, 0);
 
     QVBoxLayout *phoneEditLayout = new QVBoxLayout();
     QLabel *phoneEditLabel = new QLabel("TÉLÉPHONE");
@@ -58,12 +66,6 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     emailEditLayout->addWidget(emailEdit);
     gridLayout->addLayout(emailEditLayout, 2, 0, 1, 2);
 
-    QVBoxLayout *address2EditLayout = new QVBoxLayout();
-    QLabel *address2EditLabel = new QLabel("COMPLÉMENT D'ADRESSE");
-    QLineEdit *address2Edit = new QLineEdit();
-    address2EditLayout->addWidget(address2EditLabel);
-    address2EditLayout->addWidget(address2Edit);
-    gridLayout->addLayout(address2EditLayout, 3, 1);
 
     firstNameEdit->setObjectName("firstName" + nameEnd);
     firstNameEditLabel->setObjectName("firstName" + nameEnd + "Label");
@@ -89,14 +91,146 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     address2Edit->setObjectName("address2" + nameEnd);
     address2EditLabel->setObjectName("address2" + nameEnd + "Label");
 
-    QWidget::setTabOrder(firstNameEdit, lastNameEdit);
-    QWidget::setTabOrder(lastNameEdit, phoneEdit);
+    QWidget::setTabOrder(lastNameEdit, firstNameEdit);
+    QWidget::setTabOrder(firstNameEdit, phoneEdit);
     QWidget::setTabOrder(phoneEdit, emailEdit);
     QWidget::setTabOrder(emailEdit, addressEdit);
     QWidget::setTabOrder(addressEdit, address2Edit);
-    QWidget::setTabOrder(address2Edit, cityEdit);
+    QWidget::setTabOrder(address2Edit, postalCodeEdit);
     QWidget::setTabOrder(postalCodeEdit, cityEdit);
-
-    setStyleSheet("padding:0;");
 }
 
+
+void EditPeopleWidget::showEvent(QShowEvent* event){
+    QSqlQuery query;
+
+    QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List, postalCodeList, cityList;
+
+    query.exec("SELECT id_people, last_name, first_name, phone, email, address "
+               "FROM People;");
+
+    while (query.next()) {
+        if (query.value(0).toInt() > 0) {
+            QString last_name = query.value(1).toString().isNull() ? "" : query.value(1).toString();
+            QString first_name = query.value(2).toString().isNull() ? "" : query.value(2).toString();
+            QString phone = query.value(3).toString().isNull() ? "" : query.value(3).toString();
+            QString email = query.value(4).toString().isNull() ? "" : query.value(4).toString();
+            QString address = query.value(5).toString().isNull() ? "" : query.value(5).toString();
+
+            QStringList addressComponents = address.split("\n");
+            if (addressComponents.size() == 3) {
+                addressList << addressComponents[0];
+                address2List << addressComponents[1];
+                QString postalCodeCity = addressComponents[2];
+
+                QStringList postalCodeCityComponents = postalCodeCity.split(" ");
+                if (postalCodeCityComponents.size() == 2) {
+                    postalCodeList << postalCodeCityComponents[0];
+                    cityList << postalCodeCityComponents[1];
+                }
+            }
+
+            lastNameList << last_name;
+            firstNameList << first_name;
+            phoneList << phone;
+            emailList << email;
+        }
+    }
+
+
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    foreach (QLineEdit* lineEdit, lineEdits) {
+        QString editName = lineEdit->objectName();
+        if (!editName.contains("spinbox")) {
+            QCompleter* completer = nullptr;
+            if (editName.contains("address2"))
+                completer = new QCompleter(new QStringListModel(address2List, this), lineEdit);
+            else if (editName.contains("firstName"))
+                completer = new QCompleter(new QStringListModel(firstNameList, this), lineEdit);
+            else if (editName.contains("address"))
+                completer = new QCompleter(new QStringListModel(addressList, this), lineEdit);
+            else if (editName.contains("postalCode"))
+                completer = new QCompleter(new QStringListModel(postalCodeList, this), lineEdit);
+            else if (editName.contains("city"))
+                completer = new QCompleter(new QStringListModel(cityList, this), lineEdit);
+            else if (editName.contains("lastName"))
+                completer = new QCompleter(new QStringListModel(lastNameList, this), lineEdit);
+            else if (editName.contains("phone"))
+                completer = new QCompleter(new QStringListModel(phoneList, this), lineEdit);
+            else if (editName.contains("email"))
+                completer = new QCompleter(new QStringListModel(emailList, this), lineEdit);
+
+            if (completer) {
+                lineEdit->setCompleter(completer);
+                if(editName.contains("lastName") || editName.contains("phone") || editName.contains("email")){
+                    connect(completer, SIGNAL(activated(QModelIndex)), this, SLOT(FillOtherFields(QModelIndex)));
+                    connect(completer, SIGNAL(highlighted(QModelIndex)), this, SLOT(PreviewOtherFields(QModelIndex)));
+                    connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(PreviewOtherFields()));
+                }
+            }
+        }
+    }
+}
+
+void EditPeopleWidget::FillOtherFields(QModelIndex index){
+    int row = index.row();
+
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    foreach (QLineEdit* lineEdit, lineEdits) {
+        if (!lineEdit->objectName().contains("spinbox")) {
+            QStringList list;
+            QAbstractItemModel *model = lineEdit->completer()->model();
+            if (model) {
+                int rowCount = model->rowCount();
+                for (int i = 0; i < rowCount; ++i) {
+                    QModelIndex index = model->index(i, 0);
+                    QVariant data = model->data(index, Qt::DisplayRole);
+                    if (data.isValid())
+                        list << data.toString();
+                }
+            }
+
+            if(list.isEmpty())
+                list.append("");
+
+            lineEdit->setText(list[row]);
+        }
+    }
+}
+
+
+void EditPeopleWidget::PreviewOtherFields(QModelIndex index){
+    int row = -1;
+    if(index.isValid())
+        row = index.row();
+
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    if(row >= 0){
+        foreach (QLineEdit* lineEdit, lineEdits) {
+            if (!lineEdit->objectName().contains("spinbox")) {
+                QStringList list;
+                QAbstractItemModel *model = lineEdit->completer()->model();
+                if (model) {
+                    int rowCount = model->rowCount();
+                    for (int i = 0; i < rowCount; ++i) {
+                        QModelIndex index = model->index(i, 0);
+                        QVariant data = model->data(index, Qt::DisplayRole);
+                        if (data.isValid())
+                            list << data.toString();
+                    }
+                }
+
+                if(list.isEmpty())
+                    list.append("");
+
+                lineEdit->setPlaceholderText(list[row]);
+            }
+        }
+    }
+
+    else{
+        foreach (QLineEdit* lineEdit, lineEdits) {
+            lineEdit->setPlaceholderText("");
+        }
+    }
+}

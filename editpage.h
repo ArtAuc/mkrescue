@@ -36,7 +36,6 @@ public slots:
     void PrevDestPage();
     void NextDestPage();
     void UpdateDestinationPages(QString type = "");
-    void LoadAutofill();
 
 signals:
     void RefreshMainWindow(QString type);
@@ -46,6 +45,9 @@ private:
     void ClearAllPages();
     void SwitchPage(QString pageName);
     void AddDestPage();
+    void UpdateButtons();
+
+private:
     QString lastType;
     int currentId = -1;
     int destinationsNumber = 0;

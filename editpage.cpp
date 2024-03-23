@@ -166,6 +166,8 @@ void EditPage::ClearAllPages()
             box->setCurrentIndex(0);
     }
     ChangeEntryType("Abandon");
+
+    UpdateButtons();
 }
 
 void EditPage::ChangeEntryType(QString type)
@@ -307,8 +309,6 @@ void EditPage::SaveEdit()
 
 void EditPage::QuitEdit()
 {
-    ClearAllPages();
-
     QStackedWidget* stackedWidget = qobject_cast<QStackedWidget*>(parent());
     stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
 
@@ -428,10 +428,13 @@ void EditPage::UpdateDestinationPages(QString type){
             destStacked->removeWidget(destStacked->widget(i));
     }
 
+    UpdateButtons();
+}
 
-    // Update buttons
+void EditPage::UpdateButtons(){
     QToolButton* prevButton = findChild<QToolButton*>("prevDestButton");
     QToolButton* nextButton = findChild<QToolButton*>("nextDestButton");
+    int currentPage = findChild<QStackedWidget*>("destStackedWidget")->currentIndex() + 1;
 
     if (currentPage <= 1){ // Gray prev button
         QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect(prevButton);
@@ -461,9 +464,8 @@ void EditPage::PrevDestPage(){
     if(currentPage > 1){
         currentPage -= 1;
         destStacked->setCurrentIndex(currentPage - 1);
+        UpdateButtons();
     }
-
-    UpdateDestinationPages(destStacked->widget(currentPage - 1)->findChild<QComboBox*>()->currentText());
 }
 
 void EditPage::NextDestPage(){
@@ -473,7 +475,7 @@ void EditPage::NextDestPage(){
     if(currentPage < destStacked->count()){
         currentPage += 1;
         destStacked->setCurrentIndex(currentPage - 1);
-        UpdateDestinationPages(destStacked->widget(currentPage - 1)->findChild<QComboBox*>()->currentText());
+        UpdateButtons();
     }
 }
 
@@ -484,14 +486,4 @@ void EditPage::AddDestPage(){
     page->ChangeDestType("");
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), page, SLOT(ChangeDestType(QString)));
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
-}
-
-void EditPage::LoadAutofill(){
-    QLineEdit* lineEdit = qobject_cast<QLineEdit*>(QObject::sender());
-    QSqlQuery query;
-    QString queryString;
-
-
-    query.exec(queryString);
-    autofillList.clear();
 }
