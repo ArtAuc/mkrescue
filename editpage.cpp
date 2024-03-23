@@ -127,11 +127,11 @@ void EditPage::Edit(QString type, QStringList infos){
                     SetField("lastNameDestEdit" + iString, p[2], destStacked);
                     SetField("firstNameDestEdit" + iString, p[3], destStacked);
                     QStringList splitAddress = p[4].split("\n");
-                    if(splitAddress.count() == 4){
+                    if(splitAddress.count() == 3){
                         SetField("addressDestEdit" + iString, splitAddress[0], destStacked);
                         SetField("address2DestEdit" + iString, splitAddress[1], destStacked);
-                        SetField("postalCodeDestEdit" + iString, splitAddress[2], destStacked);
-                        SetField("cityDestEdit" + iString, splitAddress[3], destStacked);
+                        SetField("postalCodeDestEdit" + iString, splitAddress[2].split(" ")[0], destStacked);
+                        SetField("cityDestEdit" + iString, splitAddress[2].split(" ")[1], destStacked);
                     }
 
                     SetField("phoneDestEdit" + iString, p[5], destStacked);
@@ -445,6 +445,7 @@ void EditPage::UpdateDestinationPages(QString type){
     else
         nextButton->setGraphicsEffect(nullptr);
 
+    resizeEvent(nullptr);
 }
 
 void EditPage::PrevDestPage(){

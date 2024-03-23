@@ -627,6 +627,7 @@ QComboBox {
 }
 
 QComboBox QAbstractItemView {
+	border:2px solid #3b4b64;
 	background-color: white;
     color: black;
 }
