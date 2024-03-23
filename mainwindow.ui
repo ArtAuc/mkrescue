@@ -685,7 +685,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -931,41 +931,59 @@ QTabBar::tab:selected {
                 </widget>
                </widget>
               </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="redListEditPage">
+             <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <layout class="QVBoxLayout" name="reasonRedListEditLayout">
                 <item>
-                 <widget class="QPushButton" name="cancelButton">
+                 <widget class="QLabel" name="reasonRedListEditLabel">
                   <property name="text">
-                   <string>Annuler</string>
+                   <string>Motif</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="submitButton">
-                  <property name="text">
-                   <string>Valider</string>
-                  </property>
-                 </widget>
+                 <widget class="QLineEdit" name="reasonRedListEdit"/>
                 </item>
                </layout>
-              </item>
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>
             <widget class="QWidget" name="careEditPage"/>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="editButtonsLayout">
+            <item>
+             <widget class="QPushButton" name="cancelButton">
+              <property name="text">
+               <string>Annuler</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="submitButton">
+              <property name="text">
+               <string>Valider</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>

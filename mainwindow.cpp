@@ -15,17 +15,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     // editPage
     connect(ui->entryAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
+    connect(ui->redListAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddRedList()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
+    connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
-    connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshRegistry(QString)));
+    connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshPage(QString)));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
-    connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
     QGridLayout *gridLayout = qobject_cast<QGridLayout*>(ui->entryTab1->layout());
     if(gridLayout){ // Insert people entry editor
         gridLayout->addWidget(new EditPeopleWidget("AbandonEdit"), gridLayout->rowCount(), 1, 1, 2);
     }
+
+    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit"));
 
 
     ui->entryRegistryPage->SetType("entry");
@@ -368,12 +371,15 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     ui->editPage->Edit(type, infos);
 }
 
-void MainWindow::RefreshRegistry(QString type){
+void MainWindow::RefreshPage(QString type){
     if(type == "entry")
         LoadEntryRegistry(ui->yearBox->currentText());
 
     else if(type == "care")
         LoadCareRegistry(ui->yearBox->currentText());
+
+    else if(type == "redList")
+        LoadRedList();
 }
 
 QString MainWindow::ClearUselessBreaks(QString s){

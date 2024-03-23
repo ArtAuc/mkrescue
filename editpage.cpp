@@ -11,6 +11,11 @@ void EditPage::AddEntry(){
     Edit("entry", {});
 }
 
+void EditPage::AddRedList(){
+    currentId = -1;
+    Edit("redList", {});
+}
+
 void EditPage::SwitchPage(QString pageName){
     resizeEvent(nullptr);
     qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);
@@ -61,8 +66,9 @@ void EditPage::Edit(QString type, QStringList infos){
     lastType = type;
     ClearAllPages();
 
+    SwitchPage(type + "EditPage");
+
     if(type == "entry"){
-        SwitchPage("entryEditPage");
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
 
 
@@ -139,6 +145,10 @@ void EditPage::Edit(QString type, QStringList infos){
                 }
             }
         }
+    }
+
+    else if (type == "RedList"){
+
     }
 }
 
@@ -256,9 +266,6 @@ void EditPage::SaveEdit()
             }
         }
 
-
-
-
         if(death_causes.isEmpty())
             death_causes.append("");
 
@@ -301,6 +308,24 @@ void EditPage::SaveEdit()
 
     }
 
+    else if(lastType == "redList"){
+        QWidget *redListEditPage = findChild<QWidget*>("redListEditPage");
+        QString id_people = CreatePersonIfNeeded(QStringList({GetField("lastNameRedListEdit", redListEditPage),
+                                GetField("firstNameRedListEdit", redListEditPage),
+                                GetField("phoneRedListEdit", redListEditPage),
+                                GetField("emailRedListEdit", redListEditPage),
+                                GetField("addressRedListEdit", redListEditPage) + "\n" +
+                                GetField("address2RedListEdit", redListEditPage) + "\n" +
+                                GetField("postalCodeRedListEdit", redListEditPage) + " " +
+                                GetField("cityRedListEdit", redListEditPage)}));
+        QString reason = GetField("reasonRedListEdit", redListEditPage);
+
+        query.prepare("INSERT INTO Red_list (id_people, reason) "
+                      "VALUES (:id, :reason);");
+        query.bindValue(":id", id_people);
+        query.bindValue(":reason", reason);
+        query.exec();
+    }
 
     QuitEdit();
 }
@@ -308,7 +333,11 @@ void EditPage::SaveEdit()
 void EditPage::QuitEdit()
 {
     QStackedWidget* stackedWidget = qobject_cast<QStackedWidget*>(parent());
-    stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
+    if(lastType == "entry" || lastType == "care")
+        stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
+
+    else
+        stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "Page"));
 
     emit RefreshMainWindow(lastType);
 }
@@ -401,10 +430,12 @@ void EditPage::resizeEvent(QResizeEvent *event){
     layout()->setContentsMargins(margins);
 
     // Tab header
-    QTabBar* bar = findChild<QWidget*>(lastType + "EditPage")->findChild<QTabBar*>();
-    QFont font = bar->font();
-    font.setPointSize(width() * 0.02);
-    bar->setFont(font);
+    if(lastType == "entry"){
+        QTabBar* bar = findChild<QWidget*>("entryEditPage")->findChild<QTabBar*>();
+        QFont font = bar->font();
+        font.setPointSize(width() * 0.02);
+        bar->setFont(font);
+    }
 }
 
 void EditPage::UpdateDestinationPages(QString type){
