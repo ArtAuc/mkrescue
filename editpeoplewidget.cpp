@@ -17,6 +17,27 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     firstNameEditLayout->addWidget(firstNameEdit);
     gridLayout->addLayout(firstNameEditLayout, 0, 1);
 
+    QVBoxLayout *lastNameEditLayout = new QVBoxLayout();
+    QLabel *lastNameEditLabel = new QLabel("NOM");
+    QLineEdit *lastNameEdit = new QLineEdit();
+    lastNameEditLayout->addWidget(lastNameEditLabel);
+    lastNameEditLayout->addWidget(lastNameEdit);
+    gridLayout->addLayout(lastNameEditLayout, 0, 0);
+
+    QVBoxLayout *phoneEditLayout = new QVBoxLayout();
+    QLabel *phoneEditLabel = new QLabel("TÉLÉPHONE");
+    QLineEdit *phoneEdit = new QLineEdit();
+    phoneEditLayout->addWidget(phoneEditLabel);
+    phoneEditLayout->addWidget(phoneEdit);
+    gridLayout->addLayout(phoneEditLayout, 1, 0, 1, 2);
+
+    QVBoxLayout *emailEditLayout = new QVBoxLayout();
+    QLabel *emailEditLabel = new QLabel("EMAIL");
+    QLineEdit *emailEdit = new QLineEdit();
+    emailEditLayout->addWidget(emailEditLabel);
+    emailEditLayout->addWidget(emailEdit);
+    gridLayout->addLayout(emailEditLayout, 2, 0, 1, 2);
+
     QVBoxLayout *addressEditLayout = new QVBoxLayout();
     QLabel *addressEditLabel = new QLabel("ADRESSE");
     QLineEdit *addressEdit = new QLineEdit();
@@ -44,27 +65,6 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     cityEditLayout->addWidget(cityEditLabel);
     cityEditLayout->addWidget(cityEdit);
     gridLayout->addLayout(cityEditLayout, 4, 1);
-
-    QVBoxLayout *lastNameEditLayout = new QVBoxLayout();
-    QLabel *lastNameEditLabel = new QLabel("NOM");
-    QLineEdit *lastNameEdit = new QLineEdit();
-    lastNameEditLayout->addWidget(lastNameEditLabel);
-    lastNameEditLayout->addWidget(lastNameEdit);
-    gridLayout->addLayout(lastNameEditLayout, 0, 0);
-
-    QVBoxLayout *phoneEditLayout = new QVBoxLayout();
-    QLabel *phoneEditLabel = new QLabel("TÉLÉPHONE");
-    QLineEdit *phoneEdit = new QLineEdit();
-    phoneEditLayout->addWidget(phoneEditLabel);
-    phoneEditLayout->addWidget(phoneEdit);
-    gridLayout->addLayout(phoneEditLayout, 1, 0, 1, 2);
-
-    QVBoxLayout *emailEditLayout = new QVBoxLayout();
-    QLabel *emailEditLabel = new QLabel("EMAIL");
-    QLineEdit *emailEdit = new QLineEdit();
-    emailEditLayout->addWidget(emailEditLabel);
-    emailEditLayout->addWidget(emailEdit);
-    gridLayout->addLayout(emailEditLayout, 2, 0, 1, 2);
 
 
     firstNameEdit->setObjectName("firstName" + nameEnd);

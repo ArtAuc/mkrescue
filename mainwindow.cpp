@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
     LoadEntryRegistry("2024");
+
+    db.Clean();
 }
 
 MainWindow::~MainWindow()

@@ -281,3 +281,55 @@ QSqlQuery Database::GetRedList(QString search) {
 
     return query;
 }
+
+void Database::Clean(){
+    // First clean dogs so that it also cleans red list
+    CleanDogs();
+    CleanPeople();
+}
+
+void Database::CleanDogs(){
+    // Clean red list
+
+}
+
+void Database::CleanPeople(){
+    QSqlQuery query;
+    query.exec("SELECT DISTINCT id_people "
+               "FROM People "
+               "WHERE id_people > 0");
+
+    QStringList id_peoples;
+    while(query.next()){
+        id_peoples.append(query.value(0).toString());
+    }
+
+    QStringList queryStrings = {"ES_Registry WHERE id_people_prov",
+                                "Destinations WHERE id_people",
+                                "Red_list WHERE id_people"
+                               };
+
+    for(QString id : id_peoples){
+        bool used = false;
+
+        for (QString s : queryStrings){
+            query.prepare("SELECT COUNT(*) FROM " + s + " = :id");
+            query.bindValue(":id", id);
+
+            query.exec();
+            query.next();
+
+            if(query.value(0).toInt() > 0){
+                used = true;
+                break;
+            }
+        }
+
+        if(!used){ // Delete from database
+            query.prepare("DELETE FROM People "
+                          "WHERE id_people = :id");
+            query.bindValue(":id", id);
+            query.exec();
+        }
+    }
+}

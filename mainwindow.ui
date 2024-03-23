@@ -685,7 +685,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1303,21 +1303,31 @@ color:#212834;</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>menuTree</tabstop>
+  <tabstop>nextDestButton</tabstop>
   <tabstop>menuButton</tabstop>
   <tabstop>yearBox</tabstop>
   <tabstop>searchLine</tabstop>
   <tabstop>entryDateEdit</tabstop>
   <tabstop>entryTypeBox</tabstop>
   <tabstop>poundPlaceEdit</tabstop>
-  <tabstop>cancelButton</tabstop>
-  <tabstop>submitButton</tabstop>
+  <tabstop>menuTree</tabstop>
+  <tabstop>redListAddButton</tabstop>
   <tabstop>exportCareButton</tabstop>
   <tabstop>careAddButton</tabstop>
   <tabstop>entryTable</tabstop>
   <tabstop>entryAddButton</tabstop>
   <tabstop>exportEntryButton</tabstop>
   <tabstop>careTable</tabstop>
+  <tabstop>entryTabWidget</tabstop>
+  <tabstop>prevDestButton</tabstop>
+  <tabstop>dogNameEdit</tabstop>
+  <tabstop>chipEdit</tabstop>
+  <tabstop>sexBox</tabstop>
+  <tabstop>birthDateEdit</tabstop>
+  <tabstop>breedEdit</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>submitButton</tabstop>
+  <tabstop>redListTable</tabstop>
  </tabstops>
  <resources/>
  <connections/>
