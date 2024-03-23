@@ -25,12 +25,12 @@ void Database::Create()
                "id_people INTEGER PRIMARY KEY,"
                "last_name VARCHAR(255),"
                "first_name VARCHAR(255),"
-               "address VARCHAR(255),"
+               "address TEXT,"
                "phone VARCHAR(20),"
                "email VARCHAR(255)"
                ");");
-    query.exec("INSERT INTO People (id_people) "
-               "VALUES (-1)"
+    query.exec("INSERT INTO People (id_people, address) "
+               "VALUES (-1, '\n\n ')"
                ";");
     query.exec("CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"
