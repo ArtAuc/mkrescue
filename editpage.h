@@ -39,7 +39,6 @@ public slots:
 
 signals:
     void RefreshMainWindow(QString type);
-    void AbandonRedList(QString id_people, QString reason);
 
 private:
     void ClearAllPages();

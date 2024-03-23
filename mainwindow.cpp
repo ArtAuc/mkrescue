@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshRegistry(QString)));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
-    connect(ui->editPage, SIGNAL(AbandonRedList(QString, QString)), this, SLOT(AddToRedList(QString, QString)));
+    connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
     QGridLayout *gridLayout = qobject_cast<QGridLayout*>(ui->entryTab1->layout());
     if(gridLayout){ // Insert people entry editor
         gridLayout->addWidget(new EditPeopleWidget("AbandonEdit"), gridLayout->rowCount(), 1, 1, 2);
@@ -35,8 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
     LoadEntryRegistry("2024");
-
-    db.Clean();
 }
 
 MainWindow::~MainWindow()
@@ -385,28 +383,8 @@ QString MainWindow::ClearUselessBreaks(QString s){
     return s;
 }
 
-
-void MainWindow::AddToRedList(QString id_people, QString reason){
-    QSqlQuery query;
-    if (id_people.toInt() > 0) {
-        //Prevent adding the same reason multiple times
-        query.prepare("SELECT COUNT(*) "
-                      "FROM Red_list "
-                      "WHERE id_people = :id "
-                      "AND reason = :reason");
-        query.bindValue(":id", id_people);
-        query.bindValue(":reason", reason);
-        query.exec();
-
-        if (query.next()) {
-            int count = query.value(0).toInt();
-            if (count == 0) {
-                query.prepare("INSERT INTO Red_list (id_people, reason) "
-                              "VALUES (:id, :reason)");
-                query.bindValue(":id", id_people);
-                query.bindValue(":reason", reason);
-                query.exec();
-            }
-        }
-    }
+void MainWindow::Clean(){
+    db.CleanDogs();
+    db.MakeRedList();
+    db.CleanPeople();
 }

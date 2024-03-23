@@ -29,7 +29,7 @@ public slots:
     void Search(QString search);
     void TriggerEdit(QString type, QStringList necessary);
     void RefreshRegistry(QString type);
-    void AddToRedList(QString id_people, QString reason);
+    void Clean();
 
 private:
     QString ClearUselessBreaks(QString s);

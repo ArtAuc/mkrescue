@@ -282,12 +282,6 @@ QSqlQuery Database::GetRedList(QString search) {
     return query;
 }
 
-void Database::Clean(){
-    // First clean dogs so that it also cleans red list
-    CleanDogs();
-    CleanPeople();
-}
-
 void Database::CleanDogs(){
     QSqlQuery query;
 
@@ -321,40 +315,30 @@ void Database::CleanDogs(){
             query.exec();
         }
     }
+}
 
-    // Clean Red_list abandons
-    query.exec("SELECT reason "
-               "FROM Red_list "
+void Database::MakeRedList(){
+    QSqlQuery query;
+
+    query.exec("DELETE FROM Red_list "
                "WHERE reason LIKE 'Abandon de % le __/__/____';");
 
-    QStringList reasons;
+    query.exec("SELECT id_people_prov, Dogs.name, date_prov "
+               "FROM ES_Registry "
+               "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
+               "WHERE type_prov = 'Abandon'");
 
-    while(query.next())
-        reasons.append(query.value(0).toString());
+    while(query.next()){
+        QString id_people = query.value(0).toString();
+        QString reason = "Abandon de " + query.value(1).toString() + " le " + QDate::fromString(query.value(2).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy");
 
-
-    for(QString r : reasons){
-        QString sub = r.right(r.length() - 11);
-        sub.replace(" le ", " ");
-        QString dogName = sub.split(" ")[0];
-        QString date = QDate::fromString(sub.split(" ")[1], "dd/MM/yyyy").toString("yyyy-MM-dd");
-        query.prepare("SELECT COUNT(*) "
-                   "FROM ES_Registry "
-                   "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
-                   "WHERE date_prov = :date "
-                   "AND Dogs.name = :name;");
-        query.bindValue(":date", date);
-        query.bindValue(":name", dogName);
+        query.prepare("INSERT INTO Red_list (id_people, reason) "
+                      "VALUES (:id, :reason)");
+        query.bindValue(":id", id_people);
+        query.bindValue(":reason", reason);
         query.exec();
-        qDebug() << query.executedQuery() << sub;
-        query.next();
-        if(query.value(0).toInt() == 0){
-            query.prepare("DELETE FROM Red_list "
-                       "WHERE reason = :reason");
-            query.bindValue(":reason", r);
-            query.exec();
-        }
     }
+
 }
 
 void Database::CleanPeople(){

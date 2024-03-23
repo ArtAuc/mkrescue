@@ -206,8 +206,6 @@ void EditPage::SaveEdit()
                                     GetField("address2AbandonEdit") + "\n" +
                                     GetField("postalCodeAbandonEdit") + " " +
                                     GetField("cityAbandonEdit")}));
-            if(dogName != "")
-                emit AbandonRedList(id_people_prov, "Abandon de " + dogName + " le " + QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy"));
         }
 
         else{ // Fourrière

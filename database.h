@@ -20,12 +20,12 @@ public:
     QSqlQuery GetCareRegistry(QString year, QString search);
     QSqlQuery GetRedList(QString search);
     std::vector<QString> GetRegistryYears(QString type);
-    void Clean();
+    void CleanDogs();
+    void CleanPeople();
+    void MakeRedList();
 
  private:
     QSqlDatabase _database;
-    void CleanDogs(); // TODO : Remove dog entries that are used by noone
-    void CleanPeople();
 
 };
 
