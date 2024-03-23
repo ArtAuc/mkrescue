@@ -329,7 +329,7 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
 
     query.clear();
 
-    query.exec("SELECT MAX(id_people) + 1 FROM People;");
+    query.exec("SELECT MAX(MAX(id_people) + 1, 1) FROM People;");
 
     query.next();
     QString newId = query.value(0).toString();

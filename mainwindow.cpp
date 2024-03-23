@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->redListPage);
+    ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careRegistryPage->SetType("care");
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
-    LoadRedList();
+    LoadEntryRegistry("2024");
 }
 
 MainWindow::~MainWindow()
@@ -46,6 +46,9 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
+
+    box->setVisible(txt == " Entrées/Sorties" || txt == " Garderie" || txt == " Adhérents" || txt == "  Registres");
+    ui->searchLine->setVisible(txt != " Accueil");
 
     if (txt == " Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
@@ -84,12 +87,11 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->titleLabel->setText(txt.trimmed());
 }
 
-void MainWindow::LoadEntryRegistry(QString year, QString search)
-{
+void MainWindow::InitDogRegistry(QString type, QString year){ // Only for care and entry
     db.ReorderEntryRegistry();
 
     // Init yearBox
-    std::vector<QString> years = db.GetRegistryYears("entry");
+    std::vector<QString> years = db.GetRegistryYears(type);
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
@@ -105,14 +107,19 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
     box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     box->adjustSize();
 
+    box->setCurrentIndex(box->findText(year));
+
+    resizeEvent(nullptr);
+}
+void MainWindow::LoadEntryRegistry(QString year, QString search)
+{
+    InitDogRegistry("entry", year);
 
     QTableWidget* table = ui->entryTable;
     table->clearContents();
     table->setRowCount(0);
 
-    ui->yearBox->setCurrentIndex(ui->yearBox->findText(year));
-
-    connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
+    connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
 
 
     QSqlQuery query = db.GetEntryRegistry(year, search);
@@ -144,7 +151,6 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->setItem(nb, 5, new QTableWidgetItem(query.value(11).toString())); // description
         table->setItem(nb, 6, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // birth
         QStringList destinations = query.value(13).toString().split("_-_");
-
         QString destString = "";
         QString dateString = "";
 
@@ -201,32 +207,13 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
 void MainWindow::LoadCareRegistry(QString year, QString search)
 {   
-    db.ReorderCareRegistry();
-
-    // Init yearBox
-    std::vector<QString> years = db.GetRegistryYears("care");
-
-    QComboBox* box = ui->yearBox;
-    QObject::disconnect(box, nullptr, this, nullptr);
-    box->clear();
-
-    for(QString y : years){
-        if(y != QString::number(QDate::currentDate().year()))
-            box->addItem(y);
-    }
-
-    box->addItem(QString::number(QDate::currentDate().year()));
-
-    box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    box->adjustSize();
-
+    InitDogRegistry("care", year);
 
     QTableWidget* table = ui->careTable;
     table->clearContents();
     table->setRowCount(0);
 
-    ui->yearBox->setCurrentIndex(ui->yearBox->findText(year));
-    connect(box, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadCareRegistry(QString)));
+    connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadCareRegistry(QString)));
 
     QSqlQuery query = db.GetCareRegistry(year, search);
 

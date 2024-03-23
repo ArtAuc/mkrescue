@@ -33,6 +33,7 @@ public slots:
 
 private:
     QString ClearUselessBreaks(QString s);
+    void InitDogRegistry(QString type, QString year);
 
 private:
     Ui::MainWindow *ui;
