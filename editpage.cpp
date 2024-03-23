@@ -144,6 +144,19 @@ void EditPage::Edit(QString type, QStringList infos){
 
 void EditPage::ClearAllPages()
 {
+    // Destinations ES
+    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+    for (int i = destStacked->count() - 1; i >= 0; --i) {
+        QWidget *widget = destStacked->widget(i);
+        destStacked->removeWidget(widget);
+        delete widget;
+    }
+
+    qDeleteAll(destStacked->findChildren<DestinationPage*>());
+
+    destinationsNumber = 0;
+    AddDestPage();
+
     for (QWidget* widget : findChildren<QWidget*>()) {
         if (QDateEdit *dateEdit = qobject_cast<QDateEdit*>(widget))
             dateEdit->setDate(QDate::currentDate());
@@ -153,18 +166,6 @@ void EditPage::ClearAllPages()
             box->setCurrentIndex(0);
     }
     ChangeEntryType("Abandon");
-
-
-    // Destinations ES
-    QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
-    while (destStacked->count() > 0) {
-        QWidget* widget = destStacked->widget(0);
-        destStacked->removeWidget(widget);
-        delete widget;
-    }
-
-    destinationsNumber = 0;
-    AddDestPage();
 }
 
 void EditPage::ChangeEntryType(QString type)
@@ -306,6 +307,8 @@ void EditPage::SaveEdit()
 
 void EditPage::QuitEdit()
 {
+    ClearAllPages();
+
     QStackedWidget* stackedWidget = qobject_cast<QStackedWidget*>(parent());
     stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
 
@@ -410,7 +413,6 @@ void EditPage::UpdateDestinationPages(QString type){
     // Update stacked widget
     QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
     int currentPage = destStacked->currentIndex() + 1;
-
     if(type != ""){
         if(currentPage > destinationsNumber){
             destinationsNumber += 1;
@@ -480,6 +482,16 @@ void EditPage::AddDestPage(){
     DestinationPage* page = new DestinationPage(QString::number(destinationsNumber + 1));
     destStacked->insertWidget(destinationsNumber, page);
     page->ChangeDestType("");
-    connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), page, SLOT(ChangeDestType(QString)));
+    connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
+}
+
+void EditPage::LoadAutofill(){
+    QLineEdit* lineEdit = qobject_cast<QLineEdit*>(QObject::sender());
+    QSqlQuery query;
+    QString queryString;
+
+
+    query.exec(queryString);
+    autofillList.clear();
 }

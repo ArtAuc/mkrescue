@@ -14,6 +14,7 @@ SOURCES += \
     destinationpage.cpp \
     dogregistry.cpp \
     editpage.cpp \
+    editpeoplewidget.cpp \
     main.cpp \
     mainwindow.cpp \
     registry.cpp
@@ -23,6 +24,7 @@ HEADERS += \
     destinationpage.h \
     dogregistry.h \
     editpage.h \
+    editpeoplewidget.h \
     mainwindow.h \
     menutree.h \
     registry.h

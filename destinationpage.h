@@ -2,13 +2,7 @@
 #define DESTINATIONPAGE_H
 
 
-#include <QWidget>
-#include <QGridLayout>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QDateEdit>
-#include <QComboBox>
+#include "editpeoplewidget.h"
 
 class DestinationPage : public QWidget {
     Q_OBJECT
