@@ -14,6 +14,7 @@
 #include <QStandardItem>
 #include <QAbstractItemView>
 #include <QRegularExpression>
+#include <QTimer>
 #include <QRegularExpressionValidator>
 
 class EditPeopleWidget : public QWidget

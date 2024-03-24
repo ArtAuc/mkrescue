@@ -73,6 +73,14 @@ EditDogWidget::EditDogWidget(QString nameEnd){
        dogNameEdit->setMaxLength(255);
        chipEdit->setMaxLength(50);
        descriptionEdit->setMaxLength(512);
+
+       QRegularExpression disallowSeparator("\\A[^|]{0,255}\\z");
+       QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowSeparator, this); // To prevent parsing problems (separators are made of |)
+
+       dogNameEdit->setValidator(validator);
+       chipEdit->setValidator(validator);
+       descriptionEdit->setValidator(validator);
+
 }
 
 void EditDogWidget::showEvent(QShowEvent* event){
@@ -91,8 +99,8 @@ void EditDogWidget::showEvent(QShowEvent* event){
         QString sex = query.value(3).toString().isNull() ? "" : query.value(3).toString();
         QString birth = query.value(4).toString().isNull() ? "" : query.value(4).toString();
 
-        dogNameList << dogName;
-        chipList << chip;
+        dogNameList << dogName + (chip.isEmpty() ? "" : "|") + chip;
+        chipList << chip + (dogName.isEmpty() ? "" : "|") + dogName;
         descriptionList << description;
         sexList << sex;
         birthList << birth;
@@ -167,10 +175,9 @@ void EditDogWidget::FillOtherFields(QString s){
                     }
                 }
 
-                if(list.isEmpty())
-                    list.append("");
-
-                lineEdit->setText(list[row]);
+                QTimer::singleShot(50, [=]() {
+                    lineEdit->setText(list[row].split("|")[0]);
+                });
             }
         }
     }
@@ -214,10 +221,9 @@ void EditDogWidget::PreviewOtherFields(QString s){
                     }
                 }
 
-                if(list.isEmpty())
-                    list.append("");
-
-                lineEdit->setPlaceholderText(list[row]);
+                QTimer::singleShot(50, [=]() {
+                    lineEdit->setPlaceholderText(list[row].split("|")[0]);
+                });
             }
         }
     }

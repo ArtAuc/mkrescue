@@ -108,15 +108,15 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     postalCodeEdit->setMaxLength(20);
     cityEdit->setMaxLength(255);
 
-    QRegularExpression disallowUnderscore("\\A[^_]{0,255}\\z");
-    QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowUnderscore, this); // To prevent parsing problems (separators are made of _)
+    QRegularExpression disallowUnderscore("\\A[^_|]{0,255}\\z");
+    QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowUnderscore, this); // To prevent parsing problems (separators are made of _, |)
     lastNameEdit->setValidator(validator);
     firstNameEdit->setValidator(validator);
     phoneEdit->setValidator(validator);
     emailEdit->setValidator(validator);
     addressEdit->setValidator(validator);
     address2Edit->setValidator(validator);
-    QRegularExpression disallowUnderscoreSpace("\\A[^_\\s]{0,255}\\z");
+    QRegularExpression disallowUnderscoreSpace("\\A[^_|\\s]{0,255}\\z");
     validator = new QRegularExpressionValidator(disallowUnderscoreSpace, this);
     postalCodeEdit->setValidator(validator);
     cityEdit->setValidator(validator);
@@ -129,7 +129,8 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
     QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List, postalCodeList, cityList;
 
     query.exec("SELECT id_people, last_name, first_name, phone, email, address "
-               "FROM People;");
+               "FROM People "
+               "ORDER BY id_people DESC;");
 
     while (query.next()) {
         if (query.value(0).toInt() > 0) {
@@ -152,10 +153,10 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
                 }
             }
 
-            lastNameList << last_name;
-            firstNameList << first_name;
-            phoneList << phone;
-            emailList << email;
+            lastNameList << last_name + (first_name.isEmpty() ? "" : "|") + first_name + (phone.isEmpty() ? "" : "|") + phone;
+            firstNameList << first_name + (last_name.isEmpty() ? "" : "|") + last_name + (phone.isEmpty() ? "" : "|") + phone;
+            phoneList << phone + (last_name.isEmpty() ? "" : "|") + last_name + (first_name.isEmpty() ? "" : "|") + first_name;
+            emailList << email + (last_name.isEmpty() ? "" : "|") + last_name + (first_name.isEmpty() ? "" : "|") + first_name;
         }
     }
 
@@ -185,7 +186,10 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
             if (completer) {
                 completer->setCaseSensitivity(Qt::CaseInsensitive);
                 lineEdit->setCompleter(completer);
-                if(editName.contains("lastName") || editName.contains("phone") || editName.contains("email")){
+                if(editName.contains("lastName") || editName.contains("firstName") || editName.contains("phone") || editName.contains("email")){
+                    QObject::disconnect(completer, SIGNAL(activated(QString)), nullptr, nullptr);
+                    QObject::disconnect(completer, SIGNAL(highlighted(QString)), nullptr, nullptr);
+                    connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));
                     connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(PreviewOtherFields()));
@@ -232,10 +236,9 @@ void EditPeopleWidget::FillOtherFields(QString s){
                     }
                 }
 
-                if(list.isEmpty())
-                    list.append("");
-
-                lineEdit->setText(list[row]);
+                QTimer::singleShot(0, [=]() {
+                    lineEdit->setText(list[row].split("|")[0]);
+                });
             }
         }
     }
@@ -279,10 +282,7 @@ void EditPeopleWidget::PreviewOtherFields(QString s){
                     }
                 }
 
-                if(list.isEmpty())
-                    list.append("");
-
-                lineEdit->setPlaceholderText(list[row]);
+                lineEdit->setPlaceholderText(list[row].split("|")[0]);
             }
         }
     }

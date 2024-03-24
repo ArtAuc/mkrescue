@@ -44,6 +44,7 @@ void Database::Create()
                "compat_cat BOOLEAN"
                ");");
     query.exec("CREATE TABLE IF NOT EXISTS Members ("
+               "id_adhesion INT,"
                "id_people INT,"
                "date DATE,"
                "amount DECIMAL(10, 2),"

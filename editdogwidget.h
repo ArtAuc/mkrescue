@@ -10,6 +10,7 @@
 #include <QSqlQuery>
 #include <QStringListModel>
 #include <QCompleter>
+#include <QTimer>
 
 class EditDogWidget : public QWidget
 {
