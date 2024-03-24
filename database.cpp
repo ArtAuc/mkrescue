@@ -271,7 +271,8 @@ QSqlQuery Database::GetRedList(QString search) {
                           "FROM People "
                           "JOIN Red_list ON People.id_people = Red_list.id_people "
                           "WHERE (People.last_name LIKE :search OR People.phone LIKE :search) "
-                          "GROUP BY People.id_people;";
+                          "GROUP BY People.id_people "
+                          "ORDER BY People.id_people DESC;";
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
