@@ -22,7 +22,7 @@ class EditPeopleWidget : public QWidget
     Q_OBJECT
 public:
     explicit EditPeopleWidget(QWidget *parent = nullptr);
-    EditPeopleWidget(QString nameEnd);
+    EditPeopleWidget(QString nameEnd, bool simplified = false);
     void showEvent(QShowEvent *event) override;
 
 public slots:

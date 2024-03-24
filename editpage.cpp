@@ -364,8 +364,6 @@ void EditPage::SaveEdit()
 
         query.exec(queryString);
 
-        qDebug() << query.executedQuery();
-
         query.exec("DELETE FROM Destinations "
                    "WHERE id_dog = " + id_dog + ";");
 

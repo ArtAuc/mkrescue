@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
         gridLayout->addWidget(new EditPeopleWidget("AbandonEdit"), gridLayout->rowCount(), 1, 1, 2);
     }
 
-    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit"));
+    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit", true));
 
     gridLayout = qobject_cast<QGridLayout*>(ui->careTab1->layout());
     if(gridLayout){

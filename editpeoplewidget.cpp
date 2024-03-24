@@ -6,7 +6,7 @@ EditPeopleWidget::EditPeopleWidget(QWidget *parent)
 
 }
 
-EditPeopleWidget::EditPeopleWidget(QString nameEnd){
+EditPeopleWidget::EditPeopleWidget(QString nameEnd, bool simplified){
     QGridLayout *gridLayout = new QGridLayout(this);
     gridLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -120,6 +120,14 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     validator = new QRegularExpressionValidator(disallowUnderscoreSpace, this);
     postalCodeEdit->setValidator(validator);
     cityEdit->setValidator(validator);
+
+    if(simplified){ // Only show first name, last name and phone
+        for(QWidget* c : findChildren<QWidget*>()){
+            QString cName = c->objectName();
+            if (!(cName.startsWith("firstName") || cName.startsWith("lastName") || cName.startsWith("phone")))
+                c->setVisible(false);
+        }
+    }
 }
 
 
