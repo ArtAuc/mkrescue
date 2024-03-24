@@ -550,7 +550,17 @@ void EditPage::resizeEvent(QResizeEvent *event){
             else if (qobject_cast<QLabel*>(c))
                 c->setFont(font);
         }
+
+        font.setPointSize(fontSize * 1.2);
+
+        for(QPushButton *b : findChildren<QPushButton*>())
+        {
+            b->setFont(font);
+            b->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+        }
     }
+
+
 
     // Margins besides the form
     QMargins margins = layout()->contentsMargins();
@@ -559,10 +569,10 @@ void EditPage::resizeEvent(QResizeEvent *event){
     layout()->setContentsMargins(margins);
 
     // Tab header
-    if(lastType == "entry"){
-        QTabBar* bar = findChild<QWidget*>("entryEditPage")->findChild<QTabBar*>();
+    if(lastType == "entry" || lastType == "care"){
+        QTabBar* bar = findChild<QWidget*>(lastType + "EditPage")->findChild<QTabBar*>();
         QFont font = bar->font();
-        font.setPointSize(width() * 0.02);
+        font.setPointSize(width() * 0.01);
         bar->setFont(font);
     }
 }
@@ -701,7 +711,7 @@ void EditPage::RemoveCurrent(){
         }
 
         query.exec();
-    }
 
-    QuitEdit();
+        QuitEdit();
+    }
 }

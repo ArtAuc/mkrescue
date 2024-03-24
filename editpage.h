@@ -14,6 +14,7 @@
 #include <QGraphicsColorizeEffect>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QPushButton>
 
 #include "destinationpage.h"
 #include "editdogwidget.h"

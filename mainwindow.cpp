@@ -348,9 +348,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     font.setPointSize(0.02 * ui->stackedWidget->width());
     ui->titleLabel->setFont(font);
 
-    QFont comboboxFont = ui->yearBox->font();
-    comboboxFont.setPointSizeF(0.015 * ui->stackedWidget->width());
-    ui->yearBox->setFont(comboboxFont);
+    QFont comboBoxFont = ui->yearBox->font();
+    comboBoxFont.setPointSizeF(0.015 * ui->stackedWidget->width());
+    ui->yearBox->setFont(comboBoxFont);
 
     QSize textSize = ui->yearBox->fontMetrics().size(Qt::TextSingleLine, ui->yearBox->currentText());
     ui->yearBox->setFixedSize(textSize + QSize(35, 35));
