@@ -195,8 +195,6 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
                 completer->setCaseSensitivity(Qt::CaseInsensitive);
                 lineEdit->setCompleter(completer);
                 if(editName.contains("lastName") || editName.contains("firstName") || editName.contains("phone") || editName.contains("email")){
-                    QObject::disconnect(completer, SIGNAL(activated(QString)), nullptr, nullptr);
-                    QObject::disconnect(completer, SIGNAL(highlighted(QString)), nullptr, nullptr);
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));

@@ -26,6 +26,7 @@ public slots:
     void LoadEntryRegistry(QString year, QString search = "");
     void LoadCareRegistry(QString year, QString search = "");
     void LoadRedList(QString search = "");
+    void LoadMembers(QString year, QString search = "");
     void ToggleModifyButtons();
     void Search(QString search);
     void TriggerEdit(QString type, QStringList necessary);
@@ -34,7 +35,7 @@ public slots:
 
 private:
     QString ClearUselessBreaks(QString s);
-    void InitDogRegistry(QString type, QString year);
+    void InitYearRegistry(QString type, QString year);
 
 private:
     Ui::MainWindow *ui;

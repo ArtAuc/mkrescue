@@ -16,8 +16,10 @@ public:
     void Create();
     void ReorderEntryRegistry();
     void ReorderCareRegistry();
+    void ReorderMembers();
     QSqlQuery GetEntryRegistry(QString year, QString search);
     QSqlQuery GetCareRegistry(QString year, QString search);
+    QSqlQuery GetMembers(QString year, QString search);
     QSqlQuery GetRedList(QString search);
     std::vector<QString> GetRegistryYears(QString type);
     void CleanDogs();

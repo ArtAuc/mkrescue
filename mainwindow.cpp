@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->careRegistryPage);
+    ui->stackedWidget->setCurrentWidget(ui->membersPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careRegistryPage->SetType("care");
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
-    LoadCareRegistry("2024");
+    LoadMembers("2024");
 
     Clean();
 }
@@ -81,8 +81,11 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         LoadCareRegistry(QString::number(QDate::currentDate().year()));
         ui->careRegistryPage->resizeEvent(nullptr);
     }
-    else if (txt == "Adhérents")
+    else if (txt == "Adhérents"){
         stacked->setCurrentWidget(ui->membersPage);
+        LoadMembers(QString::number(QDate::currentDate().year()));
+        ui->membersPage->resizeEvent(nullptr);
+    }
     else if (txt == "Liste rouge adoptants"){
         stacked->setCurrentWidget(ui->redListPage);
         LoadRedList();
@@ -112,7 +115,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     }
 }
 
-void MainWindow::InitDogRegistry(QString type, QString year){ // Only for care and entry
+void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care and entry
     db.ReorderEntryRegistry();
 
     // Init yearBox
@@ -142,7 +145,7 @@ void MainWindow::InitDogRegistry(QString type, QString year){ // Only for care a
 }
 void MainWindow::LoadEntryRegistry(QString year, QString search)
 {
-    InitDogRegistry("entry", year);
+    InitYearRegistry("entry", year);
 
     QTableWidget* table = ui->entryTable;
     table->clearContents();
@@ -236,7 +239,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
 void MainWindow::LoadCareRegistry(QString year, QString search)
 {   
-    InitDogRegistry("care", year);
+    InitYearRegistry("care", year);
     db.ReorderCareRegistry();
 
     QTableWidget* table = ui->careTable;
@@ -292,6 +295,59 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
 
     ui->careRegistryPage->showEvent(nullptr);
     ui->careRegistryPage->resizeEvent(nullptr);
+
+}
+
+void MainWindow::LoadMembers(QString year, QString search)
+{
+    InitYearRegistry("members", year);
+    db.ReorderMembers();
+
+    QTableWidget* table = ui->membersTable;
+    table->clearContents();
+    table->setRowCount(0);
+
+    connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadMembers(QString)));
+
+    QSqlQuery query = db.GetMembers(year, search);
+
+    modifyButtons.clear();
+
+    while(query.next() && query.value(0).toString() != "")
+    {
+        int nb = table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_adhesion
+        table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date
+        table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + "\n" + query.value(3).toString()))); //lastname + firstname
+        table->setItem(nb, 3, new QTableWidgetItem(ClearUselessBreaks(query.value(4).toString().replace("\\n", "\n")))); // address
+        table->setItem(nb, 4, new QTableWidgetItem(query.value(5).toString())); // phone
+        table->setItem(nb, 5, new QTableWidgetItem(query.value(6).toString())); // email
+        QDate endDate = query.value(1).toDate().addYears(1);
+        table->setItem(nb, 6, new QTableWidgetItem(endDate.toString("dd/MM/yyyy"))); // end date
+        table->setItem(nb, 7, new QTableWidgetItem(query.value(7).toString() + "\n" +  // type
+                                                   query.value(8).toString() + "€")); // amount
+
+        // Modify icon
+        QToolButton* deleteButton = new QToolButton(table);
+        deleteButton->setIcon(QIcon("media/trash.svg"));
+        deleteButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->setItem(nb, 8, new QTableWidgetItem(""));
+        table->item(nb, 8)->setBackground(QColor("#984800"));
+        table->setCellWidget(nb, 8, deleteButton);
+
+        QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
+
+        connect(deleteButton, &QToolButton::clicked, this, [=](){
+            //TriggerEdit("care", necessary);
+        });
+
+        modifyButtons.append(deleteButton);
+    }
+
+    ui->membersPage->showEvent(nullptr);
+    ui->membersPage->resizeEvent(nullptr);
 
 }
 

@@ -144,9 +144,24 @@ void Database::ReorderCareRegistry(){
 
 }
 
-QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
-    ReorderEntryRegistry();
+void Database::ReorderMembers(){
+    QSqlQuery query;
 
+    query.exec("UPDATE Members AS t1 "
+               "SET id_adhesion = ( "
+               "    SELECT COUNT(*) + 1 "
+               "    FROM Members AS t2 "
+               "    WHERE strftime('%Y', t1.date) = strftime('%Y', t2.date) "
+               "          AND (strftime('%Y-%m-%d', t1.date) > strftime('%Y-%m-%d', t2.date) "
+               "               OR (strftime('%Y-%m-%d', t1.date) = strftime('%Y-%m-%d', t2.date) "
+               "                   AND t1.ROWID > t2.ROWID)"
+               "    ) "
+               "); ");
+
+}
+
+
+QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
     QSqlQuery query;
     QString queryString =
         "SELECT ES_registry.id_ES, "
@@ -192,8 +207,6 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
 }
 
 QSqlQuery Database::GetCareRegistry(QString year, QString search) {
-    ReorderEntryRegistry();
-
     QSqlQuery query;
     QString queryString =
         "SELECT Care_registry.id_care, "
@@ -238,6 +251,39 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
     return query;
 }
 
+QSqlQuery Database::GetMembers(QString year, QString search) {
+    QSqlQuery query;
+    QString queryString =
+        "SELECT Members.id_adhesion, "
+        "       Members.date, "
+        "       People.last_name, "
+        "       People.first_name, "
+        "       People.address, "
+        "       People.phone, "
+        "       People.email, "
+        "       Members.type, "
+        "       Members.amount "
+        "FROM Members "
+        "JOIN People ON Members.id_people = People.id_people "
+        "WHERE strftime('%Y', Members.date) = :year "
+        "AND (People.last_name LIKE :search OR People.phone LIKE :search " +
+        QString((search.contains("@") ? " OR People.email LIKE :searchb" : "")) +
+        ") "
+        "ORDER BY Members.id_adhesion;";
+
+    query.prepare(queryString);
+    query.bindValue(":year", year);
+    query.bindValue(":search", search + "%");
+    query.bindValue(":searchb", "%" + search + "%");
+
+    if (!query.exec()) {
+        qDebug() << "Error executing query:" << query.lastError().text();
+    }
+
+    return query;
+}
+
+
 std::vector<QString> Database::GetRegistryYears(QString type) {
     QSqlQuery query;
     if (type == "entry"){
@@ -248,6 +294,12 @@ std::vector<QString> Database::GetRegistryYears(QString type) {
 
     else if (type == "care"){
         query.exec("SELECT DISTINCT strftime('%Y', entry_date) AS year "
+                   "FROM Care_registry "
+                   "ORDER BY year ASC;");
+    }
+
+    else if (type == "members"){
+        query.exec("SELECT DISTINCT strftime('%Y', date) AS year "
                    "FROM Care_registry "
                    "ORDER BY year ASC;");
     }
@@ -374,7 +426,7 @@ void Database::CleanPeople(){
                                 "Care_registry WHERE id_people_prov",
                                 "Care_registry WHERE id_people_dest",
                                 "Destinations WHERE id_people",
-                                "Red_list WHERE id_people"
+                                "Red_list WHERE id_people",
                                 "Members WHERE id_people"
                                };
 
