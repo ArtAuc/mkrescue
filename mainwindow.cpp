@@ -276,7 +276,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->item(nb, 9)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 9, modifyButton);
 
-        QStringList necessary = {query.value(0).toString()};
+        QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
         connect(modifyButton, &QToolButton::clicked, this, [=](){
             TriggerEdit("care", necessary);
@@ -437,7 +437,8 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                    "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
                    "JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
                    "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
-                   "WHERE id_care = " + necessary[0] + ";");
+                   "WHERE id_care = " + necessary[0] +
+                   " AND entry_date = '" + necessary[1] + "';");
 
         query.next();
 

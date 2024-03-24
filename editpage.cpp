@@ -154,7 +154,7 @@ void EditPage::Edit(QString type, QStringList infos){
 
     else if (type == "care"){
         findChild<QTabWidget*>("careTabWidget")->setCurrentIndex(0);
-        if(infos.size() > 17){
+        if(infos.size() > 17 && infos[0].toInt() > 0){
             currentId = infos[0].toInt();
 
             // Entrée
