@@ -13,9 +13,7 @@
 #include <QCompleter>
 #include <QStandardItem>
 #include <QAbstractItemView>
-#include <QMouseEvent>
-#include <QPainter>
-
+#include <QSortFilterProxyModel>
 
 class EditPeopleWidget : public QWidget
 {
@@ -26,8 +24,8 @@ public:
     void showEvent(QShowEvent *event) override;
 
 public slots:
-    void FillOtherFields(QModelIndex index);
-    void PreviewOtherFields(QModelIndex index = QModelIndex());
+    void FillOtherFields(QString s);
+    void PreviewOtherFields(QString s = "");
 };
 
 #endif // EDITPEOPLEWIDGET_H

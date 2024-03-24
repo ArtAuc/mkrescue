@@ -51,49 +51,50 @@ MainWindow::~MainWindow()
 void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
     QStackedWidget* stacked = ui->stackedWidget;
-    QString txt = item->text(0);
+    QString txt = item->text(0).trimmed();
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
 
-    box->setVisible(txt == " Entrées/Sorties" || txt == " Garderie" || txt == " Adhérents" || txt == "  Registres");
-    ui->searchLine->setVisible(txt != " Accueil");
 
-    if (txt == " Entrées/Sorties"){
+    if (txt == "Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
         LoadEntryRegistry(QString::number(QDate::currentDate().year()));
         ui->entryRegistryPage->resizeEvent(nullptr);
     }
-    else if (txt == " Garderie"){
+    else if (txt == "Garderie"){
         stacked->setCurrentWidget(ui->careRegistryPage);
         LoadCareRegistry(QString::number(QDate::currentDate().year()));
     }
-    else if (txt == " Adhérents")
+    else if (txt == "Adhérents")
         stacked->setCurrentWidget(ui->membersPage);
-    else if (txt == " Liste rouge adoptants"){
+    else if (txt == "Liste rouge adoptants"){
         stacked->setCurrentWidget(ui->redListPage);
         LoadRedList();
     }
-    else if (txt == " Animaux perdus")
+    else if (txt == "Animaux perdus")
         stacked->setCurrentWidget(ui->lostPage);
-    else if (txt == " Demandes d'adoption")
+    else if (txt == "Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
     else{
         ui->menuTree->collapseAllExcept(txt);
-        if(txt == " Accueil")
+        if(txt == "Accueil")
             stacked->setCurrentWidget(ui->homePage);
-        else if (txt == " Fiches chiens")
+        else if (txt == "Fiches chiens")
             stacked->setCurrentWidget(ui->dogSheetsPage);
-        else if (txt == " Vétérinaire")
+        else if (txt == "Vétérinaire")
             stacked->setCurrentWidget(ui->vetPage);
     }
 
-    if (txt == "  Registres"  || txt == " Autres")
+    if (txt == "Registres"  || txt == "Autres")
         item->setExpanded(!item->isExpanded());
 
-    else
-        ui->titleLabel->setText(txt.trimmed());
+    else{
+        ui->titleLabel->setText(txt);
+        box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
+        ui->searchLine->setVisible(txt != "Accueil");
+    }
 }
 
 void MainWindow::InitDogRegistry(QString type, QString year){ // Only for care and entry
@@ -277,7 +278,6 @@ void MainWindow::LoadRedList(QString search){
     table->setRowCount(0);
 
     modifyButtons.clear();
-    db.MakeRedList();
 
     QSqlQuery query = db.GetRedList(search);
 
@@ -339,8 +339,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::ToggleModifyButtons()
 {
     for(QToolButton* but : modifyButtons){
+        QIcon icon = but->icon();
         but->setIcon(QIcon());
-        QTimer::singleShot(310, [but](){but->setIcon(QIcon("media/modify.svg"));});
+        QTimer::singleShot(310, [but, icon](){but->setIcon(icon);});
     }
 
 }
@@ -405,6 +406,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                 query.bindValue(":id", necessary[0]);
                 query.exec();
 
+                db.MakeRedList();
                 LoadRedList();
             }
     }

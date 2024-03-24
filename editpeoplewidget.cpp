@@ -163,8 +163,8 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
             if (completer) {
                 lineEdit->setCompleter(completer);
                 if(editName.contains("lastName") || editName.contains("phone") || editName.contains("email")){
-                    connect(completer, SIGNAL(activated(QModelIndex)), this, SLOT(FillOtherFields(QModelIndex)));
-                    connect(completer, SIGNAL(highlighted(QModelIndex)), this, SLOT(PreviewOtherFields(QModelIndex)));
+                    connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
+                    connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));
                     connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(PreviewOtherFields()));
                 }
             }
@@ -172,37 +172,25 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
     }
 }
 
-void EditPeopleWidget::FillOtherFields(QModelIndex index){
-    int row = index.row();
+void EditPeopleWidget::FillOtherFields(QString s){
+    QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
+    QAbstractItemModel *model = nullptr;
+    if(completer)
+        model = completer->model();
 
-    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
-    foreach (QLineEdit* lineEdit, lineEdits) {
-        if (!lineEdit->objectName().contains("spinbox")) {
-            QStringList list;
-            QAbstractItemModel *model = lineEdit->completer()->model();
-            if (model) {
-                int rowCount = model->rowCount();
-                for (int i = 0; i < rowCount; ++i) {
-                    QModelIndex index = model->index(i, 0);
-                    QVariant data = model->data(index, Qt::DisplayRole);
-                    if (data.isValid())
-                        list << data.toString();
-                }
+    int row = -1;
+
+    if (model) {
+        int rowCount = model->rowCount();
+        for (int i = 0; i < rowCount; ++i) {
+            QModelIndex index = model->index(i, 0);
+            QVariant data = model->data(index, Qt::DisplayRole);
+            if (data.isValid() && data.toString() == s){
+                row = i;
+                break;
             }
-
-            if(list.isEmpty())
-                list.append("");
-
-            lineEdit->setText(list[row]);
         }
     }
-}
-
-
-void EditPeopleWidget::PreviewOtherFields(QModelIndex index){
-    int row = -1;
-    if(index.isValid())
-        row = index.row();
 
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
     if(row >= 0){
@@ -210,6 +198,54 @@ void EditPeopleWidget::PreviewOtherFields(QModelIndex index){
             if (!lineEdit->objectName().contains("spinbox")) {
                 QStringList list;
                 QAbstractItemModel *model = lineEdit->completer()->model();
+
+                if (model) {
+                    int rowCount = model->rowCount();
+                    for (int i = 0; i < rowCount; ++i) {
+                        QModelIndex index = model->index(i, 0);
+                        QVariant data = model->data(index, Qt::DisplayRole);
+                        if (data.isValid())
+                            list << data.toString();
+                    }
+                }
+
+                if(list.isEmpty())
+                    list.append("");
+
+                lineEdit->setText(list[row]);
+            }
+        }
+    }
+}
+
+
+void EditPeopleWidget::PreviewOtherFields(QString s){
+    QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
+    QAbstractItemModel *model = nullptr;
+    if(completer)
+        model = completer->model();
+
+    int row = -1;
+
+    if (model) {
+        int rowCount = model->rowCount();
+        for (int i = 0; i < rowCount; ++i) {
+            QModelIndex index = model->index(i, 0);
+            QVariant data = model->data(index, Qt::DisplayRole);
+            if (data.isValid() && data.toString() == s){
+                row = i;
+                break;
+            }
+        }
+    }
+
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    if(row >= 0){
+        foreach (QLineEdit* lineEdit, lineEdits) {
+            if (!lineEdit->objectName().contains("spinbox")) {
+                QStringList list;
+                QAbstractItemModel *model = lineEdit->completer()->model();
+
                 if (model) {
                     int rowCount = model->rowCount();
                     for (int i = 0; i < rowCount; ++i) {
