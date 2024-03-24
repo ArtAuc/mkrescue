@@ -7,17 +7,17 @@ EditPage::EditPage(QWidget *parent)
 }
 
 void EditPage::AddEntry(){
-    currentId = -1;
+    currentNecessary.clear();
     Edit("entry", {});
 }
 
 void EditPage::AddRedList(){
-    currentId = -1;
+    currentNecessary.clear();
     Edit("redList", {});
 }
 
 void EditPage::AddCare(){
-    currentId = -1;
+    currentNecessary.clear();
     Edit("care", {});
 }
 
@@ -71,14 +71,18 @@ QString EditPage::GetField(QString name, QWidget* parent){
 void EditPage::Edit(QString type, QStringList infos){
     lastType = type;
     ClearAllPages();
+    currentNecessary.clear();
 
-    SwitchPage(type + "EditPage");
+    if(type != "redList" || infos.isEmpty())
+        SwitchPage(type + "EditPage");
 
     if(type == "entry"){
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
 
         if(infos.size() > 14){
-            currentId = infos[0].toInt();
+            currentNecessary.append(infos[0]); // id_ES
+            currentNecessary.append(infos[1]); // date_prov
+
 
             // Entrée
             SetField("entryDateEdit", infos[1]);
@@ -155,7 +159,8 @@ void EditPage::Edit(QString type, QStringList infos){
     else if (type == "care"){
         findChild<QTabWidget*>("careTabWidget")->setCurrentIndex(0);
         if(infos.size() > 17 && infos[0].toInt() > 0){
-            currentId = infos[0].toInt();
+            currentNecessary.append(infos[0]); // id_care
+            currentNecessary.append(infos[1]); // entry_date
 
             // Entrée
             SetField("careEntryDateEdit", infos[1]);
@@ -208,6 +213,14 @@ void EditPage::Edit(QString type, QStringList infos){
         }
 
     }
+
+    else if (type == "redList"){
+        if(infos.size() > 0){
+            currentNecessary = {infos[0]};
+            RemoveCurrent();
+        }
+    }
+
 }
 
 void EditPage::ClearAllPages()
@@ -329,14 +342,15 @@ void EditPage::SaveEdit()
 
 
         QString queryString;
-        if(currentId >= 0){ // Modifying
+        if(!currentNecessary.isEmpty()){ // Modifying
             queryString = "UPDATE ES_Registry "
                           "SET id_dog = " + id_dog + ", "
                           "date_prov = '" + date_prov + "', "
                           "id_people_prov = " + id_people_prov + ", "
                           "type_prov = '" + type_prov + "', "
                           "death_cause = '" + death_causes[0] + "' "
-                          "WHERE id_ES = '" + QString::number(currentId) + "';";
+                          "WHERE id_ES = " + currentNecessary[0] +
+                          " AND date_prov = " + currentNecessary[1] + ";";
         }
         else{ // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
@@ -420,14 +434,15 @@ void EditPage::SaveEdit()
                                     GetField("cityCareDestEdit", careEditPage)}));
 
         QString queryString;
-        if(currentId >= 0){ // Modifying
+        if(!currentNecessary.isEmpty()){ // Modifying
             queryString = "UPDATE Care_registry "
                           "SET id_dog = " + id_dog + ", "
                           "entry_date = '" + entry_date + "', "
                           "id_people_prov = " + id_people_prov + ", "
                           "exit_date = '" + exit_date + "', "
                           "id_people_dest = " + id_people_dest + " "
-                          "WHERE id_care = " + QString::number(currentId);
+                          "WHERE id_care = " + currentNecessary[0] +
+                          " AND entry_date = " + currentNecessary[1] + ";";
         }
 
         else{ // Creating
@@ -642,4 +657,51 @@ void EditPage::SameDestCare(){
     SetField("postalCodeCareDestEdit", GetField("postalCodeCareEntryEdit", careEditPage), careEditPage);
     SetField("cityCareDestEdit", GetField("cityCareEntryEdit", careEditPage), careEditPage);
 
+}
+
+void EditPage::RemoveCurrent(){
+    QMessageBox::StandardButton reply;
+
+    QString message;
+
+    if(lastType == "entry")
+        message = "Voulez-vous supprimer cette entrée du registre E/S?";
+
+    else if (lastType == "care")
+        message = "Voulez-vous supprimer cette entrée du registre de Garderie ?";
+
+    else if (lastType == "redList")
+        message = "Voulez-vous supprimer cette personne de la liste rouge ?";
+
+    reply = QMessageBox::question(nullptr, "Confirmation de suppression", message,
+                                              QMessageBox::Yes | QMessageBox::No);
+
+    if(reply == QMessageBox::Yes){
+        QSqlQuery query;
+        if(lastType == "entry"){
+            query.prepare("DELETE FROM ES_Registry "
+                          "WHERE id_ES = :id "
+                          "AND date_prov = :date;");
+            query.bindValue(":id", currentNecessary[0]);
+            query.bindValue(":date", currentNecessary[1]);
+        }
+
+        else if(lastType == "care"){
+            query.prepare("DELETE FROM Care_registry "
+                          "WHERE id_care = :id "
+                          "AND entry_date = :date;");
+            query.bindValue(":id", currentNecessary[0]);
+            query.bindValue(":date", currentNecessary[1]);
+        }
+
+        else if(lastType == "redList"){
+            query.prepare("DELETE FROM Red_list "
+                       "WHERE id_people = :id;");
+            query.bindValue(":id", currentNecessary[0]);
+        }
+
+        query.exec();
+    }
+
+    QuitEdit();
 }

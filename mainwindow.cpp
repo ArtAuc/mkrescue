@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
+    connect(ui->removeButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(RemoveCurrent()));
     connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshPage(QString)));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
@@ -379,6 +380,7 @@ void MainWindow::Search(QString search){
 
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
     QSqlQuery query;
+    QStringList infos;
 
     if(type == "entry"){
         query.exec("SELECT ES_registry.id_ES, "
@@ -406,12 +408,8 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
         query.next();
 
-        QStringList infos;
         for(int i = 0; i < query.record().count(); i++)
             infos.append(query.value(i).toString());
-
-
-        ui->editPage->Edit(type, infos);
     }
 
     else if (type == "care"){
@@ -442,29 +440,15 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
         query.next();
 
-        QStringList infos;
         for(int i = 0; i < query.record().count(); i++)
             infos.append(query.value(i).toString());
-
-
-        ui->editPage->Edit(type, infos);
     }
 
     else if (type == "redList"){
-            QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation de suppression", "Voulez-vous supprimer cette personne de la liste rouge ?",
-                                                      QMessageBox::Yes | QMessageBox::No);
-
-            if(reply == QMessageBox::Yes){
-                query.prepare("DELETE FROM Red_list "
-                           "WHERE id_people = :id;");
-                query.bindValue(":id", necessary[0]);
-                query.exec();
-
-                db.MakeRedList();
-                LoadRedList();
-            }
+        infos = necessary;
     }
+
+    ui->editPage->Edit(type, infos);
 }
 
 void MainWindow::RefreshPage(QString type){
@@ -474,8 +458,10 @@ void MainWindow::RefreshPage(QString type){
     else if(type == "care")
         LoadCareRegistry(ui->yearBox->currentText());
 
-    else if(type == "redList")
+    else if(type == "redList"){
+        db.MakeRedList();
         LoadRedList();
+    }
 }
 
 QString MainWindow::ClearUselessBreaks(QString s){

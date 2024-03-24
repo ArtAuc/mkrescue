@@ -65,6 +65,10 @@ EditDogWidget::EditDogWidget(QString nameEnd){
        gridLayout->addLayout(birthDateEditLayout, 3, 1);
 
        setLayout(gridLayout);
+       QWidget::setTabOrder(dogNameEdit, chipEdit);
+       QWidget::setTabOrder(chipEdit, sexBox);
+       QWidget::setTabOrder(sexBox, birthDateEdit);
+       QWidget::setTabOrder(birthDateEdit, descriptionEdit);
 }
 
 void EditDogWidget::showEvent(QShowEvent* event){

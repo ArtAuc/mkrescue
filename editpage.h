@@ -13,6 +13,7 @@
 #include <QToolButton>
 #include <QGraphicsColorizeEffect>
 #include <QSqlError>
+#include <QMessageBox>
 
 #include "destinationpage.h"
 #include "editdogwidget.h"
@@ -40,6 +41,7 @@ public slots:
     void NextDestPage();
     void UpdateDestinationPages(QString type = "");
     void SameDestCare();
+    void RemoveCurrent();
 
 signals:
     void RefreshMainWindow(QString type);
@@ -52,7 +54,7 @@ private:
 
 private:
     QString lastType;
-    int currentId = -1;
+    QStringList currentNecessary = {};
     int destinationsNumber = 0;
     QStringList autofillList;
 };

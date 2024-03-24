@@ -1078,6 +1078,20 @@ QTabBar::tab:selected {
           <item>
            <layout class="QHBoxLayout" name="editButtonsLayout">
             <item>
+             <widget class="QToolButton" name="removeButton">
+              <property name="styleSheet">
+               <string notr="true">background-color:#984800;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../build-gestion-refuge-Desktop-Debug/media/trash.svg</normaloff>../build-gestion-refuge-Desktop-Debug/media/trash.svg</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="cancelButton">
               <property name="text">
                <string>Annuler</string>
