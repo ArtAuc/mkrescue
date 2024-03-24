@@ -369,6 +369,8 @@ void Database::CleanPeople(){
     }
 
     QStringList queryStrings = {"ES_Registry WHERE id_people_prov",
+                                "Care_registry WHERE id_people_prov",
+                                "Care_registry WHERE id_people_dest",
                                 "Destinations WHERE id_people",
                                 "Red_list WHERE id_people"
                                };

@@ -402,7 +402,7 @@ void EditPage::SaveEdit()
         QString id_dog = CreateDogIfNeeded(QStringList({
                                                            GetField("dogNameCareAnimalEdit", careEditPage),
                                                            GetField("chipCareAnimalEdit", careEditPage),
-                                                           GetField("sexCareAnimalBox", careEditPage),
+                                                           GetField("sexCareAnimalEdit", careEditPage),
                                                            GetField("descriptionCareAnimalEdit", careEditPage),
                                                            GetField("birthDateCareAnimalEdit", careEditPage)
                                                        }));
