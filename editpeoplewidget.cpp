@@ -98,6 +98,28 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     QWidget::setTabOrder(addressEdit, address2Edit);
     QWidget::setTabOrder(address2Edit, postalCodeEdit);
     QWidget::setTabOrder(postalCodeEdit, cityEdit);
+
+    lastNameEdit->setMaxLength(50);
+    firstNameEdit->setMaxLength(255);
+    phoneEdit->setMaxLength(20);
+    emailEdit->setMaxLength(255);
+    addressEdit->setMaxLength(255);
+    address2Edit->setMaxLength(255);
+    postalCodeEdit->setMaxLength(20);
+    cityEdit->setMaxLength(255);
+
+    QRegularExpression disallowUnderscore("\\A[^_]{0,255}\\z");
+    QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowUnderscore, this); // To prevent parsing problems (separators are made of _)
+    lastNameEdit->setValidator(validator);
+    firstNameEdit->setValidator(validator);
+    phoneEdit->setValidator(validator);
+    emailEdit->setValidator(validator);
+    addressEdit->setValidator(validator);
+    address2Edit->setValidator(validator);
+    QRegularExpression disallowUnderscoreSpace("\\A[^_\\s]{0,255}\\z");
+    validator = new QRegularExpressionValidator(disallowUnderscoreSpace, this);
+    postalCodeEdit->setValidator(validator);
+    cityEdit->setValidator(validator);
 }
 
 

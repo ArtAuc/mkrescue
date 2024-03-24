@@ -13,7 +13,8 @@
 #include <QCompleter>
 #include <QStandardItem>
 #include <QAbstractItemView>
-#include <QSortFilterProxyModel>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 
 class EditPeopleWidget : public QWidget
 {

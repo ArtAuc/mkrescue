@@ -69,6 +69,10 @@ EditDogWidget::EditDogWidget(QString nameEnd){
        QWidget::setTabOrder(chipEdit, sexBox);
        QWidget::setTabOrder(sexBox, birthDateEdit);
        QWidget::setTabOrder(birthDateEdit, descriptionEdit);
+
+       dogNameEdit->setMaxLength(255);
+       chipEdit->setMaxLength(50);
+       descriptionEdit->setMaxLength(512);
 }
 
 void EditDogWidget::showEvent(QShowEvent* event){

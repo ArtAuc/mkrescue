@@ -132,7 +132,11 @@ void MainWindow::InitDogRegistry(QString type, QString year){ // Only for care a
     box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     box->adjustSize();
 
-    box->setCurrentIndex(box->findText(year));
+    int yearIndex = box->findText(year);
+    if(yearIndex >= 0)
+        box->setCurrentIndex(yearIndex);
+    else
+        box->setCurrentIndex(box->count() - 1);
 
     resizeEvent(nullptr);
 }

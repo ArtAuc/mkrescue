@@ -418,7 +418,7 @@ QComboBox {
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
@@ -1151,13 +1151,6 @@ padding:10px;</string>
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="exportCareButton">
-            <property name="text">
-             <string>Exporter en PDF</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="careLabelLayout">
             <property name="spacing">
              <number>0</number>
@@ -1341,6 +1334,13 @@ color:#212834;</string>
             </column>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="exportCareButton">
+            <property name="text">
+             <string>Exporter en PDF</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
         <widget class="Registry" name="redListPage">
@@ -1504,7 +1504,6 @@ color:#212834;</string>
   <tabstop>entryTypeBox</tabstop>
   <tabstop>poundPlaceEdit</tabstop>
   <tabstop>menuTree</tabstop>
-  <tabstop>exportCareButton</tabstop>
   <tabstop>careAddButton</tabstop>
   <tabstop>entryTable</tabstop>
   <tabstop>entryAddButton</tabstop>
