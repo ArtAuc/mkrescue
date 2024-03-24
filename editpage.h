@@ -31,6 +31,7 @@ public:
 public slots:
     void AddEntry();
     void AddCare();
+    void AddMember();
     void AddRedList();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);

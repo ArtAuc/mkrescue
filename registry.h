@@ -17,10 +17,12 @@ public:
     void ColorRow(int row, bool gray);
     void showEvent(QShowEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void SetType(QString type){this->type = type;}
 
 protected:
     QTableWidget* table;
     QToolButton* addButton = nullptr;
+    QString type;
 };
 
 #endif // REGISTRY_H

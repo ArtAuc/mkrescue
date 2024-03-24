@@ -73,11 +73,11 @@ QPushButton{
 	font-weight:bold;
 	color:white;
 	padding:10px;
+	border-radius:5px;
 }
 
 QToolButton, QPushButton{
 	border:none;
-	border-radius:5px;
 }
 </string>
   </property>
@@ -418,7 +418,7 @@ QComboBox {
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>8</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogSheetsPage"/>
@@ -640,9 +640,10 @@ QLabel{
 	qproperty-alignment: AlignBottom
 }
 
-QLineEdit, QDateTimeEdit, QComboBox {
+QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
 	border: 2px solid #e7e9ed;
 	border-radius: 5px;
+	font-weight:normal;
 }
 
 QComboBox {
@@ -699,7 +700,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1086,6 +1087,80 @@ QTabBar::tab:selected {
                  </layout>
                 </widget>
                </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="membersEditPage">
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
+               <layout class="QVBoxLayout" name="dateMemberaEditLayout">
+                <item>
+                 <widget class="QLabel" name="dateMemberaEditLabel">
+                  <property name="text">
+                   <string>DATE D'ADHÉSION</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDateEdit" name="dateMemberaEdit"/>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="1">
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QLabel" name="typeMemberBoxLabel_2">
+                  <property name="text">
+                   <string>RÈGLEMENT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                  <item>
+                   <widget class="QComboBox" name="typeMemberBox">
+                    <item>
+                     <property name="text">
+                      <string>Espèces</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Chèque</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="amountMemberEdit">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="typeMemberBoxLabel">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">qproperty-alignment: AlignCenter
+</string>
+                    </property>
+                    <property name="text">
+                     <string>€</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
               </item>
              </layout>
             </widget>

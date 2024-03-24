@@ -7,18 +7,19 @@ EditPage::EditPage(QWidget *parent)
 }
 
 void EditPage::AddEntry(){
-    currentNecessary.clear();
     Edit("entry", {});
 }
 
 void EditPage::AddRedList(){
-    currentNecessary.clear();
     Edit("redList", {});
 }
 
 void EditPage::AddCare(){
-    currentNecessary.clear();
     Edit("care", {});
+}
+
+void EditPage::AddMember(){
+    Edit("members", {});
 }
 
 void EditPage::SwitchPage(QString pageName){
@@ -73,7 +74,7 @@ void EditPage::Edit(QString type, QStringList infos){
     ClearAllPages();
     currentNecessary.clear();
 
-    if(type != "redList" || infos.isEmpty())
+    if((type != "redList" && type != "members") || infos.isEmpty())
         SwitchPage(type + "EditPage");
 
     if(type == "entry"){
@@ -214,9 +215,9 @@ void EditPage::Edit(QString type, QStringList infos){
 
     }
 
-    else if (type == "redList"){
+    else if (type == "redList" || type == "members"){
         if(infos.size() > 0){
-            currentNecessary = {infos[0]};
+            currentNecessary = infos;
             RemoveCurrent();
         }
     }
@@ -675,12 +676,12 @@ void EditPage::RemoveCurrent(){
 
     if(lastType == "entry")
         message = "Voulez-vous supprimer cette entrée du registre E/S?";
-
     else if (lastType == "care")
         message = "Voulez-vous supprimer cette entrée du registre de Garderie ?";
-
     else if (lastType == "redList")
         message = "Voulez-vous supprimer cette personne de la liste rouge ?";
+    else if (lastType == "members")
+        message = "Voulez-vous supprimer cette personne du registre des adhérents ?";
 
     reply = QMessageBox::question(nullptr, "Confirmation de suppression", message,
                                               QMessageBox::Yes | QMessageBox::No);
@@ -707,6 +708,14 @@ void EditPage::RemoveCurrent(){
             query.prepare("DELETE FROM Red_list "
                        "WHERE id_people = :id;");
             query.bindValue(":id", currentNecessary[0]);
+        }
+
+        else if(lastType == "members"){
+            query.prepare("DELETE FROM Members "
+                          "WHERE id_adhesion = :id "
+                          "AND date = :date;");
+            query.bindValue(":id", currentNecessary[0]);
+            query.bindValue(":date", currentNecessary[1]);
         }
 
         query.exec();

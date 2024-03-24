@@ -10,8 +10,8 @@ Registry::Registry(QWidget *parent)
 void Registry::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
 
-    table = findChild<QTableWidget*>();
-    addButton = findChildren<QToolButton*>(QRegularExpression(".*AddButton$"))[0];
+    table = findChild<QTableWidget*>(type + "Table");
+    addButton = findChild<QToolButton*>(type + "AddButton");
 
     if(table != nullptr && addButton != nullptr){
         // Center-align text for columns
@@ -39,6 +39,12 @@ void Registry::showEvent(QShowEvent* event) {
         addButton->setIcon(QIcon("media/add.svg"));
         addButton->setStyleSheet("background-color:#5596ae;"
                                  "border:none;");
+
+        if(type == "members"){
+            table->horizontalHeaderItem(1)->setText("Date\nd'adhésion");
+            table->horizontalHeaderItem(2)->setText("Nom\nPrénom");
+            table->horizontalHeaderItem(7)->setText("Nature\nMontant");
+        }
     }
 
 }
@@ -48,7 +54,7 @@ void Registry::resizeEvent(QResizeEvent *event){
 
     if(table != nullptr && addButton != nullptr){
         // Resize modify buttons
-        float iconSize = width() * 0.03;
+        float iconSize = width() * 0.02;
         for (QToolButton* but : table->findChildren<QToolButton*>()){
             but->setIconSize(QSize(iconSize, iconSize));
         }

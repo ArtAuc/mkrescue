@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->entryAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
     connect(ui->redListAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddRedList()));
     connect(ui->careAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddCare()));
+    connect(ui->membersAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddMember()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
@@ -44,12 +45,22 @@ MainWindow::MainWindow(QWidget *parent)
         gridLayout->addWidget(new EditPeopleWidget("CareDestEdit"), gridLayout->rowCount(), 0, 1, 2);
     }
 
+    gridLayout = qobject_cast<QGridLayout*>(ui->membersEditPage->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditPeopleWidget("MembersEdit"), gridLayout->rowCount(), 0, 1, 2);
+    }
+
+
 
     ui->entryRegistryPage->SetType("entry");
     ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
 
     ui->careRegistryPage->SetType("care");
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
+
+    ui->membersPage->SetType("members");
+
+    ui->redListPage->SetType("redList");
 
     LoadMembers("2024");
 
@@ -340,7 +351,7 @@ void MainWindow::LoadMembers(QString year, QString search)
         QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
         connect(deleteButton, &QToolButton::clicked, this, [=](){
-            //TriggerEdit("care", necessary);
+            TriggerEdit("members", necessary);
         });
 
         modifyButtons.append(deleteButton);
@@ -430,12 +441,12 @@ void MainWindow::Search(QString search){
     QString pageName = ui->stackedWidget->currentWidget()->objectName();
     if(pageName == "entryRegistryPage")
         LoadEntryRegistry(ui->yearBox->currentText(), search);
-
     else if(pageName == "careRegistryPage")
         LoadCareRegistry(ui->yearBox->currentText(), search);
-
     else if (pageName == "redListPage")
         LoadRedList(search);
+    else if (pageName == "membersPage")
+        LoadMembers(ui->yearBox->currentText(), search);
 }
 
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
@@ -504,7 +515,8 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
             infos.append(query.value(i).toString());
     }
 
-    else if (type == "redList"){
+    // Delete
+    else if (type == "redList" || type == "members"){
         infos = necessary;
     }
 
@@ -517,6 +529,8 @@ void MainWindow::RefreshPage(QString type){
 
     else if(type == "care")
         LoadCareRegistry(ui->yearBox->currentText());
+    else if(type == "members")
+        LoadMembers(ui->yearBox->currentText());
 
     else if(type == "redList"){
         db.MakeRedList();
