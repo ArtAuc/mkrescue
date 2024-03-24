@@ -15,6 +15,7 @@
 #include <QSqlError>
 
 #include "destinationpage.h"
+#include "editdogwidget.h"
 
 class EditPage : public QWidget
 {
@@ -27,6 +28,7 @@ public:
 
 public slots:
     void AddEntry();
+    void AddCare();
     void AddRedList();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);

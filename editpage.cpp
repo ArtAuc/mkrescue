@@ -16,6 +16,11 @@ void EditPage::AddRedList(){
     Edit("redList", {});
 }
 
+void EditPage::AddCare(){
+    currentId = -1;
+    Edit("care", {});
+}
+
 void EditPage::SwitchPage(QString pageName){
     resizeEvent(nullptr);
     qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);

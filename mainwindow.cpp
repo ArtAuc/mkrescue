@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->entryRegistryPage);
+    ui->stackedWidget->setCurrentWidget(ui->careRegistryPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     // editPage
     connect(ui->entryAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
     connect(ui->redListAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddRedList()));
+    connect(ui->careAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddCare()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
@@ -30,6 +31,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit"));
 
+    gridLayout = qobject_cast<QGridLayout*>(ui->careTab1->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditPeopleWidget("CareEntryEdit"), gridLayout->rowCount(), 1, 1, 2);
+    }
+
+    ui->careTab2->layout()->addWidget(new EditDogWidget("CareAnimalEdit"));
+    gridLayout = qobject_cast<QGridLayout*>(ui->careTab3->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditPeopleWidget("CareDestEdit"), gridLayout->rowCount(), 0, 1, 2);
+    }
+
 
     ui->entryRegistryPage->SetType("entry");
     ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
@@ -37,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careRegistryPage->SetType("care");
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
-    LoadEntryRegistry("2024");
+    LoadCareRegistry("2024");
 
     Clean();
 }
@@ -261,7 +273,11 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->item(nb, 9)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 9, modifyButton);
 
-        //connect(modifyButton, SIGNAL(clicked(bool)), this, [=](){TriggerEdit("care", QList())});
+        QStringList necessary = {query.value(0).toString()};
+
+        connect(modifyButton, &QToolButton::clicked, this, [=](){
+            TriggerEdit("care", necessary);
+        });
 
         modifyButtons.append(modifyButton);
     }
@@ -393,6 +409,10 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
 
         ui->editPage->Edit(type, infos);
+    }
+
+    else if (type == "care"){
+
     }
 
     else if (type == "redList"){

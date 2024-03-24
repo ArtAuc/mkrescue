@@ -13,6 +13,7 @@ SOURCES += \
     database.cpp \
     destinationpage.cpp \
     dogregistry.cpp \
+    editdogwidget.cpp \
     editpage.cpp \
     editpeoplewidget.cpp \
     main.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     database.h \
     destinationpage.h \
     dogregistry.h \
+    editdogwidget.h \
     editpage.h \
     editpeoplewidget.h \
     mainwindow.h \

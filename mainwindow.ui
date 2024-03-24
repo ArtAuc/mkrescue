@@ -956,7 +956,119 @@ QTabBar::tab:selected {
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="careEditPage"/>
+            <widget class="QWidget" name="careEditPage">
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <widget class="QTabWidget" name="careTabWidget">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="tabPosition">
+                 <enum>QTabWidget::North</enum>
+                </property>
+                <property name="tabShape">
+                 <enum>QTabWidget::Rounded</enum>
+                </property>
+                <property name="currentIndex">
+                 <number>2</number>
+                </property>
+                <property name="tabBarAutoHide">
+                 <bool>false</bool>
+                </property>
+                <widget class="QWidget" name="careTab1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <attribute name="title">
+                  <string>Entrée</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_3">
+                  <property name="horizontalSpacing">
+                   <number>30</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>10</number>
+                  </property>
+                  <item row="0" column="1">
+                   <layout class="QVBoxLayout" name="careDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="careDateEditLabel">
+                      <property name="text">
+                       <string>DATE D'ENTRÉE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDateEdit" name="careDateEdit">
+                      <property name="calendarPopup">
+                       <bool>true</bool>
+                      </property>
+                      <property name="currentSectionIndex">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="careTab2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <attribute name="title">
+                  <string>Animal</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_4"/>
+                </widget>
+                <widget class="QWidget" name="careTab3">
+                 <attribute name="title">
+                  <string>Sortie</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_6">
+                  <item row="0" column="0">
+                   <layout class="QVBoxLayout" name="careDestDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="careDestDateEditLabel">
+                      <property name="text">
+                       <string>DATE DE SORTIE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDateEdit" name="careDestDateEdit">
+                      <property name="calendarPopup">
+                       <bool>true</bool>
+                      </property>
+                      <property name="currentSectionIndex">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QPushButton" name="sameCareButton">
+                    <property name="text">
+                     <string>Idem</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
           <item>
@@ -1289,7 +1401,7 @@ color:#212834;</string>
             </column>
             <column>
              <property name="text">
-              <string> </string>
+              <string/>
              </property>
             </column>
            </widget>
