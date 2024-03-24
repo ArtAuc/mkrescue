@@ -39,6 +39,7 @@ public slots:
     void PrevDestPage();
     void NextDestPage();
     void UpdateDestinationPages(QString type = "");
+    void SameDestCare();
 
 signals:
     void RefreshMainWindow(QString type);

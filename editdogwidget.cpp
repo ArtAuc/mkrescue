@@ -129,6 +129,7 @@ void EditDogWidget::showEvent(QShowEvent* event){
 
             if (completer) {
                 lineEdit->setCompleter(completer);
+                completer->setCaseSensitivity(Qt::CaseInsensitive);
                 if(editName.contains("lastName") || editName.contains("phone") || editName.contains("email")){
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));

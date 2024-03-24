@@ -294,15 +294,26 @@ void Database::CleanDogs(){
         id_dogs.append(query.value(0).toString());
     }
 
-    for(QString id : id_dogs){
-        query.prepare("SELECT COUNT(*) "
-                      "FROM ES_Registry "
-                      "WHERE id_dog = :id;");
-        query.bindValue(":id", id);
-        query.exec();
-        query.next();
+    QStringList queryStrings = {"ES_Registry WHERE id_dog",
+                                "Care_Registry WHERE id_dog"
+                               };
 
-        if(query.value(0).toInt() == 0){
+    for(QString id : id_dogs){
+        bool used = false;
+        for(QString s : queryStrings){
+            query.prepare("SELECT COUNT(*) "
+                          "FROM " + s + " = :id;");
+            query.bindValue(":id", id);
+            query.exec();
+            query.next();
+
+            if(query.value(0).toInt() > 0){
+                used = true;
+                break;
+            }
+        }
+
+        if(!used){
             // Delete from Dogs
             query.prepare("DELETE FROM Dogs "
                           "WHERE id_dog = :id;");

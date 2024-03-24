@@ -64,6 +64,7 @@ QString EditPage::GetField(QString name, QWidget* parent){
     else if (box)
         return box->currentText();
 
+    return "";
 }
 
 
@@ -75,7 +76,6 @@ void EditPage::Edit(QString type, QStringList infos){
 
     if(type == "entry"){
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
-
 
         if(infos.size() > 14){
             currentId = infos[0].toInt();
@@ -152,7 +152,7 @@ void EditPage::Edit(QString type, QStringList infos){
         }
     }
 
-    else if (type == "RedList"){
+    else if (type == "care"){
 
     }
 }
@@ -331,6 +331,60 @@ void EditPage::SaveEdit()
         query.bindValue(":reason", reason);
         query.exec();
     }
+
+    if(lastType == "care"){
+        QWidget *careEditPage = findChild<QWidget*>("careEditPage");
+        // Entrée
+        QString entry_date = GetField("careEntryDateEdit", careEditPage);
+        QString id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameCareEntryEdit", careEditPage),
+                                GetField("firstNameCareEntryEdit", careEditPage),
+                                GetField("phoneCareEntryEdit", careEditPage),
+                                GetField("emailCareEntryEdit", careEditPage),
+                                GetField("addressCareEntryEdit", careEditPage) + "\n" +
+                                GetField("address2CareEntryEdit", careEditPage) + "\n" +
+                                GetField("postalCodeCareEntryEdit", careEditPage) + " " +
+                                GetField("cityCareEntryEdit", careEditPage)}));
+
+        // Animal
+        QString id_dog = CreateDogIfNeeded(QStringList({
+                                                           GetField("dogNameCareAnimalEdit", careEditPage),
+                                                           GetField("chipCareAnimalEdit", careEditPage),
+                                                           GetField("sexCareAnimalBox", careEditPage),
+                                                           GetField("descriptionCareAnimalEdit", careEditPage),
+                                                           GetField("birthDateCareAnimalEdit", careEditPage)
+                                                       }));
+
+        // Sortie
+        QString exit_date = GetField("careDestDateEdit", careEditPage);
+
+        QString id_people_dest = CreatePersonIfNeeded(QStringList({GetField("lastNameCareDestEdit", careEditPage),
+                                    GetField("firstNameCareDestEdit", careEditPage),
+                                    GetField("phoneCareDestEdit", careEditPage),
+                                    GetField("emailCareDestEdit", careEditPage),
+                                    GetField("addressCareDestEdit", careEditPage) + "\n" +
+                                    GetField("address2CareDestEdit", careEditPage) + "\n" +
+                                    GetField("postalCodeCareDestEdit", careEditPage) + " " +
+                                    GetField("cityCareDestEdit", careEditPage)}));
+
+        QString queryString;
+        if(currentId >= 0){ // Modifying
+            queryString = "UPDATE Care_registry "
+                          "SET id_dog = " + id_dog + ", "
+                          "entry_date = '" + entry_date + "', "
+                          "id_people_prov = " + id_people_prov + ", "
+                          "exit_date = '" + exit_date + "', "
+                          "id_people_dest = " + id_people_dest + " "
+                          "WHERE id_care = " + QString::number(currentId);
+        }
+
+        else{ // Creating
+            queryString = "INSERT INTO Care_registry (id_dog, entry_date, id_people_prov, exit_date, id_people_dest) "
+                          "VALUES (" + id_dog + ", '" + entry_date + "', " + id_people_prov + ", '" + exit_date + "', " + id_people_dest + ")";
+        }
+
+        query.exec(queryString);
+    }
+
 
     QuitEdit();
 }
@@ -520,4 +574,8 @@ void EditPage::AddDestPage(){
     page->ChangeDestType("");
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), page, SLOT(ChangeDestType(QString)));
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
+}
+
+void EditPage::SameDestCare(){
+
 }

@@ -161,6 +161,7 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
                 completer = new QCompleter(new QStringListModel(emailList, this), lineEdit);
 
             if (completer) {
+                completer->setCaseSensitivity(Qt::CaseInsensitive);
                 lineEdit->setCompleter(completer);
                 if(editName.contains("lastName") || editName.contains("phone") || editName.contains("email")){
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));

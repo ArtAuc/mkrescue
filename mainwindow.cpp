@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshPage(QString)));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
+    connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
     QGridLayout *gridLayout = qobject_cast<QGridLayout*>(ui->entryTab1->layout());
     if(gridLayout){ // Insert people entry editor
         gridLayout->addWidget(new EditPeopleWidget("AbandonEdit"), gridLayout->rowCount(), 1, 1, 2);
@@ -77,6 +78,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else if (txt == "Garderie"){
         stacked->setCurrentWidget(ui->careRegistryPage);
         LoadCareRegistry(QString::number(QDate::currentDate().year()));
+        ui->careRegistryPage->resizeEvent(nullptr);
     }
     else if (txt == "Adhérents")
         stacked->setCurrentWidget(ui->membersPage);
@@ -230,6 +232,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 void MainWindow::LoadCareRegistry(QString year, QString search)
 {   
     InitDogRegistry("care", year);
+    db.ReorderCareRegistry();
 
     QTableWidget* table = ui->careTable;
     table->clearContents();
