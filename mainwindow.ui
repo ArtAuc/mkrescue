@@ -389,7 +389,11 @@ QComboBox {
          </spacer>
         </item>
         <item>
-         <widget class="QLineEdit" name="searchLine"/>
+         <widget class="QLineEdit" name="searchLine">
+          <property name="styleSheet">
+           <string notr="true">margin-right:5px;</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

@@ -266,8 +266,7 @@ void EditPeopleWidget::PreviewOtherFields(QString s){
     }
 
     else{
-        foreach (QLineEdit* lineEdit, lineEdits) {
+        foreach (QLineEdit* lineEdit, lineEdits)
             lineEdit->setPlaceholderText("");
-        }
     }
 }

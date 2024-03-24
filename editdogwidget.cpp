@@ -68,40 +68,26 @@ EditDogWidget::EditDogWidget(QString nameEnd){
 }
 
 void EditDogWidget::showEvent(QShowEvent* event){
-    /*QWidget::showEvent(event);
+    QWidget::showEvent(event);
     QSqlQuery query;
 
-    QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List, postalCodeList, cityList;
+    QStringList dogNameList, chipList, descriptionList, sexList, birthList;
 
     query.exec("SELECT name, chip, description, sex, birth "
                "FROM Dogs;");
 
     while (query.next()) {
-        if (query.value(0).toInt() > 0) {
-            QString last_name = query.value(1).toString().isNull() ? "" : query.value(1).toString();
-            QString first_name = query.value(2).toString().isNull() ? "" : query.value(2).toString();
-            QString phone = query.value(3).toString().isNull() ? "" : query.value(3).toString();
-            QString email = query.value(4).toString().isNull() ? "" : query.value(4).toString();
-            QString address = query.value(5).toString().isNull() ? "" : query.value(5).toString();
+        QString dogName = query.value(0).toString().isNull() ? "" : query.value(0).toString();
+        QString chip = query.value(1).toString().isNull() ? "" : query.value(1).toString();
+        QString description = query.value(2).toString().isNull() ? "" : query.value(2).toString();
+        QString sex = query.value(3).toString().isNull() ? "" : query.value(3).toString();
+        QString birth = query.value(4).toString().isNull() ? "" : query.value(4).toString();
 
-            QStringList addressComponents = address.split("\n");
-            if (addressComponents.size() == 3) {
-                addressList << addressComponents[0];
-                address2List << addressComponents[1];
-                QString postalCodeCity = addressComponents[2];
-
-                QStringList postalCodeCityComponents = postalCodeCity.split(" ");
-                if (postalCodeCityComponents.size() == 2) {
-                    postalCodeList << postalCodeCityComponents[0];
-                    cityList << postalCodeCityComponents[1];
-                }
-            }
-
-            lastNameList << last_name;
-            firstNameList << first_name;
-            phoneList << phone;
-            emailList << email;
-        }
+        dogNameList << dogName;
+        chipList << chip;
+        descriptionList << description;
+        sexList << sex;
+        birthList << birth;
     }
 
 
@@ -110,32 +96,126 @@ void EditDogWidget::showEvent(QShowEvent* event){
         QString editName = lineEdit->objectName();
         if (!editName.contains("spinbox")) {
             QCompleter* completer = nullptr;
-            if (editName.contains("address2"))
-                completer = new QCompleter(new QStringListModel(address2List, this), lineEdit);
-            else if (editName.contains("firstName"))
-                completer = new QCompleter(new QStringListModel(firstNameList, this), lineEdit);
-            else if (editName.contains("address"))
-                completer = new QCompleter(new QStringListModel(addressList, this), lineEdit);
-            else if (editName.contains("postalCode"))
-                completer = new QCompleter(new QStringListModel(postalCodeList, this), lineEdit);
-            else if (editName.contains("city"))
-                completer = new QCompleter(new QStringListModel(cityList, this), lineEdit);
-            else if (editName.contains("lastName"))
-                completer = new QCompleter(new QStringListModel(lastNameList, this), lineEdit);
-            else if (editName.contains("phone"))
-                completer = new QCompleter(new QStringListModel(phoneList, this), lineEdit);
-            else if (editName.contains("email"))
-                completer = new QCompleter(new QStringListModel(emailList, this), lineEdit);
+            if (editName.contains("dogName"))
+                completer = new QCompleter(new QStringListModel(dogNameList, this), lineEdit);
+            else if (editName.contains("chip"))
+                completer = new QCompleter(new QStringListModel(chipList, this), lineEdit);
+            else if (editName.contains("description"))
+                completer = new QCompleter(new QStringListModel(descriptionList, this), lineEdit);
+            else if (editName.contains("sex"))
+                completer = new QCompleter(new QStringListModel(sexList, this), lineEdit);
+            else if (editName.contains("birth")) // TODO : birth is not a line edit
+                completer = new QCompleter(new QStringListModel(birthList, this), lineEdit);
+
 
             if (completer) {
-                lineEdit->setCompleter(completer);
                 completer->setCaseSensitivity(Qt::CaseInsensitive);
-                if(editName.contains("lastName") || editName.contains("phone") || editName.contains("email")){
+                lineEdit->setCompleter(completer);
+                if(editName.contains("dogName") || editName.contains("chip")){
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));
                     connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(PreviewOtherFields()));
                 }
             }
         }
-    }*/
+    }
+}
+
+
+void EditDogWidget::FillOtherFields(QString s){
+    QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
+    QAbstractItemModel *model = nullptr;
+    if(completer)
+        model = completer->model();
+
+    int row = -1;
+
+    if (model) {
+        int rowCount = model->rowCount();
+        for (int i = 0; i < rowCount; ++i) {
+            QModelIndex index = model->index(i, 0);
+            QVariant data = model->data(index, Qt::DisplayRole);
+            if (data.isValid() && data.toString() == s){
+                row = i;
+                break;
+            }
+        }
+    }
+
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    if(row >= 0){
+        foreach (QLineEdit* lineEdit, lineEdits) {
+            if (!lineEdit->objectName().contains("spinbox")) {
+                QStringList list;
+                QAbstractItemModel *model = lineEdit->completer()->model();
+
+                if (model) {
+                    int rowCount = model->rowCount();
+                    for (int i = 0; i < rowCount; ++i) {
+                        QModelIndex index = model->index(i, 0);
+                        QVariant data = model->data(index, Qt::DisplayRole);
+                        if (data.isValid())
+                            list << data.toString();
+                    }
+                }
+
+                if(list.isEmpty())
+                    list.append("");
+
+                lineEdit->setText(list[row]);
+            }
+        }
+    }
+}
+
+
+void EditDogWidget::PreviewOtherFields(QString s){
+    QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
+    QAbstractItemModel *model = nullptr;
+    if(completer)
+        model = completer->model();
+
+    int row = -1;
+
+    if (model) {
+        int rowCount = model->rowCount();
+        for (int i = 0; i < rowCount; ++i) {
+            QModelIndex index = model->index(i, 0);
+            QVariant data = model->data(index, Qt::DisplayRole);
+            if (data.isValid() && data.toString() == s){
+                row = i;
+                break;
+            }
+        }
+    }
+
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    if(row >= 0){
+        foreach (QLineEdit* lineEdit, lineEdits) {
+            if (!lineEdit->objectName().contains("spinbox")) {
+                QStringList list;
+                QAbstractItemModel *model = lineEdit->completer()->model();
+
+                if (model) {
+                    int rowCount = model->rowCount();
+                    for (int i = 0; i < rowCount; ++i) {
+                        QModelIndex index = model->index(i, 0);
+                        QVariant data = model->data(index, Qt::DisplayRole);
+                        if (data.isValid())
+                            list << data.toString();
+                    }
+                }
+
+                if(list.isEmpty())
+                    list.append("");
+
+                lineEdit->setPlaceholderText(list[row]);
+            }
+        }
+    }
+
+    else{
+        foreach (QLineEdit* lineEdit, lineEdits)
+            lineEdit->setPlaceholderText("");
+    }
 }
