@@ -301,7 +301,6 @@ void EditPage::SaveEdit()
                                                            GetField("breedEdit"),
                                                            GetField("birthDateEdit")
                                                        }));
-
         // Sortie
         QStringList death_causes, id_peoples, dates, types;
 
@@ -350,7 +349,7 @@ void EditPage::SaveEdit()
                           "type_prov = '" + type_prov + "', "
                           "death_cause = '" + death_causes[0] + "' "
                           "WHERE id_ES = " + currentNecessary[0] +
-                          " AND date_prov = " + currentNecessary[1] + ";";
+                          " AND date_prov = '" + currentNecessary[1] + "';";
         }
         else{ // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
@@ -364,6 +363,8 @@ void EditPage::SaveEdit()
         }
 
         query.exec(queryString);
+
+        qDebug() << query.executedQuery();
 
         query.exec("DELETE FROM Destinations "
                    "WHERE id_dog = " + id_dog + ";");
@@ -442,7 +443,7 @@ void EditPage::SaveEdit()
                           "exit_date = '" + exit_date + "', "
                           "id_people_dest = " + id_people_dest + " "
                           "WHERE id_care = " + currentNecessary[0] +
-                          " AND entry_date = " + currentNecessary[1] + ";";
+                          " AND entry_date = '" + currentNecessary[1] + "';";
         }
 
         else{ // Creating
