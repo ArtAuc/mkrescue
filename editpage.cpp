@@ -154,6 +154,59 @@ void EditPage::Edit(QString type, QStringList infos){
 
     else if (type == "care"){
         findChild<QTabWidget*>("careTabWidget")->setCurrentIndex(0);
+        if(infos.size() > 17){
+            currentId = infos[0].toInt();
+
+            // Entrée
+            SetField("careEntryDateEdit", infos[1]);
+
+            SetField("lastNameCareEntryEdit", infos[2]);
+            SetField("firstNameCareEntryEdit", infos[3]);
+
+            QStringList addressList = infos[4].split(infos[4].contains("\\n") ? "\\n" : "\n");
+            if(addressList.size() < 3)
+                qDebug() << "Wrong address format";
+
+            else{
+                SetField("addressCareEntryEdit", addressList[0]);
+                SetField("address2CareEntryEdit", addressList[1]);
+
+                SetField("cityCareEntryEdit", addressList[addressList.size() - 1].split(" ")[1]);
+                SetField("postalCodeCareEntryEdit", addressList[addressList.size() - 1].split(" ")[0]);
+            }
+
+            SetField("phoneCareEntryEdit", infos[5]);
+            SetField("emailCareEntryEdit", infos[6]);
+
+            // Animal
+            SetField("dogNameCareAnimalEdit", infos[7]);
+            SetField("chipCareAnimalEdit", infos[8]);
+            SetField("sexCareAnimalEdit", infos[9]);
+            SetField("birthDateCareAnimalEdit", infos[10]);
+            SetField("descriptionCareAnimalEdit", infos[11]);
+
+
+            // Sortie
+            SetField("careDestDateEdit", infos[12]);
+            SetField("lastNameCareDestEdit", infos[13]);
+            SetField("firstNameCareDestEdit", infos[14]);
+
+            addressList = infos[15].split(infos[15].contains("\\n") ? "\\n" : "\n");
+            if(addressList.size() < 3)
+                qDebug() << "Wrong address format";
+
+            else{
+                SetField("addressCareDestEdit", addressList[0]);
+                SetField("address2CareDestEdit", addressList[1]);
+
+                SetField("cityCareDestEdit", addressList[addressList.size() - 1].split(" ")[1]);
+                SetField("postalCodeCareDestEdit", addressList[addressList.size() - 1].split(" ")[0]);
+            }
+
+            SetField("phoneCareDestEdit", infos[16]);
+            SetField("emailCareDestEdit", infos[17]);
+        }
+
     }
 }
 
@@ -464,6 +517,8 @@ QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, s
 }
 
 void EditPage::resizeEvent(QResizeEvent *event){
+    QWidget::resizeEvent(event);
+
     QList<QWidget*> children = findChild<QWidget*>(lastType + "EditPage")->findChildren<QWidget*>();
 
     if(children.size() > 0){

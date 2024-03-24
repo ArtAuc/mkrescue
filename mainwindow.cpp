@@ -415,7 +415,38 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     }
 
     else if (type == "care"){
+        query.exec("SELECT Care_registry.id_care, "
+                   "Care_registry.entry_date, "
+                   "People_prov.last_name, "
+                   "People_prov.first_name, "
+                   "People_prov.address, "
+                   "People_prov.phone, "
+                   "People_prov.email, "
+                   "Dogs.name, "
+                   "Dogs.chip, "
+                   "Dogs.sex, "
+                   "Dogs.birth, "
+                   "Dogs.description, "
+                   "Care_registry.exit_date, "
+                   "People_dest.last_name, "
+                   "People_dest.first_name, "
+                   "People_dest.address, "
+                   "People_dest.phone, "
+                   "People_dest.email "
+                   "FROM Care_registry "
+                   "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
+                   "JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
+                   "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
+                   "WHERE id_care = " + necessary[0] + ";");
 
+        query.next();
+
+        QStringList infos;
+        for(int i = 0; i < query.record().count(); i++)
+            infos.append(query.value(i).toString());
+
+
+        ui->editPage->Edit(type, infos);
     }
 
     else if (type == "redList"){
