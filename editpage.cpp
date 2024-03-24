@@ -153,7 +153,7 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     else if (type == "care"){
-
+        findChild<QTabWidget*>("careTabWidget")->setCurrentIndex(0);
     }
 }
 
@@ -577,5 +577,14 @@ void EditPage::AddDestPage(){
 }
 
 void EditPage::SameDestCare(){
+    QWidget *careEditPage = findChild<QWidget*>("careEditPage");
+    SetField("firstNameCareDestEdit", GetField("firstNameCareEntryEdit", careEditPage), careEditPage);
+    SetField("lastNameCareDestEdit", GetField("lastNameCareEntryEdit", careEditPage), careEditPage);
+    SetField("phoneCareDestEdit", GetField("phoneCareEntryEdit", careEditPage), careEditPage);
+    SetField("emailCareDestEdit", GetField("emailCareEntryEdit", careEditPage), careEditPage);
+    SetField("addressCareDestEdit", GetField("addressCareEntryEdit", careEditPage), careEditPage);
+    SetField("address2CareDestEdit", GetField("address2CareEntryEdit", careEditPage), careEditPage);
+    SetField("postalCodeCareDestEdit", GetField("postalCodeCareEntryEdit", careEditPage), careEditPage);
+    SetField("cityCareDestEdit", GetField("cityCareEntryEdit", careEditPage), careEditPage);
 
 }
