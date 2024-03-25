@@ -160,6 +160,23 @@ void Database::ReorderMembers(){
 
 }
 
+QSqlQuery Database::GetCurrentESDogs(QString search){
+    QSqlQuery query;
+    QString queryString =
+            "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, ES_Registry.date_prov "
+            "FROM Dogs "
+            "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
+            "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "
+            "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
+            "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') " // To get dogs currently in shelter only
+            "ORDER BY Dogs.id_dog DESC;";
+
+    query.prepare(queryString);
+    query.bindValue(":search", search + "%");
+    query.exec();
+
+    return query;
+}
 
 QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
     QSqlQuery query;

@@ -1,16 +1,15 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent) : QFrame(parent)
+DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QString date_prov)
 {
     QGridLayout *layout = new QGridLayout(this);
 
-    QLabel *sexLabel = new QLabel(this);
+    sexLabel = new QLabel(this);
     sexLabel->setAlignment(Qt::AlignCenter);
 
-    QPixmap pixmap("media/female.png");
-    QSize labelSize = QSize(30, 30);
-    QPixmap scaledPixmap = pixmap.scaled(labelSize, Qt::KeepAspectRatio);
-    sexLabel->setPixmap(scaledPixmap);
+
+    sexIcon = QPixmap("media/" + QString(((sex == "Mâle") ? "male" : "female")) + ".png");
+    sexLabel->setPixmap(sexIcon);
 
     QLabel *ageLabel = new QLabel("3 ans 7 mois", this);
     ageLabel->setFont(QFont("Arial", 15));
@@ -37,4 +36,14 @@ DogCard::DogCard(QWidget *parent) : QFrame(parent)
     layout->addWidget(toolButton, 4, 1);
 
     setLayout(layout);
+}
+
+void DogCard::resizeEvent(QResizeEvent *event){
+    QFrame::resizeEvent(event);
+
+    QSize parentSize = qobject_cast<QWidget*>(parent())->size();
+    this->setMaximumSize(parentSize / 3);
+
+    int iconSize = 0.05 * width();
+    sexLabel->setPixmap(sexIcon.scaled(QSize(iconSize, iconSize), Qt::KeepAspectRatio));
 }

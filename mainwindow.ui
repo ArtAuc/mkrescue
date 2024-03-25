@@ -479,7 +479,7 @@ QLabel{
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
+            <widget class="QWidget" name="dogCardsContent">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -504,146 +504,6 @@ QLabel{
               <property name="spacing">
                <number>50</number>
               </property>
-              <item row="1" column="0">
-               <widget class="DogCard" name="frame">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="DogCard" name="frame_7">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="2">
-               <widget class="DogCard" name="frame_8">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="DogCard" name="frame_2">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="DogCard" name="frame_9">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="DogCard" name="frame_4">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="DogCard" name="frame_5">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="DogCard" name="frame_6">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="3">
-               <widget class="DogCard" name="frame_3">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="3">
-               <widget class="DogCard" name="frame_10">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="2">
-               <widget class="DogCard" name="frame_12">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="3">
-               <widget class="DogCard" name="frame_11">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="DogCard" name="frame_13">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="2">
-               <widget class="DogCard" name="frame_14">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
            </widget>
@@ -1930,12 +1790,6 @@ color:#212834;</string>
    <class>Registry</class>
    <extends>QWidget</extends>
    <header>registry.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>DogCard</class>
-   <extends>QFrame</extends>
-   <header>dogcard.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

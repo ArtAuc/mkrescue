@@ -62,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->redListPage->SetType("redList");
 
+
+    LoadDogCards();
+
     Clean();
 }
 
@@ -78,6 +81,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
+    modifyButtons.clear();
 
 
     if (txt == "Entrées/Sorties"){
@@ -108,8 +112,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->menuTree->collapseAllExcept(txt);
         if(txt == "Accueil")
             stacked->setCurrentWidget(ui->homePage);
-        else if (txt == "Fiches chiens")
+        else if (txt == "Fiches chiens"){
+            LoadDogCards();
             stacked->setCurrentWidget(ui->dogCardsPage);
+        }
         else if (txt == "Vétérinaire")
             stacked->setCurrentWidget(ui->vetPage);
     }
@@ -152,6 +158,34 @@ void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care 
 
     resizeEvent(nullptr);
 }
+
+void MainWindow::LoadDogCards(QString search){
+    qDeleteAll(ui->dogCardsPage->findChildren<DogCard*>());
+
+    QSqlQuery query = db.GetCurrentESDogs(search);
+
+    int row = 0;
+    int col = 0;
+
+    QGridLayout *layout = qobject_cast<QGridLayout*>(ui->dogCardsContent->layout());
+    while(query.next() && query.value(0).toString() != "")
+    {
+        DogCard *dogCard = new DogCard(query.value(0).toString(),
+                                       query.value(1).toString(),
+                                       query.value(2).toString(),
+                                       query.value(3).toString(),
+                                       query.value(4).toString());
+
+        layout->addWidget(dogCard, row, col);
+
+        col += 1;
+        if(col > 2){
+            col = 0;
+            row += 1;
+        }
+    }
+}
+
 void MainWindow::LoadEntryRegistry(QString year, QString search)
 {
     InitYearRegistry("entry", year);
@@ -164,8 +198,6 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
 
     QSqlQuery query = db.GetEntryRegistry(year, search);
-
-    modifyButtons.clear();
 
     while(query.next() && query.value(0).toString() != "")
     {
@@ -259,9 +291,6 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
 
     QSqlQuery query = db.GetCareRegistry(year, search);
 
-    modifyButtons.clear();
-
-
     while(query.next() && query.value(0).toString() != "")
     {
         int nb = table->rowCount();
@@ -319,8 +348,6 @@ void MainWindow::LoadMembers(QString year, QString search)
     connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadMembers(QString)));
 
     QSqlQuery query = db.GetMembers(year, search);
-
-    modifyButtons.clear();
 
     while(query.next() && query.value(0).toString() != "")
     {
@@ -423,6 +450,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     QSize textSize = ui->yearBox->fontMetrics().size(Qt::TextSingleLine, ui->yearBox->currentText());
     ui->yearBox->setFixedSize(textSize + QSize(35, 35));
+
+    for (DogCard* c : ui->dogCardsContent->findChildren<DogCard*>())
+        c->resizeEvent(event);
 }
 
 void MainWindow::ToggleModifyButtons()

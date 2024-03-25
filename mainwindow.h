@@ -7,6 +7,7 @@
 
 #include "database.h"
 #include "menutree.h"
+#include "dogcard.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +24,7 @@ public:
 
 public slots:
     void ChangePage(QTreeWidgetItem* item);
+    void LoadDogCards(QString search = "");
     void LoadEntryRegistry(QString year, QString search = "");
     void LoadCareRegistry(QString year, QString search = "");
     void LoadRedList(QString search = "");
