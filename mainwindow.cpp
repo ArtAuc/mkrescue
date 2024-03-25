@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->membersPage);
+    ui->stackedWidget->setCurrentWidget(ui->dogCardsPage);
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -62,8 +62,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->redListPage->SetType("redList");
 
-    LoadMembers("2024");
-
     Clean();
 }
 
@@ -111,7 +109,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         if(txt == "Accueil")
             stacked->setCurrentWidget(ui->homePage);
         else if (txt == "Fiches chiens")
-            stacked->setCurrentWidget(ui->dogSheetsPage);
+            stacked->setCurrentWidget(ui->dogCardsPage);
         else if (txt == "Vétérinaire")
             stacked->setCurrentWidget(ui->vetPage);
     }

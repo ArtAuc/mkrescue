@@ -12,6 +12,7 @@ CONFIG += c++17
 SOURCES += \
     database.cpp \
     destinationpage.cpp \
+    dogcard.cpp \
     dogregistry.cpp \
     editdogwidget.cpp \
     editpage.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
 HEADERS += \
     database.h \
     destinationpage.h \
+    dogcard.h \
     dogregistry.h \
     editdogwidget.h \
     editpage.h \
