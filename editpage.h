@@ -15,6 +15,7 @@
 #include <QSqlError>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QToolButton>
 
 #include "destinationpage.h"
 #include "editdogwidget.h"
@@ -59,6 +60,7 @@ private:
     QStringList currentNecessary = {};
     int destinationsNumber = 0;
     QStringList autofillList;
+    QToolButton* removeButton;
 };
 
 #endif // EDITPAGE_H

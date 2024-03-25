@@ -77,6 +77,9 @@ void EditPage::Edit(QString type, QStringList infos){
     if((type != "redList" && type != "members") || infos.isEmpty())
         SwitchPage(type + "EditPage");
 
+    removeButton = findChild<QToolButton*>("removeButton");
+    removeButton->setVisible(!infos.isEmpty());
+
     if(type == "entry"){
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
 
@@ -538,11 +541,11 @@ void EditPage::resizeEvent(QResizeEvent *event){
 
     if(children.size() > 0){
         QFont font = children[0]->font();
-        float fontSize = std::max(width() * 0.007, (double) 10);
+        float fontSize = std::max(width() * 0.007, (double) 9);
         font.setPointSize(fontSize);
 
         for(QWidget* c : children){
-            if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c))){
+            if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c) || qobject_cast<QDoubleSpinBox*>(c))){
                 c->setFont(font);
                 c->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
             }
