@@ -267,6 +267,16 @@ QTreeView::item { margin-top: 30px; }</string>
         </property>
        </item>
       </item>
+      <item>
+       <property name="text">
+        <string> Paramètres</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>media/wrench_gray.svg</normaloff>
+         <selectedoff>media/wrench_white.svg</selectedoff>media/wrench_gray.svg</iconset>
+       </property>
+      </item>
      </widget>
     </item>
     <item row="0" column="1">

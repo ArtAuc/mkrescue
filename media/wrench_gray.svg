@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1"
+   viewBox="0 0 82.025 100"
+   id="svg3979"
+   sodipodi:docname="wrench_gray.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3983" />
+  <sodipodi:namedview
+     id="namedview3981"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="8.43"
+     inkscape:cx="41.043891"
+     inkscape:cy="50.237248"
+     inkscape:window-width="1916"
+     inkscape:window-height="1026"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3979" />
+  <path
+     d="M63.122 22.983l-9.542-7.51V0c-3.897 1.985-10.616 8.48-8.857 17.56.182 2.68 2.254 9.564 1.37 13.318-1.188 5.008-1.627 5.116-8.75 14.086L1.64 88.974c-2.393 2.737-2.138 6.937.57 9.365 2.71 2.426 6.834 2.16 9.237-.58L56.13 42.277c2.816-3.546 8-6.675 12.49-7.902 7.71-2.37 13.405-9.596 13.405-18.174 0-6.91-3.946-13.453-9.128-16.2l-.026 15.23-9.747 7.753z"
+     id="path3977"
+     style="fill:#a7b2c8;fill-opacity:1" />
+</svg>
