@@ -51,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
 
-
     ui->entryRegistryPage->SetType("entry");
     ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
 
@@ -59,7 +58,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->careLabelLayout->setAlignment(Qt::AlignLeft);
 
     ui->membersPage->SetType("members");
-
     ui->redListPage->SetType("redList");
 
 
@@ -174,7 +172,8 @@ void MainWindow::LoadDogCards(QString search){
                                        query.value(1).toString(),
                                        query.value(2).toString(),
                                        query.value(3).toString(),
-                                       query.value(4).toString());
+                                       query.value(4).toString(),
+                                       "current");
 
         layout->addWidget(dogCard, row, col);
 
