@@ -1093,16 +1093,16 @@ QTabBar::tab:selected {
             <widget class="QWidget" name="membersEditPage">
              <layout class="QGridLayout" name="gridLayout_5">
               <item row="0" column="0">
-               <layout class="QVBoxLayout" name="dateMemberaEditLayout">
+               <layout class="QVBoxLayout" name="dateMembersEditLayout">
                 <item>
-                 <widget class="QLabel" name="dateMemberaEditLabel">
+                 <widget class="QLabel" name="dateMembersEditLabel">
                   <property name="text">
                    <string>DATE D'ADHÉSION</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDateEdit" name="dateMemberaEdit"/>
+                 <widget class="QDateEdit" name="dateMembersEdit"/>
                 </item>
                </layout>
               </item>
@@ -1118,7 +1118,7 @@ QTabBar::tab:selected {
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_3">
                   <item>
-                   <widget class="QComboBox" name="typeMemberBox">
+                   <widget class="QComboBox" name="typeMembersBox">
                     <item>
                      <property name="text">
                       <string>Espèces</string>
@@ -1132,7 +1132,7 @@ QTabBar::tab:selected {
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="amountMemberEdit">
+                   <widget class="QDoubleSpinBox" name="amountMembersEdit">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -1142,7 +1142,7 @@ QTabBar::tab:selected {
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="typeMemberBoxLabel">
+                   <widget class="QLabel" name="typeMembersBoxLabel">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                       <horstretch>0</horstretch>

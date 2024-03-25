@@ -43,6 +43,7 @@ void Registry::showEvent(QShowEvent* event) {
         if(type == "members"){
             table->horizontalHeaderItem(1)->setText("Date\nd'adhésion");
             table->horizontalHeaderItem(2)->setText("Nom\nPrénom");
+            table->horizontalHeaderItem(6)->setText("Valable\njusqu'au");
             table->horizontalHeaderItem(7)->setText("Nature\nMontant");
         }
     }

@@ -300,7 +300,7 @@ std::vector<QString> Database::GetRegistryYears(QString type) {
 
     else if (type == "members"){
         query.exec("SELECT DISTINCT strftime('%Y', date) AS year "
-                   "FROM Care_registry "
+                   "FROM Members "
                    "ORDER BY year ASC;");
     }
 

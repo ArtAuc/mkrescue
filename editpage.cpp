@@ -55,15 +55,16 @@ QString EditPage::GetField(QString name, QWidget* parent){
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
+    QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox*>(childObject);
 
     if(dateEdit)
         return dateEdit->date().toString("yyyy-MM-dd");
-
     else if (lineEdit)
         return lineEdit->text();
-
     else if (box)
         return box->currentText();
+    else if (spinBox)
+        return QString::number(spinBox->value());
 
     return "";
 }
@@ -402,7 +403,7 @@ void EditPage::SaveEdit()
         query.exec();
     }
 
-    if(lastType == "care"){
+    else if(lastType == "care"){
         QWidget *careEditPage = findChild<QWidget*>("careEditPage");
         // Entrée
         QString entry_date = GetField("careEntryDateEdit", careEditPage);
@@ -454,6 +455,30 @@ void EditPage::SaveEdit()
         }
 
         query.exec(queryString);
+    }
+
+    else if(lastType == "members"){
+        QWidget *membersEditPage = findChild<QWidget*>("membersEditPage");
+        QString id_people = CreatePersonIfNeeded(QStringList({GetField("lastNameMembersEdit", membersEditPage),
+                                GetField("firstNameMembersEdit", membersEditPage),
+                                GetField("phoneMembersEdit", membersEditPage),
+                                GetField("emailMembersEdit", membersEditPage),
+                                GetField("addressMembersEdit", membersEditPage) + "\n" +
+                                GetField("address2MembersEdit", membersEditPage) + "\n" +
+                                GetField("postalCodeMembersEdit", membersEditPage) + " " +
+                                GetField("cityMembersEdit", membersEditPage)}));
+        QString type = GetField("typeMembersBox", membersEditPage);
+        QString amount = GetField("amountMembersEdit", membersEditPage);
+        QString date = GetField("dateMembersEdit", membersEditPage);
+
+        query.prepare("INSERT INTO Members (id_people, date, amount, type) "
+                      "VALUES (:id, :date, :amount, :type);");
+        query.bindValue(":id", id_people);
+        query.bindValue(":date", date);
+        query.bindValue(":amount", amount);
+        query.bindValue(":type", type);
+        query.exec();
+
     }
 
 
