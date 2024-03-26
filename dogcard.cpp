@@ -1,8 +1,10 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo)
+DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo) : DogCard(parent)
 {
     QGridLayout *layout = new QGridLayout(this);
+
+    setObjectName("dogCard" + id_dog);
 
     sexLabel = new QLabel(this);
     sexLabel->setAlignment(Qt::AlignCenter);
@@ -50,16 +52,19 @@ DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QStri
     descriptionLabel->setFont(QFont("Arial", 15));
 
 
-    QToolButton *toolButton = new QToolButton(this);
-    toolButton->setText(">");
+    QToolButton *detailsButton = new QToolButton(this);
+    detailsButton->setIcon(QIcon("media/right.svg"));
+    detailsButton->setIconSize(QSize(15, 15));
+    detailsButton->setFixedSize(40, 40);
 
+    connect(detailsButton, SIGNAL(clicked()), parent, SLOT(SelectDogCard()));
 
     layout->addWidget(sexLabel, 1, 1);
     layout->addWidget(ageLabel, 2, 0, 1, 2);
     layout->addWidget(nameLabel, 1, 0);
     layout->addWidget(infoLabel, 3, 0, 1, 2);
     layout->addWidget(descriptionLabel, 4, 0);
-    layout->addWidget(toolButton, 4, 1);
+    layout->addWidget(detailsButton, 4, 1);
 
     setLayout(layout);
 }
@@ -67,7 +72,7 @@ DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QStri
 void DogCard::resizeEvent(QResizeEvent *event){
     QFrame::resizeEvent(event);
 
-    QSize parentSize = qobject_cast<QWidget*>(parent()->parent())->size();
+    QSize parentSize = qobject_cast<QWidget*>(parent())->size();
     this->setMaximumSize(parentSize / 4);
 
     int iconSize = 0.1 * width();

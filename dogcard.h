@@ -12,7 +12,7 @@ class DogCard : public QFrame
     Q_OBJECT
 public:
     explicit DogCard(QWidget *parent = nullptr) : QFrame(parent) {}
-    DogCard(QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo);
+    DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo);
     void resizeEvent(QResizeEvent *event);
 
 private:

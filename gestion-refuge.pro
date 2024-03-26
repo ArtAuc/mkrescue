@@ -17,6 +17,7 @@ SOURCES += \
     editdogwidget.cpp \
     editpage.cpp \
     editpeoplewidget.cpp \
+    loadpages.cpp \
     main.cpp \
     mainwindow.cpp \
     registry.cpp

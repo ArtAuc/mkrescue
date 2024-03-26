@@ -34,6 +34,7 @@ public slots:
     void TriggerEdit(QString type, QStringList necessary);
     void RefreshPage(QString type);
     void Clean();
+    void SelectDogCard();
 
 private:
     QString ClearUselessBreaks(QString s);

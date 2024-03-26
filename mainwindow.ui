@@ -436,20 +436,28 @@ QComboBox {
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
          <property name="styleSheet">
-          <string notr="true">QWidget#dogCardsContent, QScrollArea{
+          <string notr="true">QFrame{
+	background-color:white;
+	color:#333;
+	border:1px solid #ddd;
+	border-top:3px solid #3b4b64;
+	border-radius:5px;
+}
+
+QWidget#dogCardsContent, QScrollArea{
 	background-color:#fafafa;
 	border:none;
 }
 
-QFrame{
-	background-color:white;
-	color:#333;
-	border:1px solid #ddd;
-	border-radius:5px;
-}
 
 QLabel{
 	border:none;
+}
+
+QToolButton{
+	border:2px solid #3b4b64;
+	padding:10px;
+	border-radius:20px;
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -484,8 +492,8 @@ QLabel{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>967</width>
-               <height>581</height>
+               <width>969</width>
+               <height>583</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -635,6 +643,9 @@ color:#212834;</string>
             </property>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="verticalScrollMode">
+             <enum>QAbstractItemView::ScrollPerPixel</enum>
             </property>
             <attribute name="horizontalHeaderMinimumSectionSize">
              <number>0</number>
@@ -1434,6 +1445,9 @@ color:#212834;</string>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
             </property>
+            <property name="verticalScrollMode">
+             <enum>QAbstractItemView::ScrollPerPixel</enum>
+            </property>
             <attribute name="horizontalHeaderMinimumSectionSize">
              <number>0</number>
             </attribute>
@@ -1579,6 +1593,9 @@ color:#212834;</string>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
             </property>
+            <property name="verticalScrollMode">
+             <enum>QAbstractItemView::ScrollPerPixel</enum>
+            </property>
             <attribute name="horizontalHeaderMinimumSectionSize">
              <number>0</number>
             </attribute>
@@ -1686,6 +1703,9 @@ color:#212834;</string>
             </property>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="verticalScrollMode">
+             <enum>QAbstractItemView::ScrollPerPixel</enum>
             </property>
             <attribute name="horizontalHeaderMinimumSectionSize">
              <number>0</number>
