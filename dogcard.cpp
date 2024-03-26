@@ -67,8 +67,8 @@ DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QStri
 void DogCard::resizeEvent(QResizeEvent *event){
     QFrame::resizeEvent(event);
 
-    QSize parentSize = qobject_cast<QWidget*>(parent())->size();
-    this->setMaximumSize(parentSize / 3);
+    QSize parentSize = qobject_cast<QWidget*>(parent()->parent())->size();
+    this->setMaximumSize(parentSize / 4);
 
     int iconSize = 0.1 * width();
     sexLabel->setPixmap(sexIcon.scaled(QSize(iconSize, iconSize), Qt::KeepAspectRatio));
