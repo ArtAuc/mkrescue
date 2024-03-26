@@ -436,8 +436,8 @@ QComboBox {
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
          <property name="styleSheet">
-          <string notr="true">QWidget#scrollAreaWidgetContents, QScrollArea{
-	background-color:white;
+          <string notr="true">QWidget#dogCardsContent, QScrollArea{
+	background-color:#fafafa;
 	border:none;
 }
 

@@ -163,7 +163,7 @@ void Database::ReorderMembers(){
 QSqlQuery Database::GetCurrentESDogs(QString search){
     QSqlQuery query;
     QString queryString =
-            "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, ES_Registry.date_prov "
+            "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, ES_Registry.date_prov "
             "FROM Dogs "
             "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
             "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "

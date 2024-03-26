@@ -1,6 +1,6 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QString info, QString typeInfo)
+DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo)
 {
     QGridLayout *layout = new QGridLayout(this);
 
@@ -46,7 +46,7 @@ DogCard::DogCard(QString id_dog, QString name, QString sex, QString birth, QStri
     QLabel *infoLabel = new QLabel(infoString, this);
     infoLabel->setFont(QFont("Arial", 15));
 
-    QLabel *descriptionLabel = new QLabel("X Malinois", this);
+    QLabel *descriptionLabel = new QLabel(description, this);
     descriptionLabel->setFont(QFont("Arial", 15));
 
 

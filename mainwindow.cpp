@@ -173,6 +173,7 @@ void MainWindow::LoadDogCards(QString search){
                                        query.value(2).toString(),
                                        query.value(3).toString(),
                                        query.value(4).toString(),
+                                       query.value(5).toString(),
                                        "current");
 
         layout->addWidget(dogCard, row, col);
@@ -472,6 +473,8 @@ void MainWindow::Search(QString search){
         LoadCareRegistry(ui->yearBox->currentText(), search);
     else if (pageName == "redListPage")
         LoadRedList(search);
+    else if(pageName == "dogCardsPage")
+        LoadDogCards(search);
     else if (pageName == "membersPage")
         LoadMembers(ui->yearBox->currentText(), search);
 }
