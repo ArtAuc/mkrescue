@@ -13,10 +13,8 @@ class DogCard : public QFrame
 public:
     explicit DogCard(QWidget *parent = nullptr) : QFrame(parent) {}
     DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo);
-    void resizeEvent(QResizeEvent *event);
 
 private:
-    QPixmap sexIcon;
     QLabel* sexLabel;
 };
 

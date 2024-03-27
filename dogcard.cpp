@@ -9,7 +9,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     sexLabel = new QLabel(this);
     sexLabel->setAlignment(Qt::AlignCenter);
 
-    sexIcon = QPixmap("media/" + QString(((sex == "Mâle") ? "male" : "female")) + ".png");
+    int iconSize = 40;
+
+    QPixmap sexIcon("media/" + QString(((sex == "Mâle") ? "male" : "female")) + ".png");
+    sexIcon = sexIcon.scaled(QSize(iconSize, iconSize), Qt::KeepAspectRatio);
     sexLabel->setPixmap(sexIcon);
     sexLabel->setStyleSheet("padding:3px;");
 
@@ -34,10 +37,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     ageString += QString::number(months) + " mois";
     QLabel *ageLabel = new QLabel(ageString, this);
-    ageLabel->setFont(QFont("Arial", 15));
 
     QLabel *nameLabel = new QLabel(name, this);
-    nameLabel->setFont(QFont("Arial", 20, QFont::Bold));
+    nameLabel->setStyleSheet("font-size:23pt;"
+                             "font-weight:bold;");
 
     QString infoString;
     if(typeInfo == "current"){
@@ -46,16 +49,14 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     }
 
     QLabel *infoLabel = new QLabel(infoString, this);
-    infoLabel->setFont(QFont("Arial", 15));
 
     QLabel *descriptionLabel = new QLabel(description, this);
-    descriptionLabel->setFont(QFont("Arial", 15));
 
 
     QToolButton *detailsButton = new QToolButton(this);
     detailsButton->setIcon(QIcon("media/right.png"));
-    detailsButton->setIconSize(QSize(50, 50));
-    detailsButton->setFixedSize(40, 40);
+    detailsButton->setIconSize(QSize(iconSize, iconSize));
+    detailsButton->setFixedSize(iconSize, iconSize);
 
     connect(detailsButton, SIGNAL(clicked()), parent, SLOT(SelectDogCard()));
 
@@ -67,14 +68,4 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     layout->addWidget(detailsButton, 4, 1);
 
     setLayout(layout);
-}
-
-void DogCard::resizeEvent(QResizeEvent *event){
-    QFrame::resizeEvent(event);
-
-    QSize parentSize = qobject_cast<QWidget*>(parent())->size();
-    this->setMaximumSize(parentSize / 4);
-
-    int iconSize = 0.1 * width();
-    sexLabel->setPixmap(sexIcon.scaled(QSize(iconSize, iconSize), Qt::KeepAspectRatio));
 }
