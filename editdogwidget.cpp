@@ -87,7 +87,7 @@ void EditDogWidget::showEvent(QShowEvent* event){
     QWidget::showEvent(event);
     QSqlQuery query;
 
-    QStringList dogNameList, chipList, descriptionList, sexList, birthList;
+    QStringList dogNameList, chipList, descriptionList, birthList;
 
     query.exec("SELECT name, chip, description, sex, birth "
                "FROM Dogs;");
@@ -118,8 +118,6 @@ void EditDogWidget::showEvent(QShowEvent* event){
                 completer = new QCompleter(new QStringListModel(chipList, this), lineEdit);
             else if (editName.contains("description"))
                 completer = new QCompleter(new QStringListModel(descriptionList, this), lineEdit);
-            else if (editName.contains("sex"))
-                completer = new QCompleter(new QStringListModel(sexList, this), lineEdit);
             else if (editName.contains("birth")) // TODO : birth is not a line edit
                 completer = new QCompleter(new QStringListModel(birthList, this), lineEdit);
 
@@ -180,7 +178,11 @@ void EditDogWidget::FillOtherFields(QString s){
                 });
             }
         }
+
+        QComboBox* sexBox = findChild<QComboBox*>();
+        sexBox->setCurrentText(sexList[row]);
     }
+
 }
 
 
@@ -226,6 +228,9 @@ void EditDogWidget::PreviewOtherFields(QString s){
                 });
             }
         }
+
+        QComboBox* sexBox = findChild<QComboBox*>();
+        sexBox->setCurrentText(sexList[row]);
     }
 
     else{
