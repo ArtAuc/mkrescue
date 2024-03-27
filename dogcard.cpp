@@ -11,7 +11,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     sexIcon = QPixmap("media/" + QString(((sex == "Mâle") ? "male" : "female")) + ".png");
     sexLabel->setPixmap(sexIcon);
-    sexLabel->setStyleSheet("padding:0px;");
+    sexLabel->setStyleSheet("padding:3px;");
 
     QDate date = QDate::fromString(birth, "yyyy-MM-dd");
 
@@ -53,8 +53,8 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
 
     QToolButton *detailsButton = new QToolButton(this);
-    detailsButton->setIcon(QIcon("media/right.svg"));
-    detailsButton->setIconSize(QSize(15, 15));
+    detailsButton->setIcon(QIcon("media/right.png"));
+    detailsButton->setIconSize(QSize(50, 50));
     detailsButton->setFixedSize(40, 40);
 
     connect(detailsButton, SIGNAL(clicked()), parent, SLOT(SelectDogCard()));

@@ -452,12 +452,6 @@ QWidget#dogCardsContent, QScrollArea{
 
 QLabel{
 	border:none;
-}
-
-QToolButton{
-	border:2px solid #3b4b64;
-	padding:10px;
-	border-radius:20px;
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1018,7 +1012,13 @@ QTabBar::tab:selected {
                       </property>
                       <property name="icon">
                        <iconset>
-                        <normaloff>media/left.svg</normaloff>media/left.svg</iconset>
+                        <normaloff>media/left.png</normaloff>media/left.png</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>25</width>
+                        <height>25</height>
+                       </size>
                       </property>
                      </widget>
                     </item>
@@ -1029,7 +1029,13 @@ QTabBar::tab:selected {
                       </property>
                       <property name="icon">
                        <iconset>
-                        <normaloff>media/right.svg</normaloff>media/right.svg</iconset>
+                        <normaloff>media/right.png</normaloff>media/right.png</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>25</width>
+                        <height>25</height>
+                       </size>
                       </property>
                      </widget>
                     </item>

@@ -58,6 +58,7 @@ void Registry::resizeEvent(QResizeEvent *event){
         float iconSize = width() * 0.02;
         for (QToolButton* but : table->findChildren<QToolButton*>()){
             but->setIconSize(QSize(iconSize, iconSize));
+            but->setMinimumHeight(0.8 * iconSize);
         }
 
 
