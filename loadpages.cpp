@@ -7,7 +7,10 @@ void MainWindow::LoadDogCards(QString search){
 
     QString type = "current";
     if(ui->outCheckbox->checkState() == Qt::Checked)
-        type += "out";
+        type += "|out";
+
+    if(ui->careCheckbox->checkState() == Qt::Checked)
+        type += "|care";
 
     int row = 0;
     int col = 0;

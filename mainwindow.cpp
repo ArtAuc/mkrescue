@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Dog cards checkboxes
-    connect(ui->outCheckbox, SIGNAL(clicked(bool)), this, SLOT(LoadDogCards()));
-
+    connect(ui->outCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
+    connect(ui->careCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
 
 
     ui->entryRegistryPage->SetType("entry");

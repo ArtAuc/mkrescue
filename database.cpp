@@ -186,8 +186,25 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "    GROUP BY id_dog "
                 ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
                 "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
-                "WHERE (Dogs.name LIKE '%' OR chip LIKE '%' OR description LIKE '%') "
+                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
                 "AND NOT (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge')";
+
+    if(type.contains("care"))
+        queryString +=
+                " UNION "
+                ""
+                "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Care_registry.entry_date, Dogs.description, People.last_name || ' ' || People.first_name "
+                "FROM Dogs "
+                "LEFT JOIN ( "
+                "    SELECT id_dog, MAX(entry_date) AS max_date "
+                "    FROM Care_registry "
+                "    GROUP BY id_dog "
+                ") AS LastCare ON Dogs.id_dog = LastCare.id_dog "
+                "LEFT JOIN Care_registry ON Care_registry.id_dog = Care_registry.id_dog AND Care_registry.entry_date = LastCare.max_date "
+                "JOIN People ON Care_registry.id_people_prov = People.id_people "
+                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search)";
+
+
 
     queryString += " ORDER BY Dogs.id_dog DESC;";
 

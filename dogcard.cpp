@@ -2,9 +2,11 @@
 
 DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info) : DogCard(parent)
 {
-    QString typeInfo = "current";
+    QString typeInfo = "care";
     if(birth.contains("___"))
         typeInfo = "out";
+    else if (info.contains("___"))
+        typeInfo = "current";
 
 
     QGridLayout *layout = new QGridLayout(this);
@@ -33,8 +35,12 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
         QStringList splitted = info.split("___");
         QString type_prov = splitted[1];
         QString date_prov = splitted[0];
-        infoString = type_prov + " le ";
+        infoString = type_prov + " : ";
         infoString += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
+    }
+
+    else if(typeInfo == "care"){
+        infoString = "Propriétaire : " + info;
     }
 
 
@@ -49,10 +55,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
         ageString = type_dest;
         if(sex == "Femelle" && type_dest == "Mort")
             type_dest += "e";
-        ageString += " le " + QDate::fromString(date_dest, "yyyy-MM-dd").toString("dd/MM/yyyy");
+        ageString += " : " + QDate::fromString(date_dest, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
-    else{
+    else if (typeInfo == "current"){
         QDate date = QDate::fromString(birth, "yyyy-MM-dd");
 
         int years = QDate::currentDate().year() - date.year();
@@ -72,6 +78,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
             ageString = QString::number(years) + " ans, ";
 
         ageString += QString::number(months) + " mois";
+    }
+
+    else if(typeInfo == "care"){
+        ageString = "Dernière garde : " + birth;
     }
 
     QLabel *ageLabel = new QLabel(ageString, this);
