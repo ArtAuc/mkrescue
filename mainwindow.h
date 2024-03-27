@@ -35,6 +35,7 @@ public slots:
     void RefreshPage(QString type);
     void Clean();
     void SelectDogCard();
+    void UnselectDogCard();
 
 private:
     QString ClearUselessBreaks(QString s);

@@ -2,6 +2,7 @@
 
 DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info) : DogCard(parent)
 {
+    mainWindow = parent;
     QString typeInfo = "care";
     if(birth.contains("___"))
         typeInfo = "out";
@@ -90,12 +91,13 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     QLabel *descriptionLabel = new QLabel(description, this);
 
 
-    QToolButton *detailsButton = new QToolButton(this);
+    detailsButton = new QToolButton(this);
     detailsButton->setIcon(QIcon("media/right.png"));
     detailsButton->setIconSize(QSize(iconSize, iconSize));
     detailsButton->setFixedSize(iconSize, iconSize);
 
-    connect(detailsButton, SIGNAL(clicked()), parent, SLOT(SelectDogCard()));
+    connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
+    connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
 
     layout->addWidget(sexLabel, 1, 1);
     layout->addWidget(nameLabel, 1, 0);
@@ -111,5 +113,26 @@ void DogCard::resizeEvent(QResizeEvent *event){
     QFrame::resizeEvent(event);
 
     QSize parentSize = qobject_cast<QWidget*>(parent())->size();
-    this->setMaximumSize(parentSize / 4);
+    if(selected)
+        setFixedSize(parentSize);
+    else{
+        setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+        setMaximumSize(parentSize / 4);
+    }
+}
+
+void DogCard::SelectThis(){
+    disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
+    connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
+    connect(detailsButton, SIGNAL(clicked()), this, SLOT(UnselectThis()));
+    selected = true;
+    resizeEvent(nullptr);
+}
+
+void DogCard::UnselectThis(){
+    disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
+    connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
+    connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
+    selected = false;
+    resizeEvent(nullptr);
 }

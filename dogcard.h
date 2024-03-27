@@ -6,6 +6,8 @@
 #include <QToolButton>
 #include <QGridLayout>
 #include <QDate>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 
 class DogCard : public QFrame
 {
@@ -15,8 +17,16 @@ public:
     DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info);
     void resizeEvent(QResizeEvent *event);
 
+
+private slots:
+    void SelectThis();
+    void UnselectThis();
+
 private:
     QLabel* sexLabel;
+    QToolButton *detailsButton;
+    QWidget* mainWindow;
+    bool selected = false;
 };
 
 #endif // DOGCARD_H

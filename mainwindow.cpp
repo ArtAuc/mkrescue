@@ -309,7 +309,16 @@ void MainWindow::Clean(){
 }
 
 void MainWindow::SelectDogCard(){
-    DogCard *card = qobject_cast<DogCard*>(QObject::sender()->parent());
+    DogCard *selectedCard = qobject_cast<DogCard*>(QObject::sender()->parent());
 
-    qDebug() << card->objectName();
+    for (DogCard* c : findChildren<DogCard*>()){
+        if(c->objectName() != selectedCard->objectName())
+            c->setVisible(false);
+    }
+}
+
+void MainWindow::UnselectDogCard(){
+    for (DogCard* c : findChildren<DogCard*>()){
+        c->setVisible(true);
+    }
 }
