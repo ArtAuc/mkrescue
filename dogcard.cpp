@@ -69,3 +69,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     setLayout(layout);
 }
+
+void DogCard::resizeEvent(QResizeEvent *event){
+    QFrame::resizeEvent(event);
+
+    QSize parentSize = qobject_cast<QWidget*>(parent())->size();
+    this->setMaximumSize(parentSize / 4);
+}

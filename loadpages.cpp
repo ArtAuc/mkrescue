@@ -30,6 +30,8 @@ void MainWindow::LoadDogCards(QString search){
             row += 1;
         }
     }
+
+    resizeEvent(nullptr);
 }
 
 void MainWindow::LoadEntryRegistry(QString year, QString search)

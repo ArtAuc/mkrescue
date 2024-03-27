@@ -172,6 +172,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     QSize textSize = ui->yearBox->fontMetrics().size(Qt::TextSingleLine, ui->yearBox->currentText());
     ui->yearBox->setFixedSize(textSize + QSize(35, 35));
+
+    for (DogCard* c : ui->dogCardsContent->findChildren<DogCard*>())
+        c->resizeEvent(event);
 }
 
 void MainWindow::ToggleModifyButtons()
