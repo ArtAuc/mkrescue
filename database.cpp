@@ -217,8 +217,6 @@ QSqlQuery Database::GetDogs(QString type, QString search){
     query.bindValue(":search", search + "%");
     query.exec();
 
-    qDebug() << query.executedQuery();
-
     return query;
 }
 

@@ -182,7 +182,7 @@ void EditDogWidget::FillOtherFields(QString s){
         QComboBox* sexBox = findChild<QComboBox*>();
         sexBox->setCurrentText(sexList[row]);
 
-        QDateTimeEdit* birthEdit = findChild<QDateTimeEdit*>();
+        QDateEdit* birthEdit = findChild<QDateEdit*>();
         birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-mm-dd"));
     }
 
@@ -235,8 +235,8 @@ void EditDogWidget::PreviewOtherFields(QString s){
         QComboBox* sexBox = findChild<QComboBox*>();
         sexBox->setCurrentText(sexList[row]);
 
-        QDateTimeEdit* birthEdit = findChild<QDateTimeEdit*>();
-        birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-mm-dd"));
+        QDateEdit* birthEdit = findChild<QDateEdit*>();
+        birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-MM-dd"));
     }
 
     else{

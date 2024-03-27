@@ -346,40 +346,54 @@ void EditPage::SaveEdit()
 
 
         QString queryString;
-        if(!currentNecessary.isEmpty()){ // Modifying
+        if (!currentNecessary.isEmpty()) { // Modifying
             queryString = "UPDATE ES_Registry "
-                          "SET id_dog = " + id_dog + ", "
-                          "date_prov = '" + date_prov + "', "
-                          "id_people_prov = " + id_people_prov + ", "
-                          "type_prov = '" + type_prov + "', "
-                          "death_cause = '" + death_causes[0] + "' "
-                          "WHERE id_ES = " + currentNecessary[0] +
-                          " AND date_prov = '" + currentNecessary[1] + "';";
+                          "SET id_dog = :id_dog, "
+                          "date_prov = :date_prov, "
+                          "id_people_prov = :id_people_prov, "
+                          "type_prov = :type_prov, "
+                          "death_cause = :death_cause "
+                          "WHERE id_ES = :id_ES "
+                          "AND date_prov = :current_date_prov";
+
+            query.prepare(queryString);
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":date_prov", date_prov);
+            query.bindValue(":id_people_prov", id_people_prov);
+            query.bindValue(":type_prov", type_prov);
+            query.bindValue(":death_cause", death_causes[0]);
+            query.bindValue(":id_ES", currentNecessary[0]);
+            query.bindValue(":current_date_prov", currentNecessary[1]);
         }
-        else{ // Creating
+        else { // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
-                              "VALUES (" +
-                              id_dog + ", '" +
-                                type_prov + "', '" +
-                                date_prov + "', " +
-                                id_people_prov + ", '" +
-                                death_causes[0] +
-                              "');";
+                          "VALUES (:id_dog, :type_prov, :date_prov, :id_people_prov, :death_cause)";
+
+            query.prepare(queryString);
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":type_prov", type_prov);
+            query.bindValue(":date_prov", date_prov);
+            query.bindValue(":id_people_prov", id_people_prov);
+            query.bindValue(":death_cause", death_causes[0]);
         }
 
-        query.exec(queryString);
+        query.exec();
 
-        query.exec("DELETE FROM Destinations "
-                   "WHERE id_dog = " + id_dog + ";");
+        query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog");
+        query.bindValue(":id_dog", id_dog);
+        query.exec();
 
 
         for(int i = 0; i < id_peoples.count(); i++){
-            query.exec("INSERT INTO Destinations (id_dog, id_people, date, type)"
-                       "VALUES (" +
-                       id_dog + ", " +
-                       id_peoples[i] + ", '" +
-                       dates[i] + "', '" +
-                       types[i] + "');");
+            query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type) "
+                          "VALUES (:id_dog, :id_people, :date, :type)");
+
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":id_people", id_peoples[i]);
+            query.bindValue(":date", dates[i]);
+            query.bindValue(":type", types[i]);
+
+            query.exec();
         }
 
     }
@@ -438,23 +452,37 @@ void EditPage::SaveEdit()
                                     GetField("cityCareDestEdit", careEditPage)}));
 
         QString queryString;
-        if(!currentNecessary.isEmpty()){ // Modifying
+        if (!currentNecessary.isEmpty()) { // Modifying
             queryString = "UPDATE Care_registry "
-                          "SET id_dog = " + id_dog + ", "
-                          "entry_date = '" + entry_date + "', "
-                          "id_people_prov = " + id_people_prov + ", "
-                          "exit_date = '" + exit_date + "', "
-                          "id_people_dest = " + id_people_dest + " "
-                          "WHERE id_care = " + currentNecessary[0] +
-                          " AND entry_date = '" + currentNecessary[1] + "';";
+                          "SET id_dog = :id_dog, "
+                          "entry_date = :entry_date, "
+                          "id_people_prov = :id_people_prov, "
+                          "exit_date = :exit_date, "
+                          "id_people_dest = :id_people_dest "
+                          "WHERE id_care = :id_care "
+                          "AND entry_date = :current_entry_date";
+
+            query.prepare(queryString);
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":entry_date", entry_date);
+            query.bindValue(":id_people_prov", id_people_prov);
+            query.bindValue(":exit_date", exit_date);
+            query.bindValue(":id_people_dest", id_people_dest);
+            query.bindValue(":id_care", currentNecessary[0]);
+            query.bindValue(":current_entry_date", currentNecessary[1]);
+        }
+        else { // Creating
+            query.prepare("INSERT INTO Care_registry (id_dog, entry_date, id_people_prov, exit_date, id_people_dest) "
+                          "VALUES (:id_dog, :entry_date, :id_people_prov, :exit_date, :id_people_dest)");
+
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":entry_date", entry_date);
+            query.bindValue(":id_people_prov", id_people_prov);
+            query.bindValue(":exit_date", exit_date);
+            query.bindValue(":id_people_dest", id_people_dest);
         }
 
-        else{ // Creating
-            queryString = "INSERT INTO Care_registry (id_dog, entry_date, id_people_prov, exit_date, id_people_dest) "
-                          "VALUES (" + id_dog + ", '" + entry_date + "', " + id_people_prov + ", '" + exit_date + "', " + id_people_dest + ")";
-        }
-
-        query.exec(queryString);
+        query.exec();
     }
 
     else if(lastType == "members"){
@@ -522,8 +550,16 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
         newId = "1";
 
 
-    query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
-               "VALUES ('" + newId + "', '" + infos[0] + "', '" + infos[1] + "', '" + infos[4] + "', '" + infos[2] + "', '" + infos[3] + "')");
+    query.prepare("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
+                  "VALUES (:id, :last_name, :first_name, :address, :phone, :email)");
+
+    query.bindValue(":id", newId);
+    query.bindValue(":last_name", infos[0]);
+    query.bindValue(":first_name", infos[1]);
+    query.bindValue(":address", infos[4]);
+    query.bindValue(":phone", infos[2]);
+    query.bindValue(":email", infos[3]);
+    query.exec();
 
     return newId;
 }
@@ -553,9 +589,17 @@ QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, s
         newId = "1";
 
 
-    query.exec("INSERT INTO Dogs (id_dog, name, sex, chip, description, birth) "
-               "VALUES ('" + newId + "', '" + infos[0] + "', '" + infos[2] + "', '" + infos[1] + "', '" + infos[3] + "', '" + infos[4] + "')");
+    query.prepare("INSERT INTO Dogs (id_dog, name, sex, chip, description, birth) "
+                  "VALUES (:id, :name, :sex, :chip, :description, :birth)");
 
+    query.bindValue(":id", newId);
+    query.bindValue(":name", infos[0]);
+    query.bindValue(":sex", infos[2]);
+    query.bindValue(":chip", infos[1]);
+    query.bindValue(":description", infos[3]);
+    query.bindValue(":birth", infos[4]);
+
+    query.exec();
     return newId;
 }
 
