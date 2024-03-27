@@ -25,7 +25,7 @@ public slots:
     void PreviewOtherFields(QString s = "");
 
 private:
-    QStringList sexList;
+    QStringList sexList, birthList;
 };
 
 #endif // EDITDOGWIDGET_H

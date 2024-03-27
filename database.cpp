@@ -171,7 +171,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                           ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
                           "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
                           "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
-                          "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') ";
+                          "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') "
+                          "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry)";
 
     if(type.contains("out"))
         queryString +=
@@ -187,9 +188,10 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
                 "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
                 "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
-                "AND NOT (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge')";
+                "AND NOT (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') "
+                "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry)";
 
-    if(type.contains("care"))
+    if(type.contains("care")){
         queryString +=
                 " UNION "
                 ""
@@ -203,6 +205,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "LEFT JOIN Care_registry ON Care_registry.id_dog = Care_registry.id_dog AND Care_registry.entry_date = LastCare.max_date "
                 "JOIN People ON Care_registry.id_people_prov = People.id_people "
                 "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search)";
+    }
 
 
 
@@ -213,6 +216,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
     query.exec();
+
+    qDebug() << query.executedQuery();
 
     return query;
 }

@@ -87,7 +87,7 @@ void EditDogWidget::showEvent(QShowEvent* event){
     QWidget::showEvent(event);
     QSqlQuery query;
 
-    QStringList dogNameList, chipList, descriptionList, birthList;
+    QStringList dogNameList, chipList, descriptionList;
 
     query.exec("SELECT name, chip, description, sex, birth "
                "FROM Dogs;");
@@ -181,6 +181,9 @@ void EditDogWidget::FillOtherFields(QString s){
 
         QComboBox* sexBox = findChild<QComboBox*>();
         sexBox->setCurrentText(sexList[row]);
+
+        QDateTimeEdit* birthEdit = findChild<QDateTimeEdit*>();
+        birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-mm-dd"));
     }
 
 }
@@ -231,6 +234,9 @@ void EditDogWidget::PreviewOtherFields(QString s){
 
         QComboBox* sexBox = findChild<QComboBox*>();
         sexBox->setCurrentText(sexList[row]);
+
+        QDateTimeEdit* birthEdit = findChild<QDateTimeEdit*>();
+        birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-mm-dd"));
     }
 
     else{

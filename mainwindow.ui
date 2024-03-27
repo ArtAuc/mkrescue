@@ -431,7 +431,7 @@ QComboBox {
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>5</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
