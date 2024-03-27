@@ -113,12 +113,14 @@ void DogCard::resizeEvent(QResizeEvent *event){
     QFrame::resizeEvent(event);
 
     QSize parentSize = qobject_cast<QWidget*>(parent())->size();
-    if(selected)
-        setFixedSize(parentSize);
-    else{
-        setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        setMaximumSize(parentSize / 4);
+    if(selected){
+        if(maximumWidth() <= width() || maximumHeight() <= height())
+            setMaximumSize(size() + QSize(1, 1));
+        else
+            setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
     }
+    else
+        setMaximumSize(parentSize / 4);
 }
 
 void DogCard::SelectThis(){

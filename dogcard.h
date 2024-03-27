@@ -17,7 +17,6 @@ public:
     DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info);
     void resizeEvent(QResizeEvent *event);
 
-
 private slots:
     void SelectThis();
     void UnselectThis();
