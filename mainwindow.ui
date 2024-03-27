@@ -459,16 +459,23 @@ QLabel{
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <widget class="QCheckBox" name="checkBox">
+             <widget class="QCheckBox" name="outCheckbox">
               <property name="text">
                <string>Sortis du refuge</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox_2">
+             <widget class="QCheckBox" name="checkBox">
               <property name="text">
-               <string>Pension</string>
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="careCheckbox">
+              <property name="text">
+               <string>Garderie</string>
               </property>
              </widget>
             </item>

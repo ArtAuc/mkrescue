@@ -17,7 +17,7 @@ public:
     void ReorderEntryRegistry();
     void ReorderCareRegistry();
     void ReorderMembers();
-    QSqlQuery GetCurrentESDogs(QString search);
+    QSqlQuery GetDogs(QString type, QString search);
     QSqlQuery GetEntryRegistry(QString year, QString search);
     QSqlQuery GetCareRegistry(QString year, QString search);
     QSqlQuery GetMembers(QString year, QString search);

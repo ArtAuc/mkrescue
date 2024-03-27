@@ -5,10 +5,14 @@
 void MainWindow::LoadDogCards(QString search){
     qDeleteAll(ui->dogCardsPage->findChildren<DogCard*>());
 
-    QSqlQuery query = db.GetCurrentESDogs(search);
+    QString type = "current";
+    if(ui->outCheckbox->checkState() == Qt::Checked)
+        type += "out";
 
     int row = 0;
     int col = 0;
+
+    QSqlQuery query = db.GetDogs(type, search);
 
     QGridLayout *layout = qobject_cast<QGridLayout*>(ui->dogCardsContent->layout());
     while(query.next() && query.value(0).toString() != "")
@@ -19,8 +23,7 @@ void MainWindow::LoadDogCards(QString search){
                                        query.value(2).toString(),
                                        query.value(3).toString(),
                                        query.value(4).toString(),
-                                       query.value(5).toString(),
-                                       "current");
+                                       query.value(5).toString());
 
         layout->addWidget(dogCard, row, col);
 

@@ -160,16 +160,28 @@ void Database::ReorderMembers(){
 
 }
 
-QSqlQuery Database::GetCurrentESDogs(QString search){
+QSqlQuery Database::GetDogs(QString type, QString search){
+    QString queryString = "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov) "
+                          "FROM Dogs "
+                          "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
+                          "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "
+                          "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
+                          "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') ";
+
+    if(type.contains("out"))
+        queryString +=
+                " UNION "
+                ""
+                "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Destinations.date || '___' || Destinations.type, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov) "
+                "FROM Dogs "
+                "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
+                "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "
+                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
+                "AND NOT (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge')";
+
+    queryString += " ORDER BY Dogs.id_dog DESC;";
+
     QSqlQuery query;
-    QString queryString =
-            "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, ES_Registry.date_prov "
-            "FROM Dogs "
-            "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
-            "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "
-            "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
-            "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') " // To get dogs currently in shelter only
-            "ORDER BY Dogs.id_dog DESC;";
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");

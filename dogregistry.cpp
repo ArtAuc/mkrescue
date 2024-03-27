@@ -1,4 +1,4 @@
-#include "dogregistry.h"
+    #include "dogregistry.h"
 
 DogRegistry::DogRegistry(QWidget *parent)
     : Registry{parent}

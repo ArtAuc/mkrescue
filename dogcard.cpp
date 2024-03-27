@@ -1,7 +1,12 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info, QString typeInfo) : DogCard(parent)
+DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info) : DogCard(parent)
 {
+    QString typeInfo = "current";
+    if(birth.contains("___"))
+        typeInfo = "out";
+
+
     QGridLayout *layout = new QGridLayout(this);
 
     setObjectName("dogCard" + id_dog);
@@ -16,39 +21,61 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     sexLabel->setPixmap(sexIcon);
     sexLabel->setStyleSheet("padding:3px;");
 
-    QDate date = QDate::fromString(birth, "yyyy-MM-dd");
 
-    int years = QDate::currentDate().year() - date.year();
-    int months = QDate::currentDate().month() - date.month();
-
-    if (QDate::currentDate().day() < date.day())
-        months--;
-
-    if (months < 0) {
-        years--;
-        months += 12;
-    }
-
-    QString ageString;
-    if (years == 1)
-        ageString = "1 an, ";
-    else if (years > 1)
-        ageString = QString::number(years) + " ans, ";
-
-    ageString += QString::number(months) + " mois";
-    QLabel *ageLabel = new QLabel(ageString, this);
 
     QLabel *nameLabel = new QLabel(name, this);
     nameLabel->setStyleSheet("font-size:23pt;"
                              "font-weight:bold;");
 
+
     QString infoString;
-    if(typeInfo == "current"){
-        infoString = "Entré" + QString((sex == "Mâle") ? "" : "e");
-        infoString += " le " + QDate::fromString(info, "yyyy-MM-dd").toString("dd/MM/yyyy");
+    if(typeInfo == "current" || typeInfo == "out"){
+        QStringList splitted = info.split("___");
+        QString type_prov = splitted[1];
+        QString date_prov = splitted[0];
+        infoString = type_prov + " le ";
+        infoString += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
+
     QLabel *infoLabel = new QLabel(infoString, this);
+
+
+    QString ageString;
+
+    if(typeInfo == "out"){ // In this case, birth = date_dest___type_dest
+        QString type_dest = birth.split("___")[1];
+        QString date_dest = birth.split("___")[0];
+        ageString = type_dest;
+        if(sex == "Femelle" && type_dest == "Mort")
+            type_dest += "e";
+        ageString += " le " + QDate::fromString(date_dest, "yyyy-MM-dd").toString("dd/MM/yyyy");
+    }
+
+    else{
+        QDate date = QDate::fromString(birth, "yyyy-MM-dd");
+
+        int years = QDate::currentDate().year() - date.year();
+        int months = QDate::currentDate().month() - date.month();
+
+        if (QDate::currentDate().day() < date.day())
+            months--;
+
+        if (months < 0) {
+            years--;
+            months += 12;
+        }
+
+        if (years == 1)
+            ageString = "1 an, ";
+        else if (years > 1)
+            ageString = QString::number(years) + " ans, ";
+
+        ageString += QString::number(months) + " mois";
+    }
+
+    QLabel *ageLabel = new QLabel(ageString, this);
+
 
     QLabel *descriptionLabel = new QLabel(description, this);
 
@@ -61,9 +88,9 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     connect(detailsButton, SIGNAL(clicked()), parent, SLOT(SelectDogCard()));
 
     layout->addWidget(sexLabel, 1, 1);
-    layout->addWidget(ageLabel, 2, 0, 1, 2);
     layout->addWidget(nameLabel, 1, 0);
-    layout->addWidget(infoLabel, 3, 0, 1, 2);
+    layout->addWidget(infoLabel, 2, 0, 1, 2);
+    layout->addWidget(ageLabel, 3, 0, 1, 2);
     layout->addWidget(descriptionLabel, 4, 0);
     layout->addWidget(detailsButton, 4, 1);
 

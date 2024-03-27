@@ -51,6 +51,11 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
 
+    // Dog cards checkboxes
+    connect(ui->outCheckbox, SIGNAL(clicked(bool)), this, SLOT(LoadDogCards()));
+
+
+
     ui->entryRegistryPage->SetType("entry");
     ui->entryLabelLayout->setAlignment(Qt::AlignLeft);
 
