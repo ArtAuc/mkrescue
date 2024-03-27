@@ -164,7 +164,12 @@ QSqlQuery Database::GetDogs(QString type, QString search){
     QString queryString = "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov) "
                           "FROM Dogs "
                           "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
-                          "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "
+                          "LEFT JOIN ("
+                          "    SELECT id_dog, MAX(date) AS max_date "
+                          "    FROM Destinations "
+                          "    GROUP BY id_dog "
+                          ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
+                          "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
                           "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
                           "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') ";
 
@@ -175,8 +180,13 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Destinations.date || '___' || Destinations.type, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov) "
                 "FROM Dogs "
                 "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
-                "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog "
-                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
+                "LEFT JOIN ("
+                "    SELECT id_dog, MAX(date) AS max_date "
+                "    FROM Destinations "
+                "    GROUP BY id_dog "
+                ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
+                "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
+                "WHERE (Dogs.name LIKE '%' OR chip LIKE '%' OR description LIKE '%') "
                 "AND NOT (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge')";
 
     queryString += " ORDER BY Dogs.id_dog DESC;";
