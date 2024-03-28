@@ -20,7 +20,8 @@ SOURCES += \
     loadpages.cpp \
     main.cpp \
     mainwindow.cpp \
-    registry.cpp
+    registry.cpp \
+    tristatecheckbox.cpp
 
 HEADERS += \
     database.h \
@@ -32,7 +33,8 @@ HEADERS += \
     editpeoplewidget.h \
     mainwindow.h \
     menutree.h \
-    registry.h
+    registry.h \
+    tristatecheckbox.h
 
 FORMS += \
     mainwindow.ui

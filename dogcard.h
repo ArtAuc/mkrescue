@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include <QGridLayout>
 #include <QDate>
+#include <QSqlQuery>
 
 class DogCard : public QFrame
 {
@@ -20,7 +21,8 @@ private slots:
     void UnselectThis();
 
 private:
-    QLabel *sexLabel, *chipLabel, *vetLabel;
+    QString id_dog;
+    QLabel *sexLabel, *chipLabel, *vetLabel, *birthLabel;
     QToolButton *detailsButton;
     QWidget *mainWindow, *nameSexWidget;
     bool selected = false;

@@ -1,12 +1,14 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2) : DogCard(parent)
+DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info2, QString description, QString info1) : DogCard(parent)
 {
+    this->id_dog = id_dog;
     mainWindow = parent;
+
     QString typeInfo = "care";
-    if(info1.contains("___"))
+    if(info2.contains("___"))
         typeInfo = "out";
-    else if (info2.contains("___"))
+    else if (info1.contains("___"))
         typeInfo = "current";
 
 
@@ -33,36 +35,37 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     nameSexLayout->addWidget(nameLabel);
     nameSexLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Preferred));
     nameSexWidget->setLayout(nameSexLayout);
+    nameSexWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    QString info2String;
+    QString info1String;
     if(typeInfo == "current" || typeInfo == "out"){
-        QStringList splitted = info2.split("___");
+        QStringList splitted = info1.split("___");
         QString type_prov = splitted[1];
         QString date_prov = splitted[0];
-        info2String = type_prov + " : ";
-        info2String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
+        info1String = type_prov + " : ";
+        info1String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
     else if(typeInfo == "care"){
-        info2String = "Propriétaire : " + info2;
+        info1String = "Propriétaire : " + info1;
     }
 
 
-    QLabel *info2Label = new QLabel(info2String, this);
+    QLabel *info1Label = new QLabel(info1String, this);
 
-    QString ageString;
+    QString info2String;
 
-    if(typeInfo == "out"){ // Here info1 = date_dest___type_dest
-        QString type_dest = info1.split("___")[1];
-        QString date_dest = info1.split("___")[0];
-        ageString = type_dest;
+    if(typeInfo == "out"){ // Here info2 = date_dest___type_dest
+        QString type_dest = info2.split("___")[1];
+        QString date_dest = info2.split("___")[0];
+        info2String = type_dest;
         if(sex == "Femelle" && type_dest == "Mort")
             type_dest += "e";
-        ageString += " : " + QDate::fromString(date_dest, "yyyy-MM-dd").toString("dd/MM/yyyy");
+        info2String += " : " + QDate::fromString(date_dest, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
     else if (typeInfo == "current"){
-        QDate date = QDate::fromString(info1, "yyyy-MM-dd");
+        QDate date = QDate::fromString(info2, "yyyy-MM-dd");
 
         int years = QDate::currentDate().year() - date.year();
         int months = QDate::currentDate().month() - date.month();
@@ -76,18 +79,18 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
         }
 
         if (years == 1)
-            ageString = "1 an, ";
+            info2String = "1 an, ";
         else if (years > 1)
-            ageString = QString::number(years) + " ans, ";
+            info2String = QString::number(years) + " ans, ";
 
-        ageString += QString::number(months) + " mois";
+        info2String += QString::number(months) + " mois";
     }
 
     else if(typeInfo == "care"){
-        ageString = "Dernière garde : " + QDate::fromString(info1, "yyyy-MM-dd").toString("dd/MM/yyyy");
+        info2String = "Dernière garde : " + QDate::fromString(info2, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
-    QLabel *ageLabel = new QLabel(ageString, this);
+    QLabel *info2Label = new QLabel(info2String, this);
 
     QLabel *descriptionLabel = new QLabel(description, this);
 
@@ -105,15 +108,18 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     // Labels only visible when selected
     chipLabel = new QLabel();
-    vetLabel = new QLabel();
+    vetLabel = new QLabel("C");
+    birthLabel = new QLabel();
+    vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     layout->addWidget(nameSexWidget, 0, 0);
-    layout->addWidget(info2Label, 1,  0);
-    layout->addWidget(ageLabel, 2, 0);
+    layout->addWidget(info1Label, 3,  0);
+    layout->addWidget(info2Label, 4, 0);
     layout->addWidget(descriptionLabel, 5, 0);
     layout->addWidget(detailsButton, 5, 2);
 
     nameLabel->setObjectName("nameLabel" + id_dog);
+    vetLabel->setObjectName("vetLabel" + id_dog);
 
     setLayout(layout);
 }
@@ -125,7 +131,7 @@ void DogCard::resizeEvent(QResizeEvent *event){
     QSize parentSize = qobject_cast<QWidget*>(parent())->size();
     if(selected){
         if(maximumWidth() <= width() || maximumHeight() <= height())
-            setMaximumSize(size() + QSize(3, 3));
+            setMaximumSize(size() + QSize(5, 5));
         else
             setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
         factor = 0.7;
@@ -136,15 +142,19 @@ void DogCard::resizeEvent(QResizeEvent *event){
     }
 
     for(QLabel *label : findChildren<QLabel*>()){
-        if(!label->objectName().contains("nameLabel")){
-            label->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
-        }
-
-        else{
+        if(label->objectName() == "nameLabel" + id_dog){
             label->setStyleSheet("font-size:" + QString::number(factor * 0.03 * width()) + "pt;"
                                  "font-weight:bold;");
         }
+
+        else{
+            label->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
+        }
     }
+
+    vetLabel->setStyleSheet(vetLabel->styleSheet() + "margin-left:30px;"
+                                                     "padding:30px;"
+                                                     "border-left: 2px solid gray;");
 
     sexLabel->setPixmap(sexIcon.scaled(factor * size() / 10, Qt::KeepAspectRatio));
 }
@@ -154,7 +164,20 @@ void DogCard::SelectThis(){
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(UnselectThis()));
     selected = true;
-    layout->addWidget(vetLabel, 0, 2, 3, 1);
+
+    QSqlQuery query;
+    query.exec("SELECT chip, birth "
+               "FROM Dogs "
+               "WHERE id_dog = " + id_dog + ";");
+
+    if(query.next()){
+        chipLabel->setText(query.value(0).toString());
+        birthLabel->setText("Naissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+    }
+
+    layout->addWidget(vetLabel, 0, 1, 3, 1);
+    layout->addWidget(chipLabel, 1, 0);
+    layout->addWidget(birthLabel, 2, 0);
 
     resizeEvent(nullptr);
 }
@@ -164,6 +187,8 @@ void DogCard::UnselectThis(){
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
     selected = false;
+    layout->removeWidget(chipLabel);
+    layout->removeWidget(birthLabel);
     layout->removeWidget(vetLabel);
 
     resizeEvent(nullptr);
