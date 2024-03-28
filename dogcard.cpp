@@ -1,58 +1,60 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info) : DogCard(parent)
+DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2) : DogCard(parent)
 {
     mainWindow = parent;
     QString typeInfo = "care";
-    if(birth.contains("___"))
+    if(info1.contains("___"))
         typeInfo = "out";
-    else if (info.contains("___"))
+    else if (info2.contains("___"))
         typeInfo = "current";
 
 
-    QGridLayout *layout = new QGridLayout(this);
+    layout = new QGridLayout(this);
 
     setObjectName("dogCard" + id_dog);
 
     sexLabel = new QLabel(this);
     sexLabel->setAlignment(Qt::AlignCenter);
 
-    int iconSize = 40;
-
-    QPixmap sexIcon("media/" + QString(((sex == "Mâle") ? "male" : "female")) + ".png");
-    sexIcon = sexIcon.scaled(QSize(iconSize, iconSize), Qt::KeepAspectRatio);
+    sexIcon = QPixmap("media/" + QString(((sex == "Mâle") ? "male" : "female")) + ".png");
     sexLabel->setPixmap(sexIcon);
     sexLabel->setStyleSheet("padding:3px;");
-
 
 
     QLabel *nameLabel = new QLabel(name, this);
     nameLabel->setStyleSheet("font-size:23pt;"
                              "font-weight:bold;");
 
+    nameSexWidget = new QWidget(this);
+    QHBoxLayout *nameSexLayout = new QHBoxLayout(nameSexWidget);
+    nameSexLayout->setContentsMargins(0, 0, 0, 0);
+    nameSexLayout->addWidget(sexLabel);
+    nameSexLayout->addWidget(nameLabel);
+    nameSexLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Preferred));
+    nameSexWidget->setLayout(nameSexLayout);
 
-    QString infoString;
+    QString info2String;
     if(typeInfo == "current" || typeInfo == "out"){
-        QStringList splitted = info.split("___");
+        QStringList splitted = info2.split("___");
         QString type_prov = splitted[1];
         QString date_prov = splitted[0];
-        infoString = type_prov + " : ";
-        infoString += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
+        info2String = type_prov + " : ";
+        info2String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
     else if(typeInfo == "care"){
-        infoString = "Propriétaire : " + info;
+        info2String = "Propriétaire : " + info2;
     }
 
 
-    QLabel *infoLabel = new QLabel(infoString, this);
-
+    QLabel *info2Label = new QLabel(info2String, this);
 
     QString ageString;
 
-    if(typeInfo == "out"){ // In this case, birth = date_dest___type_dest
-        QString type_dest = birth.split("___")[1];
-        QString date_dest = birth.split("___")[0];
+    if(typeInfo == "out"){ // Here info1 = date_dest___type_dest
+        QString type_dest = info1.split("___")[1];
+        QString date_dest = info1.split("___")[0];
         ageString = type_dest;
         if(sex == "Femelle" && type_dest == "Mort")
             type_dest += "e";
@@ -60,7 +62,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     }
 
     else if (typeInfo == "current"){
-        QDate date = QDate::fromString(birth, "yyyy-MM-dd");
+        QDate date = QDate::fromString(info1, "yyyy-MM-dd");
 
         int years = QDate::currentDate().year() - date.year();
         int months = QDate::currentDate().month() - date.month();
@@ -82,14 +84,15 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     }
 
     else if(typeInfo == "care"){
-        ageString = "Dernière garde : " + birth;
+        ageString = "Dernière garde : " + QDate::fromString(info1, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
     QLabel *ageLabel = new QLabel(ageString, this);
 
-
     QLabel *descriptionLabel = new QLabel(description, this);
 
+
+    int iconSize = 40;
 
     detailsButton = new QToolButton(this);
     detailsButton->setIcon(QIcon("media/right.png"));
@@ -99,12 +102,18 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
 
-    layout->addWidget(sexLabel, 1, 1);
-    layout->addWidget(nameLabel, 1, 0);
-    layout->addWidget(infoLabel, 2, 0, 1, 2);
-    layout->addWidget(ageLabel, 3, 0, 1, 2);
-    layout->addWidget(descriptionLabel, 4, 0);
-    layout->addWidget(detailsButton, 4, 1);
+
+    // Labels only visible when selected
+    chipLabel = new QLabel();
+    vetLabel = new QLabel();
+
+    layout->addWidget(nameSexWidget, 0, 0);
+    layout->addWidget(info2Label, 1,  0);
+    layout->addWidget(ageLabel, 2, 0);
+    layout->addWidget(descriptionLabel, 5, 0);
+    layout->addWidget(detailsButton, 5, 2);
+
+    nameLabel->setObjectName("nameLabel" + id_dog);
 
     setLayout(layout);
 }
@@ -112,15 +121,32 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 void DogCard::resizeEvent(QResizeEvent *event){
     QFrame::resizeEvent(event);
 
+    float factor;
     QSize parentSize = qobject_cast<QWidget*>(parent())->size();
     if(selected){
         if(maximumWidth() <= width() || maximumHeight() <= height())
-            setMaximumSize(size() + QSize(1, 1));
+            setMaximumSize(size() + QSize(3, 3));
         else
             setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+        factor = 0.7;
     }
-    else
+    else{
         setMaximumSize(parentSize / 4);
+        factor = 2;
+    }
+
+    for(QLabel *label : findChildren<QLabel*>()){
+        if(!label->objectName().contains("nameLabel")){
+            label->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
+        }
+
+        else{
+            label->setStyleSheet("font-size:" + QString::number(factor * 0.03 * width()) + "pt;"
+                                 "font-weight:bold;");
+        }
+    }
+
+    sexLabel->setPixmap(sexIcon.scaled(factor * size() / 10, Qt::KeepAspectRatio));
 }
 
 void DogCard::SelectThis(){
@@ -128,6 +154,8 @@ void DogCard::SelectThis(){
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(UnselectThis()));
     selected = true;
+    layout->addWidget(vetLabel, 0, 2, 3, 1);
+
     resizeEvent(nullptr);
 }
 
@@ -136,5 +164,7 @@ void DogCard::UnselectThis(){
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
     selected = false;
+    layout->removeWidget(vetLabel);
+
     resizeEvent(nullptr);
 }

@@ -321,4 +321,6 @@ void MainWindow::UnselectDogCard(){
     for (DogCard* c : findChildren<DogCard*>()){
         c->setVisible(true);
     }
+
+    LoadDogCards(ui->searchLine->text());
 }

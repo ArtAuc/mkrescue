@@ -6,15 +6,13 @@
 #include <QToolButton>
 #include <QGridLayout>
 #include <QDate>
-#include <QPropertyAnimation>
-#include <QGraphicsOpacityEffect>
 
 class DogCard : public QFrame
 {
     Q_OBJECT
 public:
     explicit DogCard(QWidget *parent = nullptr) : QFrame(parent) {}
-    DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString birth, QString description, QString info);
+    DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2);
     void resizeEvent(QResizeEvent *event);
 
 private slots:
@@ -22,10 +20,12 @@ private slots:
     void UnselectThis();
 
 private:
-    QLabel* sexLabel;
+    QLabel *sexLabel, *chipLabel, *vetLabel;
     QToolButton *detailsButton;
-    QWidget* mainWindow;
+    QWidget *mainWindow, *nameSexWidget;
     bool selected = false;
+    QGridLayout *layout;
+    QPixmap sexIcon;
 };
 
 #endif // DOGCARD_H
