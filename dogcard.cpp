@@ -11,6 +11,20 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     else if (info1.contains("___"))
         typeInfo = "current";
 
+    // Header color according to type
+    QString hColor;
+    if(typeInfo == "current")
+        hColor = "3b4b64";
+    else if(typeInfo == "care")
+        hColor = "97717a";
+    else if(typeInfo == "out")
+        hColor = "a3acbd";
+
+
+    setStyleSheet("QFrame{border-top:3px solid #" + hColor + ";}"
+                  "QLabel, QWidget#dogCardsContent, QScrollArea{border:none;}");
+
+
 
     layout = new QGridLayout(this);
 

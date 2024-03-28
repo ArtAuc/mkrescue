@@ -440,7 +440,6 @@ QComboBox {
 	background-color:white;
 	color:#333;
 	border:1px solid #ddd;
-	border-top:3px solid #3b4b64;
 	border-radius:5px;
 }
 
