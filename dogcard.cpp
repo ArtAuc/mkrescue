@@ -111,9 +111,9 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     birthLabel = new QLabel();
     vetLabel = new QLabel("C");
     vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castré" : "Stérilisée");
-    compatDogBox = new TriStateCheckBox("Compatible chien");
-    compatCatBox = new TriStateCheckBox("Compatible chat");
+    sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castré" : "Stérilisée", this);
+    compatDogBox = new TriStateCheckBox("Compatible chien", this);
+    compatCatBox = new TriStateCheckBox("Compatible chat", this);
 
     layout->addWidget(nameSexWidget, 0, 0);
     layout->addWidget(info1Label, 3,  0);
@@ -169,13 +169,16 @@ void DogCard::SelectThis(){
     selected = true;
 
     QSqlQuery query;
-    query.exec("SELECT chip, birth "
+    query.exec("SELECT chip, birth, sterilized, compat_dog, compat_cat "
                "FROM Dogs "
                "WHERE id_dog = " + id_dog + ";");
 
     if(query.next()){
         chipLabel->setText(query.value(0).toString());
         birthLabel->setText("Naissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        sterilizedBox->SqlToState(query.value(2).toString());
+        compatDogBox->SqlToState(query.value(3).toString());
+        compatCatBox->SqlToState(query.value(4).toString());
     }
 
     layout->addWidget(chipLabel, 1, 0);
@@ -198,6 +201,24 @@ void DogCard::UnselectThis(){
     layout->removeWidget(birthLabel);
     layout->removeWidget(vetLabel);
     layout->removeWidget(sterilizedBox);
+    layout->removeWidget(compatDogBox);
+    layout->removeWidget(compatCatBox);
 
     resizeEvent(nullptr);
+}
+
+void DogCard::SaveCard(){
+    QSqlQuery query;
+    query.prepare("UPDATE Dogs "
+                  "SET sterilized = :sterilized, "
+                  "compat_dog = :compat_dog, "
+                  "compat_cat = :compat_cat "
+                  "WHERE id_dog = :id;");
+
+    query.bindValue(":sterilized", sterilizedBox->StateToSql());
+    query.bindValue(":compat_dog", compatDogBox->StateToSql());
+    query.bindValue(":compat_cat", compatCatBox->StateToSql());
+    query.bindValue(":id", id_dog);
+
+    query.exec();
 }

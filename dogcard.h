@@ -7,6 +7,8 @@
 #include <QGridLayout>
 #include <QDate>
 #include <QSqlQuery>
+#include <QSqlError>
+
 #include "tristatecheckbox.h"
 
 class DogCard : public QFrame
@@ -20,8 +22,10 @@ public:
 private slots:
     void SelectThis();
     void UnselectThis();
+    void SaveCard();
 
 private:
+    QString StateToSql(Qt::CheckState state);
     QString id_dog;
     QLabel *sexLabel, *chipLabel, *vetLabel, *birthLabel;
     QToolButton *detailsButton;
