@@ -26,13 +26,14 @@ private slots:
 private:
     QString StateToSql(Qt::CheckState state);
     QString id_dog;
-    QLabel *sexLabel, *vetLabel, *descriptionLabel;
+    QLabel *sexLabel, *vetLabel, *descriptionLabel, *info2Label;
     QToolButton *detailsButton;
     QWidget *mainWindow, *nameSexWidget;
     bool selected = false;
     QGridLayout *layout;
     QPixmap sexIcon;
     TriStateCheckBox *sterilizedBox, *compatDogBox, *compatCatBox;
+    QString type;
 };
 
 #endif // DOGCARD_H

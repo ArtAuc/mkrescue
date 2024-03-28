@@ -11,6 +11,8 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     else if (info1.contains("___"))
         typeInfo = "current";
 
+    type = typeInfo;
+
     // Header color according to type
     QString hColor;
     if(typeInfo == "current")
@@ -104,7 +106,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
         info2String = "Dernière garde : " + QDate::fromString(info2, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
-    QLabel *info2Label = new QLabel(info2String, this);
+    info2Label = new QLabel(info2String, this);
 
     descriptionLabel = new QLabel(description, this);
 
@@ -128,11 +130,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     vetLabel->setObjectName("vetLabel" + id_dog);
 
     layout->addWidget(nameSexWidget, 0, 0);
-    layout->addWidget(info1Label, 2,  0);
+    layout->addWidget(info1Label, 3,  0);
     layout->addWidget(info2Label, 4, 0);
     layout->addWidget(descriptionLabel, 5, 0);
     layout->addWidget(detailsButton, 5, 2);
-    layout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding), 9, 0);
 
     nameLabel->setObjectName("nameLabel" + id_dog);
 
@@ -199,19 +200,27 @@ void DogCard::SelectThis(){
     if(query.next()){
 
         chipLabel->setText(query.value(0).toString());
-        birthLabel->setText("\nNaissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        birthLabel->setText("Naissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy") + "\n");
         sterilizedBox->SqlToState(query.value(2).toString());
         compatDogBox->SqlToState(query.value(3).toString());
         compatCatBox->SqlToState(query.value(4).toString());
     }
 
+    // Modify age
+    if(type == "current"){
+        birthLabel->setText(birthLabel->text() + "Âge : " + info2Label->text() + "\n");
+        layout->removeWidget(info2Label);
+        info2Label->setText("");
+    }
+
     descriptionLabel->setText(descriptionLabel->text() + "\n");
 
     layout->addWidget(chipLabel, 1, 0);
-    layout->addWidget(birthLabel, 3, 0);
+    layout->addWidget(birthLabel, 2, 0);
     layout->addWidget(sterilizedBox, 6, 0);
     layout->addWidget(compatDogBox, 7, 0);
     layout->addWidget(compatCatBox, 8, 0);
+    layout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding), 9, 0);
     layout->addWidget(vetLabel, 0, 1, layout->rowCount(), 1);
 
     layout->setContentsMargins(layout->contentsMargins() + 50);
