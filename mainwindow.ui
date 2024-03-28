@@ -436,7 +436,36 @@ QComboBox {
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
          <property name="styleSheet">
-          <string notr="true">QFrame{
+          <string notr="true">QCheckBox {
+    color: white;
+    border-radius: 20px;
+	padding:10px;
+}
+
+QCheckBox:checked {
+	background-color:green;
+	border:none;
+}
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray
+}
+
+QCheckBox::indicator:checked {
+	image:url('media/checked.png');
+}
+
+QCheckBox::indicator:unchecked {
+	image: url('media/cross.png');
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+QFrame{
 	background-color:white;
 	color:#333;
 	border:1px solid #ddd;
@@ -458,25 +487,67 @@ QLabel{
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QCheckBox" name="outCheckbox">
+              <property name="styleSheet">
+               <string notr="true">QCheckBox:checked{
+	background-color:#a3acbd
+}</string>
+              </property>
               <property name="text">
                <string>Sortis du refuge</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox">
-              <property name="text">
-               <string>CheckBox</string>
+             <spacer name="horizontalSpacer_7">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-             </widget>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item>
              <widget class="QCheckBox" name="careCheckbox">
+              <property name="styleSheet">
+               <string notr="true">QCheckBox:checked{
+	    background-color: #97717a;
+}</string>
+              </property>
               <property name="text">
                <string>Garderie</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -494,7 +565,7 @@ QLabel{
                <x>0</x>
                <y>0</y>
                <width>969</width>
-               <height>583</height>
+               <height>566</height>
               </rect>
              </property>
              <property name="styleSheet">

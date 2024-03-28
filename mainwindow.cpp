@@ -180,6 +180,11 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     for (DogCard* c : ui->dogCardsContent->findChildren<DogCard*>())
         c->resizeEvent(event);
+
+    QFont checkboxFont = ui->careCheckbox->font();
+    checkboxFont.setPointSize(0.01 * ui->dogCardsPage->width());
+    ui->careCheckbox->setFont(checkboxFont);
+    ui->outCheckbox->setFont(checkboxFont);
 }
 
 void MainWindow::ToggleModifyButtons()
