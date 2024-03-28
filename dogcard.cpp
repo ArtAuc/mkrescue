@@ -92,7 +92,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     QLabel *info2Label = new QLabel(info2String, this);
 
-    QLabel *descriptionLabel = new QLabel(description, this);
+    descriptionLabel = new QLabel(description, this);
 
 
     int iconSize = 40;
@@ -105,24 +105,22 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
 
-
-    // Labels only visible when selected
-    chipLabel = new QLabel();
-    birthLabel = new QLabel();
-    vetLabel = new QLabel("C");
-    vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    // Only shown if selected
     sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castré" : "Stérilisée", this);
     compatDogBox = new TriStateCheckBox("Compatible chien", this);
     compatCatBox = new TriStateCheckBox("Compatible chat", this);
+    vetLabel = new QLabel("C");
+    vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    vetLabel->setObjectName("vetLabel" + id_dog);
 
     layout->addWidget(nameSexWidget, 0, 0);
-    layout->addWidget(info1Label, 3,  0);
+    layout->addWidget(info1Label, 2,  0);
     layout->addWidget(info2Label, 4, 0);
     layout->addWidget(descriptionLabel, 5, 0);
     layout->addWidget(detailsButton, 5, 2);
+    layout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding), 9, 0);
 
     nameLabel->setObjectName("nameLabel" + id_dog);
-    vetLabel->setObjectName("vetLabel" + id_dog);
 
     setLayout(layout);
 }
@@ -133,6 +131,9 @@ void DogCard::resizeEvent(QResizeEvent *event){
     float factor;
     QSize parentSize = qobject_cast<QWidget*>(parent())->size();
     if(selected){
+        layout->setSpacing(height() / 100);
+        //layout->setContentsMargins(width() / 10, height() / 10, width() / 10, height() / 10);
+
         if(maximumWidth() <= width() || maximumHeight() <= height())
             setMaximumSize(size() + QSize(5, 5));
         else
@@ -144,14 +145,15 @@ void DogCard::resizeEvent(QResizeEvent *event){
         factor = 2;
     }
 
-    for(QLabel *label : findChildren<QLabel*>()){
-        if(label->objectName() == "nameLabel" + id_dog){
-            label->setStyleSheet("font-size:" + QString::number(factor * 0.03 * width()) + "pt;"
+
+    for(QWidget *c : findChildren<QWidget*>()){
+        if(c->objectName() == "nameLabel" + id_dog){
+            c->setStyleSheet("font-size:" + QString::number(factor * 0.03 * width()) + "pt;"
                                  "font-weight:bold;");
         }
 
-        else{
-            label->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
+        else if (qobject_cast<QLabel*>(c) || qobject_cast<TriStateCheckBox*>(c)){
+            c->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
         }
     }
 
@@ -163,49 +165,46 @@ void DogCard::resizeEvent(QResizeEvent *event){
 }
 
 void DogCard::SelectThis(){
+    selected = true;
+
+    layout->removeWidget(detailsButton);
+    layout->addWidget(detailsButton, 9, 2);
     disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
-    connect(detailsButton, SIGNAL(clicked()), this, SLOT(UnselectThis()));
-    selected = true;
 
     QSqlQuery query;
     query.exec("SELECT chip, birth, sterilized, compat_dog, compat_cat "
                "FROM Dogs "
                "WHERE id_dog = " + id_dog + ";");
 
+    QLabel *chipLabel, *birthLabel;
+    chipLabel = new QLabel();
+    birthLabel = new QLabel();
+
     if(query.next()){
+
         chipLabel->setText(query.value(0).toString());
-        birthLabel->setText("Naissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        birthLabel->setText("\nNaissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
         sterilizedBox->SqlToState(query.value(2).toString());
         compatDogBox->SqlToState(query.value(3).toString());
         compatCatBox->SqlToState(query.value(4).toString());
     }
 
+    descriptionLabel->setText(descriptionLabel->text() + "\n");
+
     layout->addWidget(chipLabel, 1, 0);
-    layout->addWidget(birthLabel, 2, 0);
+    layout->addWidget(birthLabel, 3, 0);
     layout->addWidget(sterilizedBox, 6, 0);
     layout->addWidget(compatDogBox, 7, 0);
     layout->addWidget(compatCatBox, 8, 0);
     layout->addWidget(vetLabel, 0, 1, layout->rowCount(), 1);
 
+    layout->setContentsMargins(layout->contentsMargins() + 50);
+
 
     resizeEvent(nullptr);
 }
 
-void DogCard::UnselectThis(){
-    disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
-    connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
-    connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
-    selected = false;
-    layout->removeWidget(chipLabel);
-    layout->removeWidget(birthLabel);
-    layout->removeWidget(vetLabel);
-    layout->removeWidget(sterilizedBox);
-    layout->removeWidget(compatDogBox);
-    layout->removeWidget(compatCatBox);
-
-    resizeEvent(nullptr);
-}
 
 void DogCard::SaveCard(){
     QSqlQuery query;

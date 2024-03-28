@@ -21,19 +21,18 @@ public:
 
 private slots:
     void SelectThis();
-    void UnselectThis();
     void SaveCard();
 
 private:
     QString StateToSql(Qt::CheckState state);
     QString id_dog;
-    QLabel *sexLabel, *chipLabel, *vetLabel, *birthLabel;
+    QLabel *sexLabel, *vetLabel, *descriptionLabel;
     QToolButton *detailsButton;
     QWidget *mainWindow, *nameSexWidget;
-    TriStateCheckBox *sterilizedBox, *compatDogBox, *compatCatBox;
     bool selected = false;
     QGridLayout *layout;
     QPixmap sexIcon;
+    TriStateCheckBox *sterilizedBox, *compatDogBox, *compatCatBox;
 };
 
 #endif // DOGCARD_H
