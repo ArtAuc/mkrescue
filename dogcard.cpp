@@ -108,9 +108,12 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     // Labels only visible when selected
     chipLabel = new QLabel();
-    vetLabel = new QLabel("C");
     birthLabel = new QLabel();
+    vetLabel = new QLabel("C");
     vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castré" : "Stérilisée");
+    compatDogBox = new TriStateCheckBox("Compatible chien");
+    compatCatBox = new TriStateCheckBox("Compatible chat");
 
     layout->addWidget(nameSexWidget, 0, 0);
     layout->addWidget(info1Label, 3,  0);
@@ -175,9 +178,13 @@ void DogCard::SelectThis(){
         birthLabel->setText("Naissance : " + QDate::fromString(query.value(1).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
     }
 
-    layout->addWidget(vetLabel, 0, 1, 3, 1);
     layout->addWidget(chipLabel, 1, 0);
     layout->addWidget(birthLabel, 2, 0);
+    layout->addWidget(sterilizedBox, 6, 0);
+    layout->addWidget(compatDogBox, 7, 0);
+    layout->addWidget(compatCatBox, 8, 0);
+    layout->addWidget(vetLabel, 0, 1, layout->rowCount(), 1);
+
 
     resizeEvent(nullptr);
 }
@@ -190,6 +197,7 @@ void DogCard::UnselectThis(){
     layout->removeWidget(chipLabel);
     layout->removeWidget(birthLabel);
     layout->removeWidget(vetLabel);
+    layout->removeWidget(sterilizedBox);
 
     resizeEvent(nullptr);
 }

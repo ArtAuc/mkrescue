@@ -7,6 +7,7 @@
 #include <QGridLayout>
 #include <QDate>
 #include <QSqlQuery>
+#include "tristatecheckbox.h"
 
 class DogCard : public QFrame
 {
@@ -25,6 +26,7 @@ private:
     QLabel *sexLabel, *chipLabel, *vetLabel, *birthLabel;
     QToolButton *detailsButton;
     QWidget *mainWindow, *nameSexWidget;
+    TriStateCheckBox *sterilizedBox, *compatDogBox, *compatCatBox;
     bool selected = false;
     QGridLayout *layout;
     QPixmap sexIcon;

@@ -20,8 +20,7 @@ SOURCES += \
     loadpages.cpp \
     main.cpp \
     mainwindow.cpp \
-    registry.cpp \
-    tristatecheckbox.cpp
+    registry.cpp
 
 HEADERS += \
     database.h \
