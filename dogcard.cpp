@@ -120,9 +120,9 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
 
     // Only shown if selected
-    sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castré" : "Stérilisée", this);
-    compatDogBox = new TriStateCheckBox("Compatible chien", this);
-    compatCatBox = new TriStateCheckBox("Compatible chat", this);
+    sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castration" : "Stérilisation", this);
+    compatDogBox = new TriStateCheckBox("Compatibilité chien", this);
+    compatCatBox = new TriStateCheckBox("Compatibilité chat", this);
     vetLabel = new QLabel("C");
     vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     vetLabel->setObjectName("vetLabel" + id_dog);
@@ -146,12 +146,8 @@ void DogCard::resizeEvent(QResizeEvent *event){
     QSize parentSize = qobject_cast<QWidget*>(parent())->size();
     if(selected){
         layout->setSpacing(height() / 100);
-        //layout->setContentsMargins(width() / 10, height() / 10, width() / 10, height() / 10);
 
-        if(maximumWidth() <= width() || maximumHeight() <= height())
-            setMaximumSize(size() + QSize(5, 5));
-        else
-            setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+        setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
         factor = 0.7;
     }
     else{
@@ -166,8 +162,12 @@ void DogCard::resizeEvent(QResizeEvent *event){
                                  "font-weight:bold;");
         }
 
-        else if (qobject_cast<QLabel*>(c) || qobject_cast<TriStateCheckBox*>(c)){
+        else if (qobject_cast<QLabel*>(c)){
             c->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
+        }
+
+        else if (qobject_cast<TriStateCheckBox*>(c)){
+            c->setStyleSheet("font-size:" + QString::number(factor * 0.015 * width()) + "pt;");
         }
     }
 
@@ -182,9 +182,10 @@ void DogCard::SelectThis(){
     selected = true;
 
     layout->removeWidget(detailsButton);
-    layout->addWidget(detailsButton, 9, 2);
+    layout->addWidget(detailsButton, 0, 2);
     disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
+    detailsButton->setIcon(QIcon("media/cross.png"));
 
     QSqlQuery query;
     query.exec("SELECT chip, birth, sterilized, compat_dog, compat_cat "

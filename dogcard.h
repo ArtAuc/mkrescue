@@ -7,7 +7,7 @@
 #include <QGridLayout>
 #include <QDate>
 #include <QSqlQuery>
-#include <QSqlError>
+#include <QRegularExpression>
 
 #include "tristatecheckbox.h"
 

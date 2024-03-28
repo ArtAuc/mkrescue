@@ -443,10 +443,18 @@ QComboBox {
 }
 
 QCheckBox:checked {
-	background-color:green;
+	background-color:#165532;
 	border:none;
 }
+
 QCheckBox:unchecked {
+	background-color:#7b352e;
+	color:white;
+	border:none;
+}
+
+
+QCheckBox:indeterminate {
 	border: 1px solid gray;
     background-color: white;
 	color:gray
@@ -457,7 +465,11 @@ QCheckBox::indicator:checked {
 }
 
 QCheckBox::indicator:unchecked {
-	image: url('media/cross.png');
+	image: url('media/whitecross.png');
+}
+
+QCheckBox::indicator:indeterminate {
+	image: url('media/question.png');
 }
 
 QCheckBox::indicator {
@@ -487,23 +499,20 @@ QLabel{
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <spacer name="horizontalSpacer_5">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <widget class="QCheckBox" name="outCheckbox">
               <property name="styleSheet">
                <string notr="true">QCheckBox:checked{
 	background-color:#a3acbd
+}
+
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray;
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
 }</string>
               </property>
               <property name="text">
@@ -512,23 +521,25 @@ QLabel{
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer_7">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <widget class="QCheckBox" name="careCheckbox">
               <property name="styleSheet">
                <string notr="true">QCheckBox:checked{
 	    background-color: #97717a;
+}
+
+
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray;
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
 }</string>
               </property>
               <property name="text">
