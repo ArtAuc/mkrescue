@@ -491,7 +491,6 @@ QWidget#dogCardsContent, QScrollArea{
 
 
 QLabel{
-	font-size:15pt;
 	border:none;
 }</string>
          </property>

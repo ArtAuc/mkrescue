@@ -90,6 +90,12 @@ void Database::Create()
                "reason TEXT,"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
+    query.exec("CREATE TABLE IF NOT EXISTS Prescriptions ("
+               "id_dog INT,"
+               "date DATE,"
+               "filename VARCHAR(255),"
+               "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
+               ");");
     query.exec("CREATE TABLE IF NOT EXISTS ES_registry ("
                "id_ES INT,"
                "id_dog INT,"

@@ -159,16 +159,16 @@ void DogCard::resizeEvent(QResizeEvent *event){
 
     for(QWidget *c : findChildren<QWidget*>()){
         if(c->objectName() == "nameLabel" + id_dog){
-            c->setStyleSheet("font-size:" + QString::number(factor * 0.03 * width()) + "pt;"
+            c->setStyleSheet("font-size:" + QString::number(0.013 * mainWindow->width()) + "pt;"
                                  "font-weight:bold;");
         }
 
         else if (qobject_cast<QLabel*>(c)){
-            c->setStyleSheet("font-size:" + QString::number(factor * 0.02 * width()) + "pt;");
+            c->setStyleSheet("font-size:" + QString::number(0.01 * mainWindow->width()) + "pt;");
         }
 
-        else if (qobject_cast<TriStateCheckBox*>(c)){
-            c->setStyleSheet("font-size:" + QString::number(factor * 0.015 * width()) + "pt;");
+        if (qobject_cast<TriStateCheckBox*>(c)){
+            c->setStyleSheet("font-size:" + QString::number(0.008 * mainWindow->width()) + "pt;");
         }
     }
 
