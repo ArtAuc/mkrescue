@@ -130,6 +130,16 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     historyScroll->setObjectName("historyScroll" + chip);
     historyScroll->setLayout(new QVBoxLayout());
 
+    // Make labels copiable
+    info2Label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    info2Label->setCursor(QCursor(Qt::IBeamCursor));
+    descriptionLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    descriptionLabel->setCursor(QCursor(Qt::IBeamCursor));
+    nameLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    nameLabel->setCursor(QCursor(Qt::IBeamCursor));
+    info1Label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    info1Label->setCursor(QCursor(Qt::IBeamCursor));
+
     layout->addWidget(nameSexWidget, 0, 0);
     layout->addWidget(info1Label, 3,  0);
     layout->addWidget(info2Label, 4, 0);
@@ -204,6 +214,11 @@ void DogCard::SelectThis(){
     QLabel *chipLabel, *birthLabel;
     chipLabel = new QLabel();
     birthLabel = new QLabel();
+    chipLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    chipLabel->setCursor(QCursor(Qt::IBeamCursor));
+    birthLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    birthLabel->setCursor(QCursor(Qt::IBeamCursor));
+
 
     if(query.next()){
 
@@ -264,43 +279,75 @@ void DogCard::CreateHistory(){
     QVBoxLayout* histLayout = qobject_cast<QVBoxLayout*>(historyScroll->layout());
 
     // ES
-    queryString = "SELECT ES_Registry.type_prov, People.last_name, People.first_name, ES_Registry.date_prov AS date, 'ES' "
+    queryString = "SELECT ES_Registry.type_prov, People.last_name, People.first_name, People.phone, ES_Registry.date_prov AS date, 'ES' "
                   "FROM ES_Registry "
                   "JOIN People on ES_Registry.id_people_prov = People.id_people "
                   "JOIN Dogs ON ES_Registry.id_dog = Dogs.id_dog "
-                  "WHERE Dogs.chip = :chip;";
+                  "WHERE Dogs.chip = :chip";
+
+    // Destinations
+    queryString += " UNION "
+                   "SELECT Destinations.type, People.last_name, People.first_name, People.phone, Destinations.date AS date, 'Destination' "
+                   "FROM Destinations "
+                   "JOIN People on Destinations.id_people = People.id_people "
+                   "JOIN Dogs ON Destinations.id_dog = Dogs.id_dog "
+                   "WHERE Dogs.chip = :chip";
 
     // Care
 
+
     // Vet
+
+    // Sort by descending date
+    queryString = "SELECT * FROM (" + queryString + ") AS Results "
+                    "ORDER BY Results.date DESC;";
 
     query.prepare(queryString);
     query.bindValue(":chip", chip);
     query.exec();
 
     while(query.next()){
-        QString type = query.value(4).toString();
+        QString type = query.value(5).toString();
         QLabel* histLabel = new QLabel();
         QString colorString;
+        QString dateString(QDate::fromString(query.value(4).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
         if(type == "ES"){
             if(query.value(0).toString().startsWith("Fourrière___"))
-                histLabel->setText("Fourrière : " +
-                               query.value(0).toString().split("___")[1] + " (" +
-                               QDate::fromString(query.value(3).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy") + ")");
+                histLabel->setText(dateString + " : Fourrière (" +
+                               query.value(0).toString().split("___")[1] + ")");
 
             else
-                histLabel->setText(query.value(0).toString() + " : " +
-                               query.value(1).toString() + " " + query.value(2).toString() + " (" +
-                               QDate::fromString(query.value(3).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy") + ")");
-            colorString = "blue";
+                histLabel->setText(dateString + " : " +
+                               query.value(0).toString() + " (" +
+                               (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
+            colorString = "#3b4b64";
         }
+
+        else if(type == "Destination"){
+            if(query.value(0).toString() == "Mort")
+                histLabel->setText(dateString + " : Mort");
+
+            histLabel->setText(dateString + " : " +
+                           query.value(0).toString() + " (" +
+                           (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
+
+
+            colorString = "#a3acbd";
+        }
+
+
 
         histLabel->setStyleSheet("QLabel{"
                                  "  border-left:2px solid " + colorString + ";"
                                  "  border-radius:0px;"
                                  "}");
         histLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        histLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        histLabel->setCursor(QCursor(Qt::IBeamCursor));
+
+
         histLayout->addWidget(histLabel);
     }
 
+    histLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
