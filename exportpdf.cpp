@@ -41,6 +41,40 @@ void MainWindow::ExportEntryRegistry() {
     QPainter painter;
     painter.begin(&printer);
 
+    // First page
+    painter.setPen(QPen(Qt::black));
+    QFont titleFont("Arial", 30);
+    titleFont.setBold(true);
+    painter.setFont(titleFont);
+    QSizeF pageSize = printer.pageRect(QPrinter::DevicePixel).size();
+
+    QString txt = "Refuge"; //TODO : use shelter's name
+    QRectF rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
+    qreal x = (pageSize.width() - rect.width()) / 2;
+    painter.drawText(QPointF(x, 0.4 * pageSize.height()), txt);
+
+    txt = "REGISTRE ENTRÉES ET SORTIES";
+    rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
+    x = (pageSize.width() - rect.width()) / 2;
+    painter.drawText(QPointF(x, pageSize.height() / 2), txt);
+
+    txt = ui->yearBox->currentText();
+    rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
+    x = (pageSize.width() - rect.width()) / 2;
+    painter.drawText(QPointF(x, 0.6 * pageSize.height()), txt);
+
+    titleFont.setBold(false);
+    titleFont.setPointSize(20);
+    painter.setFont(titleFont);
+    txt = "Fait le " + QDate::currentDate().toString("dd/MM/yyyy");
+    rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
+    x = 0.95 * pageSize.width() - rect.width();
+    qreal y = 0.98 * pageSize.height() - rect.height();
+    painter.drawText(QPointF(x, y), txt);
+
+
+
+    // Registry pages
     qreal scaleFactor = printer.pageRect(QPrinter::DevicePixel).width() / qreal(entryRegistryPage->width());
 
     painter.scale(scaleFactor, scaleFactor);
