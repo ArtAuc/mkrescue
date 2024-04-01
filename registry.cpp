@@ -80,7 +80,10 @@ void Registry::resizeEvent(QResizeEvent *event){
             sumWidth += table->columnWidth(col);
         }
 
-        float factor = 0.99 * table->width() / sumWidth; // Allows to occupy the whole width of the window
+        if(table->verticalScrollBar()->isVisible())
+            sumWidth += table->verticalScrollBar()->width();
+
+        float factor = table->width() / sumWidth; // Allows to occupy the whole width of the window
         if(factor > 1){
             for (int col = 0; col < table->columnCount(); ++col) {
                 table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));

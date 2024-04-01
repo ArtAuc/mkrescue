@@ -125,7 +125,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castration" : "Stérilisation", this);
     compatDogBox = new TriStateCheckBox("Compatibilité chien", this);
     compatCatBox = new TriStateCheckBox("Compatibilité chat", this);
-    vetLabel = new QLabel("C");
+    vetLabel = new QLabel("");
     vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     vetLabel->setObjectName("vetLabel" + id_dog);
 
@@ -153,7 +153,7 @@ void DogCard::resizeEvent(QResizeEvent *event){
     }
     else{
         setMaximumSize(parentSize / 4);
-        factor = 2;
+        factor = 1.5;
     }
 
 

@@ -416,7 +416,10 @@ QComboBox {
         <item>
          <widget class="QLineEdit" name="searchLine">
           <property name="styleSheet">
-           <string notr="true">margin-right:5px;</string>
+           <string notr="true">margin-right:30px;
+padding:10px;
+border-radius:5px;
+border:1px solid gray;</string>
           </property>
          </widget>
         </item>

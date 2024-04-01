@@ -167,7 +167,7 @@ void Database::ReorderMembers(){
 }
 
 QSqlQuery Database::GetDogs(QString type, QString search){
-    QString queryString = "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov) "
+    QString queryString = "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov), Dogs.chip "
                           "FROM Dogs "
                           "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
                           "LEFT JOIN ("
@@ -184,7 +184,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
         queryString +=
                 " UNION "
                 ""
-                "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Destinations.date || '___' || Destinations.type, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov) "
+                "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Destinations.date || '___' || Destinations.type, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov), Dogs.chip "
                 "FROM Dogs "
                 "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
                 "JOIN ( "
@@ -201,7 +201,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
         queryString +=
                 " UNION "
                 ""
-                "SELECT DISTINCT Dogs.id_dog, Dogs.name, Dogs.sex, Care_registry.entry_date, Dogs.description, People.last_name || ' ' || People.first_name "
+                "SELECT Dogs.id_dog, Dogs.name, Dogs.sex, Care_registry.entry_date, Dogs.description, People.last_name || ' ' || People.first_name, Dogs.chip "
                 "FROM Dogs "
                 "LEFT JOIN ( "
                 "    SELECT id_dog, MAX(entry_date) AS max_date "
@@ -215,7 +215,9 @@ QSqlQuery Database::GetDogs(QString type, QString search){
 
 
 
-    queryString += " ORDER BY Dogs.id_dog DESC;";
+    queryString = "SELECT * FROM (" + queryString + ") AS Results "
+                    "GROUP BY Results.chip "
+                    "ORDER BY MAX(Results.id_dog) DESC;";
 
     QSqlQuery query;
 

@@ -175,6 +175,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     comboBoxFont.setPointSizeF(0.015 * ui->stackedWidget->width());
     ui->yearBox->setFont(comboBoxFont);
 
+    comboBoxFont.setPointSizeF(0.01 * ui->stackedWidget->width());
+
+    ui->searchLine->setFont(comboBoxFont);
+
     QSize textSize = ui->yearBox->fontMetrics().size(Qt::TextSingleLine, ui->yearBox->currentText());
     ui->yearBox->setFixedSize(textSize + QSize(35, 35));
 

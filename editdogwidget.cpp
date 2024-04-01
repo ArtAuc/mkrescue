@@ -118,8 +118,6 @@ void EditDogWidget::showEvent(QShowEvent* event){
                 completer = new QCompleter(new QStringListModel(chipList, this), lineEdit);
             else if (editName.contains("description"))
                 completer = new QCompleter(new QStringListModel(descriptionList, this), lineEdit);
-            else if (editName.contains("birth")) // TODO : birth is not a line edit
-                completer = new QCompleter(new QStringListModel(birthList, this), lineEdit);
 
 
             if (completer) {
