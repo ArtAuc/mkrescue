@@ -180,8 +180,10 @@ void DogCard::resizeEvent(QResizeEvent *event){
             c->setFont(font);
         }
 
-        if (qobject_cast<TriStateCheckBox*>(c)){
-            c->setStyleSheet("font-size:" + QString::number(0.008 * mainWindow->width()) + "pt;");
+        if (qobject_cast<TriStateCheckBox*>(c) || qobject_cast<QPushButton*>(c)){
+            QFont font = c->font();
+            font.setPointSizeF(0.008 * mainWindow->width());
+            c->setFont(font);
         }
     }
 
@@ -204,6 +206,9 @@ void DogCard::SelectThis(){
     disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
     detailsButton->setIcon(QIcon("media/cross.png"));
+
+    QPushButton *prescButton = new QPushButton("Voir les ordonnances");
+    connect(prescButton, SIGNAL(clicked()), this, SLOT(OpenFolderInFileExplorer()));
 
     // Infos summary (on the left)
     QSqlQuery query;
@@ -248,7 +253,8 @@ void DogCard::SelectThis(){
     layout->addWidget(compatDogBox, 7, 0);
     layout->addWidget(compatCatBox, 8, 0);
     layout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding), 9, 0);
-    layout->addWidget(historyScroll, 0, 1, layout->rowCount(), 1);
+    layout->addWidget(prescButton, 10, 0);
+    layout->addWidget(historyScroll, 1, 1, layout->rowCount() - 1, 1);
 
     layout->setContentsMargins(layout->contentsMargins() + 50);
 
@@ -378,4 +384,30 @@ void DogCard::CreateHistory(){
     }
 
     histLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding));
+}
+
+void DogCard::OpenFolderInFileExplorer() {
+    QString folderPath = "prescriptions/" + chip + "/";
+
+    QDir directory(folderPath);
+    if (!directory.exists()) {
+        QMessageBox::information(nullptr, "Aucune ordonnance", "Aucune ordonnance n'a été trouvée pour ce chien");
+        return;
+    }
+
+#ifdef Q_OS_WIN
+    QString command = "explorer.exe /select," + QDir::toNativeSeparators(folderPath);
+    QProcess::startDetached(command);
+#elif defined(Q_OS_MAC)
+    QStringList arguments;
+    arguments << "-R" << folderPath;
+    QProcess::startDetached("open", arguments);
+#elif defined(Q_OS_LINUX)
+    QStringList arguments;
+    arguments << folderPath;
+    QProcess::startDetached("xdg-open", arguments);
+#else
+    // Unsupported platform
+    QMessageBox::critical(nullptr, "Erreur", "Erreur d'ouverture du dossier " + QDir::toNativeSeparators(folderPath);
+#endif
 }

@@ -9,6 +9,10 @@
 #include <QSqlQuery>
 #include <QRegularExpression>
 #include <QScrollArea>
+#include <QMessageBox>
+#include <QProcess>
+#include <QPushButton>
+#include <QDir>
 
 #include "tristatecheckbox.h"
 
@@ -24,6 +28,7 @@ public:
 private slots:
     void SelectThis();
     void SaveCard();
+    void OpenFolderInFileExplorer();
 
 private:
     QString StateToSql(Qt::CheckState state);
