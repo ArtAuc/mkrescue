@@ -4,6 +4,10 @@
 #include <QTreeWidgetItem>
 #include <QSqlRecord>
 #include <QMessageBox>
+#include <QPrinter>
+#include <QFileDialog>
+#include <QPageSize>
+#include <QPainter>
 
 #include "database.h"
 #include "menutree.h"
@@ -36,10 +40,12 @@ public slots:
     void Clean();
     void SelectDogCard();
     void UnselectDogCard();
+    void ExportEntryRegistry();
 
 private:
     QString ClearUselessBreaks(QString s);
     void InitYearRegistry(QString type, QString year);
+    void InitExportButtons();
 
 private:
     Ui::MainWindow *ui;

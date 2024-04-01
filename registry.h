@@ -7,6 +7,7 @@
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QToolButton>
+#include <QPushButton>
 
 
 class Registry : public QWidget

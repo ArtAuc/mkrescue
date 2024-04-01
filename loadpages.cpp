@@ -89,6 +89,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
                     table->insertRow(nb + i);
                     for (int col = 0; col < table->columnCount(); ++col) {
                         QTableWidgetItem *emptyItem = new QTableWidgetItem();
+                        emptyItem->setText("");
                         table->setItem(nb + i, col, emptyItem);
                     }
                 }
@@ -113,6 +114,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
         // Modify icon
         QToolButton* modifyButton = new QToolButton(table);
+
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
@@ -125,11 +127,13 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
             TriggerEdit("entry", necessary);
         });
 
+
         modifyButtons.append(modifyButton);
     }
 
     ui->entryRegistryPage->showEvent(nullptr);
     ui->entryRegistryPage->resizeEvent(nullptr);
+
 }
 
 void MainWindow::LoadCareRegistry(QString year, QString search)

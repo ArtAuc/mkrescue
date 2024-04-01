@@ -434,7 +434,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -1866,6 +1866,13 @@ color:#212834;</string>
               <string/>
              </property>
             </column>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="exportMembersButton">
+            <property name="text">
+             <string>Exporter en PDF</string>
+            </property>
            </widget>
           </item>
          </layout>

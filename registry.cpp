@@ -65,6 +65,10 @@ void Registry::resizeEvent(QResizeEvent *event){
         QFont font = table->font();
         float fontSize = std::max(width() * 0.007, (double) 7);
         font.setPointSize(fontSize);
+
+        for(QPushButton* but : findChildren<QPushButton*>())
+            but->setFont(font);;
+
         table->setFont(font);
         table->horizontalHeader()->setFont(font);
 

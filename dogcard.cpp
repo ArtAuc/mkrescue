@@ -243,9 +243,9 @@ void DogCard::SelectThis(){
 
     descriptionLabel->setText(descriptionLabel->text() + "\n");
 
+
     // History (on the right)
     CreateHistory();
-
 
     layout->addWidget(chipLabel, 1, 0);
     layout->addWidget(birthLabel, 2, 0);
