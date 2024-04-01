@@ -14,10 +14,10 @@ void MainWindow::ExportEntryRegistry() {
 
     // Hide useless items
     ui->entryAddButton->hide();
-    table->setColumnCount(10);
+    table->hideColumn(10);
     ui->exportEntryButton->hide();
 
-    table->setFont(QFont("Arial", 7));
+    table->setFont(QFont("Sans Serif", 7));
     table->resizeColumnsToContents();
     float sumWidth = 0;
 
@@ -81,5 +81,13 @@ void MainWindow::ExportEntryRegistry() {
     entryRegistryPage->setMaximumWidth(QWIDGETSIZE_MAX);
     entryRegistryPage->setMinimumWidth(0);
     entryRegistryPage->show();
+    ui->entryAddButton->show();
+    table->showColumn(10);
+    ui->exportEntryButton->show();
+    table->verticalScrollBar()->show();
+
+
+    LoadEntryRegistry(ui->yearBox->currentText(), ui->searchLine->text());
+    entryRegistryPage->resizeEvent(nullptr);
 }
 
