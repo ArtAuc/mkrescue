@@ -301,8 +301,13 @@ void DogCard::CreateHistory(){
                    "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
                    "WHERE Dogs.chip = :chip";
 
-
     // Vet
+    queryString += " UNION "
+                   "SELECT Vet.reason, '', '', '', Vet.date AS date, 'Vet' "
+                   "FROM Vet "
+                   "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
+                   "WHERE Dogs.chip = :chip";
+
 
     // Sort by descending date
     queryString = "SELECT * FROM (" + queryString + ") AS Results "
@@ -348,8 +353,16 @@ void DogCard::CreateHistory(){
                                 " : <b>Garderie</b> (" +
                                 (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
 
+            colorString = "#97717a";
         }
 
+        else if(type == "Vet"){
+            histLabel->setText(dateString +
+                                " : <b>RDV Vétérinaire</b> (" +
+                                query.value(0).toString() + ")");
+
+            colorString = "#2cc09d";
+        }
 
 
         histLabel->setStyleSheet("QLabel{"
