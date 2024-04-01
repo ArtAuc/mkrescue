@@ -1,8 +1,8 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info2, QString description, QString info1) : DogCard(parent)
+DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info2, QString description, QString info1) : DogCard(parent)
 {
-    this->id_dog = id_dog;
+    this->chip = chip;
     mainWindow = parent;
 
     QString typeInfo = "care";
@@ -30,7 +30,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
 
     layout = new QGridLayout(this);
 
-    setObjectName("dogCard" + id_dog);
+    setObjectName("dogCard" + chip);
 
     sexLabel = new QLabel(this);
     sexLabel->setAlignment(Qt::AlignCenter);
@@ -125,9 +125,10 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     sterilizedBox = new TriStateCheckBox((sex == "Mâle") ? "Castration" : "Stérilisation", this);
     compatDogBox = new TriStateCheckBox("Compatibilité chien", this);
     compatCatBox = new TriStateCheckBox("Compatibilité chat", this);
-    vetLabel = new QLabel("");
-    vetLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    vetLabel->setObjectName("vetLabel" + id_dog);
+    historyScroll = new QScrollArea();
+    historyScroll->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    historyScroll->setObjectName("historyScroll" + chip);
+    historyScroll->setLayout(new QVBoxLayout());
 
     layout->addWidget(nameSexWidget, 0, 0);
     layout->addWidget(info1Label, 3,  0);
@@ -135,7 +136,7 @@ DogCard::DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QSt
     layout->addWidget(descriptionLabel, 5, 0);
     layout->addWidget(detailsButton, 5, 2);
 
-    nameLabel->setObjectName("nameLabel" + id_dog);
+    nameLabel->setObjectName("nameLabel" + chip);
 
     setLayout(layout);
 }
@@ -158,13 +159,15 @@ void DogCard::resizeEvent(QResizeEvent *event){
 
 
     for(QWidget *c : findChildren<QWidget*>()){
-        if(c->objectName() == "nameLabel" + id_dog){
+        if(c->objectName() == "nameLabel" + chip){
             c->setStyleSheet("font-size:" + QString::number(0.013 * mainWindow->width()) + "pt;"
                                  "font-weight:bold;");
         }
 
         else if (qobject_cast<QLabel*>(c)){
-            c->setStyleSheet("font-size:" + QString::number(0.01 * mainWindow->width()) + "pt;");
+            QFont font = c->font();
+            font.setPointSize(0.01 * mainWindow->width());
+            c->setFont(font);
         }
 
         if (qobject_cast<TriStateCheckBox*>(c)){
@@ -172,9 +175,13 @@ void DogCard::resizeEvent(QResizeEvent *event){
         }
     }
 
-    vetLabel->setStyleSheet(vetLabel->styleSheet() + "margin-left:30px;"
-                                                     "padding:30px;"
-                                                     "border-left: 2px solid gray;");
+    historyScroll->setStyleSheet("QScrollArea{"
+                                    "background-color:white;"
+                                    "margin-left:30px;"
+                                    "padding:30px;"
+                                    "border-left: 2px solid gray;"
+                                    "border-radius:0px;"
+                                 "}");
 
     sexLabel->setPixmap(sexIcon.scaled(factor * size() / 10, Qt::KeepAspectRatio));
 }
@@ -188,10 +195,11 @@ void DogCard::SelectThis(){
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
     detailsButton->setIcon(QIcon("media/cross.png"));
 
+    // Infos summary (on the left)
     QSqlQuery query;
     query.exec("SELECT chip, birth, sterilized, compat_dog, compat_cat "
                "FROM Dogs "
-               "WHERE id_dog = " + id_dog + ";");
+               "WHERE chip = " + chip + ";");
 
     QLabel *chipLabel, *birthLabel;
     chipLabel = new QLabel();
@@ -215,13 +223,17 @@ void DogCard::SelectThis(){
 
     descriptionLabel->setText(descriptionLabel->text() + "\n");
 
+    // History (on the right)
+    CreateHistory();
+
+
     layout->addWidget(chipLabel, 1, 0);
     layout->addWidget(birthLabel, 2, 0);
     layout->addWidget(sterilizedBox, 6, 0);
     layout->addWidget(compatDogBox, 7, 0);
     layout->addWidget(compatCatBox, 8, 0);
     layout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding), 9, 0);
-    layout->addWidget(vetLabel, 0, 1, layout->rowCount(), 1);
+    layout->addWidget(historyScroll, 0, 1, layout->rowCount(), 1);
 
     layout->setContentsMargins(layout->contentsMargins() + 50);
 
@@ -236,12 +248,59 @@ void DogCard::SaveCard(){
                   "SET sterilized = :sterilized, "
                   "compat_dog = :compat_dog, "
                   "compat_cat = :compat_cat "
-                  "WHERE id_dog = :id;");
+                  "WHERE chip = :chip;");
 
     query.bindValue(":sterilized", sterilizedBox->StateToSql());
     query.bindValue(":compat_dog", compatDogBox->StateToSql());
     query.bindValue(":compat_cat", compatCatBox->StateToSql());
-    query.bindValue(":id", id_dog);
+    query.bindValue(":chip", chip);
 
     query.exec();
+}
+
+void DogCard::CreateHistory(){
+    QSqlQuery query;
+    QString queryString;
+    QVBoxLayout* histLayout = qobject_cast<QVBoxLayout*>(historyScroll->layout());
+
+    // ES
+    queryString = "SELECT ES_Registry.type_prov, People.last_name, People.first_name, ES_Registry.date_prov AS date, 'ES' "
+                  "FROM ES_Registry "
+                  "JOIN People on ES_Registry.id_people_prov = People.id_people "
+                  "JOIN Dogs ON ES_Registry.id_dog = Dogs.id_dog "
+                  "WHERE Dogs.chip = :chip;";
+
+    // Care
+
+    // Vet
+
+    query.prepare(queryString);
+    query.bindValue(":chip", chip);
+    query.exec();
+
+    while(query.next()){
+        QString type = query.value(4).toString();
+        QLabel* histLabel = new QLabel();
+        QString colorString;
+        if(type == "ES"){
+            if(query.value(0).toString().startsWith("Fourrière___"))
+                histLabel->setText("Fourrière : " +
+                               query.value(0).toString().split("___")[1] + " (" +
+                               QDate::fromString(query.value(3).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy") + ")");
+
+            else
+                histLabel->setText(query.value(0).toString() + " : " +
+                               query.value(1).toString() + " " + query.value(2).toString() + " (" +
+                               QDate::fromString(query.value(3).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy") + ")");
+            colorString = "blue";
+        }
+
+        histLabel->setStyleSheet("QLabel{"
+                                 "  border-left:2px solid " + colorString + ";"
+                                 "  border-radius:0px;"
+                                 "}");
+        histLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        histLayout->addWidget(histLabel);
+    }
+
 }

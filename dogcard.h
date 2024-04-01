@@ -8,6 +8,7 @@
 #include <QDate>
 #include <QSqlQuery>
 #include <QRegularExpression>
+#include <QScrollArea>
 
 #include "tristatecheckbox.h"
 
@@ -18,6 +19,7 @@ public:
     explicit DogCard(QWidget *parent = nullptr) : QFrame(parent) {}
     DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2);
     void resizeEvent(QResizeEvent *event);
+    void CreateHistory();
 
 private slots:
     void SelectThis();
@@ -25,8 +27,9 @@ private slots:
 
 private:
     QString StateToSql(Qt::CheckState state);
-    QString id_dog;
-    QLabel *sexLabel, *vetLabel, *descriptionLabel, *info2Label;
+    QString chip;
+    QLabel *sexLabel, *descriptionLabel, *info2Label;
+    QScrollArea *historyScroll;
     QToolButton *detailsButton;
     QWidget *mainWindow, *nameSexWidget;
     bool selected = false;
