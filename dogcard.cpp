@@ -294,6 +294,12 @@ void DogCard::CreateHistory(){
                    "WHERE Dogs.chip = :chip";
 
     // Care
+    queryString += " UNION "
+                   "SELECT Care_registry.exit_date, People.last_name, People.first_name, People.phone, Care_registry.entry_date AS date, 'Care' "
+                   "FROM Care_registry "
+                   "JOIN People on Care_registry.id_people_prov = People.id_people "
+                   "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
+                   "WHERE Dogs.chip = :chip";
 
 
     // Vet
@@ -313,26 +319,35 @@ void DogCard::CreateHistory(){
         QString dateString(QDate::fromString(query.value(4).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
         if(type == "ES"){
             if(query.value(0).toString().startsWith("Fourrière___"))
-                histLabel->setText(dateString + " : Fourrière (" +
+                histLabel->setText(dateString + " : <b>Fourrière</b> (" +
                                query.value(0).toString().split("___")[1] + ")");
 
             else
-                histLabel->setText(dateString + " : " +
-                               query.value(0).toString() + " (" +
+                histLabel->setText(dateString + " : <b>" +
+                               query.value(0).toString() + "</b> (" +
                                (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
             colorString = "#3b4b64";
         }
 
         else if(type == "Destination"){
             if(query.value(0).toString() == "Mort")
-                histLabel->setText(dateString + " : Mort");
+                histLabel->setText(dateString + " : <b>Mort</b>");
 
-            histLabel->setText(dateString + " : " +
-                           query.value(0).toString() + " (" +
+            histLabel->setText(dateString + " : <b>" +
+                           query.value(0).toString() + "</b> (" +
                            (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
 
 
             colorString = "#a3acbd";
+        }
+
+        else if(type == "Care"){
+            QString exitDateString(QDate::fromString(query.value(0).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+            histLabel->setText(dateString +
+                                QString(exitDateString.isEmpty() ? "" : (" au " + exitDateString)) +
+                                " : <b>Garderie</b> (" +
+                                (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
+
         }
 
 
