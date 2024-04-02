@@ -295,3 +295,47 @@ void MainWindow::LoadRedList(QString search){
     ui->redListPage->showEvent(nullptr);
     ui->redListPage->resizeEvent(nullptr);
 }
+
+void MainWindow::LoadLost(QString search){
+    QTableWidget* table = ui->lostTable;
+    table->clearContents();
+    table->setRowCount(0);
+    modifyButtons.clear();
+
+    QSqlQuery query = db.GetLost(search);
+
+    while(query.next() && query.value(0).toString() != "")
+    {
+        int nb = table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(ClearUselessBreaks(query.value(0).toString()) + "\n" + query.value(1).toString())); // identification + name
+        table->setItem(nb, 1, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + "\n" + query.value(3).toString()))); // species + sex
+        table->setItem(nb, 2, new QTableWidgetItem(query.value(4).toString())); // description
+        table->setItem(nb, 3, new QTableWidgetItem(query.value(5).toDate().toString("dd/MM/yyyy"))); // date
+        table->setItem(nb, 4, new QTableWidgetItem(query.value(6).toString())); // place
+        table->setItem(nb, 5, new QTableWidgetItem(ClearUselessBreaks(query.value(7).toString() + " " + query.value(8).toString() + "\n" + //people_lastname + people_firstname
+                                                  query.value(9).toString()))); // people_phone
+        table->setItem(nb, 6, new QTableWidgetItem(query.value(10).toString())); // found
+        table->setItem(nb, 7, new QTableWidgetItem(""));
+
+        // Modify icon
+        QToolButton* modifyButton = new QToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->item(nb, 7)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 7, modifyButton);
+
+        QStringList necessary = {query.value(1).toString(), query.value(5).toString(), query.value(11).toString()}; // name + date + id_people
+
+        connect(modifyButton, &QToolButton::clicked, this, [=](){
+            TriggerEdit("lost", necessary);
+        });
+
+        modifyButtons.append(modifyButton);
+    }
+
+    ui->lostPage->showEvent(nullptr);
+    ui->lostPage->resizeEvent(nullptr);
+
+}

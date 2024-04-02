@@ -35,9 +35,10 @@ public slots:
     void LoadCareRegistry(QString year, QString search = "");
     void LoadRedList(QString search = "");
     void LoadMembers(QString year, QString search = "");
+    void LoadLost(QString search = "");
     void ToggleModifyButtons();
     void Search(QString search);
-    void TriggerEdit(QString type, QStringList necessary);
+    void TriggerEdit(QString type, QStringList infos);
     void RefreshPage(QString type);
     void Clean();
     void SelectDogCard();

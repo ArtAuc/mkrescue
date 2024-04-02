@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->membersPage->SetType("members");
     ui->redListPage->SetType("redList");
+    ui->lostPage->SetType("lost");
 
 
     LoadDogCards();
@@ -108,8 +109,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         stacked->setCurrentWidget(ui->redListPage);
         LoadRedList();
     }
-    else if (txt == "Animaux perdus")
+    else if (txt == "Animaux perdus"){
         stacked->setCurrentWidget(ui->lostPage);
+        LoadLost();
+    }
     else if (txt == "Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
@@ -217,8 +220,11 @@ void MainWindow::Search(QString search){
         LoadDogCards(search);
     else if (pageName == "membersPage")
         LoadMembers(ui->yearBox->currentText(), search);
+    else if (pageName == "lostPage")
+        LoadLost(search);
 }
 
+// Only necessary infos are sent because the list is stored when the slot is connected
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
     QSqlQuery query;
     QStringList infos;
@@ -289,6 +295,11 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     else if (type == "redList" || type == "members"){
         infos = necessary;
     }
+
+    else if (type == "lost"){
+
+    }
+
 
     ui->editPage->Edit(type, infos);
 }

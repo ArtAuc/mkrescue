@@ -434,7 +434,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>6</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -887,7 +887,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>2</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1058,6 +1058,7 @@ QTabBar::tab:selected {
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="lostEditPage"/>
             <widget class="QWidget" name="redListEditPage">
              <property name="styleSheet">
               <string notr="true">QLineEdit{
@@ -1640,7 +1641,137 @@ color:#212834;</string>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="lostPage"/>
+        <widget class="Registry" name="lostPage">
+         <layout class="QVBoxLayout" name="verticalLayout_12">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QToolButton" name="lostAddButton">
+              <property name="text">
+               <string>...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="lostTable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAsNeeded</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAsNeeded</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>false</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="verticalScrollMode">
+             <enum>QAbstractItemView::ScrollPerPixel</enum>
+            </property>
+            <attribute name="horizontalHeaderMinimumSectionSize">
+             <number>0</number>
+            </attribute>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>90</number>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Identification</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Espèce/Sexe</string>
+             </property>
+             <property name="font">
+              <font>
+               <bold>false</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Description</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Date de perte</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Lieu de perte</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Propriétaire</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Retrouvé</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string/>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
         <widget class="QWidget" name="adoptionDemandPage"/>
         <widget class="Registry" name="membersPage">
          <layout class="QVBoxLayout" name="verticalLayout_8">

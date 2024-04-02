@@ -12,16 +12,17 @@ CONFIG += c++17
 
 SOURCES += \
     database.cpp \
+    database_getregistry.cpp \
     destinationpage.cpp \
     dogcard.cpp \
     dogregistry.cpp \
     editdogwidget.cpp \
     editpage.cpp \
     editpeoplewidget.cpp \
-    exportpdf.cpp \
-    loadpages.cpp \
     main.cpp \
     mainwindow.cpp \
+    mainwindow_exportpdf.cpp \
+    mainwindow_loadpages.cpp \
     registry.cpp
 
 HEADERS += \
