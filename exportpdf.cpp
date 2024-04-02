@@ -34,6 +34,7 @@ void MainWindow::ExportEntryRegistry() {
 
     QPainter painter;
     painter.begin(&printer);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
     // First page
     painter.setPen(QPen(Qt::black));
@@ -68,15 +69,15 @@ void MainWindow::ExportEntryRegistry() {
 
     // Registry pages
     qreal scaleFactor = printer.pageRect(QPrinter::DevicePixel).width() / qreal(entryRegistryPage->width());
+    titleFont.setPointSize(10);
+    painter.setFont(titleFont);
 
-    painter.scale(scaleFactor, scaleFactor);
-
+    int pageNum = 0;
     while(table->rowCount() > 0){
-        // TODO : page number
+        painter.scale(scaleFactor, scaleFactor);
         printer.newPage();
 
         int lastVisibleRow = table->rowAt(table->viewport()->height()) - 1;
-        qDebug() << table->rowAt(100);
         while(lastVisibleRow + 1 > 0 && table->item(lastVisibleRow + 1, 0)->text().isEmpty())
             lastVisibleRow -= 1;
 
@@ -102,6 +103,14 @@ void MainWindow::ExportEntryRegistry() {
             table->setRowCount(0);
         }
 
+        // Page numerotation
+        pageNum += 1;
+        painter.scale(1 / scaleFactor, 1 / scaleFactor);
+        txt = QString::number(pageNum);
+        rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
+        x = 0.98 * pageSize.width() - rect.width();
+        y = pageSize.height() - rect.height();
+        painter.drawText(QPointF(x, y), txt);
     }
 
 
