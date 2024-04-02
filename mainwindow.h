@@ -12,6 +12,7 @@
 #include "database.h"
 #include "menutree.h"
 #include "dogcard.h"
+#include "registry.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -40,9 +41,9 @@ public slots:
     void Clean();
     void SelectDogCard();
     void UnselectDogCard();
-    void ExportEntryRegistry();
 
 private:
+    void ExportRegistry(QString type);
     QString ClearUselessBreaks(QString s);
     void InitYearRegistry(QString type, QString year);
     void InitExportButtons();

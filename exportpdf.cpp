@@ -2,28 +2,33 @@
 #include "ui_mainwindow.h"
 
 void MainWindow::InitExportButtons(){
-    connect(ui->exportEntryButton, SIGNAL(clicked()), this, SLOT(ExportEntryRegistry()));
+    connect(ui->entryExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("entryRegistry");});
+    connect(ui->careExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("careRegistry");});
 }
 
-void MainWindow::ExportEntryRegistry() {
-    Registry *entryRegistryPage = ui->entryRegistryPage;
-    QTableWidget* table = ui->entryTable;
-    entryRegistryPage->hide();
+void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "careRegistry" || "members"
+    Registry *page = findChild<Registry*>(type + "Page");
+    QTableWidget* table = page->findChild<QTableWidget*>();
+    page->hide();
     setWindowState(Qt::WindowMaximized);
 
     table->scrollToTop();
 
     // Hide useless items
-    ui->entryAddButton->hide();
-    table->hideColumn(10);
-    ui->exportEntryButton->hide();
+    findChild<QToolButton*>(type.remove("Registry") + "AddButton")->hide();
+    findChild<QPushButton*>(type.remove("Registry") + "ExportButton")->hide();
+    table->hideColumn(table->columnCount() - 1);
 
-    entryRegistryPage->setFixedWidth(entryRegistryPage->width() / 2);
-    entryRegistryPage->resizeEvent(nullptr);
-    ui->entryLabel3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8)  + table->columnWidth(9) - table->verticalScrollBar()->width() / 2); // "Sortie" label is too large because of hidden scrollbar
+    page->setFixedWidth(page->width() / 2);
+    page->resizeEvent(nullptr);
+    if(type == "entryRegistry")
+        ui->entryLabel3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8)  + table->columnWidth(9) - table->verticalScrollBar()->width() / 2); // "Sortie" label is too large because of hidden scrollbar
+    else if (type == "careRegistry")
+        ui->careLabel3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8) - table->verticalScrollBar()->width() / 2); // "Sortie" label is too large because of hidden scrollbar
+
     table->verticalScrollBar()->hide();
     table->horizontalScrollBar()->hide();
-    table->viewport()->setFixedHeight(entryRegistryPage->width() / 1.5);
+    table->viewport()->setFixedHeight(page->width() / 1.5);
 
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
@@ -48,7 +53,11 @@ void MainWindow::ExportEntryRegistry() {
     qreal x = (pageSize.width() - rect.width()) / 2;
     painter.drawText(QPointF(x, 0.4 * pageSize.height()), txt);
 
-    txt = "REGISTRE ENTRÉES ET SORTIES";
+    txt = "REGISTRE ";
+    if(type == "entryRegistry")
+        txt += "ENTRÉES ET SORTIES";
+    else if(type == "careRegistry")
+        txt += "GARDERIE";
     rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
     x = (pageSize.width() - rect.width()) / 2;
     painter.drawText(QPointF(x, pageSize.height() / 2), txt);
@@ -68,7 +77,7 @@ void MainWindow::ExportEntryRegistry() {
     painter.drawText(QPointF(x, y), txt);
 
     // Registry pages
-    qreal scaleFactor = printer.pageRect(QPrinter::DevicePixel).width() / qreal(entryRegistryPage->width());
+    qreal scaleFactor = printer.pageRect(QPrinter::DevicePixel).width() / qreal(page->width());
     titleFont.setPointSize(10);
     painter.setFont(titleFont);
 
@@ -87,7 +96,7 @@ void MainWindow::ExportEntryRegistry() {
             }
 
             table->clearSelection();
-            entryRegistryPage->render(&painter, QPoint(), QRegion(), RenderFlag::DrawChildren);
+            page->render(&painter, QPoint(), QRegion(), RenderFlag::DrawChildren);
 
 
             for (int row = 0; row <= lastVisibleRow; ++row)
@@ -99,7 +108,7 @@ void MainWindow::ExportEntryRegistry() {
 
         else{
             table->clearSelection();
-            entryRegistryPage->render(&painter, QPoint(), QRegion(), RenderFlag::DrawChildren);
+            page->render(&painter, QPoint(), QRegion(), RenderFlag::DrawChildren);
             table->setRowCount(0);
         }
 
@@ -116,17 +125,17 @@ void MainWindow::ExportEntryRegistry() {
 
     painter.end();
 
-    entryRegistryPage->setMaximumWidth(QWIDGETSIZE_MAX);
-    entryRegistryPage->setMinimumWidth(0);
+    page->setMaximumWidth(QWIDGETSIZE_MAX);
+    page->setMinimumWidth(0);
     table->viewport()->setMinimumHeight(0);
     table->viewport()->setMaximumHeight(QWIDGETSIZE_MAX);
-    entryRegistryPage->show();
-    ui->entryAddButton->show();
-    table->showColumn(10);
-    ui->exportEntryButton->show();
+    page->show();
+    table->showColumn(table->columnCount() - 1);
+    findChild<QToolButton*>(type.remove("Registry") + "AddButton")->show();
+    findChild<QPushButton*>(type.remove("Registry") + "ExportButton")->show();
     table->verticalScrollBar()->show();
 
     LoadEntryRegistry(ui->yearBox->currentText(), ui->searchLine->text());
-    entryRegistryPage->resizeEvent(nullptr);
-}
+    page->resizeEvent(nullptr);
 
+}
