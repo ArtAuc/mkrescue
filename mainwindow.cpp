@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     ui->careTab2->layout()->addWidget(new EditDogWidget("CareAnimalEdit"));
+    ui->entryTab2->layout()->addWidget(new EditDogWidget("EntryAnimalEdit"));
     gridLayout = qobject_cast<QGridLayout*>(ui->careTab3->layout());
     if(gridLayout){
         gridLayout->addWidget(new EditPeopleWidget("CareDestEdit"), gridLayout->rowCount(), 0, 1, 2);

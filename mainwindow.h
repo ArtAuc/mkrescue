@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QPageSize>
 #include <QPainter>
+#include <QStandardPaths>
 
 #include "database.h"
 #include "menutree.h"

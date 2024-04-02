@@ -120,11 +120,13 @@ void EditPage::Edit(QString type, QStringList infos){
             }
 
             // Animal
-            SetField("dogNameEdit", infos[10]);
-            SetField("chipEdit", infos[9]);
-            SetField("sexBox", infos[8]);
-            SetField("birthDateEdit", infos[12]);
-            SetField("breedEdit", infos[11]);
+            SetField("dogNameEntryAnimalEdit", infos[10]);
+            SetField("chipEntryAnimalEdit", infos[9]);
+            SetField("sexEntryAnimalEdit", infos[8]);
+            SetField("birthDateEntryAnimalEdit", infos[12]);
+            SetField("descriptionEntryAnimalEdit", infos[11]);
+
+
 
 
             // Sortie
@@ -278,11 +280,12 @@ void EditPage::SaveEdit()
 {
     QSqlQuery query;
     if(lastType == "entry"){
+        QWidget *entryEditPage = findChild<QWidget*>("entryEditPage");
         // Entrée
         QString date_prov = GetField("entryDateEdit");
         QString type_prov = GetField("entryTypeBox");
         QString id_people_prov = "-1";
-        QString dogName =  GetField("dogNameEdit");
+        QString dogName =  GetField("dogNameEntryAnimalEdit");
         if(GetField("entryTypeBox") == "Abandon"){
             id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit"),
                                     GetField("firstNameAbandonEdit"),
@@ -301,10 +304,10 @@ void EditPage::SaveEdit()
         // Animal
         QString id_dog = CreateDogIfNeeded(QStringList({
                                                            dogName,
-                                                           GetField("chipEdit"),
-                                                           GetField("sexBox"),
-                                                           GetField("breedEdit"),
-                                                           GetField("birthDateEdit")
+                                                           GetField("chipEntryAnimalEdit", entryEditPage),
+                                                           GetField("sexEntryAnimalEdit", entryEditPage),
+                                                           GetField("descriptionEntryAnimalEdit", entryEditPage),
+                                                           GetField("birthDateEntryAnimalEdit", entryEditPage)
                                                        }));
         // Sortie
         QStringList death_causes, id_peoples, dates, types;

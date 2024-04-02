@@ -8,6 +8,25 @@ void MainWindow::InitExportButtons(){
 }
 
 void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "careRegistry" || "members"
+    QString suggestedName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Registre ";
+    if(type.contains("entry"))
+        suggestedName += "ES";
+    else if(type.contains("care"))
+        suggestedName += "Garderie";
+    else if(type.contains("members"))
+        suggestedName += "Adherents";
+
+    suggestedName += " " + ui->yearBox->currentText();
+    suggestedName = QDir::toNativeSeparators(suggestedName);
+
+    QString fileName = QFileDialog::getSaveFileName(nullptr, "Enregistrement du registre", suggestedName, "Fichiers PDF (*.pdf)");
+    if (fileName.isEmpty())
+        return;
+
+    if (!fileName.endsWith(".pdf"))
+        fileName += ".pdf";
+
+
     Registry *page = findChild<Registry*>(type + "Page");
     QTableWidget* table = page->findChild<QTableWidget*>();
     page->hide();
@@ -34,7 +53,7 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setPageSize(QPageSize::A4);
-    printer.setOutputFileName("output.pdf");
+    printer.setOutputFileName(fileName);
     printer.setResolution(300);
     printer.setPageOrientation(QPageLayout::Landscape);
 

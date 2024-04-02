@@ -434,7 +434,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>8</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -887,7 +887,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>2</number>
+                 <number>1</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -988,96 +988,7 @@ QTabBar::tab:selected {
                  <attribute name="title">
                   <string>Animal</string>
                  </attribute>
-                 <layout class="QGridLayout" name="gridLayout_2">
-                  <item row="1" column="1">
-                   <layout class="QVBoxLayout" name="chipEditLayout">
-                    <item>
-                     <widget class="QLabel" name="chipEditLabel">
-                      <property name="text">
-                       <string>N° D'IDENTIFICATION</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="chipEdit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="1" column="0">
-                   <layout class="QVBoxLayout" name="dogNameEditLayout">
-                    <item>
-                     <widget class="QLabel" name="dogNameEditLabel">
-                      <property name="text">
-                       <string>NOM</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="dogNameEdit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="5" column="0" colspan="2">
-                   <layout class="QVBoxLayout" name="breedEditLayout">
-                    <item>
-                     <widget class="QLabel" name="breedEditLabel">
-                      <property name="text">
-                       <string>DESCRIPTION</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="breedEdit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="3" column="0">
-                   <layout class="QVBoxLayout" name="sexBoxLayout">
-                    <item>
-                     <widget class="QLabel" name="sexBoxLabel">
-                      <property name="text">
-                       <string>SEXE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="sexBox">
-                      <item>
-                       <property name="text">
-                        <string>Mâle</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>Femelle</string>
-                       </property>
-                      </item>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="3" column="1">
-                   <layout class="QVBoxLayout" name="birthDateEditLayout">
-                    <item>
-                     <widget class="QLabel" name="birthDateEditLabel">
-                      <property name="text">
-                       <string>DATE DE NAISSANCE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDateEdit" name="birthDateEdit">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                 </layout>
+                 <layout class="QGridLayout" name="gridLayout_2"/>
                 </widget>
                 <widget class="QWidget" name="entryTab3">
                  <attribute name="title">
@@ -1935,11 +1846,6 @@ color:#212834;</string>
   <tabstop>careTable</tabstop>
   <tabstop>entryTabWidget</tabstop>
   <tabstop>prevDestButton</tabstop>
-  <tabstop>dogNameEdit</tabstop>
-  <tabstop>chipEdit</tabstop>
-  <tabstop>sexBox</tabstop>
-  <tabstop>birthDateEdit</tabstop>
-  <tabstop>breedEdit</tabstop>
   <tabstop>cancelButton</tabstop>
   <tabstop>submitButton</tabstop>
   <tabstop>redListTable</tabstop>
