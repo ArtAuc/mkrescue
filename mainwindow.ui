@@ -577,8 +577,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>969</width>
-               <height>566</height>
+               <width>68</width>
+               <height>84</height>
               </rect>
              </property>
              <property name="styleSheet">

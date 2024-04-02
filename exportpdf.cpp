@@ -4,6 +4,7 @@
 void MainWindow::InitExportButtons(){
     connect(ui->entryExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("entryRegistry");});
     connect(ui->careExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("careRegistry");});
+    connect(ui->membersExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("members");});
 }
 
 void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "careRegistry" || "members"
@@ -15,8 +16,8 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     table->scrollToTop();
 
     // Hide useless items
-    findChild<QToolButton*>(type.remove("Registry") + "AddButton")->hide();
-    findChild<QPushButton*>(type.remove("Registry") + "ExportButton")->hide();
+    findChild<QToolButton*>(QString(type).remove("Registry") + "AddButton")->hide();
+    findChild<QPushButton*>(QString(type).remove("Registry") + "ExportButton")->hide();
     table->hideColumn(table->columnCount() - 1);
 
     page->setFixedWidth(page->width() / 2);
@@ -57,7 +58,9 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     if(type == "entryRegistry")
         txt += "ENTRÉES ET SORTIES";
     else if(type == "careRegistry")
-        txt += "GARDERIE";
+        txt += "DE GARDERIE";
+    else if(type == "members")
+        txt += "DES ADHÉRENTS";
     rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
     x = (pageSize.width() - rect.width()) / 2;
     painter.drawText(QPointF(x, pageSize.height() / 2), txt);
@@ -131,11 +134,17 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     table->viewport()->setMaximumHeight(QWIDGETSIZE_MAX);
     page->show();
     table->showColumn(table->columnCount() - 1);
-    findChild<QToolButton*>(type.remove("Registry") + "AddButton")->show();
-    findChild<QPushButton*>(type.remove("Registry") + "ExportButton")->show();
+    findChild<QToolButton*>(QString(type).remove("Registry") + "AddButton")->show();
+    findChild<QPushButton*>(QString(type).remove("Registry") + "ExportButton")->show();
     table->verticalScrollBar()->show();
 
-    LoadEntryRegistry(ui->yearBox->currentText(), ui->searchLine->text());
+    if(type == "entryRegistry")
+        LoadEntryRegistry(ui->yearBox->currentText(), ui->searchLine->text());
+    else if(type == "careRegistry")
+        LoadCareRegistry(ui->yearBox->currentText(), ui->searchLine->text());
+    else if(type == "members")
+        LoadMembers(ui->yearBox->currentText(), ui->searchLine->text());
+
     page->resizeEvent(nullptr);
 
 }
