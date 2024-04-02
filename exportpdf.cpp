@@ -18,26 +18,19 @@ void MainWindow::ExportEntryRegistry() {
     table->hideColumn(10);
     ui->exportEntryButton->hide();
 
-    table->setFont(QFont("Sans Serif", 7));
-    table->resizeColumnsToContents();
-    float sumWidth = 0;
-
-    for (int col = 0; col < table->columnCount(); ++col) {
-        sumWidth += table->columnWidth(col);
-    }
-
-    entryRegistryPage->setMinimumWidth(sumWidth);
-    entryRegistryPage->setMaximumWidth(entryRegistryPage->height() / 1.4);
+    entryRegistryPage->setFixedWidth(entryRegistryPage->width() / 2);
     entryRegistryPage->resizeEvent(nullptr);
     ui->entryLabel3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8)  + table->columnWidth(9) - table->verticalScrollBar()->width() / 2); // "Sortie" label is too large because of hidden scrollbar
     table->verticalScrollBar()->hide();
     table->horizontalScrollBar()->hide();
+    table->viewport()->setFixedHeight(entryRegistryPage->width() / 1.5);
 
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setPageSize(QPageSize::A4);
     printer.setOutputFileName("output.pdf");
     printer.setResolution(300);
+    printer.setPageOrientation(QPageLayout::Landscape);
 
     QPainter painter;
     painter.begin(&printer);
@@ -73,8 +66,6 @@ void MainWindow::ExportEntryRegistry() {
     qreal y = 0.98 * pageSize.height() - rect.height();
     painter.drawText(QPointF(x, y), txt);
 
-
-
     // Registry pages
     qreal scaleFactor = printer.pageRect(QPrinter::DevicePixel).width() / qreal(entryRegistryPage->width());
 
@@ -84,7 +75,8 @@ void MainWindow::ExportEntryRegistry() {
         // TODO : page number
         printer.newPage();
 
-        int lastVisibleRow = table->rowAt(table->verticalScrollBar()->value() + table->viewport()->height()) - 1;
+        int lastVisibleRow = table->rowAt(table->viewport()->height()) - 1;
+        qDebug() << table->rowAt(100);
         while(lastVisibleRow + 1 > 0 && table->item(lastVisibleRow + 1, 0)->text().isEmpty())
             lastVisibleRow -= 1;
 
@@ -93,6 +85,7 @@ void MainWindow::ExportEntryRegistry() {
                 table->hideRow(row);
             }
 
+            table->clearSelection();
             entryRegistryPage->render(&painter, QPoint(), QRegion(), RenderFlag::DrawChildren);
 
 
@@ -104,6 +97,7 @@ void MainWindow::ExportEntryRegistry() {
         }
 
         else{
+            table->clearSelection();
             entryRegistryPage->render(&painter, QPoint(), QRegion(), RenderFlag::DrawChildren);
             table->setRowCount(0);
         }
@@ -115,12 +109,13 @@ void MainWindow::ExportEntryRegistry() {
 
     entryRegistryPage->setMaximumWidth(QWIDGETSIZE_MAX);
     entryRegistryPage->setMinimumWidth(0);
+    table->viewport()->setMinimumHeight(0);
+    table->viewport()->setMaximumHeight(QWIDGETSIZE_MAX);
     entryRegistryPage->show();
     ui->entryAddButton->show();
     table->showColumn(10);
     ui->exportEntryButton->show();
     table->verticalScrollBar()->show();
-
 
     LoadEntryRegistry(ui->yearBox->currentText(), ui->searchLine->text());
     entryRegistryPage->resizeEvent(nullptr);
