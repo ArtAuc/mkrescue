@@ -86,7 +86,6 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
-    modifyButtons.clear();
 
 
     if (txt == "Entrées/Sorties"){
@@ -196,9 +195,11 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::ToggleModifyButtons()
 {
     for(QToolButton* but : modifyButtons){
-        QIcon icon = but->icon();
-        but->setIcon(QIcon());
-        QTimer::singleShot(310, [but, icon](){but->setIcon(icon);});
+        if(but != nullptr){
+            QIcon icon = but->icon();
+            but->setIcon(QIcon());
+            QTimer::singleShot(310, [but, icon](){but->setIcon(icon);});
+        }
     }
 
 }

@@ -47,6 +47,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
     QTableWidget* table = ui->entryTable;
     table->clearContents();
     table->setRowCount(0);
+    modifyButtons.clear();
 
     connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
 
@@ -144,6 +145,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
     QTableWidget* table = ui->careTable;
     table->clearContents();
     table->setRowCount(0);
+    modifyButtons.clear();
 
     connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadCareRegistry(QString)));
 
@@ -202,6 +204,7 @@ void MainWindow::LoadMembers(QString year, QString search)
     QTableWidget* table = ui->membersTable;
     table->clearContents();
     table->setRowCount(0);
+    modifyButtons.clear();
 
     connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadMembers(QString)));
 

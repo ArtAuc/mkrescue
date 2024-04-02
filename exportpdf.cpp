@@ -9,6 +9,7 @@ void MainWindow::ExportEntryRegistry() {
     Registry *entryRegistryPage = ui->entryRegistryPage;
     QTableWidget* table = ui->entryTable;
     entryRegistryPage->hide();
+    setWindowState(Qt::WindowMaximized);
 
     table->scrollToTop();
 
