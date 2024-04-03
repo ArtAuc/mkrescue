@@ -22,7 +22,7 @@ public:
     QSqlQuery GetCareRegistry(QString year, QString search);
     QSqlQuery GetMembers(QString year, QString search);
     QSqlQuery GetRedList(QString search);
-    QSqlQuery GetLost(QString search);
+    QSqlQuery GetLost(QString search, bool found = false);
     std::vector<QString> GetRegistryYears(QString type);
     void CleanDogs();
     void CleanPeople();

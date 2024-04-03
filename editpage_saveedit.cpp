@@ -154,7 +154,9 @@ void EditPage::Edit(QString type, QStringList infos){
             SetField("descriptionLostEdit", infos[4], lostEditPage);
             SetField("lossDateEdit", infos[5], lostEditPage);
             SetField("lossPlaceEdit", infos[6], lostEditPage);
-            lostEditPage->findChild<QCheckBox*>("foundLostBox")->setChecked(infos[7] == "1");
+            QCheckBox *foundLostBox = lostEditPage->findChild<QCheckBox*>("foundLostBox");
+            foundLostBox->setChecked(infos[7] == "1");
+            foundLostBox->setText(QString((infos[7] == "1") ? "" : "Non ") + "Retrouvé");
 
             // Propriétaire
             SetField("lastNameLostOwnerEdit", infos[8], lostEditPage);

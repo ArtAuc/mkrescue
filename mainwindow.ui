@@ -479,7 +479,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>8</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -578,8 +578,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>969</width>
-               <height>566</height>
+               <width>68</width>
+               <height>84</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -1194,7 +1194,7 @@ QTabBar::tab:selected {
                        </sizepolicy>
                       </property>
                       <property name="text">
-                       <string>Retrouvé</string>
+                       <string>Non Retrouvé</string>
                       </property>
                      </widget>
                     </item>
@@ -1441,7 +1441,7 @@ QTabBar::tab:selected {
                </sizepolicy>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:#984800;
+               <string notr="true">background-color:#7b352e;
 padding:10px;</string>
               </property>
               <property name="text">
@@ -1802,9 +1802,45 @@ color:#212834;</string>
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="rightMargin">
-           <number>9</number>
-          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QCheckBox" name="foundCheckBox">
+              <property name="styleSheet">
+               <string notr="true">QCheckBox:checked{
+	background-color:#3b4b64;
+}
+
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray;
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
+}</string>
+              </property>
+              <property name="text">
+               <string>Retrouvés</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_7">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <property name="spacing">
@@ -2134,23 +2170,53 @@ color:#212834;</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>nextDestButton</tabstop>
-  <tabstop>menuButton</tabstop>
-  <tabstop>yearBox</tabstop>
-  <tabstop>searchLine</tabstop>
-  <tabstop>entryDateEdit</tabstop>
-  <tabstop>entryTypeBox</tabstop>
-  <tabstop>poundPlaceEdit</tabstop>
-  <tabstop>menuTree</tabstop>
-  <tabstop>careAddButton</tabstop>
-  <tabstop>entryTable</tabstop>
-  <tabstop>entryAddButton</tabstop>
-  <tabstop>careTable</tabstop>
-  <tabstop>entryTabWidget</tabstop>
-  <tabstop>prevDestButton</tabstop>
+  <tabstop>lostTabWidget</tabstop>
+  <tabstop>foundLostBox</tabstop>
+  <tabstop>lossDateEdit</tabstop>
+  <tabstop>lossPlaceEdit</tabstop>
+  <tabstop>speciesLostEdit</tabstop>
+  <tabstop>nameLostEdit</tabstop>
+  <tabstop>idLostEdit</tabstop>
+  <tabstop>sexLostEdit</tabstop>
+  <tabstop>descriptionLostEdit</tabstop>
+  <tabstop>removeButton</tabstop>
   <tabstop>cancelButton</tabstop>
   <tabstop>submitButton</tabstop>
+  <tabstop>entryTabWidget</tabstop>
+  <tabstop>prevDestButton</tabstop>
+  <tabstop>entryAddButton</tabstop>
+  <tabstop>careTable</tabstop>
   <tabstop>redListTable</tabstop>
+  <tabstop>outCheckbox</tabstop>
+  <tabstop>careCheckbox</tabstop>
+  <tabstop>dogCardsScrollArea</tabstop>
+  <tabstop>entryExportButton</tabstop>
+  <tabstop>nextDestButton</tabstop>
+  <tabstop>menuTree</tabstop>
+  <tabstop>careAddButton</tabstop>
+  <tabstop>searchLine</tabstop>
+  <tabstop>poundPlaceEdit</tabstop>
+  <tabstop>yearBox</tabstop>
+  <tabstop>entryDateEdit</tabstop>
+  <tabstop>entryTypeBox</tabstop>
+  <tabstop>menuButton</tabstop>
+  <tabstop>reasonRedListEdit</tabstop>
+  <tabstop>careTabWidget</tabstop>
+  <tabstop>careEntryDateEdit</tabstop>
+  <tabstop>careDestDateEdit</tabstop>
+  <tabstop>sameCareButton</tabstop>
+  <tabstop>dateMembersEdit</tabstop>
+  <tabstop>typeMembersBox</tabstop>
+  <tabstop>amountMembersEdit</tabstop>
+  <tabstop>entryTable</tabstop>
+  <tabstop>careExportButton</tabstop>
+  <tabstop>redListAddButton</tabstop>
+  <tabstop>foundCheckBox</tabstop>
+  <tabstop>lostAddButton</tabstop>
+  <tabstop>lostTable</tabstop>
+  <tabstop>membersAddButton</tabstop>
+  <tabstop>membersTable</tabstop>
+  <tabstop>membersExportButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -238,7 +238,7 @@ QSqlQuery Database::GetRedList(QString search) {
     return query;
 }
 
-QSqlQuery Database::GetLost(QString search) {
+QSqlQuery Database::GetLost(QString search, bool found) {
     QSqlQuery query;
     QString queryString = "SELECT identification, "
                           "name, "
@@ -254,8 +254,12 @@ QSqlQuery Database::GetLost(QString search) {
                           "People.id_people "
                           "FROM Lost "
                           "JOIN People ON People.id_people = Lost.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search OR identification LIKE :search OR name LIKE :search) "
-                          "ORDER BY date;";
+                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search OR identification LIKE :search OR name LIKE :search) ";
+
+    if(!found) // Remove dogs already found
+        queryString += "AND found = 0 ";
+
+    queryString += "ORDER BY date;";
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");

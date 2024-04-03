@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->redListAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddRedList()));
     connect(ui->careAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddCare()));
     connect(ui->membersAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddMember()));
+    connect(ui->lostAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddLost()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
@@ -34,9 +35,10 @@ MainWindow::MainWindow(QWidget *parent)
     InitEditWidgets();
 
 
-    // Dog cards checkboxes
+    // Filter checkboxes
     connect(ui->outCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->careCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
+    connect(ui->foundCheckBox, &QCheckBox::clicked, this, [this]() {LoadLost(ui->searchLine->text());});
 
 
     ui->entryRegistryPage->SetType("entry");
@@ -141,6 +143,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else if (txt == "Animaux perdus"){
         stacked->setCurrentWidget(ui->lostPage);
         LoadLost();
+        resizeEvent(nullptr);
     }
     else if (txt == "Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
@@ -223,6 +226,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     checkboxFont.setPointSize(0.01 * ui->dogCardsPage->width());
     ui->careCheckbox->setFont(checkboxFont);
     ui->outCheckbox->setFont(checkboxFont);
+    checkboxFont.setPointSize(0.01 * ui->lostPage->width());
+    ui->foundCheckBox->setFont(checkboxFont);
 }
 
 void MainWindow::ToggleModifyButtons()
@@ -378,6 +383,8 @@ void MainWindow::RefreshPage(QString type){
     else if(type == "lost"){
         LoadLost();
     }
+
+    resizeEvent(nullptr);
 }
 
 QString MainWindow::ClearUselessBreaks(QString s){

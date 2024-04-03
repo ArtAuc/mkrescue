@@ -35,8 +35,10 @@ void EditPage::ClearAllPages()
     AddDestPage();
 
     for (QWidget* widget : findChildren<QWidget*>()) {
-        if (QDateEdit *dateEdit = qobject_cast<QDateEdit*>(widget))
+        if (QDateEdit *dateEdit = qobject_cast<QDateEdit*>(widget)){
             dateEdit->setDate(QDate::currentDate());
+            dateEdit->clear();
+        }
         else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget))
             lineEdit->clear();
         else if (QComboBox *box = qobject_cast<QComboBox*>(widget))

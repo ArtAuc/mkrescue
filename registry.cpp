@@ -105,7 +105,7 @@ void Registry::resizeEvent(QResizeEvent *event){
             }
         }
 
-        addButton->setFixedSize(QSize(std::max(table->columnWidth(table->columnCount() - 1), int(0.03 * width())), fontSize * 4));
+        addButton->setFixedSize(QSize(std::max(table->columnWidth(table->columnCount() - 1), int(0.03 * width())), fontSize * 4.5));
         addButton->setIconSize(0.7 * QSize(iconSize, iconSize));
     }
 }
