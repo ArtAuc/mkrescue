@@ -241,6 +241,8 @@ void MainWindow::Search(QString search){
         LoadMembers(ui->yearBox->currentText(), search);
     else if (pageName == "lostPage")
         LoadLost(search);
+
+    findChild<Registry*>(pageName)->resizeEvent(nullptr);
 }
 
 // Only necessary infos are sent because the list is stored when the slot is connected
