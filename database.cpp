@@ -253,7 +253,8 @@ void Database::CleanPeople(){
                                 "Care_registry WHERE id_people_dest",
                                 "Destinations WHERE id_people",
                                 "Red_list WHERE id_people",
-                                "Members WHERE id_people"
+                                "Members WHERE id_people",
+                                "Lost WHERE id_people"
                                };
 
     for(QString id : id_peoples){

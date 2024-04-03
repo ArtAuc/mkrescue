@@ -260,6 +260,8 @@ void EditPage::RemoveCurrent(){
         message = "Voulez-vous supprimer cette personne de la liste rouge ?";
     else if (lastType == "members")
         message = "Voulez-vous supprimer cette personne du registre des adhérents ?";
+    else if (lastType == "lost")
+        message = "Voulez-vous supprimer cette entrée des animaux perdus ?";
 
     reply = QMessageBox::question(nullptr, "Confirmation de suppression", message,
                                               QMessageBox::Yes | QMessageBox::No);
@@ -294,6 +296,16 @@ void EditPage::RemoveCurrent(){
                           "AND date = :date;");
             query.bindValue(":id", currentNecessary[0]);
             query.bindValue(":date", currentNecessary[1]);
+        }
+
+        else if(lastType == "lost"){
+            query.prepare("DELETE FROM Lost "
+                          "WHERE name = :name "
+                          "AND date = :date "
+                          "AND id_people = :id;");
+            query.bindValue(":name", currentNecessary[0]);
+            query.bindValue(":date", currentNecessary[1]);
+            query.bindValue(":id", currentNecessary[2]);
         }
 
         query.exec();
