@@ -22,10 +22,38 @@ void EditPage::AddMember(){
     Edit("members", {});
 }
 
+void EditPage::AddLost(){
+    Edit("lost", {});
+}
+
 void EditPage::SwitchPage(QString pageName){
     resizeEvent(nullptr);
     qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);
     findChild<QStackedWidget*>("editStacked")->setCurrentWidget(findChild<QWidget*>(pageName));
+}
+
+QStringList EditPage::AddressList(QString address){
+    QStringList addressList;
+
+    addressList = address.split(address.contains("\\n") ? "\\n" : "\n");
+
+    if(addressList.size() != 3){
+        QMessageBox::critical(nullptr, "Erreur", "Erreur dans le format de l'adresse postale");
+        return QStringList({"", "", "", ""});
+    }
+
+    else{
+        QStringList postalCity = addressList[2].split(" ");
+        if(postalCity.size() != 2){
+            QMessageBox::critical(nullptr, "Erreur", "Erreur dans le format du code postal");
+            return QStringList({"", "", "", ""});
+        }
+
+        addressList[2] = postalCity[0];
+        addressList.append(postalCity[1]);
+    }
+
+    return addressList;
 }
 
 void EditPage::SetField(QString name, QString value, QWidget* parent){
@@ -67,25 +95,6 @@ QString EditPage::GetField(QString name, QWidget* parent){
         return QString::number(spinBox->value());
 
     return "";
-}
-
-
-void EditPage::ChangeEntryType(QString type)
-{
-    QWidget* entreeTab = findChild<QWidget*>("entryTab1");
-    for (QWidget* widget : entreeTab->findChildren<QWidget*>()) {
-        if(widget->objectName().startsWith("poundPlaceEdit")) // Pound
-            widget->setVisible(type != "Abandon");
-        else if(widget->objectName().startsWith("firstNameAbandonEdit") ||
-                widget->objectName().startsWith("lastNameAbandonEdit") ||
-                widget->objectName().startsWith("phoneAbandonEdit") ||
-                widget->objectName().startsWith("emailAbandonEdit")||
-                widget->objectName().startsWith("addressAbandonEdit") ||
-                widget->objectName().startsWith("address2AbandonEdit") ||
-                widget->objectName().startsWith("postalCodeAbandonEdit") ||
-                widget->objectName().startsWith("cityAbandonEdit")) // Abandoned
-            widget->setVisible(type == "Abandon");
-    }
 }
 
 // Returns id_people newly created, or already existent

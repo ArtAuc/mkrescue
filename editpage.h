@@ -35,6 +35,7 @@ public slots:
     void AddCare();
     void AddMember();
     void AddRedList();
+    void AddLost();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
     void SaveEdit();
@@ -51,6 +52,7 @@ signals:
     void RefreshMainWindow(QString type);
 
 private:
+    QStringList AddressList(QString address);
     void ClearAllPages();
     void SwitchPage(QString pageName);
     void AddDestPage();

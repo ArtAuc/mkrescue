@@ -298,23 +298,29 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     }
 
     else if (type == "lost"){
-        query.exec("SELECT identification, "
+        query.prepare("SELECT identification, "
                    "name, "
                    "species, "
                    "sex, "
                    "description, "
                    "date, "
                    "place, "
+                   "found, "
                    "People.last_name, "
                    "People.first_name, "
                    "People.phone, "
-                   "found, "
+                   "People.email, "
+                   "People.address, "
                    "People.id_people "
                    "FROM Lost "
                    "JOIN People ON People.id_people = Lost.id_people "
                    "WHERE name = '" + necessary[0] +
                    "' AND date = '" + necessary[1] +
                    "' AND People.id_people = " + necessary[2] + ";");
+
+        if(!query.exec())
+            QMessageBox::critical(nullptr, "Erreur de la requête SQL", query.lastError().text());
+
         query.next();
 
         for(int i = 0; i < query.record().count(); i++)
@@ -337,6 +343,10 @@ void MainWindow::RefreshPage(QString type){
     else if(type == "redList"){
         db.MakeRedList();
         LoadRedList();
+    }
+
+    else if(type == "lost"){
+        LoadLost();
     }
 }
 

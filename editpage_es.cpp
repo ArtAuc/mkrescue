@@ -1,5 +1,24 @@
 #include "editpage.h"
 
+
+void EditPage::ChangeEntryType(QString type)
+{
+    QWidget* entreeTab = findChild<QWidget*>("entryTab1");
+    for (QWidget* widget : entreeTab->findChildren<QWidget*>()) {
+        if(widget->objectName().startsWith("poundPlaceEdit")) // Pound
+            widget->setVisible(type != "Abandon");
+        else if(widget->objectName().startsWith("firstNameAbandonEdit") ||
+                widget->objectName().startsWith("lastNameAbandonEdit") ||
+                widget->objectName().startsWith("phoneAbandonEdit") ||
+                widget->objectName().startsWith("emailAbandonEdit")||
+                widget->objectName().startsWith("addressAbandonEdit") ||
+                widget->objectName().startsWith("address2AbandonEdit") ||
+                widget->objectName().startsWith("postalCodeAbandonEdit") ||
+                widget->objectName().startsWith("cityAbandonEdit")) // Abandoned
+            widget->setVisible(type == "Abandon");
+    }
+}
+
 void EditPage::ClearAllPages()
 {
     // Destinations ES

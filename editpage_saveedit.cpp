@@ -34,17 +34,11 @@ void EditPage::Edit(QString type, QStringList infos){
                 SetField("lastNameAbandonEdit", infos[3]);
                 SetField("firstNameAbandonEdit", infos[4]);
 
-                QStringList addressList = infos[5].split(infos[5].contains("\\n") ? "\\n" : "\n");
-                if(addressList.size() < 3)
-                    qDebug() << "Wrong address format";
-
-                else{
-                    SetField("addressAbandonEdit", addressList[0]);
-                    SetField("address2AbandonEdit", addressList[1]);
-
-                    SetField("cityAbandonEdit", addressList[addressList.size() - 1].split(" ")[1]);
-                    SetField("postalCodeAbandonEdit", addressList[addressList.size() - 1].split(" ")[0]);
-                }
+                QStringList addressList = AddressList(infos[5]);
+                SetField("addressAbandonEdit", addressList[0]);
+                SetField("address2AbandonEdit", addressList[1]);
+                SetField("postalCodeAbandonEdit", addressList[2]);
+                SetField("cityAbandonEdit", addressList[3]);
 
                 SetField("phoneAbandonEdit", infos[6]);
                 SetField("emailAbandonEdit", infos[7]);
@@ -77,13 +71,11 @@ void EditPage::Edit(QString type, QStringList infos){
                     SetField("destDateEdit" + iString, p[0], destStacked);
                     SetField("lastNameDestEdit" + iString, p[2], destStacked);
                     SetField("firstNameDestEdit" + iString, p[3], destStacked);
-                    QStringList splitAddress = p[4].split("\n");
-                    if(splitAddress.count() == 3){
-                        SetField("addressDestEdit" + iString, splitAddress[0], destStacked);
-                        SetField("address2DestEdit" + iString, splitAddress[1], destStacked);
-                        SetField("postalCodeDestEdit" + iString, splitAddress[2].split(" ")[0], destStacked);
-                        SetField("cityDestEdit" + iString, splitAddress[2].split(" ")[1], destStacked);
-                    }
+                    QStringList addressList = AddressList(p[4]);
+                    SetField("addressDestEdit" + iString, addressList[0], destStacked);
+                    SetField("address2DestEdit" + iString, addressList[1], destStacked);
+                    SetField("postalCodeDestEdit" + iString, addressList[2], destStacked);
+                    SetField("cityDestEdit" + iString, addressList[3], destStacked);
 
                     SetField("phoneDestEdit" + iString, p[5], destStacked);
                     SetField("emailDestEdit" + iString, p[6], destStacked);
@@ -104,17 +96,11 @@ void EditPage::Edit(QString type, QStringList infos){
             SetField("lastNameCareEntryEdit", infos[2]);
             SetField("firstNameCareEntryEdit", infos[3]);
 
-            QStringList addressList = infos[4].split(infos[4].contains("\\n") ? "\\n" : "\n");
-            if(addressList.size() < 3)
-                qDebug() << "Wrong address format";
-
-            else{
-                SetField("addressCareEntryEdit", addressList[0]);
-                SetField("address2CareEntryEdit", addressList[1]);
-
-                SetField("cityCareEntryEdit", addressList[addressList.size() - 1].split(" ")[1]);
-                SetField("postalCodeCareEntryEdit", addressList[addressList.size() - 1].split(" ")[0]);
-            }
+            QStringList addressList = AddressList(infos[4]);
+            SetField("addressCareEntryEdit", addressList[0]);
+            SetField("address2CareEntryEdit", addressList[1]);
+            SetField("postalCodeCareEntryEdit", addressList[2]);
+            SetField("cityCareEntryEdit", addressList[3]);
 
             SetField("phoneCareEntryEdit", infos[5]);
             SetField("emailCareEntryEdit", infos[6]);
@@ -132,17 +118,12 @@ void EditPage::Edit(QString type, QStringList infos){
             SetField("lastNameCareDestEdit", infos[13]);
             SetField("firstNameCareDestEdit", infos[14]);
 
-            addressList = infos[15].split(infos[15].contains("\\n") ? "\\n" : "\n");
-            if(addressList.size() < 3)
-                qDebug() << "Wrong address format";
+            addressList = AddressList(infos[15]);
 
-            else{
-                SetField("addressCareDestEdit", addressList[0]);
-                SetField("address2CareDestEdit", addressList[1]);
-
-                SetField("cityCareDestEdit", addressList[addressList.size() - 1].split(" ")[1]);
-                SetField("postalCodeCareDestEdit", addressList[addressList.size() - 1].split(" ")[0]);
-            }
+            SetField("addressCareDestEdit", addressList[0]);
+            SetField("address2CareDestEdit", addressList[1]);
+            SetField("postalCodeCareDestEdit", addressList[2]);
+            SetField("cityCareDestEdit", addressList[3]);
 
             SetField("phoneCareDestEdit", infos[16]);
             SetField("emailCareDestEdit", infos[17]);
@@ -158,23 +139,35 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     else if (type == "lost"){
-        QWidget *lostPage = findChild<QWidget*>("lostEditPage");
+        QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
         findChild<QTabWidget*>("lostTabWidget")->setCurrentIndex(0);
-        if(infos.size() > 11 && infos[11].toInt() > 0){
+        if(infos.size() > 13 && infos[13].toInt() > 0){
+            currentNecessary.append(infos[1]); // name
+            currentNecessary.append(infos[5]); // date
+            currentNecessary.append(infos[13]); // id_people
+
             // Animal
-            SetField("idLostEdit", infos[0], lostPage);
-            SetField("nameLostEdit", infos[1], lostPage);
-            SetField("speciesLostEdit", infos[2], lostPage);
-            SetField("sexLostEdit", infos[3], lostPage);
-            SetField("descriptionLostEdit", infos[4], lostPage);
-            SetField("lossDateEdit", infos[5], lostPage);
-            SetField("lossPlaceEdit", infos[6], lostPage);
-            lostPage->findChild<QCheckBox*>("foundLostBox")->setChecked(infos[10] == "1");
+            SetField("idLostEdit", infos[0], lostEditPage);
+            SetField("nameLostEdit", infos[1], lostEditPage);
+            SetField("speciesLostEdit", infos[2], lostEditPage);
+            SetField("sexLostEdit", infos[3], lostEditPage);
+            SetField("descriptionLostEdit", infos[4], lostEditPage);
+            SetField("lossDateEdit", infos[5], lostEditPage);
+            SetField("lossPlaceEdit", infos[6], lostEditPage);
+            lostEditPage->findChild<QCheckBox*>("foundLostBox")->setChecked(infos[7] == "1");
 
             // Propriétaire
-            SetField("lastNameLostOwnerEdit", infos[7], lostPage);
-            SetField("firstNameLostOwnerEdit", infos[8], lostPage);
-            SetField("phoneLostOwnerEdit", infos[9], lostPage);
+            SetField("lastNameLostOwnerEdit", infos[8], lostEditPage);
+            SetField("firstNameLostOwnerEdit", infos[9], lostEditPage);
+            SetField("phoneLostOwnerEdit", infos[10], lostEditPage);
+            SetField("emailAbandonEdit", infos[11], lostEditPage);
+
+            QStringList addressList = AddressList(infos[12]);
+
+            SetField("addressAbandonEdit", addressList[0], lostEditPage);
+            SetField("address2AbandonEdit", addressList[1], lostEditPage);
+            SetField("postalCodeAbandonEdit", addressList[2], lostEditPage);
+            SetField("cityAbandonEdit", addressList[3], lostEditPage);
         }
     }
 }
@@ -414,7 +407,72 @@ void EditPage::SaveEdit()
         query.bindValue(":amount", amount);
         query.bindValue(":type", type);
         query.exec();
+    }
 
+    else if(lastType == "lost"){
+        QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
+        QString id_people = CreatePersonIfNeeded(QStringList({GetField("lastNameLostOwnerEdit", lostEditPage),
+                                GetField("firstNameLostOwnerEdit", lostEditPage),
+                                GetField("phoneLostOwnerEdit", lostEditPage),
+                                GetField("emailLostOwnerEdit", lostEditPage),
+                                GetField("addressLostOwnerEdit", lostEditPage) + "\n" +
+                                GetField("address2LostOwnerEdit", lostEditPage) + "\n" +
+                                GetField("postalCodeLostOwnerEdit", lostEditPage) + " " +
+                                GetField("cityLostOwnerEdit", lostEditPage)}));
+        QString species = GetField("speciesLostEdit", lostEditPage);
+        QString name = GetField("nameLostEdit", lostEditPage);
+        QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
+        QString description = GetField("descriptionLostEdit", lostEditPage);
+        QString identification = GetField("idLostEdit", lostEditPage);
+        QString sex = GetField("sexLostEdit", lostEditPage);
+        QString date = GetField("lossDateEdit", lostEditPage);
+        QString place = GetField("lossPlaceEdit", lostEditPage);
+
+        if (!currentNecessary.isEmpty()) { // Modifying
+            QString queryString = "UPDATE Lost "
+                                  "SET species = :species, "
+                                  "name = :name, "
+                                  "found = :found, "
+                                  "description = :description, "
+                                  "identification = :identification, "
+                                  "sex = :sex, "
+                                  "date = :date, "
+                                  "place = :place "
+                                  "WHERE name = :name_nec "
+                                  "AND date = :date_nec "
+                                  "AND id_people = :id_people;";
+
+            QSqlQuery query;
+            query.prepare(queryString);
+            query.bindValue(":species", species);
+            query.bindValue(":name", name);
+            query.bindValue(":found", found);
+            query.bindValue(":description", description);
+            query.bindValue(":identification", identification);
+            query.bindValue(":sex", sex);
+            query.bindValue(":date", date);
+            query.bindValue(":place", place);
+            query.bindValue(":name_nec", currentNecessary[0]);
+            query.bindValue(":date_nec", currentNecessary[1]);
+            query.bindValue(":id_people", currentNecessary[2]);
+            query.exec();
+        }
+        else { // Creating
+            QSqlQuery query;
+            query.prepare("INSERT INTO Lost (id_people, species, name, found, description, identification, sex, date, place) "
+                          "VALUES (:id_people, :species, :name, :found, :description, :identification, :sex, :date, :place)");
+
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":species", species);
+            query.bindValue(":name", name);
+            query.bindValue(":found", found);
+            query.bindValue(":description", description);
+            query.bindValue(":identification", identification);
+            query.bindValue(":sex", sex);
+            query.bindValue(":date", date);
+            query.bindValue(":place", place);
+            query.exec();
+        }
     }
 
 

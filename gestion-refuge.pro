@@ -18,7 +18,7 @@ SOURCES += \
     dogregistry.cpp \
     editdogwidget.cpp \
     editpage.cpp \
-    editpage_destpage.cpp \
+    editpage_es.cpp \
     editpage_saveedit.cpp \
     editpeoplewidget.cpp \
     main.cpp \
