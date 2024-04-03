@@ -10,6 +10,12 @@
     <height>739</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="palette">
    <palette>
     <active>
@@ -79,7 +85,46 @@ QPushButton{
 QToolButton, QPushButton{
 	border:none;
 }
-</string>
+
+QCheckBox {
+    color: white;
+    border-radius: 20px;
+	padding:10px;
+}
+
+QCheckBox:checked {
+	background-color:#165532;
+	border:none;
+}
+
+QCheckBox:unchecked {
+	background-color:#7b352e;
+	color:white;
+	border:none;
+}
+
+QCheckBox:indeterminate {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray
+}
+
+QCheckBox::indicator:checked {
+	image:url('media/checked.png');
+}
+
+QCheckBox::indicator:unchecked {
+	image: url('media/whitecross.png');
+}
+
+QCheckBox::indicator:indeterminate {
+	image: url('media/question.png');
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QFormLayout" name="formLayout_2">
@@ -434,53 +479,12 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>8</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
          <property name="styleSheet">
-          <string notr="true">QCheckBox {
-    color: white;
-    border-radius: 20px;
-	padding:10px;
-}
-
-QCheckBox:checked {
-	background-color:#165532;
-	border:none;
-}
-
-QCheckBox:unchecked {
-	background-color:#7b352e;
-	color:white;
-	border:none;
-}
-
-
-QCheckBox:indeterminate {
-	border: 1px solid gray;
-    background-color: white;
-	color:gray
-}
-
-QCheckBox::indicator:checked {
-	image:url('media/checked.png');
-}
-
-QCheckBox::indicator:unchecked {
-	image: url('media/whitecross.png');
-}
-
-QCheckBox::indicator:indeterminate {
-	image: url('media/question.png');
-}
-
-QCheckBox::indicator {
-    width: 16px;
-    height: 16px;
-}
-
-QFrame{
+          <string notr="true">QFrame{
 	background-color:white;
 	color:#333;
 	border:1px solid #ddd;
@@ -539,10 +543,7 @@ QCheckBox:unchecked {
 QCheckBox::indicator:unchecked{
 		image: url('media/cross.png');
 }
-
-QCheckBox::indicator:unchecked{
-		image: url('media/cross.png');
-}</string>
+</string>
               </property>
               <property name="text">
                <string>Garderie</string>
@@ -577,8 +578,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>68</width>
-               <height>84</height>
+               <width>969</width>
+               <height>566</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -1059,67 +1060,21 @@ QTabBar::tab:selected {
              </layout>
             </widget>
             <widget class="QWidget" name="lostEditPage">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <layout class="QGridLayout" name="gridLayout_10">
               <item row="0" column="0" rowspan="2">
                <widget class="QTabWidget" name="lostTabWidget">
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <widget class="QWidget" name="lostTab1">
                  <attribute name="title">
                   <string>Animal</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_9">
-                  <item row="2" column="0">
-                   <layout class="QVBoxLayout" name="idLostEditLayout">
-                    <item>
-                     <widget class="QLabel" name="idLostEditLabel">
-                      <property name="text">
-                       <string>IDENTIFICATION</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="idLostEdit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="4" column="0">
-                   <widget class="QCheckBox" name="foundLostBox">
-                    <property name="text">
-                     <string>Retrouvé</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <layout class="QVBoxLayout" name="speciesLostEditLayout">
-                    <item>
-                     <widget class="QLabel" name="speciesLostEditLabel">
-                      <property name="text">
-                       <string>ESPÈCE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="speciesLostEdit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="0" column="1">
-                   <layout class="QVBoxLayout" name="lossPlaceEditLayout">
-                    <item>
-                     <widget class="QLabel" name="lossPlaceEditLabel">
-                      <property name="text">
-                       <string>LIEU DE PERTE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="lossPlaceEdit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="2" column="1">
+                  <item row="3" column="1">
                    <layout class="QVBoxLayout" name="sexLostEditLayout">
                     <item>
                      <widget class="QLabel" name="sexLostEditLabel">
@@ -1144,21 +1099,49 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="1" column="1">
-                   <layout class="QVBoxLayout" name="nameLostEditLayout">
+                  <item row="5" column="0" colspan="2">
+                   <layout class="QVBoxLayout" name="descriptionLostEditLayout">
                     <item>
-                     <widget class="QLabel" name="nameLostEditLabel">
+                     <widget class="QLabel" name="descriptionLostEditLabel">
                       <property name="text">
-                       <string>NOM</string>
+                       <string>DESCRIPTION</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="nameLostEdit"/>
+                     <widget class="QLineEdit" name="descriptionLostEdit"/>
                     </item>
                    </layout>
                   </item>
-                  <item row="0" column="0">
+                  <item row="1" column="1">
+                   <layout class="QVBoxLayout" name="lossPlaceEditLayout">
+                    <item>
+                     <widget class="QLabel" name="lossPlaceEditLabel">
+                      <property name="text">
+                       <string>LIEU DE PERTE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="lossPlaceEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="0">
+                   <layout class="QVBoxLayout" name="idLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="idLostEditLabel">
+                      <property name="text">
+                       <string>IDENTIFICATION</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="idLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="0">
                    <layout class="QVBoxLayout" name="lossDateEditLayout">
                     <item>
                      <widget class="QLabel" name="lossDateEditLabel">
@@ -1172,17 +1155,48 @@ QTabBar::tab:selected {
                     </item>
                    </layout>
                   </item>
-                  <item row="3" column="0" colspan="2">
-                   <layout class="QVBoxLayout" name="descriptionLostEditLayout">
+                  <item row="2" column="0">
+                   <layout class="QVBoxLayout" name="speciesLostEditLayout">
                     <item>
-                     <widget class="QLabel" name="descriptionLostEditLabel">
+                     <widget class="QLabel" name="speciesLostEditLabel">
                       <property name="text">
-                       <string>DESCRIPTION</string>
+                       <string>ESPÈCE</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="descriptionLostEdit"/>
+                     <widget class="QLineEdit" name="speciesLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="1">
+                   <layout class="QVBoxLayout" name="nameLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="nameLostEditLabel">
+                      <property name="text">
+                       <string>NOM</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="nameLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="0" colspan="2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_6">
+                    <item>
+                     <widget class="QCheckBox" name="foundLostBox">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Retrouvé</string>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </item>
@@ -1681,6 +1695,9 @@ color:#212834;</string>
             <property name="spacing">
              <number>0</number>
             </property>
+            <property name="rightMargin">
+             <number>2</number>
+            </property>
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
@@ -1782,18 +1799,24 @@ color:#212834;</string>
         </widget>
         <widget class="Registry" name="lostPage">
          <layout class="QVBoxLayout" name="verticalLayout_12">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <property name="spacing">
              <number>0</number>
             </property>
+            <property name="rightMargin">
+             <number>6</number>
+            </property>
             <item>
              <spacer name="horizontalSpacer_5">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -1805,6 +1828,12 @@ color:#212834;</string>
             </item>
             <item>
              <widget class="QToolButton" name="lostAddButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>...</string>
               </property>
@@ -1920,6 +1949,9 @@ color:#212834;</string>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
              <number>0</number>
             </property>
             <item>

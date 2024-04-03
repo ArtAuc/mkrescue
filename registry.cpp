@@ -14,6 +14,11 @@ void Registry::showEvent(QShowEvent* event) {
     addButton = findChild<QToolButton*>(type + "AddButton");
 
     if(table != nullptr && addButton != nullptr){
+        // Headers
+        table->verticalHeader()->setVisible(false);
+        for(int i = 0; i < table->columnCount(); i++)
+            table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
+
         // Center-align text for columns
         for(int col = 0; col < table->columnCount(); col++){
             for(int row = 0; row < table->rowCount(); row++)
@@ -45,6 +50,11 @@ void Registry::showEvent(QShowEvent* event) {
             table->horizontalHeaderItem(2)->setText("Nom\nPrénom");
             table->horizontalHeaderItem(6)->setText("Valable\njusqu'au");
             table->horizontalHeaderItem(7)->setText("Nature\nMontant");
+        }
+        else if(type == "lost"){
+            table->horizontalHeaderItem(1)->setText("Espèce\nSexe");
+            table->horizontalHeaderItem(3)->setText("Date de\nperte");
+            table->horizontalHeaderItem(4)->setText("Lieu de\nperte");
         }
     }
 

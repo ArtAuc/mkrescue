@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
+    connect(ui->foundLostBox, SIGNAL(clicked(bool)), this, SLOT(ToggleFoundBoxText()));
 
     InitEditWidgets();
 
@@ -98,6 +99,15 @@ void MainWindow::InitEditWidgets(){
     ui->lostTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->lostTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
+
+
+void MainWindow::ToggleFoundBoxText(){
+    QString newText = "Retrouvé";
+    if(!ui->foundLostBox->isChecked())
+        newText = "Non Retrouvé";
+    ui->foundLostBox->setText(newText);
+}
+
 
 // Change selected page from stacked widget, based on the selected menu item
 void MainWindow::ChangePage(QTreeWidgetItem* item)

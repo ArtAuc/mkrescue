@@ -43,6 +43,7 @@ public slots:
     void Clean();
     void SelectDogCard();
     void UnselectDogCard();
+    void ToggleFoundBoxText();
 
 private:
     void ExportRegistry(QString type);

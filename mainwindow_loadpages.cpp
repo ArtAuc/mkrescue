@@ -64,7 +64,6 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         if(prov_type[0] == "Fourrière"){
             table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
                                                       prov_type[1]))); //place
-
         }
         else if (prov_type[0] == "Abandon")
             table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
@@ -315,7 +314,7 @@ void MainWindow::LoadLost(QString search){
         table->setItem(nb, 4, new QTableWidgetItem(query.value(6).toString())); // place
         table->setItem(nb, 5, new QTableWidgetItem(ClearUselessBreaks(query.value(7).toString() + " " + query.value(8).toString() + "\n" + //people_lastname + people_firstname
                                                   query.value(9).toString()))); // people_phone
-        table->setItem(nb, 6, new QTableWidgetItem(query.value(10).toString())); // found
+        table->setItem(nb, 6, new QTableWidgetItem((query.value(10).toString() == "1") ? "Oui" : "")); // found
         table->setItem(nb, 7, new QTableWidgetItem(""));
 
         // Modify icon

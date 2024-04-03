@@ -20,11 +20,6 @@ void DogRegistry::showEvent(QShowEvent* event) {
     }
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
-        // Headers
-        table->verticalHeader()->setVisible(false);
-        for(int i = 0; i < table->columnCount(); i++)
-            table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
-
         table->horizontalHeaderItem(1)->setText("Date\nd'entrée");
         table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
         table->horizontalHeaderItem(6)->setText("Date de\nnaissance");
