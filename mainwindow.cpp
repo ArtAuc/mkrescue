@@ -29,30 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
-    QGridLayout *gridLayout = qobject_cast<QGridLayout*>(ui->entryTab1->layout());
-    if(gridLayout){ // Insert people entry editor
-        gridLayout->addWidget(new EditPeopleWidget("AbandonEdit"), gridLayout->rowCount(), 1, 1, 2);
-    }
 
-    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit", true));
-
-    gridLayout = qobject_cast<QGridLayout*>(ui->careTab1->layout());
-    if(gridLayout){
-        gridLayout->addWidget(new EditPeopleWidget("CareEntryEdit"), gridLayout->rowCount(), 1, 1, 2);
-    }
-
-    ui->careTab2->layout()->addWidget(new EditDogWidget("CareAnimalEdit"));
-    ui->entryTab2->layout()->addWidget(new EditDogWidget("EntryAnimalEdit"));
-    ui->lostTab2->layout()->addWidget(new EditPeopleWidget("LostOwnerEdit", true));
-    gridLayout = qobject_cast<QGridLayout*>(ui->careTab3->layout());
-    if(gridLayout){
-        gridLayout->addWidget(new EditPeopleWidget("CareDestEdit"), gridLayout->rowCount(), 0, 1, 2);
-    }
-
-    gridLayout = qobject_cast<QGridLayout*>(ui->membersEditPage->layout());
-    if(gridLayout){
-        gridLayout->addWidget(new EditPeopleWidget("MembersEdit"), gridLayout->rowCount(), 0, 1, 2);
-    }
+    InitEditWidgets();
 
 
     // Dog cards checkboxes
@@ -76,9 +54,49 @@ MainWindow::MainWindow(QWidget *parent)
     Clean();
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::InitEditWidgets(){
+    QGridLayout *gridLayout = qobject_cast<QGridLayout*>(ui->entryTab1->layout());
+    if(gridLayout){ // Insert people entry editor
+        gridLayout->addWidget(new EditPeopleWidget("AbandonEdit"), gridLayout->rowCount(), 1, 1, 2);
+        gridLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding), gridLayout->rowCount(), 1, 1, 2);
+    }
+    ui->entryTab2->layout()->addWidget(new EditDogWidget("EntryAnimalEdit"));
+
+    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit", true));
+
+    gridLayout = qobject_cast<QGridLayout*>(ui->careTab1->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditPeopleWidget("CareEntryEdit"), gridLayout->rowCount(), 1, 1, 2);
+        gridLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding), gridLayout->rowCount(), 1, 1, 2);
+    }
+
+    ui->careTab2->layout()->addWidget(new EditDogWidget("CareAnimalEdit"));
+
+    gridLayout = qobject_cast<QGridLayout*>(ui->careTab3->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditPeopleWidget("CareDestEdit"), gridLayout->rowCount(), 0, 1, 2);
+        gridLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding), gridLayout->rowCount(), 0, 1, 2);
+    }
+
+
+    gridLayout = qobject_cast<QGridLayout*>(ui->membersEditPage->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditPeopleWidget("MembersEdit"), gridLayout->rowCount(), 0, 1, 2);
+    }
+
+
+    ui->lostTab2->layout()->addWidget(new EditPeopleWidget("LostOwnerEdit", true));
+
+    ui->careTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->entryTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->lostTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->lostTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 
 // Change selected page from stacked widget, based on the selected menu item

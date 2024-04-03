@@ -213,7 +213,7 @@ void EditPage::resizeEvent(QResizeEvent *event){
     layout()->setContentsMargins(margins);
 
     // Tab header
-    if(lastType == "entry" || lastType == "care"){
+    if(lastType == "entry" || lastType == "care" || lastType == "lost"){
         QTabBar* bar = findChild<QWidget*>(lastType + "EditPage")->findChild<QTabBar*>();
         QFont font = bar->font();
         font.setPointSize(width() * 0.01);

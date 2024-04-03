@@ -49,6 +49,7 @@ private:
     QString ClearUselessBreaks(QString s);
     void InitYearRegistry(QString type, QString year);
     void InitExportButtons();
+    void InitEditWidgets();
 
 private:
     Ui::MainWindow *ui;
