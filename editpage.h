@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QToolButton>
+#include <QCheckBox>
 
 #include "destinationpage.h"
 #include "editdogwidget.h"

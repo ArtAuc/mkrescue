@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->careTab2->layout()->addWidget(new EditDogWidget("CareAnimalEdit"));
     ui->entryTab2->layout()->addWidget(new EditDogWidget("EntryAnimalEdit"));
+    ui->lostTab2->layout()->addWidget(new EditPeopleWidget("LostOwnerEdit", true));
     gridLayout = qobject_cast<QGridLayout*>(ui->careTab3->layout());
     if(gridLayout){
         gridLayout->addWidget(new EditPeopleWidget("CareDestEdit"), gridLayout->rowCount(), 0, 1, 2);
@@ -297,7 +298,27 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     }
 
     else if (type == "lost"){
+        query.exec("SELECT identification, "
+                   "name, "
+                   "species, "
+                   "sex, "
+                   "description, "
+                   "date, "
+                   "place, "
+                   "People.last_name, "
+                   "People.first_name, "
+                   "People.phone, "
+                   "found, "
+                   "People.id_people "
+                   "FROM Lost "
+                   "JOIN People ON People.id_people = Lost.id_people "
+                   "WHERE name = '" + necessary[0] +
+                   "' AND date = '" + necessary[1] +
+                   "' AND People.id_people = " + necessary[2] + ";");
+        query.next();
 
+        for(int i = 0; i < query.record().count(); i++)
+            infos.append(query.value(i).toString());
     }
 
 

@@ -434,7 +434,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>6</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -1058,7 +1058,146 @@ QTabBar::tab:selected {
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="lostEditPage"/>
+            <widget class="QWidget" name="lostEditPage">
+             <layout class="QGridLayout" name="gridLayout_10">
+              <item row="0" column="0" rowspan="2">
+               <widget class="QTabWidget" name="lostTabWidget">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="lostTab1">
+                 <attribute name="title">
+                  <string>Animal</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_9">
+                  <item row="2" column="0">
+                   <layout class="QVBoxLayout" name="idLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="idLostEditLabel">
+                      <property name="text">
+                       <string>IDENTIFICATION</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="idLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QCheckBox" name="foundLostBox">
+                    <property name="text">
+                     <string>Retrouvé</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <layout class="QVBoxLayout" name="speciesLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="speciesLostEditLabel">
+                      <property name="text">
+                       <string>ESPÈCE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="speciesLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="1">
+                   <layout class="QVBoxLayout" name="lossPlaceEditLayout">
+                    <item>
+                     <widget class="QLabel" name="lossPlaceEditLabel">
+                      <property name="text">
+                       <string>LIEU DE PERTE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="lossPlaceEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="1">
+                   <layout class="QVBoxLayout" name="sexLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="sexLostEditLabel">
+                      <property name="text">
+                       <string>SEXE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="sexLostEdit">
+                      <item>
+                       <property name="text">
+                        <string>Mâle</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Femelle</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="1">
+                   <layout class="QVBoxLayout" name="nameLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="nameLostEditLabel">
+                      <property name="text">
+                       <string>NOM</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="nameLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="0">
+                   <layout class="QVBoxLayout" name="lossDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="lossDateEditLabel">
+                      <property name="text">
+                       <string>DATE DE PERTE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDateEdit" name="lossDateEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <layout class="QVBoxLayout" name="descriptionLostEditLayout">
+                    <item>
+                     <widget class="QLabel" name="descriptionLostEditLabel">
+                      <property name="text">
+                       <string>DESCRIPTION</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="descriptionLostEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="lostTab2">
+                 <attribute name="title">
+                  <string>Propriétaire</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_14"/>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="redListEditPage">
              <property name="styleSheet">
               <string notr="true">QLineEdit{
