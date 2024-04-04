@@ -95,4 +95,12 @@ inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
     }
 }
 
+inline bool DoesPeopleExist(QString id_people){
+    QSqlQuery query;
+    HandleErrorExec(&query, "SELECT COUNT(*) FROM People WHERE id_people = " + id_people);
+    query.next();
+    return query.value(0).toInt() > 0;
+}
+
+
 #endif // UTILS_H

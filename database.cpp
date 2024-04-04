@@ -29,12 +29,14 @@ void Database::Create()
                "phone VARCHAR(20),"
                "email VARCHAR(255)"
                ");");
-    HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
-               "VALUES (-1, '', '', '\n\n ', '', '')"
-               ";");
-    HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
-               "VALUES (-2, '', '', '\n\n ', '', '')"
-               ";");
+    if(!DoesPeopleExist("-1"))
+        HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
+                   "VALUES (-1, '', '', '\n\n ', '', '')"
+                   ";");
+    if(!DoesPeopleExist("-2"))
+        HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
+                   "VALUES (-2, '', '', '\n\n ', '', '')"
+                   ";");
     HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"
                "name VARCHAR(255),"
