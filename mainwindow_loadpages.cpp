@@ -304,7 +304,7 @@ void MainWindow::LoadLost(QString search){
 
     QSqlQuery query = db.GetLost(search, ui->foundCheckBox->isChecked());
 
-    while(query.next() && query.value(0).toString() != "")
+    while(query.next() && query.record().count() > 0)
     {
         int nb = table->rowCount();
         table->insertRow(nb);

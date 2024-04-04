@@ -55,8 +55,64 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
 
 
     // If does not correspond exactly, ask if the user wants to overwrite
-    QString message = "e";
-    if(!message.isEmpty()) {
+    QString message;
+    // Entry_registry
+    HandleErrorExec(&query, "SELECT ES_registry.type_prov, Dogs.name "
+                    "FROM ES_registry "
+                    "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
+                    "WHERE id_people_prov = " + old_id_people + ";");
+
+    while(message.count("\n") < 10 && query.next()){
+        message += "Registre E/S : " + query.value(0).toString() + " (" + query.value(1).toString() + ")\n";
+    }
+
+    // Care_registry
+    HandleErrorExec(&query, "SELECT Dogs.name "
+                        "FROM Care_registry "
+                        "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
+                        "WHERE id_people_prov = " + old_id_people + ";");
+        while(message.count("\n") < 10 && query.next()){
+            message += "Registre Garderie : " + query.value(0).toString() + "\n";
+    }
+
+    // Destinations
+    HandleErrorExec(&query, "SELECT Destinations.type, Dogs.name "
+                        "FROM Destinations "
+                        "JOIN Dogs ON Destinations.id_dog = Dogs.id_dog "
+                        "WHERE id_people = " + old_id_people + ";");
+        while(message.count("\n") < 10 && query.next()){
+            message += "Registre E/S : " + query.value(0).toString() + " (" + query.value(1).toString() + ")\n";
+    }
+
+    // Red_list
+    HandleErrorExec(&query, "SELECT * "
+                        "FROM Red_list "
+                        "WHERE id_people = " + old_id_people + ";");
+        if(message.count("\n") < 10 && query.next()){
+            message += "Liste rouge\n";
+    }
+
+    // Members
+    HandleErrorExec(&query, "SELECT * "
+                        "FROM Members "
+                        "WHERE id_people = " + old_id_people + ";");
+        if(message.count("\n") < 10 && query.next()){
+            message += "Adhérents\n";
+    }
+
+    // Lost
+    HandleErrorExec(&query, "SELECT name "
+                        "FROM Lost "
+                        "WHERE id_people = " + old_id_people + ";");
+        while(message.count("\n") < 10 && query.next()){
+            message += "Animaux perdus " + query.value(0).toString() + "\n";
+    }
+
+
+    if(message.count("\n") == 10)
+        message += "...";
+
+    if(!message.isEmpty() || message.count("\n") == 1) {
         QMessageBox::StandardButton reply;
 
         reply = QMessageBox::warning(nullptr, "Modification sur les informations de la personne", "Voulez-vous aussi modifier les informations de " + last_name + " " + first_name +
@@ -272,6 +328,7 @@ void EditPage::RemoveCurrent(){
         }
 
         else if(lastType == "lost"){
+            qDebug() << currentNecessary;
             query.prepare("DELETE FROM Lost "
                           "WHERE name = :name "
                           "AND date = :date "

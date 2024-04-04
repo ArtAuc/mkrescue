@@ -143,10 +143,11 @@ void EditPage::Edit(QString type, QStringList infos){
         }
     }
 
+
     else if (type == "lost"){
         currentPage = findChild<QWidget*>("lostEditPage");
         findChild<QTabWidget*>("lostTabWidget")->setCurrentIndex(0);
-        if(infos.size() > 13 && infos[13].toInt() > 0){
+        if(infos.size() > 13){
             currentNecessary.append(infos[1]); // name
             currentNecessary.append(infos[5]); // date
             currentNecessary.append(infos[13]); // id_people
@@ -436,7 +437,7 @@ void EditPage::SaveEdit()
                                 GetField("address2LostOwnerEdit", lostEditPage) + "\n" +
                                 GetField("postalCodeLostOwnerEdit", lostEditPage) + " " +
                                 GetField("cityLostOwnerEdit", lostEditPage),
-                                lostEditPage->findChild<EditPeopleWidget*>("MembersEdit")->GetOldId());
+                                lostEditPage->findChild<EditPeopleWidget*>("LostOwnerEdit")->GetOldId());
         QString species = GetField("speciesLostEdit", lostEditPage);
         QString name = GetField("nameLostEdit", lostEditPage);
         QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
