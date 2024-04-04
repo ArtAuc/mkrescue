@@ -37,5 +37,28 @@ inline QString GetField(QString name, QWidget* parent){
     return "";
 }
 
+inline QStringList AddressList(QString address){
+    QStringList addressList;
+
+    addressList = address.split(address.contains("\\n") ? "\\n" : "\n");
+
+    if(addressList.size() != 3){
+        QMessageBox::critical(nullptr, "Erreur", "Erreur dans le format de l'adresse postale");
+        return QStringList({"", "", "", ""});
+    }
+
+    else{
+        QStringList postalCity = addressList[2].split(" ");
+        if(postalCity.size() != 2){
+            QMessageBox::critical(nullptr, "Erreur", "Erreur dans le format du code postal");
+            return QStringList({"", "", "", ""});
+        }
+
+        addressList[2] = postalCity[0];
+        addressList.append(postalCity[1]);
+    }
+
+    return addressList;
+}
 
 #endif // UTILS_H

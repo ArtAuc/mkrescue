@@ -51,7 +51,6 @@ signals:
     void RefreshMainWindow(QString type);
 
 private:
-    QStringList AddressList(QString address);
     void ClearAllPages();
     void SwitchPage(QString pageName);
     void AddDestPage();

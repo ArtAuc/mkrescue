@@ -1,7 +1,7 @@
 #include "database.h"
 
 QSqlQuery Database::GetDogs(QString type, QString search){
-    QString queryString = "SELECT Dogs.chip, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov), Dogs.id_dog "
+    QString queryString = "SELECT Dogs.chip, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '_|_' || ES_Registry.type_prov), Dogs.id_dog "
                           "FROM Dogs "
                           "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
                           "LEFT JOIN ("
@@ -18,7 +18,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
         queryString +=
                 " UNION "
                 ""
-                "SELECT Dogs.chip, Dogs.name, Dogs.sex, Destinations.date || '___' || Destinations.type, Dogs.description, (ES_Registry.date_prov || '___' || ES_Registry.type_prov), Dogs.id_dog "
+                "SELECT Dogs.chip, Dogs.name, Dogs.sex, Destinations.date || '_|_' || Destinations.type, Dogs.description, (ES_Registry.date_prov || '_|_' || ES_Registry.type_prov), Dogs.id_dog "
                 "FROM Dogs "
                 "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
                 "JOIN ( "
@@ -78,7 +78,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "       Dogs.name, "
         "       Dogs.description, "
         "       Dogs.birth, "
-        "       GROUP_CONCAT(Destinations.date || '___' || Destinations.type || '___' || People_dest.last_name || '___' || People_dest.first_name || '___' || People_dest.address || '___' || People_dest.phone || '___' || People_dest.email, '_-_'), "
+        "       GROUP_CONCAT(Destinations.date || '_|_' || IFNULL(Destinations.type, '') || '_|_' || IFNULL(People_dest.last_name, '') || '_|_' || IFNULL(People_dest.first_name, '') || '_|_' || IFNULL(People_dest.address, '') || '_|_' || IFNULL(People_dest.phone, '') || '_|_' || IFNULL(People_dest.email, ''), '_-_'), "
         "       ES_registry.death_cause "
         "FROM ES_registry "
         "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
@@ -220,7 +220,7 @@ QSqlQuery Database::GetRedList(QString search) {
     QString queryString = "SELECT People.last_name, "
                           "People.first_name, "
                           "People.phone, "
-                          "GROUP_CONCAT(Red_list.reason, '___'), "
+                          "GROUP_CONCAT(Red_list.reason, '_|_'), "
                           "People.id_people "
                           "FROM People "
                           "JOIN Red_list ON People.id_people = Red_list.id_people "

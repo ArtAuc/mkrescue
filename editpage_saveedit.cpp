@@ -24,11 +24,11 @@ void EditPage::Edit(QString type, QStringList infos){
             // Entrée
             SetField("entryDateEdit", infos[1], entryEditPage);
 
-            QString type_prov = infos[2].split("___")[0];
+            QString type_prov = infos[2].split("_|_")[0];
             SetField("entryTypeBox", type_prov, entryEditPage);
 
             if(type_prov == "Fourrière"){
-                SetField("poundPlaceEdit", infos[2].split("___")[1], entryEditPage);
+                SetField("poundPlaceEdit", infos[2].split("_|_")[1], entryEditPage);
             }
 
             else{
@@ -66,7 +66,7 @@ void EditPage::Edit(QString type, QStringList infos){
                     AddDestPage();
                     QString iString = QString::number(destinationsNumber);
 
-                    QStringList p = d.split("___");
+                    QStringList p = d.split("_|_");
 
                     SetField("destTypeBox" + iString, p[1], destStacked);
                     SetField("destDateEdit" + iString, p[0], destStacked);
@@ -200,7 +200,7 @@ void EditPage::SaveEdit()
         }
 
         else{ // Fourrière
-            type_prov += "___" + GetField("poundPlaceEdit", entryEditPage);
+            type_prov += "_|_" + GetField("poundPlaceEdit", entryEditPage);
         }
 
         // Animal
@@ -224,13 +224,11 @@ void EditPage::SaveEdit()
 
                 if(type == "Mort"){
                     death_causes.append(GetField("deathCauseEdit" + iString, destStacked));
-                    // TODO : Add a Destination for death
                     id_peoples.append("-1");
                 }
 
                 else if(type == "Entrée au refuge"){
-                    // TODO : Add custom data about the shelter
-                    id_peoples.append("-1");
+                    id_peoples.append("-2");
                 }
 
                 else{
@@ -269,6 +267,7 @@ void EditPage::SaveEdit()
             query.bindValue(":death_cause", death_causes[0]);
             query.bindValue(":id_ES", currentNecessary[0]);
             query.bindValue(":current_date_prov", currentNecessary[1]);
+            qDebug() << query.executedQuery();
         }
         else { // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "

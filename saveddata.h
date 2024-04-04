@@ -15,12 +15,6 @@ public:
 
 private:
     QString accessHash;
-    QString shelterName;
-    QString shelterAddress;
-    QString shelterAddress2;
-    QString shelterPostalCode;
-    QString shelterCity;
-    QString shelterPhone;
 };
 
 #endif // SAVEDDATA_H

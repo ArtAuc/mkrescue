@@ -17,13 +17,6 @@ bool SavedData::Load(){
         accessHash = in.readLine();
 
         if(!accessHash.isEmpty()){
-            shelterName = in.readLine();
-            shelterPhone = in.readLine();
-            shelterAddress = in.readLine();
-            shelterAddress2 = in.readLine();
-            shelterPostalCode = in.readLine();
-            shelterCity = in.readLine();
-
             file.close();
 
             return true;
@@ -36,8 +29,4 @@ bool SavedData::Load(){
     file.close();
 
     return false;
-}
-
-QStringList SavedData::GetShelterInfos(){
-    return {shelterName, shelterPhone, shelterAddress, shelterAddress2, shelterPostalCode, shelterCity};
 }

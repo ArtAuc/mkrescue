@@ -32,30 +32,6 @@ void EditPage::SwitchPage(QString pageName){
     findChild<QStackedWidget*>("editStacked")->setCurrentWidget(findChild<QWidget*>(pageName));
 }
 
-QStringList EditPage::AddressList(QString address){
-    QStringList addressList;
-
-    addressList = address.split(address.contains("\\n") ? "\\n" : "\n");
-
-    if(addressList.size() != 3){
-        QMessageBox::critical(nullptr, "Erreur", "Erreur dans le format de l'adresse postale");
-        return QStringList({"", "", "", ""});
-    }
-
-    else{
-        QStringList postalCity = addressList[2].split(" ");
-        if(postalCity.size() != 2){
-            QMessageBox::critical(nullptr, "Erreur", "Erreur dans le format du code postal");
-            return QStringList({"", "", "", ""});
-        }
-
-        addressList[2] = postalCity[0];
-        addressList.append(postalCity[1]);
-    }
-
-    return addressList;
-}
-
 // Returns id_people newly created, or already existent
 QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name, first_name, phone, email, address
     QSqlQuery query;

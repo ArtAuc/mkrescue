@@ -15,6 +15,7 @@
 #include "dogcard.h"
 #include "registry.h"
 #include "saveddata.h"
+#include "settingspage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

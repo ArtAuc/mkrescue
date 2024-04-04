@@ -1516,6 +1516,19 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
             </item>
            </layout>
           </item>
+          <item row="7" column="0" colspan="2">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item row="4" column="0" colspan="2">
            <layout class="QVBoxLayout" name="address2ShelterEditLayout">
             <item>
@@ -1612,17 +1625,11 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
            </layout>
           </item>
           <item row="6" column="0" colspan="2">
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+           <widget class="QPushButton" name="saveSettingsButton">
+            <property name="text">
+             <string>Sauvegarder</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -2318,12 +2325,12 @@ QCheckBox::indicator:unchecked{
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>lostTabWidget</tabstop>
-  <tabstop>foundLostBox</tabstop>
-  <tabstop>lossDateEdit</tabstop>
-  <tabstop>lossPlaceEdit</tabstop>
-  <tabstop>speciesLostEdit</tabstop>
-  <tabstop>nameLostEdit</tabstop>
+  <tabstop>nameShelterEdit</tabstop>
+  <tabstop>phoneShelterEdit</tabstop>
+  <tabstop>addressShelterEdit</tabstop>
+  <tabstop>address2ShelterEdit</tabstop>
+  <tabstop>postalCodeShelterEdit</tabstop>
+  <tabstop>cityShelterEdit</tabstop>
   <tabstop>idLostEdit</tabstop>
   <tabstop>sexLostEdit</tabstop>
   <tabstop>descriptionLostEdit</tabstop>
@@ -2365,6 +2372,12 @@ QCheckBox::indicator:unchecked{
   <tabstop>membersAddButton</tabstop>
   <tabstop>membersTable</tabstop>
   <tabstop>membersExportButton</tabstop>
+  <tabstop>lostTabWidget</tabstop>
+  <tabstop>foundLostBox</tabstop>
+  <tabstop>lossDateEdit</tabstop>
+  <tabstop>lossPlaceEdit</tabstop>
+  <tabstop>speciesLostEdit</tabstop>
+  <tabstop>nameLostEdit</tabstop>
  </tabstops>
  <resources/>
  <connections/>

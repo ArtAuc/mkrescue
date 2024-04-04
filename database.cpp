@@ -32,6 +32,9 @@ void Database::Create()
     query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                "VALUES (-1, '', '', '\n\n ', '', '')"
                ";");
+    query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
+               "VALUES (-2, '', '', '\n\n ', '', '')"
+               ";");
     query.exec("CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"
                "name VARCHAR(255),"

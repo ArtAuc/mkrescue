@@ -152,8 +152,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else if (txt == "Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
-    else if (txt == "Paramètres")
+    else if (txt == "Paramètres"){
         stacked->setCurrentWidget(ui->settingsPage);
+        findChild<SettingsPage*>()->LoadSettings();
+    }
 
     else{
         ui->menuTree->collapseAllExcept(txt);
@@ -286,7 +288,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     "Dogs.name, "
                     "Dogs.description, "
                     "Dogs.birth, "
-                    "GROUP_CONCAT(Destinations.date || '___' || Destinations.type || '___' || People_dest.last_name || '___' || People_dest.first_name || '___' || People_dest.address || '___' || People_dest.phone || '___' || People_dest.email, '_-_'), "
+                    "GROUP_CONCAT(Destinations.date || '_|_' || IFNULL(Destinations.type, '') || '_|_' || IFNULL(People_dest.last_name, '') || '_|_' || IFNULL(People_dest.first_name, '') || '_|_' || IFNULL(People_dest.address, '') || '_|_' || IFNULL(People_dest.phone, '') || '_|_' || IFNULL(People_dest.email, ''), '_-_'), "
                     "ES_registry.death_cause "
                     "FROM ES_registry "
                     "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
@@ -395,6 +397,9 @@ void MainWindow::RefreshPage(QString type){
 }
 
 QString MainWindow::ClearUselessBreaks(QString s){
+    while(s.contains(" \n"))
+        s = s.replace(" \n", "\n");
+
     while(s.contains("\n\n"))
         s = s.replace("\n\n", "\n");
     s = s.trimmed();

@@ -60,7 +60,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_ES
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
-        QStringList prov_type = query.value(2).toString().split("___");
+        QStringList prov_type = query.value(2).toString().split("_|_");
         if(prov_type[0] == "Fourrière"){
             table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
                                                       prov_type[1]))); //place
@@ -94,14 +94,15 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
                     }
                 }
 
-                QStringList p = d.split("___");
+                QStringList p = d.split("_|_");
                 dateString = QDate::fromString(p[0], "yyyy-MM-dd").toString("dd/MM/yyyy");
 
-                destString = p[1] + "\n" + // dest_type
+
+                destString = ClearUselessBreaks(p[1] + "\n" + // dest_type
                         p[2] + " " + p[3] + "\n" + //dest_lastname + dest_firstname
                         p[4].replace("\\n", "\n") + "\n" + // dest_address
                         p[5] + "\n" + // dest_phone
-                        p[6]; //dest_email
+                        p[6]); //dest_email
             }
 
             table->setItem(nb + i, 7, new QTableWidgetItem(dateString)); // date_dest
@@ -263,7 +264,7 @@ void MainWindow::LoadRedList(QString search){
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString() + " " + query.value(1).toString())); // last_name + first_name
         table->setItem(nb, 1, new QTableWidgetItem(query.value(2).toString())); // phone
 
-        QStringList reasons = query.value(3).toString().split("___");
+        QStringList reasons = query.value(3).toString().split("_|_");
         QString reasonsString = "";
 
         for (QString r : reasons){
