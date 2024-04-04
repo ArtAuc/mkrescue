@@ -56,7 +56,7 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
 
     // If does not correspond exactly, ask if the user wants to overwrite
     QString message;
-    // Entry_registry
+    // ES_registry
     HandleErrorExec(&query, "SELECT ES_registry.type_prov, Dogs.name "
                     "FROM ES_registry "
                     "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
@@ -105,9 +105,16 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
                         "FROM Lost "
                         "WHERE id_people = " + old_id_people + ";");
         while(message.count("\n") < 10 && query.next()){
-            message += "Animaux perdus " + query.value(0).toString() + "\n";
+            message += "Animaux perdus : " + query.value(0).toString() + "\n";
     }
 
+    // Adoption_demand
+    HandleErrorExec(&query, "SELECT * "
+                        "FROM Adoption_demand "
+                        "WHERE id_people = " + old_id_people + ";");
+        if(message.count("\n") < 10 && query.next()){
+            message += "Demande d'adoption\n";
+    }
 
     if(message.count("\n") == 10)
         message += "...";
@@ -358,6 +365,7 @@ void EditPage::AssignIdPeople(QWidget *currentPage){
                       "AND address = :address "
                       "AND phone = :phone "
                       "AND email = :email;");
+
 
         QString lastName = GetField("lastName" + editPeopleWidget->objectName(), editPeopleWidget);
         QString firstName = GetField("firstName" + editPeopleWidget->objectName(), editPeopleWidget);

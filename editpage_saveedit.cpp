@@ -168,14 +168,14 @@ void EditPage::Edit(QString type, QStringList infos){
             SetField("lastNameLostOwnerEdit", infos[8], currentPage);
             SetField("firstNameLostOwnerEdit", infos[9], currentPage);
             SetField("phoneLostOwnerEdit", infos[10], currentPage);
-            SetField("emailAbandonEdit", infos[11], currentPage);
+            SetField("emailLostOwnerEdit", infos[11], currentPage);
 
             QStringList addressList = AddressList(infos[12]);
 
-            SetField("addressAbandonEdit", addressList[0], currentPage);
-            SetField("address2AbandonEdit", addressList[1], currentPage);
-            SetField("postalCodeAbandonEdit", addressList[2], currentPage);
-            SetField("cityAbandonEdit", addressList[3], currentPage);
+            SetField("addressLostOwnerEdit", addressList[0], currentPage);
+            SetField("address2LostOwnerEdit", addressList[1], currentPage);
+            SetField("postalCodeLostOwnerEdit", addressList[2], currentPage);
+            SetField("cityLostOwnerEdit", addressList[3], currentPage);
         }
     }
 
@@ -475,7 +475,6 @@ void EditPage::SaveEdit()
             query.bindValue(":date_nec", currentNecessary[1]);
             query.bindValue(":id_people", currentNecessary[2]);
             HandleErrorExec(&query);
-
         }
         else { // Creating
             QSqlQuery query;
