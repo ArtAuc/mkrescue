@@ -7,6 +7,7 @@ EditPeopleWidget::EditPeopleWidget(QWidget *parent)
 }
 
 EditPeopleWidget::EditPeopleWidget(QString nameEnd, bool simplified){
+    setObjectName(nameEnd);
     QGridLayout *gridLayout = new QGridLayout(this);
     gridLayout->setContentsMargins(0, 0, 0, 0);
 

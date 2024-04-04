@@ -95,9 +95,9 @@ inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
     }
 }
 
-inline bool DoesPeopleExist(QString id_people){
+inline bool IsInTable(QString table, QString attribute, QString value){
     QSqlQuery query;
-    HandleErrorExec(&query, "SELECT COUNT(*) FROM People WHERE id_people = " + id_people);
+    HandleErrorExec(&query, "SELECT COUNT(*) FROM " + table + " WHERE " + attribute + " = " + value);
     query.next();
     return query.value(0).toInt() > 0;
 }

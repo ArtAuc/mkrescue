@@ -101,9 +101,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
     query.bindValue(":searchb", "%" + search + "%");
 
 
-    if (!query.exec()) {
-        qDebug() << "Error executing query:" << query.lastError().text();
-    }
+    HandleErrorExec(&query);
 
     return query;
 }
@@ -146,9 +144,7 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
     query.bindValue(":search", search + "%");
     query.bindValue(":searchb", "%" + search + "%");
 
-    if (!query.exec()) {
-        qDebug() << "Error executing query:" << query.lastError().text();
-    }
+    HandleErrorExec(&query);
 
     return query;
 }
@@ -187,19 +183,19 @@ QSqlQuery Database::GetMembers(QString year, QString search) {
 std::vector<QString> Database::GetRegistryYears(QString type) {
     QSqlQuery query;
     if (type == "entry"){
-        query.exec("SELECT DISTINCT strftime('%Y', date_prov) AS year "
+        HandleErrorExec(&query, "SELECT DISTINCT strftime('%Y', date_prov) AS year "
                    "FROM ES_Registry "
                    "ORDER BY year ASC;");
     }
 
     else if (type == "care"){
-        query.exec("SELECT DISTINCT strftime('%Y', entry_date) AS year "
+        HandleErrorExec(&query, "SELECT DISTINCT strftime('%Y', entry_date) AS year "
                    "FROM Care_registry "
                    "ORDER BY year ASC;");
     }
 
     else if (type == "members"){
-        query.exec("SELECT DISTINCT strftime('%Y', date) AS year "
+        HandleErrorExec(&query, "SELECT DISTINCT strftime('%Y', date) AS year "
                    "FROM Members "
                    "ORDER BY year ASC;");
     }

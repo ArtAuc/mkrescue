@@ -26,10 +26,15 @@ public:
     explicit EditPeopleWidget(QWidget *parent = nullptr);
     EditPeopleWidget(QString nameEnd, bool simplified = false);
     void showEvent(QShowEvent *event) override;
+    QString GetOldId(){ return oldId; }
+    void SetOldId(QString oldId){ this->oldId = oldId; }
 
 public slots:
     void FillOtherFields(QString s);
     void PreviewOtherFields(QString s = "");
+
+private:
+    QString oldId = "-1";
 };
 
 #endif // EDITPEOPLEWIDGET_H

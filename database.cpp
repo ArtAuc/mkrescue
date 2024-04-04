@@ -14,6 +14,7 @@ Database::~Database()
     _database.close();
 }
 
+
 void Database::Create()
 {
     QFile oldFile("data.db");
@@ -29,11 +30,11 @@ void Database::Create()
                "phone VARCHAR(20),"
                "email VARCHAR(255)"
                ");");
-    if(!DoesPeopleExist("-1"))
+    if(!IsInTable("People", "id_people", "-1"))
         HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                    "VALUES (-1, '', '', '\n\n ', '', '')"
                    ";");
-    if(!DoesPeopleExist("-2"))
+    if(!IsInTable("People", "id_people", "-2"))
         HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                    "VALUES (-2, '', '', '\n\n ', '', '')"
                    ";");

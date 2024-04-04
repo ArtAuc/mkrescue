@@ -90,8 +90,8 @@ public slots:
     void SaveSettings(){
         QSqlQuery query;
         query.prepare("INSERT OR REPLACE INTO People "
-                      "(id_people, last_name, phone, address) "
-                      "VALUES (-2, :name, :phone, :address);");
+                      "(id_people, last_name, phone, address, first_name, email) "
+                      "VALUES (-2, :name, :phone, :address, '', '');");
         query.bindValue(":name", GetField("nameShelterEdit", this));
         query.bindValue(":phone", GetField("phoneShelterEdit", this));
         query.bindValue(":address", GetField("addressShelterEdit", this) + "\n" +

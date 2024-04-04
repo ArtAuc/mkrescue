@@ -33,44 +33,80 @@ void EditPage::SwitchPage(QString pageName){
 }
 
 // Returns id_people newly created, or already existent
-QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name, first_name, phone, email, address
+QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QString phone, QString email, QString address, QString old_id_people) {
+    // If already modified, do not ask again
+    if(dealtIdPeople.contains(old_id_people))
+        return old_id_people;
+
     QSqlQuery query;
 
+    // Keep this so the user is not asked if no changes are made
     HandleErrorExec(&query, "SELECT id_people FROM People "
-               "WHERE last_name = '" + infos[0] + "' "
-               "AND first_name = '" + infos[1] + "' "
-               "AND phone = '" + infos[2] + "' "
-               "AND email = '" + infos[3] + "' "
-               "AND address = '" + infos[4] + "'");
+               "WHERE last_name = '" + last_name + "' "
+               "AND first_name = '" + first_name + "' "
+               "AND phone = '" + phone + "' "
+               "AND email = '" + email + "' "
+               "AND address = '" + address + "'");
 
     if (query.next())
         return query.value(0).toString();
 
-
     query.clear();
 
-    HandleErrorExec(&query, "SELECT MAX(MAX(id_people) + 1, 1) FROM People;");
 
+    // If does not correspond exactly, ask if the user wants to overwrite
+    QString message = "e";
+    if(!message.isEmpty()) {
+        QMessageBox::StandardButton reply;
+
+        reply = QMessageBox::warning(nullptr, "Modification sur les informations de la personne", "Voulez-vous aussi modifier les informations de " + last_name + " " + first_name +
+                " dans : \n" + message,
+                QMessageBox::Yes | QMessageBox::No);
+
+        if(reply == QMessageBox::Yes){
+            query.prepare("UPDATE People "
+                          "SET last_name = :last_name, "
+                          "first_name = :first_name, "
+                          "address = :address, "
+                          "phone = :phone, "
+                          "email = :email "
+                          "WHERE id_people = :id");
+
+            query.bindValue(":id", old_id_people);
+            query.bindValue(":last_name", last_name);
+            query.bindValue(":first_name", first_name);
+            query.bindValue(":address", address);
+            query.bindValue(":phone", phone);
+            query.bindValue(":email", email);
+
+            HandleErrorExec(&query);
+
+            dealtIdPeople.append(old_id_people);
+
+            return old_id_people;
+        }
+    }
+
+    HandleErrorExec(&query, "SELECT MAX(id_people) + 1 FROM People;");
     query.next();
     QString newId = query.value(0).toString();
-    if (newId == "")
+    if (newId.isEmpty())
         newId = "1";
-
 
     query.prepare("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                   "VALUES (:id, :last_name, :first_name, :address, :phone, :email)");
 
     query.bindValue(":id", newId);
-    query.bindValue(":last_name", infos[0]);
-    query.bindValue(":first_name", infos[1]);
-    query.bindValue(":address", infos[4]);
-    query.bindValue(":phone", infos[2]);
-    query.bindValue(":email", infos[3]);
+    query.bindValue(":last_name", last_name);
+    query.bindValue(":first_name", first_name);
+    query.bindValue(":address", address);
+    query.bindValue(":phone", phone);
+    query.bindValue(":email", email);
     HandleErrorExec(&query);
-
 
     return newId;
 }
+
 
 // Returns id_dog newly created, or already existent
 QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, sex, description, birth
@@ -252,3 +288,37 @@ void EditPage::RemoveCurrent(){
     }
 }
 
+void EditPage::AssignIdPeople(QWidget *currentPage){
+    if(currentPage == nullptr)
+        return;
+
+    QSqlQuery query;
+    for(EditPeopleWidget *editPeopleWidget : currentPage->findChildren<EditPeopleWidget*>()){
+        query.prepare("SELECT id_people "
+                      "FROM People "
+                      "WHERE last_name = :last_name "
+                      "AND first_name = :first_name "
+                      "AND address = :address "
+                      "AND phone = :phone "
+                      "AND email = :email;");
+
+        QString lastName = GetField("lastName" + editPeopleWidget->objectName(), editPeopleWidget);
+        QString firstName = GetField("firstName" + editPeopleWidget->objectName(), editPeopleWidget);
+        QString address = GetField("address" + editPeopleWidget->objectName(), editPeopleWidget) + "\n" +
+                          GetField("address2" + editPeopleWidget->objectName(), editPeopleWidget) + "\n" +
+                          GetField("postalCode" + editPeopleWidget->objectName(), editPeopleWidget) + " " + GetField("city" + editPeopleWidget->objectName(), editPeopleWidget);
+        QString phone = GetField("phone" + editPeopleWidget->objectName(), editPeopleWidget);
+        QString email = GetField("email" + editPeopleWidget->objectName(), editPeopleWidget);
+
+        query.bindValue(":last_name", lastName);
+        query.bindValue(":first_name", firstName);
+        query.bindValue(":address", address);
+        query.bindValue(":phone", phone);
+        query.bindValue(":email", email);
+
+        HandleErrorExec(&query);
+
+        query.next();
+        editPeopleWidget->SetOldId(query.value(0).toString());
+    }
+}

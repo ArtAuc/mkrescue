@@ -5,6 +5,7 @@ void EditPage::Edit(QString type, QStringList infos){
     lastType = type;
     ClearAllPages();
     currentNecessary.clear();
+    dealtIdPeople.clear();
 
     if((type != "redList" && type != "members") || infos.isEmpty())
         SwitchPage(type + "EditPage");
@@ -12,9 +13,11 @@ void EditPage::Edit(QString type, QStringList infos){
     removeButton = findChild<QToolButton*>("removeButton");
     removeButton->setVisible(!infos.isEmpty());
 
+    QWidget *currentPage = nullptr;
+
     if(type == "entry"){
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
-        QWidget *entryEditPage = findChild<QWidget*>("entryEditPage");
+        currentPage = findChild<QWidget*>("entryEditPage");
 
         if(infos.size() > 14){
             currentNecessary.append(infos[0]); // id_ES
@@ -22,35 +25,35 @@ void EditPage::Edit(QString type, QStringList infos){
 
 
             // Entrée
-            SetField("entryDateEdit", infos[1], entryEditPage);
+            SetField("entryDateEdit", infos[1], currentPage);
 
             QString type_prov = infos[2].split("_|_")[0];
-            SetField("entryTypeBox", type_prov, entryEditPage);
+            SetField("entryTypeBox", type_prov, currentPage);
 
             if(type_prov == "Fourrière"){
-                SetField("poundPlaceEdit", infos[2].split("_|_")[1], entryEditPage);
+                SetField("poundPlaceEdit", infos[2].split("_|_")[1], currentPage);
             }
 
             else{
-                SetField("lastNameAbandonEdit", infos[3], entryEditPage);
-                SetField("firstNameAbandonEdit", infos[4], entryEditPage);
+                SetField("lastNameAbandonEdit", infos[3], currentPage);
+                SetField("firstNameAbandonEdit", infos[4], currentPage);
 
                 QStringList addressList = AddressList(infos[5]);
-                SetField("addressAbandonEdit", addressList[0], entryEditPage);
-                SetField("address2AbandonEdit", addressList[1], entryEditPage);
-                SetField("postalCodeAbandonEdit", addressList[2], entryEditPage);
-                SetField("cityAbandonEdit", addressList[3], entryEditPage);
+                SetField("addressAbandonEdit", addressList[0], currentPage);
+                SetField("address2AbandonEdit", addressList[1], currentPage);
+                SetField("postalCodeAbandonEdit", addressList[2], currentPage);
+                SetField("cityAbandonEdit", addressList[3], currentPage);
 
-                SetField("phoneAbandonEdit", infos[6], entryEditPage);
-                SetField("emailAbandonEdit", infos[7], entryEditPage);
+                SetField("phoneAbandonEdit", infos[6], currentPage);
+                SetField("emailAbandonEdit", infos[7], currentPage);
             }
 
             // Animal
-            SetField("dogNameEntryAnimalEdit", infos[10], entryEditPage);
-            SetField("chipEntryAnimalEdit", infos[9], entryEditPage);
-            SetField("sexEntryAnimalEdit", infos[8], entryEditPage);
-            SetField("birthDateEntryAnimalEdit", infos[12], entryEditPage);
-            SetField("descriptionEntryAnimalEdit", infos[11], entryEditPage);
+            SetField("dogNameEntryAnimalEdit", infos[10], currentPage);
+            SetField("chipEntryAnimalEdit", infos[9], currentPage);
+            SetField("sexEntryAnimalEdit", infos[8], currentPage);
+            SetField("birthDateEntryAnimalEdit", infos[12], currentPage);
+            SetField("descriptionEntryAnimalEdit", infos[11], currentPage);
 
 
             // Sortie
@@ -86,49 +89,49 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     else if (type == "care"){
-        QWidget *careEditPage = findChild<QWidget*>("careEditPage");
+        currentPage = findChild<QWidget*>("careEditPage");
         findChild<QTabWidget*>("careTabWidget")->setCurrentIndex(0);
         if(infos.size() > 17 && infos[0].toInt() > 0){
             currentNecessary.append(infos[0]); // id_care
             currentNecessary.append(infos[1]); // entry_date
 
             // Entrée
-            SetField("careEntryDateEdit", infos[1], careEditPage);
+            SetField("careEntryDateEdit", infos[1], currentPage);
 
-            SetField("lastNameCareEntryEdit", infos[2], careEditPage);
-            SetField("firstNameCareEntryEdit", infos[3], careEditPage);
+            SetField("lastNameCareEntryEdit", infos[2], currentPage);
+            SetField("firstNameCareEntryEdit", infos[3], currentPage);
 
             QStringList addressList = AddressList(infos[4]);
-            SetField("addressCareEntryEdit", addressList[0], careEditPage);
-            SetField("address2CareEntryEdit", addressList[1], careEditPage);
-            SetField("postalCodeCareEntryEdit", addressList[2], careEditPage);
-            SetField("cityCareEntryEdit", addressList[3], careEditPage);
+            SetField("addressCareEntryEdit", addressList[0], currentPage);
+            SetField("address2CareEntryEdit", addressList[1], currentPage);
+            SetField("postalCodeCareEntryEdit", addressList[2], currentPage);
+            SetField("cityCareEntryEdit", addressList[3], currentPage);
 
-            SetField("phoneCareEntryEdit", infos[5], careEditPage);
-            SetField("emailCareEntryEdit", infos[6], careEditPage);
+            SetField("phoneCareEntryEdit", infos[5], currentPage);
+            SetField("emailCareEntryEdit", infos[6], currentPage);
 
             // Animal
-            SetField("dogNameCareAnimalEdit", infos[7], careEditPage);
-            SetField("chipCareAnimalEdit", infos[8], careEditPage);
-            SetField("sexCareAnimalEdit", infos[9], careEditPage);
-            SetField("birthDateCareAnimalEdit", infos[10], careEditPage);
-            SetField("descriptionCareAnimalEdit", infos[11], careEditPage);
+            SetField("dogNameCareAnimalEdit", infos[7], currentPage);
+            SetField("chipCareAnimalEdit", infos[8], currentPage);
+            SetField("sexCareAnimalEdit", infos[9], currentPage);
+            SetField("birthDateCareAnimalEdit", infos[10], currentPage);
+            SetField("descriptionCareAnimalEdit", infos[11], currentPage);
 
 
             // Sortie
-            SetField("careDestDateEdit", infos[12], careEditPage);
-            SetField("lastNameCareDestEdit", infos[13], careEditPage);
-            SetField("firstNameCareDestEdit", infos[14], careEditPage);
+            SetField("careDestDateEdit", infos[12], currentPage);
+            SetField("lastNameCareDestEdit", infos[13], currentPage);
+            SetField("firstNameCareDestEdit", infos[14], currentPage);
 
             addressList = AddressList(infos[15]);
 
-            SetField("addressCareDestEdit", addressList[0], careEditPage);
-            SetField("address2CareDestEdit", addressList[1], careEditPage);
-            SetField("postalCodeCareDestEdit", addressList[2], careEditPage);
-            SetField("cityCareDestEdit", addressList[3], careEditPage);
+            SetField("addressCareDestEdit", addressList[0], currentPage);
+            SetField("address2CareDestEdit", addressList[1], currentPage);
+            SetField("postalCodeCareDestEdit", addressList[2], currentPage);
+            SetField("cityCareDestEdit", addressList[3], currentPage);
 
-            SetField("phoneCareDestEdit", infos[16], careEditPage);
-            SetField("emailCareDestEdit", infos[17], careEditPage);
+            SetField("phoneCareDestEdit", infos[16], currentPage);
+            SetField("emailCareDestEdit", infos[17], currentPage);
         }
 
     }
@@ -141,7 +144,7 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     else if (type == "lost"){
-        QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
+        currentPage = findChild<QWidget*>("lostEditPage");
         findChild<QTabWidget*>("lostTabWidget")->setCurrentIndex(0);
         if(infos.size() > 13 && infos[13].toInt() > 0){
             currentNecessary.append(infos[1]); // name
@@ -149,31 +152,33 @@ void EditPage::Edit(QString type, QStringList infos){
             currentNecessary.append(infos[13]); // id_people
 
             // Animal
-            SetField("idLostEdit", infos[0], lostEditPage);
-            SetField("nameLostEdit", infos[1], lostEditPage);
-            SetField("speciesLostEdit", infos[2], lostEditPage);
-            SetField("sexLostEdit", infos[3], lostEditPage);
-            SetField("descriptionLostEdit", infos[4], lostEditPage);
-            SetField("lossDateEdit", infos[5], lostEditPage);
-            SetField("lossPlaceEdit", infos[6], lostEditPage);
-            QCheckBox *foundLostBox = lostEditPage->findChild<QCheckBox*>("foundLostBox");
+            SetField("idLostEdit", infos[0], currentPage);
+            SetField("nameLostEdit", infos[1], currentPage);
+            SetField("speciesLostEdit", infos[2], currentPage);
+            SetField("sexLostEdit", infos[3], currentPage);
+            SetField("descriptionLostEdit", infos[4], currentPage);
+            SetField("lossDateEdit", infos[5], currentPage);
+            SetField("lossPlaceEdit", infos[6], currentPage);
+            QCheckBox *foundLostBox = currentPage->findChild<QCheckBox*>("foundLostBox");
             foundLostBox->setChecked(infos[7] == "1");
             foundLostBox->setText(QString((infos[7] == "1") ? "" : "Non ") + "Retrouvé");
 
             // Propriétaire
-            SetField("lastNameLostOwnerEdit", infos[8], lostEditPage);
-            SetField("firstNameLostOwnerEdit", infos[9], lostEditPage);
-            SetField("phoneLostOwnerEdit", infos[10], lostEditPage);
-            SetField("emailAbandonEdit", infos[11], lostEditPage);
+            SetField("lastNameLostOwnerEdit", infos[8], currentPage);
+            SetField("firstNameLostOwnerEdit", infos[9], currentPage);
+            SetField("phoneLostOwnerEdit", infos[10], currentPage);
+            SetField("emailAbandonEdit", infos[11], currentPage);
 
             QStringList addressList = AddressList(infos[12]);
 
-            SetField("addressAbandonEdit", addressList[0], lostEditPage);
-            SetField("address2AbandonEdit", addressList[1], lostEditPage);
-            SetField("postalCodeAbandonEdit", addressList[2], lostEditPage);
-            SetField("cityAbandonEdit", addressList[3], lostEditPage);
+            SetField("addressAbandonEdit", addressList[0], currentPage);
+            SetField("address2AbandonEdit", addressList[1], currentPage);
+            SetField("postalCodeAbandonEdit", addressList[2], currentPage);
+            SetField("cityAbandonEdit", addressList[3], currentPage);
         }
     }
+
+    AssignIdPeople(currentPage);
 }
 
 
@@ -189,14 +194,15 @@ void EditPage::SaveEdit()
         QString id_people_prov = "-1";
         QString dogName =  GetField("dogNameEntryAnimalEdit", entryEditPage);
         if(GetField("entryTypeBox", entryEditPage) == "Abandon"){
-            id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit", entryEditPage),
+            id_people_prov = CreatePersonIfNeeded(GetField("lastNameAbandonEdit", entryEditPage),
                                     GetField("firstNameAbandonEdit", entryEditPage),
                                     GetField("phoneAbandonEdit", entryEditPage),
                                     GetField("emailAbandonEdit", entryEditPage),
                                     GetField("addressAbandonEdit", entryEditPage) + "\n" +
                                     GetField("address2AbandonEdit", entryEditPage) + "\n" +
                                     GetField("postalCodeAbandonEdit", entryEditPage) + " " +
-                                    GetField("cityAbandonEdit", entryEditPage)}));
+                                    GetField("cityAbandonEdit", entryEditPage),
+                                    entryEditPage->findChild<EditPeopleWidget*>()->GetOldId());
         }
 
         else{ // Fourrière
@@ -232,14 +238,15 @@ void EditPage::SaveEdit()
                 }
 
                 else{
-                    id_peoples.append(CreatePersonIfNeeded(QStringList({GetField("lastNameDestEdit" + iString, destStacked),
+                    id_peoples.append(CreatePersonIfNeeded(GetField("lastNameDestEdit" + iString, destStacked),
                                                         GetField("firstNameDestEdit" + iString, destStacked),
                                                         GetField("phoneDestEdit" + iString, destStacked),
                                                         GetField("emailDestEdit" + iString, destStacked),
                                                         GetField("addressDestEdit" + iString, destStacked) + "\n" +
                                                         GetField("address2DestEdit" + iString, destStacked) + "\n" +
                                                         GetField("postalCodeDestEdit" + iString, destStacked) + " " +
-                                                        GetField("cityDestEdit" + iString, destStacked)})));
+                                                        GetField("cityDestEdit" + iString, destStacked),
+                                                        destStacked->findChild<EditPeopleWidget*>("DestEdit" + iString)->GetOldId()));
                 }
             }
         }
@@ -267,7 +274,6 @@ void EditPage::SaveEdit()
             query.bindValue(":death_cause", death_causes[0]);
             query.bindValue(":id_ES", currentNecessary[0]);
             query.bindValue(":current_date_prov", currentNecessary[1]);
-            qDebug() << query.executedQuery();
         }
         else { // Creating
             queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
@@ -300,21 +306,21 @@ void EditPage::SaveEdit()
             query.bindValue(":type", types[i]);
 
             HandleErrorExec(&query);
-
         }
 
     }
 
     else if(lastType == "redList"){
         QWidget *redListEditPage = findChild<QWidget*>("redListEditPage");
-        QString id_people = CreatePersonIfNeeded(QStringList({GetField("lastNameRedListEdit", redListEditPage),
+        QString id_people = CreatePersonIfNeeded(GetField("lastNameRedListEdit", redListEditPage),
                                 GetField("firstNameRedListEdit", redListEditPage),
                                 GetField("phoneRedListEdit", redListEditPage),
                                 GetField("emailRedListEdit", redListEditPage),
                                 GetField("addressRedListEdit", redListEditPage) + "\n" +
                                 GetField("address2RedListEdit", redListEditPage) + "\n" +
                                 GetField("postalCodeRedListEdit", redListEditPage) + " " +
-                                GetField("cityRedListEdit", redListEditPage)}));
+                                GetField("cityRedListEdit", redListEditPage),
+                                redListEditPage->findChild<EditPeopleWidget*>()->GetOldId());
         QString reason = GetField("reasonRedListEdit", redListEditPage);
 
         query.prepare("INSERT INTO Red_list (id_people, reason) "
@@ -329,14 +335,15 @@ void EditPage::SaveEdit()
         QWidget *careEditPage = findChild<QWidget*>("careEditPage");
         // Entrée
         QString entry_date = GetField("careEntryDateEdit", careEditPage);
-        QString id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameCareEntryEdit", careEditPage),
+        QString id_people_prov = CreatePersonIfNeeded(GetField("lastNameCareEntryEdit", careEditPage),
                                 GetField("firstNameCareEntryEdit", careEditPage),
                                 GetField("phoneCareEntryEdit", careEditPage),
                                 GetField("emailCareEntryEdit", careEditPage),
                                 GetField("addressCareEntryEdit", careEditPage) + "\n" +
                                 GetField("address2CareEntryEdit", careEditPage) + "\n" +
                                 GetField("postalCodeCareEntryEdit", careEditPage) + " " +
-                                GetField("cityCareEntryEdit", careEditPage)}));
+                                GetField("cityCareEntryEdit", careEditPage),
+                                careEditPage->findChild<EditPeopleWidget*>("CareEntryEdit")->GetOldId());
 
         // Animal
         QString id_dog = CreateDogIfNeeded(QStringList({
@@ -350,14 +357,15 @@ void EditPage::SaveEdit()
         // Sortie
         QString exit_date = GetField("careDestDateEdit", careEditPage);
 
-        QString id_people_dest = CreatePersonIfNeeded(QStringList({GetField("lastNameCareDestEdit", careEditPage),
+        QString id_people_dest = CreatePersonIfNeeded(GetField("lastNameCareDestEdit", careEditPage),
                                     GetField("firstNameCareDestEdit", careEditPage),
                                     GetField("phoneCareDestEdit", careEditPage),
                                     GetField("emailCareDestEdit", careEditPage),
                                     GetField("addressCareDestEdit", careEditPage) + "\n" +
                                     GetField("address2CareDestEdit", careEditPage) + "\n" +
                                     GetField("postalCodeCareDestEdit", careEditPage) + " " +
-                                    GetField("cityCareDestEdit", careEditPage)}));
+                                    GetField("cityCareDestEdit", careEditPage),
+                                    careEditPage->findChild<EditPeopleWidget*>("CareDestEdit")->GetOldId());
 
         QString queryString;
         if (!currentNecessary.isEmpty()) { // Modifying
@@ -391,19 +399,19 @@ void EditPage::SaveEdit()
         }
 
         HandleErrorExec(&query);
-
     }
 
     else if(lastType == "members"){
         QWidget *membersEditPage = findChild<QWidget*>("membersEditPage");
-        QString id_people = CreatePersonIfNeeded(QStringList({GetField("lastNameMembersEdit", membersEditPage),
+        QString id_people = CreatePersonIfNeeded(GetField("lastNameMembersEdit", membersEditPage),
                                 GetField("firstNameMembersEdit", membersEditPage),
                                 GetField("phoneMembersEdit", membersEditPage),
                                 GetField("emailMembersEdit", membersEditPage),
                                 GetField("addressMembersEdit", membersEditPage) + "\n" +
                                 GetField("address2MembersEdit", membersEditPage) + "\n" +
                                 GetField("postalCodeMembersEdit", membersEditPage) + " " +
-                                GetField("cityMembersEdit", membersEditPage)}));
+                                GetField("cityMembersEdit", membersEditPage),
+                                membersEditPage->findChild<EditPeopleWidget*>("MembersEdit")->GetOldId());
         QString type = GetField("typeMembersBox", membersEditPage);
         QString amount = GetField("amountMembersEdit", membersEditPage);
         QString date = GetField("dateMembersEdit", membersEditPage);
@@ -420,14 +428,15 @@ void EditPage::SaveEdit()
 
     else if(lastType == "lost"){
         QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
-        QString id_people = CreatePersonIfNeeded(QStringList({GetField("lastNameLostOwnerEdit", lostEditPage),
+        QString id_people = CreatePersonIfNeeded(GetField("lastNameLostOwnerEdit", lostEditPage),
                                 GetField("firstNameLostOwnerEdit", lostEditPage),
                                 GetField("phoneLostOwnerEdit", lostEditPage),
                                 GetField("emailLostOwnerEdit", lostEditPage),
                                 GetField("addressLostOwnerEdit", lostEditPage) + "\n" +
                                 GetField("address2LostOwnerEdit", lostEditPage) + "\n" +
                                 GetField("postalCodeLostOwnerEdit", lostEditPage) + " " +
-                                GetField("cityLostOwnerEdit", lostEditPage)}));
+                                GetField("cityLostOwnerEdit", lostEditPage),
+                                lostEditPage->findChild<EditPeopleWidget*>("MembersEdit")->GetOldId());
         QString species = GetField("speciesLostEdit", lostEditPage);
         QString name = GetField("nameLostEdit", lostEditPage);
         QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
