@@ -14,6 +14,7 @@
 #include "menutree.h"
 #include "dogcard.h"
 #include "registry.h"
+#include "saveddata.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -57,5 +58,6 @@ private:
     Database db;
     QList<QToolButton*> modifyButtons;
     int rowClicked;
+    SavedData savedData;
 };
 #endif // MAINWINDOW_H

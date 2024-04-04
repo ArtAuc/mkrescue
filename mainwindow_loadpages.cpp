@@ -314,7 +314,7 @@ void MainWindow::LoadLost(QString search){
         table->setItem(nb, 4, new QTableWidgetItem(query.value(6).toString())); // place
         table->setItem(nb, 5, new QTableWidgetItem(ClearUselessBreaks(query.value(7).toString() + " " + query.value(8).toString() + "\n" + //people_lastname + people_firstname
                                                   query.value(9).toString()))); // people_phone
-        table->setItem(nb, 6, new QTableWidgetItem((query.value(10).toString() == "1") ? "Oui" : "")); // found
+        table->setItem(nb, 6, new QTableWidgetItem((query.value(10).toString() == "1") ? "✔" : "")); // found
         table->setItem(nb, 7, new QTableWidgetItem(""));
 
         // Modify icon

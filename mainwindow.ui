@@ -479,7 +479,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -1484,6 +1484,148 @@ padding:10px;</string>
           </item>
          </layout>
         </widget>
+        <widget class="SettingsPage" name="settingsPage">
+         <property name="styleSheet">
+          <string notr="true">QLabel{
+	margin:0;
+	margin-bottom:1px;
+	color:#555;
+	font-weight:bold;
+	qproperty-alignment: AlignBottom
+}
+
+QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
+	border: 2px solid #e7e9ed;
+	border-radius: 5px;
+	font-weight:normal;
+}
+</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="5" column="1">
+           <layout class="QVBoxLayout" name="cityShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="cityShelterEditLabel">
+              <property name="text">
+               <string>VILLE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="cityShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <layout class="QVBoxLayout" name="address2ShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="address2ShelterEditLabel">
+              <property name="text">
+               <string>COMPLÉMENT D'ADRESSE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="address2ShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <layout class="QVBoxLayout" name="phoneShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="phoneShelterEditLabel">
+              <property name="text">
+               <string>TÉLÉPHONE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="phoneShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLabel" name="shelterInfosLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLabel {
+	qproperty-alignment: 'AlignCenter';
+	padding:10px;
+	color:white;
+	background-color:#3b4b64;
+	border-radius:5px;
+}</string>
+            </property>
+            <property name="text">
+             <string>INFORMATIONS SUR LE REFUGE</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <layout class="QVBoxLayout" name="addressShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="addressShelterEditLabel">
+              <property name="text">
+               <string>ADRESSE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="addressShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QVBoxLayout" name="nameShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="nameShelterEditLabel">
+              <property name="text">
+               <string>NOM</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="nameShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="5" column="0">
+           <layout class="QVBoxLayout" name="postalCodeShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="postalCodeShelterEditLabel">
+              <property name="text">
+               <string>CODE POSTAL</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="postalCodeShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
         <widget class="DogRegistry" name="careRegistryPage">
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
@@ -2166,6 +2308,12 @@ QCheckBox::indicator:unchecked{
    <class>Registry</class>
    <extends>QWidget</extends>
    <header>registry.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SettingsPage</class>
+   <extends>QWidget</extends>
+   <header>settingspage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

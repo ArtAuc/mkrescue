@@ -5,6 +5,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    if(!savedData.Load()){
+        // TODO : Initial login page (choose pwd and drive API)
+    }
+
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
     ui->stackedWidget->setCurrentWidget(ui->dogCardsPage);
@@ -148,6 +152,9 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else if (txt == "Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
+    else if (txt == "Paramètres")
+        stacked->setCurrentWidget(ui->settingsPage);
+
     else{
         ui->menuTree->collapseAllExcept(txt);
         if(txt == "Accueil")
@@ -166,7 +173,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else{
         ui->titleLabel->setText(txt);
         box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
-        ui->searchLine->setVisible(txt != "Accueil");
+        ui->searchLine->setVisible(txt != "Accueil" && txt != "Paramètres");
     }
 }
 

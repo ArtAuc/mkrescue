@@ -14,6 +14,7 @@ void EditPage::Edit(QString type, QStringList infos){
 
     if(type == "entry"){
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
+        QWidget *entryEditPage = findChild<QWidget*>("entryEditPage");
 
         if(infos.size() > 14){
             currentNecessary.append(infos[0]); // id_ES
@@ -21,35 +22,35 @@ void EditPage::Edit(QString type, QStringList infos){
 
 
             // Entrée
-            SetField("entryDateEdit", infos[1]);
+            SetField("entryDateEdit", infos[1], entryEditPage);
 
             QString type_prov = infos[2].split("___")[0];
-            SetField("entryTypeBox", type_prov);
+            SetField("entryTypeBox", type_prov, entryEditPage);
 
             if(type_prov == "Fourrière"){
-                SetField("poundPlaceEdit", infos[2].split("___")[1]);
+                SetField("poundPlaceEdit", infos[2].split("___")[1], entryEditPage);
             }
 
             else{
-                SetField("lastNameAbandonEdit", infos[3]);
-                SetField("firstNameAbandonEdit", infos[4]);
+                SetField("lastNameAbandonEdit", infos[3], entryEditPage);
+                SetField("firstNameAbandonEdit", infos[4], entryEditPage);
 
                 QStringList addressList = AddressList(infos[5]);
-                SetField("addressAbandonEdit", addressList[0]);
-                SetField("address2AbandonEdit", addressList[1]);
-                SetField("postalCodeAbandonEdit", addressList[2]);
-                SetField("cityAbandonEdit", addressList[3]);
+                SetField("addressAbandonEdit", addressList[0], entryEditPage);
+                SetField("address2AbandonEdit", addressList[1], entryEditPage);
+                SetField("postalCodeAbandonEdit", addressList[2], entryEditPage);
+                SetField("cityAbandonEdit", addressList[3], entryEditPage);
 
-                SetField("phoneAbandonEdit", infos[6]);
-                SetField("emailAbandonEdit", infos[7]);
+                SetField("phoneAbandonEdit", infos[6], entryEditPage);
+                SetField("emailAbandonEdit", infos[7], entryEditPage);
             }
 
             // Animal
-            SetField("dogNameEntryAnimalEdit", infos[10]);
-            SetField("chipEntryAnimalEdit", infos[9]);
-            SetField("sexEntryAnimalEdit", infos[8]);
-            SetField("birthDateEntryAnimalEdit", infos[12]);
-            SetField("descriptionEntryAnimalEdit", infos[11]);
+            SetField("dogNameEntryAnimalEdit", infos[10], entryEditPage);
+            SetField("chipEntryAnimalEdit", infos[9], entryEditPage);
+            SetField("sexEntryAnimalEdit", infos[8], entryEditPage);
+            SetField("birthDateEntryAnimalEdit", infos[12], entryEditPage);
+            SetField("descriptionEntryAnimalEdit", infos[11], entryEditPage);
 
 
             // Sortie
@@ -85,48 +86,49 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     else if (type == "care"){
+        QWidget *careEditPage = findChild<QWidget*>("careEditPage");
         findChild<QTabWidget*>("careTabWidget")->setCurrentIndex(0);
         if(infos.size() > 17 && infos[0].toInt() > 0){
             currentNecessary.append(infos[0]); // id_care
             currentNecessary.append(infos[1]); // entry_date
 
             // Entrée
-            SetField("careEntryDateEdit", infos[1]);
+            SetField("careEntryDateEdit", infos[1], careEditPage);
 
-            SetField("lastNameCareEntryEdit", infos[2]);
-            SetField("firstNameCareEntryEdit", infos[3]);
+            SetField("lastNameCareEntryEdit", infos[2], careEditPage);
+            SetField("firstNameCareEntryEdit", infos[3], careEditPage);
 
             QStringList addressList = AddressList(infos[4]);
-            SetField("addressCareEntryEdit", addressList[0]);
-            SetField("address2CareEntryEdit", addressList[1]);
-            SetField("postalCodeCareEntryEdit", addressList[2]);
-            SetField("cityCareEntryEdit", addressList[3]);
+            SetField("addressCareEntryEdit", addressList[0], careEditPage);
+            SetField("address2CareEntryEdit", addressList[1], careEditPage);
+            SetField("postalCodeCareEntryEdit", addressList[2], careEditPage);
+            SetField("cityCareEntryEdit", addressList[3], careEditPage);
 
-            SetField("phoneCareEntryEdit", infos[5]);
-            SetField("emailCareEntryEdit", infos[6]);
+            SetField("phoneCareEntryEdit", infos[5], careEditPage);
+            SetField("emailCareEntryEdit", infos[6], careEditPage);
 
             // Animal
-            SetField("dogNameCareAnimalEdit", infos[7]);
-            SetField("chipCareAnimalEdit", infos[8]);
-            SetField("sexCareAnimalEdit", infos[9]);
-            SetField("birthDateCareAnimalEdit", infos[10]);
-            SetField("descriptionCareAnimalEdit", infos[11]);
+            SetField("dogNameCareAnimalEdit", infos[7], careEditPage);
+            SetField("chipCareAnimalEdit", infos[8], careEditPage);
+            SetField("sexCareAnimalEdit", infos[9], careEditPage);
+            SetField("birthDateCareAnimalEdit", infos[10], careEditPage);
+            SetField("descriptionCareAnimalEdit", infos[11], careEditPage);
 
 
             // Sortie
-            SetField("careDestDateEdit", infos[12]);
-            SetField("lastNameCareDestEdit", infos[13]);
-            SetField("firstNameCareDestEdit", infos[14]);
+            SetField("careDestDateEdit", infos[12], careEditPage);
+            SetField("lastNameCareDestEdit", infos[13], careEditPage);
+            SetField("firstNameCareDestEdit", infos[14], careEditPage);
 
             addressList = AddressList(infos[15]);
 
-            SetField("addressCareDestEdit", addressList[0]);
-            SetField("address2CareDestEdit", addressList[1]);
-            SetField("postalCodeCareDestEdit", addressList[2]);
-            SetField("cityCareDestEdit", addressList[3]);
+            SetField("addressCareDestEdit", addressList[0], careEditPage);
+            SetField("address2CareDestEdit", addressList[1], careEditPage);
+            SetField("postalCodeCareDestEdit", addressList[2], careEditPage);
+            SetField("cityCareDestEdit", addressList[3], careEditPage);
 
-            SetField("phoneCareDestEdit", infos[16]);
-            SetField("emailCareDestEdit", infos[17]);
+            SetField("phoneCareDestEdit", infos[16], careEditPage);
+            SetField("emailCareDestEdit", infos[17], careEditPage);
         }
 
     }
@@ -182,23 +184,23 @@ void EditPage::SaveEdit()
     if(lastType == "entry"){
         QWidget *entryEditPage = findChild<QWidget*>("entryEditPage");
         // Entrée
-        QString date_prov = GetField("entryDateEdit");
-        QString type_prov = GetField("entryTypeBox");
+        QString date_prov = GetField("entryDateEdit", entryEditPage);
+        QString type_prov = GetField("entryTypeBox", entryEditPage);
         QString id_people_prov = "-1";
-        QString dogName =  GetField("dogNameEntryAnimalEdit");
-        if(GetField("entryTypeBox") == "Abandon"){
-            id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit"),
-                                    GetField("firstNameAbandonEdit"),
-                                    GetField("phoneAbandonEdit"),
-                                    GetField("emailAbandonEdit"),
-                                    GetField("addressAbandonEdit") + "\n" +
-                                    GetField("address2AbandonEdit") + "\n" +
-                                    GetField("postalCodeAbandonEdit") + " " +
-                                    GetField("cityAbandonEdit")}));
+        QString dogName =  GetField("dogNameEntryAnimalEdit", entryEditPage);
+        if(GetField("entryTypeBox", entryEditPage) == "Abandon"){
+            id_people_prov = CreatePersonIfNeeded(QStringList({GetField("lastNameAbandonEdit", entryEditPage),
+                                    GetField("firstNameAbandonEdit", entryEditPage),
+                                    GetField("phoneAbandonEdit", entryEditPage),
+                                    GetField("emailAbandonEdit", entryEditPage),
+                                    GetField("addressAbandonEdit", entryEditPage) + "\n" +
+                                    GetField("address2AbandonEdit", entryEditPage) + "\n" +
+                                    GetField("postalCodeAbandonEdit", entryEditPage) + " " +
+                                    GetField("cityAbandonEdit", entryEditPage)}));
         }
 
         else{ // Fourrière
-            type_prov += "___" + GetField("poundPlaceEdit");
+            type_prov += "___" + GetField("poundPlaceEdit", entryEditPage);
         }
 
         // Animal

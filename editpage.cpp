@@ -56,47 +56,6 @@ QStringList EditPage::AddressList(QString address){
     return addressList;
 }
 
-void EditPage::SetField(QString name, QString value, QWidget* parent){
-    if(parent == nullptr)
-        parent = this;
-
-    QObject *childObject = parent->findChild<QWidget*>(name);
-    QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
-    QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
-    QComboBox *box = qobject_cast<QComboBox*>(childObject);
-
-    if(dateEdit)
-        dateEdit->setDate(QDate::fromString(value, "yyyy-MM-dd"));
-
-    else if (lineEdit)
-        lineEdit->setText(value);
-
-    else if (box)
-        box->setCurrentText(value);
-}
-
-QString EditPage::GetField(QString name, QWidget* parent){
-    if (parent == nullptr)
-        parent = this;
-
-    QObject *childObject = parent->findChild<QWidget*>(name);
-    QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
-    QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
-    QComboBox *box = qobject_cast<QComboBox*>(childObject);
-    QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox*>(childObject);
-
-    if(dateEdit)
-        return dateEdit->date().toString("yyyy-MM-dd");
-    else if (lineEdit)
-        return lineEdit->text();
-    else if (box)
-        return box->currentText();
-    else if (spinBox)
-        return QString::number(spinBox->value());
-
-    return "";
-}
-
 // Returns id_people newly created, or already existent
 QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name, first_name, phone, email, address
     QSqlQuery query;

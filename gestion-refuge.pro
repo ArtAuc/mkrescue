@@ -25,7 +25,8 @@ SOURCES += \
     mainwindow.cpp \
     mainwindow_exportpdf.cpp \
     mainwindow_loadpages.cpp \
-    registry.cpp
+    registry.cpp \
+    saveddata.cpp
 
 HEADERS += \
     database.h \
@@ -38,7 +39,10 @@ HEADERS += \
     mainwindow.h \
     menutree.h \
     registry.h \
-    tristatecheckbox.h
+    saveddata.h \
+    settingspage.h \
+    tristatecheckbox.h \
+    utils.h
 
 FORMS += \
     mainwindow.ui

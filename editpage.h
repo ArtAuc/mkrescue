@@ -20,6 +20,7 @@
 
 #include "destinationpage.h"
 #include "editdogwidget.h"
+#include "utils.h"
 
 class EditPage : public QWidget
 {
@@ -40,8 +41,6 @@ public slots:
     void ChangeEntryType(QString type);
     void SaveEdit();
     void QuitEdit();
-    void SetField(QString name, QString value, QWidget* parent = nullptr);
-    QString GetField(QString name, QWidget* parent = nullptr);
     void PrevDestPage();
     void NextDestPage();
     void UpdateDestinationPages(QString type = "");
