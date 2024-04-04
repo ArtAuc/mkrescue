@@ -57,7 +57,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
-    query.exec();
+    HandleErrorExec(&query);
+
 
     return query;
 }
@@ -177,9 +178,7 @@ QSqlQuery Database::GetMembers(QString year, QString search) {
     query.bindValue(":search", search + "%");
     query.bindValue(":searchb", "%" + search + "%");
 
-    if (!query.exec()) {
-        qDebug() << "Error executing query:" << query.lastError().text();
-    }
+    HandleErrorExec(&query);
 
     return query;
 }
@@ -264,9 +263,7 @@ QSqlQuery Database::GetLost(QString search, bool found) {
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
 
-    if (!query.exec()) {
-        qDebug() << "Error executing query:" << query.lastError().text();
-    }
+    HandleErrorExec(&query);
 
     return query;
 }

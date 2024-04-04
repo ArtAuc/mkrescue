@@ -275,7 +275,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     QStringList infos;
 
     if(type == "entry"){
-        query.exec("SELECT ES_registry.id_ES, "
+        HandleErrorExec(&query, "SELECT ES_registry.id_ES, "
                     "ES_registry.date_prov, "
                     "ES_registry.type_prov, "
                     "People_prov.last_name, "
@@ -305,7 +305,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     }
 
     else if (type == "care"){
-        query.exec("SELECT Care_registry.id_care, "
+        HandleErrorExec(&query, "SELECT Care_registry.id_care, "
                    "Care_registry.entry_date, "
                    "People_prov.last_name, "
                    "People_prov.first_name, "

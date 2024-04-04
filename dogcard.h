@@ -15,6 +15,7 @@
 #include <QDir>
 
 #include "tristatecheckbox.h"
+#include "utils.h"
 
 class DogCard : public QFrame
 {

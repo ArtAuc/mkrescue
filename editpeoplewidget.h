@@ -17,6 +17,8 @@
 #include <QTimer>
 #include <QRegularExpressionValidator>
 
+#include "utils.h"
+
 class EditPeopleWidget : public QWidget
 {
     Q_OBJECT

@@ -36,7 +36,7 @@ void EditPage::SwitchPage(QString pageName){
 QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name, first_name, phone, email, address
     QSqlQuery query;
 
-    query.exec("SELECT id_people FROM People "
+    HandleErrorExec(&query, "SELECT id_people FROM People "
                "WHERE last_name = '" + infos[0] + "' "
                "AND first_name = '" + infos[1] + "' "
                "AND phone = '" + infos[2] + "' "
@@ -49,7 +49,7 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
 
     query.clear();
 
-    query.exec("SELECT MAX(MAX(id_people) + 1, 1) FROM People;");
+    HandleErrorExec(&query, "SELECT MAX(MAX(id_people) + 1, 1) FROM People;");
 
     query.next();
     QString newId = query.value(0).toString();
@@ -66,7 +66,8 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
     query.bindValue(":address", infos[4]);
     query.bindValue(":phone", infos[2]);
     query.bindValue(":email", infos[3]);
-    query.exec();
+    HandleErrorExec(&query);
+
 
     return newId;
 }
@@ -75,7 +76,7 @@ QString EditPage::CreatePersonIfNeeded(QStringList infos){ // infos = last_name,
 QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, sex, description, birth
     QSqlQuery query;
 
-    query.exec("SELECT id_dog FROM Dogs "
+    HandleErrorExec(&query, "SELECT id_dog FROM Dogs "
                    "WHERE chip = '" + infos[1] + "' "
                    "AND name = '" + infos[0] + "' "
                    "AND sex = '" + infos[2] + "' "
@@ -88,7 +89,7 @@ QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, s
 
     query.clear();
 
-    query.exec("SELECT MAX(id_dog) + 1 FROM Dogs;");
+    HandleErrorExec(&query, "SELECT MAX(id_dog) + 1 FROM Dogs;");
 
     query.next();
     QString newId = query.value(0).toString();
@@ -106,7 +107,8 @@ QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, s
     query.bindValue(":description", infos[3]);
     query.bindValue(":birth", infos[4]);
 
-    query.exec();
+    HandleErrorExec(&query);
+
     return newId;
 }
 
@@ -243,7 +245,8 @@ void EditPage::RemoveCurrent(){
             query.bindValue(":id", currentNecessary[2]);
         }
 
-        query.exec();
+        HandleErrorExec(&query);
+
 
         QuitEdit();
     }

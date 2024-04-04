@@ -281,11 +281,13 @@ void EditPage::SaveEdit()
             query.bindValue(":death_cause", death_causes[0]);
         }
 
-        query.exec();
+        HandleErrorExec(&query);
+
 
         query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog");
         query.bindValue(":id_dog", id_dog);
-        query.exec();
+        HandleErrorExec(&query);
+
 
 
         for(int i = 0; i < id_peoples.count(); i++){
@@ -297,7 +299,8 @@ void EditPage::SaveEdit()
             query.bindValue(":date", dates[i]);
             query.bindValue(":type", types[i]);
 
-            query.exec();
+            HandleErrorExec(&query);
+
         }
 
     }
@@ -318,7 +321,8 @@ void EditPage::SaveEdit()
                       "VALUES (:id, :reason);");
         query.bindValue(":id", id_people);
         query.bindValue(":reason", reason);
-        query.exec();
+        HandleErrorExec(&query);
+
     }
 
     else if(lastType == "care"){
@@ -386,7 +390,8 @@ void EditPage::SaveEdit()
             query.bindValue(":id_people_dest", id_people_dest);
         }
 
-        query.exec();
+        HandleErrorExec(&query);
+
     }
 
     else if(lastType == "members"){
@@ -409,7 +414,8 @@ void EditPage::SaveEdit()
         query.bindValue(":date", date);
         query.bindValue(":amount", amount);
         query.bindValue(":type", type);
-        query.exec();
+        HandleErrorExec(&query);
+
     }
 
     else if(lastType == "lost"){
@@ -458,7 +464,8 @@ void EditPage::SaveEdit()
             query.bindValue(":name_nec", currentNecessary[0]);
             query.bindValue(":date_nec", currentNecessary[1]);
             query.bindValue(":id_people", currentNecessary[2]);
-            query.exec();
+            HandleErrorExec(&query);
+
         }
         else { // Creating
             QSqlQuery query;
@@ -474,7 +481,8 @@ void EditPage::SaveEdit()
             query.bindValue(":sex", sex);
             query.bindValue(":date", date);
             query.bindValue(":place", place);
-            query.exec();
+            HandleErrorExec(&query);
+
         }
     }
 

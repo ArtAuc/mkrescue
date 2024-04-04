@@ -21,7 +21,7 @@ void Database::Create()
         oldFile.copy("data.db.bkp");
 
     QSqlQuery query;
-    query.exec("CREATE TABLE IF NOT EXISTS People ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS People ("
                "id_people INTEGER PRIMARY KEY,"
                "last_name VARCHAR(255),"
                "first_name VARCHAR(255),"
@@ -29,13 +29,13 @@ void Database::Create()
                "phone VARCHAR(20),"
                "email VARCHAR(255)"
                ");");
-    query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
+    HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                "VALUES (-1, '', '', '\n\n ', '', '')"
                ";");
-    query.exec("INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
+    HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                "VALUES (-2, '', '', '\n\n ', '', '')"
                ";");
-    query.exec("CREATE TABLE IF NOT EXISTS Dogs ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"
                "name VARCHAR(255),"
                "sex VARCHAR(10),"
@@ -46,7 +46,7 @@ void Database::Create()
                "compat_dog BOOLEAN,"
                "compat_cat BOOLEAN"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Members ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Members ("
                "id_adhesion INT,"
                "id_people INT,"
                "date DATE,"
@@ -54,12 +54,12 @@ void Database::Create()
                "type VARCHAR(50),"
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Red_list ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Red_list ("
                "id_people INT,"
                "reason TEXT,"
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Lost ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Lost ("
                "id_people INT,"
                "species VARCHAR(50),"
                "name VARCHAR(255),"
@@ -71,7 +71,7 @@ void Database::Create()
                "place VARCHAR(255),"
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Adoption_demand ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Adoption_demand ("
                "id_people INT,"
                "sex VARCHAR(10),"
                "breed VARCHAR(100),"
@@ -79,7 +79,7 @@ void Database::Create()
                "infos TEXT,"
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Care_registry ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Care_registry ("
                "id_care INT,"
                "id_people_prov INT,"
                "id_people_dest INT,"
@@ -90,13 +90,13 @@ void Database::Create()
                "FOREIGN KEY (id_people_dest) REFERENCES People(id_people),"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Vet ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Vet ("
                "id_dog INT,"
                "date DATE,"
                "reason TEXT,"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS ES_registry ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS ES_registry ("
                "id_ES INT,"
                "id_dog INT,"
                "type_prov VARCHAR(50),"
@@ -106,7 +106,7 @@ void Database::Create()
                "FOREIGN KEY (id_people_prov) REFERENCES People(id_people),"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog)"
                ");");
-    query.exec("CREATE TABLE IF NOT EXISTS Destinations ("
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Destinations ("
                "id_dog INT,"
                "id_people INT,"
                "date DATE,"
@@ -122,7 +122,7 @@ void Database::ReorderEntryRegistry()
 {
     QSqlQuery query;
 
-    query.exec("UPDATE ES_registry AS t1 "
+    HandleErrorExec(&query, "UPDATE ES_registry AS t1 "
                "SET id_ES = ( "
                "    SELECT COUNT(*) + 1 "
                "    FROM ES_registry AS t2 "
@@ -137,7 +137,7 @@ void Database::ReorderEntryRegistry()
 void Database::ReorderCareRegistry(){
     QSqlQuery query;
 
-    query.exec("UPDATE Care_registry AS t1 "
+    HandleErrorExec(&query, "UPDATE Care_registry AS t1 "
                "SET id_care = ( "
                "    SELECT COUNT(*) + 1 "
                "    FROM Care_registry AS t2 "
@@ -153,7 +153,7 @@ void Database::ReorderCareRegistry(){
 void Database::ReorderMembers(){
     QSqlQuery query;
 
-    query.exec("UPDATE Members AS t1 "
+    HandleErrorExec(&query, "UPDATE Members AS t1 "
                "SET id_adhesion = ( "
                "    SELECT COUNT(*) + 1 "
                "    FROM Members AS t2 "
@@ -169,7 +169,7 @@ void Database::ReorderMembers(){
 void Database::CleanDogs(){
     QSqlQuery query;
 
-    query.exec("SELECT DISTINCT id_dog "
+    HandleErrorExec(&query, "SELECT DISTINCT id_dog "
                "FROM Dogs");
 
     QStringList id_dogs;
@@ -187,7 +187,8 @@ void Database::CleanDogs(){
             query.prepare("SELECT COUNT(*) "
                           "FROM " + s + " = :id;");
             query.bindValue(":id", id);
-            query.exec();
+            HandleErrorExec(&query);
+
             query.next();
 
             if(query.value(0).toInt() > 0){
@@ -201,13 +202,15 @@ void Database::CleanDogs(){
             query.prepare("DELETE FROM Dogs "
                           "WHERE id_dog = :id;");
             query.bindValue(":id", id);
-            query.exec();
+            HandleErrorExec(&query);
+
 
             // Delete Destinations
             query.prepare("DELETE FROM Destinations "
                           "WHERE id_dog = :id;");
             query.bindValue(":id", id);
-            query.exec();
+            HandleErrorExec(&query);
+
         }
     }
 }
@@ -215,11 +218,11 @@ void Database::CleanDogs(){
 void Database::MakeRedList(){
     QSqlQuery query;
 
-    query.exec("DELETE FROM Red_list "
+    HandleErrorExec(&query, "DELETE FROM Red_list "
                "WHERE reason LIKE 'Abandon de % le __/__/____';");
 
 
-    query.exec("SELECT id_people_prov, Dogs.name, date_prov "
+    HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, date_prov "
                "FROM ES_Registry "
                "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
                "WHERE type_prov = 'Abandon'");
@@ -236,13 +239,14 @@ void Database::MakeRedList(){
                       "VALUES (:id, :reason)");
         query.bindValue(":id", id_peoples[i]);
         query.bindValue(":reason", reasons[i]);
-        query.exec();
+        HandleErrorExec(&query);
+
     }
 }
 
 void Database::CleanPeople(){
     QSqlQuery query;
-    query.exec("SELECT DISTINCT id_people "
+    HandleErrorExec(&query, "SELECT DISTINCT id_people "
                "FROM People "
                "WHERE id_people > 0");
 
@@ -267,7 +271,8 @@ void Database::CleanPeople(){
             query.prepare("SELECT COUNT(*) FROM " + s + " = :id;");
             query.bindValue(":id", id);
 
-            query.exec();
+            HandleErrorExec(&query);
+
             query.next();
 
             if(query.value(0).toInt() > 0){
@@ -280,7 +285,7 @@ void Database::CleanPeople(){
             query.prepare("DELETE FROM People "
                           "WHERE id_people = :id");
             query.bindValue(":id", id);
-            query.exec();
+            HandleErrorExec(&query);
         }
     }
 }

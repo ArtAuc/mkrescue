@@ -89,7 +89,7 @@ void EditDogWidget::showEvent(QShowEvent* event){
 
     QStringList dogNameList, chipList, descriptionList;
 
-    query.exec("SELECT name, chip, description, sex, birth "
+    HandleErrorExec(&query, "SELECT name, chip, description, sex, birth "
                "FROM Dogs;");
 
     while (query.next()) {

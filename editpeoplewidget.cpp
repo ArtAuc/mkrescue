@@ -132,11 +132,12 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd, bool simplified){
 
 
 void EditPeopleWidget::showEvent(QShowEvent* event){
+    QWidget::showEvent(event);
     QSqlQuery query;
 
     QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List, postalCodeList, cityList;
 
-    query.exec("SELECT id_people, last_name, first_name, phone, email, address "
+    HandleErrorExec(&query, "SELECT id_people, last_name, first_name, phone, email, address "
                "FROM People "
                "ORDER BY id_people DESC;");
 

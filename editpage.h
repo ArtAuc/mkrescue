@@ -1,23 +1,6 @@
 #ifndef EDITPAGE_H
 #define EDITPAGE_H
 
-#include <QWidget>
-#include <QSqlQuery>
-#include <QStackedWidget>
-#include <QDateEdit>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QLayout>
-#include <QSpinBox>
-#include <QLabel>
-#include <QToolButton>
-#include <QGraphicsColorizeEffect>
-#include <QSqlError>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QToolButton>
-#include <QCheckBox>
-
 #include "destinationpage.h"
 #include "editdogwidget.h"
 #include "utils.h"

@@ -12,6 +12,8 @@
 #include <QCompleter>
 #include <QTimer>
 
+#include "utils.h"
+
 class EditDogWidget : public QWidget
 {
     Q_OBJECT

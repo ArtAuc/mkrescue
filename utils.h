@@ -1,6 +1,28 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QSqlDatabase>
+#include <QMainWindow>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDir>
+#include <QWidget>
+#include <QSqlQuery>
+#include <QStackedWidget>
+#include <QDateEdit>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QLayout>
+#include <QSpinBox>
+#include <QLabel>
+#include <QToolButton>
+#include <QGraphicsColorizeEffect>
+#include <QSqlError>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QToolButton>
+#include <QCheckBox>
+
 
 inline void SetField(QString name, QString value, QWidget* parent){
     QObject *childObject = parent->findChild<QWidget*>(name);
@@ -59,6 +81,18 @@ inline QStringList AddressList(QString address){
     }
 
     return addressList;
+}
+
+inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
+    if(queryString.isNull()){
+        if(!query->exec())
+            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text());
+    }
+
+    else{
+        if(!query->exec(queryString))
+            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text());
+    }
 }
 
 #endif // UTILS_H

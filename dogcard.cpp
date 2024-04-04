@@ -6,9 +6,9 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     mainWindow = parent;
 
     QString typeInfo = "care";
-    if(info2.contains("___"))
+    if(info2.contains("_|_"))
         typeInfo = "out";
-    else if (info1.contains("___"))
+    else if (info1.contains("_|_"))
         typeInfo = "current";
 
     type = typeInfo;
@@ -55,7 +55,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
 
     QString info1String;
     if(typeInfo == "current" || typeInfo == "out"){
-        QStringList splitted = info1.split("___");
+        QStringList splitted = info1.split("_|_");
         QString type_prov = splitted[1];
         QString date_prov = splitted[0];
         info1String = type_prov + " : ";
@@ -71,9 +71,9 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
 
     QString info2String;
 
-    if(typeInfo == "out"){ // Here info2 = date_dest___type_dest
-        QString type_dest = info2.split("___")[1];
-        QString date_dest = info2.split("___")[0];
+    if(typeInfo == "out"){ // Here info2 = date_dest_|_type_dest
+        QString type_dest = info2.split("_|_")[1];
+        QString date_dest = info2.split("_|_")[0];
         info2String = type_dest;
         if(sex == "Femelle" && type_dest == "Mort")
             type_dest += "e";
@@ -212,7 +212,7 @@ void DogCard::SelectThis(){
 
     // Infos summary (on the left)
     QSqlQuery query;
-    query.exec("SELECT chip, birth, sterilized, compat_dog, compat_cat "
+    HandleErrorExec(&query, "SELECT chip, birth, sterilized, compat_dog, compat_cat "
                "FROM Dogs "
                "WHERE chip = " + chip + ";");
 
@@ -276,7 +276,8 @@ void DogCard::SaveCard(){
     query.bindValue(":compat_cat", compatCatBox->StateToSql());
     query.bindValue(":chip", chip);
 
-    query.exec();
+    HandleErrorExec(&query);
+
 }
 
 void DogCard::CreateHistory(){
@@ -321,7 +322,8 @@ void DogCard::CreateHistory(){
 
     query.prepare(queryString);
     query.bindValue(":chip", chip);
-    query.exec();
+    HandleErrorExec(&query);
+
 
     while(query.next()){
         QString type = query.value(5).toString();
@@ -329,9 +331,9 @@ void DogCard::CreateHistory(){
         QString colorString;
         QString dateString(QDate::fromString(query.value(4).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
         if(type == "ES"){
-            if(query.value(0).toString().startsWith("Fourrière___"))
+            if(query.value(0).toString().startsWith("Fourrière_|_"))
                 histLabel->setText(dateString + " : <b>Fourrière</b> (" +
-                               query.value(0).toString().split("___")[1] + ")");
+                               query.value(0).toString().split("_|_")[1] + ")");
 
             else
                 histLabel->setText(dateString + " : <b>" +
