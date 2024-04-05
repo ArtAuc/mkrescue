@@ -8,7 +8,7 @@ void EditPage::Edit(QString type, QStringList infos){
     dealtIdPeople.clear();
     dealtIdDog.clear();
 
-    if((type != "redList" && type != "members") || infos.isEmpty())
+    if(type != "redList" || infos.isEmpty())
         SwitchPage(type + "EditPage");
 
     removeButton = findChild<QToolButton*>("removeButton");
@@ -141,7 +141,32 @@ void EditPage::Edit(QString type, QStringList infos){
 
     }
 
-    else if (type == "redList" || type == "members"){
+    else if (type == "members"){
+        currentPage = findChild<QWidget*>("membersEditPage");
+        if(infos.size() > 8 && infos[0].toInt() > 0){
+            currentNecessary.append(infos[0]); // id_adhesion
+            currentNecessary.append(infos[1]); // date
+
+            SetField("dateMembersEdit", infos[1], currentPage);
+
+            SetField("lastNameMembersEdit", infos[2], currentPage);
+            SetField("firstNameMembersEdit", infos[3], currentPage);
+
+            QStringList addressList = AddressList(infos[4]);
+            SetField("addressMembersEdit", addressList[0], currentPage);
+            SetField("address2MembersEdit", addressList[1], currentPage);
+            SetField("postalCodeMembersEdit", addressList[2], currentPage);
+            SetField("cityMembersEdit", addressList[3], currentPage);
+
+            SetField("phoneMembersEdit", infos[5], currentPage);
+            SetField("emailMembersEdit", infos[6], currentPage);
+            SetField("typeMembersBox", infos[7], currentPage);
+            SetField("amountMembersEdit", infos[8], currentPage);
+        }
+    }
+
+
+    else if (type == "redList"){
         if(infos.size() > 0){
             currentNecessary = infos;
             RemoveCurrent();
@@ -425,12 +450,35 @@ void EditPage::SaveEdit()
         QString amount = GetField("amountMembersEdit", membersEditPage);
         QString date = GetField("dateMembersEdit", membersEditPage);
 
-        query.prepare("INSERT INTO Members (id_people, date, amount, type) "
-                      "VALUES (:id, :date, :amount, :type);");
-        query.bindValue(":id", id_people);
-        query.bindValue(":date", date);
-        query.bindValue(":amount", amount);
-        query.bindValue(":type", type);
+
+        if (!currentNecessary.isEmpty()) { // Modifying
+            QString queryString;
+            queryString = "UPDATE Members "
+                          "SET date = :date, "
+                          "amount = :amount, "
+                          "type = :type, "
+                          "id_people = :id_people "
+                          "WHERE id_adhesion = :id_adhesion "
+                          "AND date = :current_date";
+
+            query.prepare(queryString);
+            query.bindValue(":date", date);
+            query.bindValue(":amount", amount);
+            query.bindValue(":type", type);
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":id_adhesion", currentNecessary[0]);
+            query.bindValue(":current_date", currentNecessary[1]);
+        }
+        else { // Creating
+            query.prepare("INSERT INTO Members (id_people, date, amount, type) "
+                          "VALUES (:id_people, :date, :amount, :type)");
+
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":date", date);
+            query.bindValue(":amount", amount);
+            query.bindValue(":type", type);
+        }
+
         HandleErrorExec(&query);
 
     }

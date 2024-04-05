@@ -229,21 +229,21 @@ void MainWindow::LoadMembers(QString year, QString search)
                                                    query.value(8).toString() + "€")); // amount
 
         // Modify icon
-        QToolButton* deleteButton = new QToolButton(table);
-        deleteButton->setIcon(QIcon("media/trash.svg"));
-        deleteButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+        QToolButton* modifyButton = new QToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
         table->setItem(nb, 8, new QTableWidgetItem(""));
-        table->item(nb, 8)->setBackground(QColor("#984800"));
-        table->setCellWidget(nb, 8, deleteButton);
+        table->item(nb, 8)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 8, modifyButton);
 
         QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
-        connect(deleteButton, &QToolButton::clicked, this, [=](){
+        connect(modifyButton, &QToolButton::clicked, this, [=](){
             TriggerEdit("members", necessary);
         });
 
-        modifyButtons.append(deleteButton);
+        modifyButtons.append(modifyButton);
     }
 
     ui->membersPage->showEvent(nullptr);

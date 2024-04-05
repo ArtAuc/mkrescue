@@ -70,8 +70,8 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
                             "FROM Care_registry "
                             "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
                             "WHERE id_people_prov = " + old_id_people + ";");
-            while(message.count("\n") < 10 && query.next()){
-                message += "Registre Garderie : " + query.value(0).toString() + "\n";
+        while(message.count("\n") < 10 && query.next()){
+            message += "Registre Garderie : " + query.value(0).toString() + "\n";
         }
 
         // Destinations
@@ -79,40 +79,39 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
                             "FROM Destinations "
                             "JOIN Dogs ON Destinations.id_dog = Dogs.id_dog "
                             "WHERE id_people = " + old_id_people + ";");
-            while(message.count("\n") < 10 && query.next()){
-                message += "Registre E/S : " + query.value(0).toString() + " (" + query.value(1).toString() + ")\n";
+        while(message.count("\n") < 10 && query.next()){
+            message += "Registre E/S : " + query.value(0).toString() + " (" + query.value(1).toString() + ")\n";
         }
 
         // Red_list
         HandleErrorExec(&query, "SELECT * "
                             "FROM Red_list "
                             "WHERE id_people = " + old_id_people + ";");
-            if(message.count("\n") < 10 && query.next()){
-                message += "Liste rouge\n";
+        if(message.count("\n") < 10 && query.next()){
+            message += "Liste rouge\n";
         }
 
         // Members
-        HandleErrorExec(&query, "SELECT * "
-                            "FROM Members "
-                            "WHERE id_people = " + old_id_people + ";");
-            if(message.count("\n") < 10 && query.next()){
-                message += "Adhérents\n";
-        }
+        HandleErrorExec(&query, "SELECT strftime('%Y', date) "
+                                "FROM Members "
+                                "WHERE id_people = '" + old_id_people + "';");
+        while(message.count("\n") < 10 && query.next())
+            message += "Adhérents (" + query.value(0).toString() + ")\n";
 
         // Lost
         HandleErrorExec(&query, "SELECT name "
                             "FROM Lost "
                             "WHERE id_people = " + old_id_people + ";");
-            while(message.count("\n") < 10 && query.next()){
-                message += "Animaux perdus : " + query.value(0).toString() + "\n";
+        while(message.count("\n") < 10 && query.next()){
+            message += "Animaux perdus : " + query.value(0).toString() + "\n";
         }
 
         // Adoption_demand
-        HandleErrorExec(&query, "SELECT * "
+        HandleErrorExec(&query, "SELECT breed "
                             "FROM Adoption_demand "
                             "WHERE id_people = " + old_id_people + ";");
-            if(message.count("\n") < 10 && query.next()){
-                message += "Demande d'adoption\n";
+        while(message.count("\n") < 10 && query.next()){
+            message += "Demande d'adoption(" + query.value(0).toString() + ")\n";
         }
 
         if(message.count("\n") == 10)

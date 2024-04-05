@@ -29,6 +29,7 @@ inline void SetField(QString name, QString value, QWidget* parent){
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
+    QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox*>(childObject);
 
     if(dateEdit)
         dateEdit->setDate(QDate::fromString(value, "yyyy-MM-dd"));
@@ -38,6 +39,9 @@ inline void SetField(QString name, QString value, QWidget* parent){
 
     else if (box)
         box->setCurrentText(value);
+
+    else if (spinBox)
+        spinBox->setValue(value.toDouble());
 }
 
 inline QString GetField(QString name, QWidget* parent){

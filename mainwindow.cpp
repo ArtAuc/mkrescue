@@ -336,8 +336,30 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
             infos.append(query.value(i).toString());
     }
 
+    else if (type == "members"){
+        HandleErrorExec(&query,
+                "SELECT Members.id_adhesion, "
+                "       Members.date, "
+                "       People.last_name, "
+                "       People.first_name, "
+                "       People.address, "
+                "       People.phone, "
+                "       People.email, "
+                "       Members.type, "
+                "       Members.amount "
+                "FROM Members "
+                "JOIN People ON Members.id_people = People.id_people "
+                "WHERE Members.id_adhesion = " + necessary[0] +
+                " AND Members.date = '" + necessary[1] + "';");
+
+        query.next();
+
+        for(int i = 0; i < query.record().count(); i++)
+            infos.append(query.value(i).toString());
+    }
+
     // Delete
-    else if (type == "redList" || type == "members"){
+    else if (type == "redList"){
         infos = necessary;
     }
 
@@ -378,7 +400,6 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 void MainWindow::RefreshPage(QString type){
     if(type == "entry")
         LoadEntryRegistry(ui->yearBox->currentText());
-
     else if(type == "care")
         LoadCareRegistry(ui->yearBox->currentText());
     else if(type == "members")
