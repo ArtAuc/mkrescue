@@ -11,9 +11,10 @@ class EditPage : public QWidget
 public:
     explicit EditPage(QWidget *parent = nullptr);
     QString CreatePersonIfNeeded(QString last_name, QString first_name, QString phone, QString email, QString address, QString old_id_people);
-    QString CreateDogIfNeeded(QStringList infos);
+    QString CreateDogIfNeeded(QString name, QString chip, QString sex, QString description, QString birth, QString old_id_dog);
     void resizeEvent(QResizeEvent *event) override;
     void AssignIdPeople(QWidget *page);
+    void AssignIdDog(QWidget *page);
 
 public slots:
     void AddEntry();
@@ -47,6 +48,7 @@ private:
     QStringList autofillList;
     QToolButton* removeButton;
     QStringList dealtIdPeople;
+    QStringList dealtIdDog;
 };
 
 #endif // EDITPAGE_H

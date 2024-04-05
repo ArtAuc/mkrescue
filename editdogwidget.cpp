@@ -3,6 +3,8 @@
 EditDogWidget::EditDogWidget(QWidget *parent) : QWidget(parent){}
 
 EditDogWidget::EditDogWidget(QString nameEnd){
+        setObjectName(nameEnd);
+
        // Create widgets
        QLabel *chipLabel = new QLabel("N° D'IDENTIFICATION");
        QLineEdit *chipEdit = new QLineEdit;

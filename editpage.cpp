@@ -62,7 +62,7 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
                         "WHERE id_people_prov = " + old_id_people + ";");
 
         while(message.count("\n") < 10 && query.next()){
-            message += "Registre E/S : " + query.value(0).toString() + " (" + query.value(1).toString() + ")\n";
+            message += "Registre E/S : " + query.value(0).toString().split("_|_")[0] + " (" + query.value(1).toString() + ")\n";
         }
 
         // Care_registry
@@ -172,40 +172,96 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
 
 
 // Returns id_dog newly created, or already existent
-QString EditPage::CreateDogIfNeeded(QStringList infos){ // infos = name, chip, sex, description, birth
+QString EditPage::CreateDogIfNeeded(QString name, QString chip, QString sex, QString description, QString birth, QString old_id_dog) {
     QSqlQuery query;
 
+    // If already modified, do not ask again
+    if(dealtIdDog.contains(old_id_dog))
+        return old_id_dog;
+
+    // Keep this so the user is not asked if no changes are made
     HandleErrorExec(&query, "SELECT id_dog FROM Dogs "
-                   "WHERE chip = '" + infos[1] + "' "
-                   "AND name = '" + infos[0] + "' "
-                   "AND sex = '" + infos[2] + "' "
-                   "AND description = '" + infos[3] + "' "
-                   "AND birth = '" + infos[4] + "'");
+                   "WHERE chip = '" + chip + "' "
+                   "AND name = '" + name + "' "
+                   "AND sex = '" + sex + "' "
+                   "AND description = '" + description + "' "
+                   "AND birth = '" + birth + "'");
 
     if (query.next())
         return query.value(0).toString();
-
-
     query.clear();
 
-    HandleErrorExec(&query, "SELECT MAX(id_dog) + 1 FROM Dogs;");
+    if(old_id_dog.toInt() > 0){
+        // If does not correspond exactly, ask if the user wants to overwrite
+        QString message;
 
+        // ES_registry
+        HandleErrorExec(&query, "SELECT ES_registry.type_prov "
+                        "FROM ES_registry "
+                        "WHERE ES_registry.id_dog = " + old_id_dog + ";");
+
+        while(message.count("\n") < 10 && query.next()){
+            message += "Registre E/S : " + query.value(0).toString().split("_|_")[0] + "\n";
+        }
+
+        // Care_registry
+        HandleErrorExec(&query, "SELECT * "
+                            "FROM Care_registry "
+                            "WHERE Care_registry.id_dog = " + old_id_dog + ";");
+
+        if(message.count("\n") < 10 && query.next())
+            message += "Registre Garderie\n";
+
+        if(message.count("\n") < 10 && query.next())
+            message += "Liste rouge\n";
+
+        QMessageBox::StandardButton reply = QMessageBox::No;
+        if(message.count("\n") > 1) {
+            reply = QMessageBox::warning(nullptr, "Modification sur les informations du chien", "Voulez-vous aussi modifier les informations de " + name +
+                    " dans : \n" + message,
+                    QMessageBox::Yes | QMessageBox::No);
+
+        }
+
+        if(reply == QMessageBox::Yes || message.count("\n") <= 1){
+            query.prepare("UPDATE Dogs "
+                          "SET name = :name, "
+                          "sex = :sex, "
+                          "chip = :chip, "
+                          "description = :description, "
+                          "birth = :birth "
+                          "WHERE id_dog = :id");
+
+            query.bindValue(":id", old_id_dog);
+            query.bindValue(":name", name);
+            query.bindValue(":sex", sex);
+            query.bindValue(":chip", chip);
+            query.bindValue(":description", description);
+            query.bindValue(":birth", birth);
+
+            HandleErrorExec(&query);
+
+            dealtIdDog.append(old_id_dog);
+
+            return old_id_dog;
+        }
+    }
+
+    HandleErrorExec(&query, "SELECT MAX(id_dog) + 1 FROM Dogs;");
     query.next();
     QString newId = query.value(0).toString();
-    if (newId == "")
+    if (newId.isEmpty())
         newId = "1";
-
 
     query.prepare("INSERT INTO Dogs (id_dog, name, sex, chip, description, birth) "
                   "VALUES (:id, :name, :sex, :chip, :description, :birth)");
 
     query.bindValue(":id", newId);
-    query.bindValue(":name", infos[0]);
-    query.bindValue(":sex", infos[2]);
-    query.bindValue(":chip", infos[1]);
-    query.bindValue(":description", infos[3]);
-    query.bindValue(":birth", infos[4]);
-
+    query.bindValue(":name", name);
+    query.bindValue(":sex", sex);
+    query.bindValue(":chip", chip);
+    query.bindValue(":description", description);
+    query.bindValue(":birth", birth);
     HandleErrorExec(&query);
 
     return newId;
@@ -384,5 +440,38 @@ void EditPage::AssignIdPeople(QWidget *currentPage){
 
         query.next();
         editPeopleWidget->SetOldId(query.value(0).toString());
+    }
+}
+
+void EditPage::AssignIdDog(QWidget *currentPage) {
+    if (currentPage == nullptr)
+        return;
+
+    QSqlQuery query;
+    for (EditDogWidget *editDogWidget : currentPage->findChildren<EditDogWidget*>()) {
+        query.prepare("SELECT id_dog "
+                      "FROM Dogs "
+                      "WHERE name = :name "
+                      "AND sex = :sex "
+                      "AND chip = :chip "
+                      "AND description = :description "
+                      "AND birth = :birth;");
+
+        QString name = GetField("dogName" + editDogWidget->objectName(), editDogWidget);
+        QString sex = GetField("sex" + editDogWidget->objectName(), editDogWidget);
+        QString chip = GetField("chip" + editDogWidget->objectName(), editDogWidget);
+        QString description = GetField("description" + editDogWidget->objectName(), editDogWidget);
+        QString birth = GetField("birthDate" + editDogWidget->objectName(), editDogWidget);
+
+        query.bindValue(":name", name);
+        query.bindValue(":sex", sex);
+        query.bindValue(":chip", chip);
+        query.bindValue(":description", description);
+        query.bindValue(":birth", birth);
+
+        HandleErrorExec(&query);
+
+        if(query.next()) // If not the case, probably creating a new dog
+            editDogWidget->SetOldId(query.value(0).toString());
     }
 }

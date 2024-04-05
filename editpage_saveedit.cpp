@@ -6,6 +6,7 @@ void EditPage::Edit(QString type, QStringList infos){
     ClearAllPages();
     currentNecessary.clear();
     dealtIdPeople.clear();
+    dealtIdDog.clear();
 
     if((type != "redList" && type != "members") || infos.isEmpty())
         SwitchPage(type + "EditPage");
@@ -184,6 +185,7 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     AssignIdPeople(currentPage);
+    AssignIdDog(currentPage);
 }
 
 
@@ -215,13 +217,14 @@ void EditPage::SaveEdit()
         }
 
         // Animal
-        QString id_dog = CreateDogIfNeeded(QStringList({
-                                                           dogName,
-                                                           GetField("chipEntryAnimalEdit", entryEditPage),
-                                                           GetField("sexEntryAnimalEdit", entryEditPage),
-                                                           GetField("descriptionEntryAnimalEdit", entryEditPage),
-                                                           GetField("birthDateEntryAnimalEdit", entryEditPage)
-                                                       }));
+        QString id_dog = CreateDogIfNeeded(
+                                           dogName,
+                                           GetField("chipEntryAnimalEdit", entryEditPage),
+                                           GetField("sexEntryAnimalEdit", entryEditPage),
+                                           GetField("descriptionEntryAnimalEdit", entryEditPage),
+                                           GetField("birthDateEntryAnimalEdit", entryEditPage),
+                                           entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId()
+                                            );
         // Sortie
         QStringList death_causes, id_peoples, dates, types;
 
@@ -351,13 +354,14 @@ void EditPage::SaveEdit()
                                 careEditPage->findChild<EditPeopleWidget*>("CareEntryEdit")->GetOldId());
 
         // Animal
-        QString id_dog = CreateDogIfNeeded(QStringList({
-                                                           GetField("dogNameCareAnimalEdit", careEditPage),
-                                                           GetField("chipCareAnimalEdit", careEditPage),
-                                                           GetField("sexCareAnimalEdit", careEditPage),
-                                                           GetField("descriptionCareAnimalEdit", careEditPage),
-                                                           GetField("birthDateCareAnimalEdit", careEditPage)
-                                                       }));
+        QString id_dog = CreateDogIfNeeded(
+                                           GetField("dogNameCareAnimalEdit", careEditPage),
+                                           GetField("chipCareAnimalEdit", careEditPage),
+                                           GetField("sexCareAnimalEdit", careEditPage),
+                                           GetField("descriptionCareAnimalEdit", careEditPage),
+                                           GetField("birthDateCareAnimalEdit", careEditPage),
+                                           careEditPage->findChild<EditDogWidget*>("CareAnimalEdit")->GetOldId()
+                                           );
 
         // Sortie
         QString exit_date = GetField("careDestDateEdit", careEditPage);
