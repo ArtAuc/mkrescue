@@ -203,7 +203,7 @@ void EditPage::SaveEdit()
                                     GetField("address2AbandonEdit", entryEditPage) + "\n" +
                                     GetField("postalCodeAbandonEdit", entryEditPage) + " " +
                                     GetField("cityAbandonEdit", entryEditPage),
-                                    entryEditPage->findChild<EditPeopleWidget*>()->GetOldId());
+                                    entryEditPage->findChild<EditPeopleWidget*>("AbandonEdit")->GetOldId());
         }
 
         else{ // Fourrière
