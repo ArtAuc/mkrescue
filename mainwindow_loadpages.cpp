@@ -81,6 +81,9 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         QString destString = "";
         QString dateString = "";
 
+        // Sort the destinations using date
+        std::sort(destinations.begin(), destinations.end(), dateComparator);
+
         for (int i = 0; i < destinations.size(); i++){
             QString d = destinations[i];
 

@@ -102,5 +102,15 @@ inline bool IsInTable(QString table, QString attribute, QString value){
     return query.value(0).toInt() > 0;
 }
 
+inline auto dateComparator = [](const QString& dest1, const QString& dest2) {
+    QStringList p1 = dest1.split("_|_");
+    QStringList p2 = dest2.split("_|_");
+
+    QDate date1 = QDate::fromString(p1[0], "yyyy-MM-dd");
+    QDate date2 = QDate::fromString(p2[0], "yyyy-MM-dd");
+
+    return date1 < date2;
+};
+
 
 #endif // UTILS_H

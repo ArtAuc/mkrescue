@@ -61,6 +61,10 @@ void EditPage::Edit(QString type, QStringList infos){
             QStringList destinations = infos[13].split("_-_");
             QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
 
+            // Sort the destinations using date
+            std::sort(destinations.begin(), destinations.end(), dateComparator);
+
+
             for (int i = 0; i < destinations.size(); i++){
                 QString d = destinations[i];
 
