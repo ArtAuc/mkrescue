@@ -380,6 +380,8 @@ void EditPage::RemoveCurrent(){
         message = "Voulez-vous supprimer cette personne du registre des adhérents ?";
     else if (lastType == "lost")
         message = "Voulez-vous supprimer cette entrée des animaux perdus ?";
+    else if (lastType == "vet")
+        message = "Voulez-vous supprimer ce RDV Vétérinaire ?";
 
     reply = QMessageBox::question(nullptr, "Confirmation de suppression", message,
                                               QMessageBox::Yes | QMessageBox::No);
@@ -424,6 +426,14 @@ void EditPage::RemoveCurrent(){
             query.bindValue(":name", currentNecessary[0]);
             query.bindValue(":date", currentNecessary[1]);
             query.bindValue(":id", currentNecessary[2]);
+        }
+
+        else if(lastType == "vet"){
+            query.prepare("DELETE FROM Vet "
+                          "WHERE date = :date "
+                          "AND id_dog = :id_dog;");
+            query.bindValue(":date", currentNecessary[0]);
+            query.bindValue(":id_dog", currentNecessary[1]);
         }
 
         HandleErrorExec(&query);

@@ -175,7 +175,7 @@ void EditPage::Edit(QString type, QStringList infos){
 
             SetField("dateVetAnimalEdit", infos[0], currentPage);
             // Reason
-            if(infos[6] == "Vaccin" || infos[6] == "")
+            if(infos[6] == "Vaccin" || infos[6] == "Stérilisation")
                 SetField("reasonVetAnimalBox", infos[6], currentPage);
             else{
                 SetField("reasonVetAnimalBox", "Autre", currentPage);
@@ -455,6 +455,44 @@ void EditPage::SaveEdit()
         }
     }
 
+    else if(lastType == "vet"){
+        QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
+        QString date = vetEditPage->findChild<QDateEdit*>("dateVetAnimalEdit")->date().toString("yyyy-MM-dd");
+        QString reason = vetEditPage->findChild<QComboBox*>("reasonVetAnimalBox")->currentText();
+
+        if(reason == "Autre")
+            reason = vetEditPage->findChild<QLineEdit*>("reasonVetAnimalEdit")->text();
+
+        QString id_dog = CreateDogIfNeeded("VetAnimalEdit", vetEditPage);
+
+        if (!currentNecessary.isEmpty()) { // Modifying
+            QString queryString = "UPDATE Vet "
+                                  "SET id_dog = :id, "
+                                  "date = :date, "
+                                  "reason = :reason "
+                                  "WHERE date = :date_nec "
+                                  "AND id_dog = :id_nec;";
+
+            QSqlQuery query;
+            query.prepare(queryString);
+            query.bindValue(":id", id_dog);
+            query.bindValue(":date", date);
+            query.bindValue(":reason", reason);
+            query.bindValue(":date_nec", currentNecessary[0]);
+            query.bindValue(":id_nec", currentNecessary[1]);
+            HandleErrorExec(&query);
+        }
+        else { // Creating
+            QSqlQuery query;
+            query.prepare("INSERT INTO Vet (id_dog, date, reason) "
+                          "VALUES (:id_dog, :date, :reason)");
+
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":date", date);
+            query.bindValue(":reason", reason);
+            HandleErrorExec(&query);
+        }
+    }
 
 
     QuitEdit();

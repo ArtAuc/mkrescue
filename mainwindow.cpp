@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->careAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddCare()));
     connect(ui->membersAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddMember()));
     connect(ui->lostAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddLost()));
+    connect(ui->vetAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddVet()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
     connect(ui->foundLostBox, SIGNAL(clicked(bool)), this, SLOT(ToggleFoundBoxText()));
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
+    ui->reasonVetAnimalEdit->hide();
 
     InitEditWidgets();
 

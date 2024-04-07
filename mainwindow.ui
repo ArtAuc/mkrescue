@@ -1443,7 +1443,14 @@ QTabBar::tab:selected {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDateEdit" name="dateVetAnimalEdit"/>
+                 <widget class="QDateEdit" name="dateVetAnimalEdit">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
