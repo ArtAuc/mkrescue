@@ -275,8 +275,10 @@ void MainWindow::Search(QString search){
         LoadCareRegistry(ui->yearBox->currentText(), search);
     else if (pageName == "redListPage")
         LoadRedList(search);
-    else if(pageName == "dogCardsPage")
+    else if(pageName == "dogCardsPage"){
         LoadDogCards(search);
+        return; // As this page is not a registry
+    }
     else if (pageName == "membersPage")
         LoadMembers(ui->yearBox->currentText(), search);
     else if (pageName == "lostPage")
