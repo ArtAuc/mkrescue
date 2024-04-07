@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->membersPage->SetType("members");
     ui->redListPage->SetType("redList");
     ui->lostPage->SetType("lost");
+    ui->vetPage->SetType("vet");
 
 
     LoadDogCards();
@@ -165,8 +166,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
             LoadDogCards();
             stacked->setCurrentWidget(ui->dogCardsPage);
         }
-        else if (txt == "Vétérinaire")
+        else if (txt == "Vétérinaire"){
             stacked->setCurrentWidget(ui->vetPage);
+            LoadVet();
+        }
     }
 
     if (txt == "Registres"  || txt == "Autres")
@@ -265,6 +268,8 @@ void MainWindow::Search(QString search){
         LoadMembers(ui->yearBox->currentText(), search);
     else if (pageName == "lostPage")
         LoadLost(search);
+    else if (pageName == "vetPage")
+        LoadVet(search);
 
     findChild<Registry*>(pageName)->resizeEvent(nullptr);
 }
@@ -384,9 +389,17 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                    "' AND date = '" + necessary[1] +
                    "' AND People.id_people = " + necessary[2] + ";");
 
-        if(!query.exec())
-            QMessageBox::critical(nullptr, "Erreur de la requête SQL", query.lastError().text());
+        HandleErrorExec(&query);
+        query.next();
 
+        for(int i = 0; i < query.record().count(); i++)
+            infos.append(query.value(i).toString());
+    }
+
+    else if (type == "vet"){
+        query.prepare("");
+
+        HandleErrorExec(&query);
         query.next();
 
         for(int i = 0; i < query.record().count(); i++)
@@ -413,6 +426,11 @@ void MainWindow::RefreshPage(QString type){
     else if(type == "lost"){
         LoadLost();
     }
+
+    else if(type == "vet"){
+        LoadVet();
+    }
+
 
     resizeEvent(nullptr);
 }

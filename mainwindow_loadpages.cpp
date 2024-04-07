@@ -342,3 +342,44 @@ void MainWindow::LoadLost(QString search){
     ui->lostPage->resizeEvent(nullptr);
 
 }
+
+
+void MainWindow::LoadVet(QString search){
+    QTableWidget* table = ui->vetTable;
+    table->clearContents();
+    table->setRowCount(0);
+    modifyButtons.clear();
+
+    QSqlQuery query = db.GetVet(search);
+
+    while(query.next() && query.record().count() > 0)
+    {
+        int nb = table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toDate().toString("dd/MM/yyyy"))); // date
+        table->setItem(nb, 1, new QTableWidgetItem(ClearUselessBreaks(query.value(1).toString() + "\n" + query.value(2).toString()))); // name + chip
+        table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // reason
+
+        // Modify icon
+        QToolButton* modifyButton = new QToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->setItem(nb, 3, new QTableWidgetItem("")); // reason
+        table->item(nb, 3)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 3, modifyButton);
+
+        QStringList necessary = {query.value(0).toString(), query.value(4).toString()}; // date + id_dog
+
+        connect(modifyButton, &QToolButton::clicked, this, [=](){
+            TriggerEdit("vet", necessary);
+        });
+
+        modifyButtons.append(modifyButton);
+    }
+
+    ui->vetPage->showEvent(nullptr);
+    ui->vetPage->resizeEvent(nullptr);
+
+}
+

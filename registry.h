@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include <QToolButton>
 #include <QPushButton>
+#include <QLayout>
 
 
 class Registry : public QWidget
@@ -24,6 +25,7 @@ protected:
     QTableWidget* table;
     QToolButton* addButton = nullptr;
     QString type;
+    QWidget *horizontalPlacehold = nullptr;
 };
 
 #endif // REGISTRY_H

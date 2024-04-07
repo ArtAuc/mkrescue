@@ -36,7 +36,7 @@ void Database::Create()
                    ";");
     if(!IsInTable("People", "id_people", "-2"))
         HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
-                   "VALUES (-2, '', '', '\n\n ', '', '')"
+                   "VALUES (-2, 'Refuge', '', '\n\n ', '', '')"
                    ";");
     HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"

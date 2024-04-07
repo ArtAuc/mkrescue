@@ -3,12 +3,12 @@
 Registry::Registry(QWidget *parent)
     : QWidget{parent}
 {
-
-
 }
 
 void Registry::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
+
+    layout()->setSpacing(0);
 
     table = findChild<QTableWidget*>(type + "Table");
     addButton = findChild<QToolButton*>(type + "AddButton");
@@ -56,6 +56,12 @@ void Registry::showEvent(QShowEvent* event) {
             table->horizontalHeaderItem(3)->setText("Date de\nperte");
             table->horizontalHeaderItem(4)->setText("Lieu de\nperte");
         }
+
+        else if(type == "vet"){
+            table->horizontalHeaderItem(0)->setText("Date\n du RDV");
+        }
+
+        horizontalPlacehold = findChild<QWidget*>(type + "HorizontalPlacehold");
     }
 
 }
@@ -95,15 +101,24 @@ void Registry::resizeEvent(QResizeEvent *event){
             sumWidth += table->columnWidth(col);
         }
 
+
         if(table->verticalScrollBar()->isVisible())
             sumWidth += table->verticalScrollBar()->width();
 
+
         float factor = table->width() / sumWidth; // Allows to occupy the whole width of the window
-        if(factor > 1){
-            for (int col = 0; col < table->columnCount(); ++col) {
+        if(factor > 1)
+            for (int col = 0; col < table->columnCount(); ++col)
                 table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
-            }
+
+        sumWidth = 0;
+
+        for (int col = 0; col < table->columnCount() - 1; ++col) {
+            sumWidth += table->columnWidth(col);
         }
+
+        if(horizontalPlacehold != nullptr)
+            horizontalPlacehold->setMaximumWidth(sumWidth);
 
         addButton->setFixedSize(QSize(std::max(table->columnWidth(table->columnCount() - 1), int(0.03 * width())), fontSize * 4.5));
         addButton->setIconSize(0.7 * QSize(iconSize, iconSize));
