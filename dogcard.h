@@ -13,6 +13,8 @@
 #include <QProcess>
 #include <QPushButton>
 #include <QDir>
+#include <QStandardPaths>
+#include <QFileDialog>
 
 #include "tristatecheckbox.h"
 #include "utils.h"
@@ -29,11 +31,13 @@ public:
 private slots:
     void SelectThis();
     void SaveCard();
-    void OpenFolderInFileExplorer();
+    void HandlePrescription();
+    void OpenPrescriptionFolder();
+    void AddPrescription();
 
 private:
     QString StateToSql(Qt::CheckState state);
-    QString chip;
+    QString chip, dogName;
     QLabel *sexLabel, *descriptionLabel, *info2Label;
     QScrollArea *historyScroll;
     QToolButton *detailsButton;

@@ -162,10 +162,6 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else if (txt == "Demandes d'adoption")
         stacked->setCurrentWidget(ui->adoptionDemandPage);
 
-    else if (txt == "Paramètres"){
-        stacked->setCurrentWidget(ui->settingsPage);
-        findChild<SettingsPage*>()->LoadSettings();
-    }
 
     else{
         ui->menuTree->collapseAllExcept(txt);
@@ -178,6 +174,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         else if (txt == "Vétérinaire"){
             stacked->setCurrentWidget(ui->vetPage);
             LoadVet();
+        }
+        else if (txt == "Paramètres"){
+            stacked->setCurrentWidget(ui->settingsPage);
+            findChild<SettingsPage*>()->LoadSettings();
         }
     }
 

@@ -3,6 +3,7 @@
 DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info2, QString description, QString info1) : DogCard(parent)
 {
     this->chip = chip;
+    this->dogName = name;
     mainWindow = parent;
 
     QString typeInfo = "care";
@@ -207,8 +208,9 @@ void DogCard::SelectThis(){
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
     detailsButton->setIcon(QIcon("media/cross.png"));
 
-    QPushButton *prescButton = new QPushButton("Voir les ordonnances");
-    connect(prescButton, SIGNAL(clicked()), this, SLOT(OpenFolderInFileExplorer()));
+    QPushButton *prescButton = new QPushButton("Ordonnances");
+
+    connect(prescButton, SIGNAL(clicked()), this, SLOT(HandlePrescription()));
 
     // Infos summary (on the left)
     QSqlQuery query;
@@ -388,7 +390,7 @@ void DogCard::CreateHistory(){
     histLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 
-void DogCard::OpenFolderInFileExplorer() {
+void DogCard::OpenPrescriptionFolder() {
     QString folderPath = "prescriptions/" + chip + "/";
 
     QDir directory(folderPath);
@@ -412,4 +414,49 @@ void DogCard::OpenFolderInFileExplorer() {
     // Unsupported platform
     QMessageBox::critical(nullptr, "Erreur", "Erreur d'ouverture du dossier " + QDir::toNativeSeparators(folderPath);
 #endif
+}
+
+void DogCard::AddPrescription(){
+    QString dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Documents numérisés/");
+    if (!QDir(dirPath).exists())
+        dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+    QString filePath = QFileDialog::getOpenFileName(nullptr, "Sélectionnez l'ordonnance", dirPath, "Ordonnances (*.jpg *.jpeg *.png *.gif *.bmp *.pdf);;Tous les fichiers (*)");
+
+    if (!filePath.isEmpty()) {
+        QString chipDirectory = QDir::toNativeSeparators("prescriptions/" + chip + "/");
+        if (!QDir(".").mkpath(chipDirectory)) {
+            QMessageBox::critical(nullptr, "Échec", "La création du répertoire pour le chien a échoué");
+            return;
+        }
+
+
+        QString fileName = "Ordonnance_" + dogName + "_" + QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss") + "." + QFileInfo(filePath).completeSuffix();
+        QString destinationPath = chipDirectory + fileName;
+
+
+        if (QFile::copy(filePath, destinationPath))
+            QMessageBox::information(nullptr, "Succès", "L'ordonnance a été ajoutée pour " + dogName);
+        else
+            QMessageBox::critical(nullptr, "Échec", "La copie de l'ordonnance a échoué");
+    }
+
+    else
+        QMessageBox::critical(nullptr, "Aucun fichier sélectionné", "L'ordonnance n'a pas été selectionnée.");
+}
+
+void DogCard::HandlePrescription(){
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Ordonnances");
+
+    QPushButton *addButton = msgBox.addButton("Ajouter", QMessageBox::AcceptRole);
+    QPushButton *browseButton = msgBox.addButton("Parcourir", QMessageBox::RejectRole);
+
+    // Show the message box
+    msgBox.exec();
+
+    // Check which button was clicked
+    if (msgBox.clickedButton() == addButton)
+        AddPrescription();
+    else if (msgBox.clickedButton() == browseButton)
+        OpenPrescriptionFolder();
 }

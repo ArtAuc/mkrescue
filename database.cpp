@@ -181,7 +181,8 @@ void Database::CleanDogs(){
     }
 
     QStringList queryStrings = {"ES_Registry WHERE id_dog",
-                                "Care_Registry WHERE id_dog"
+                                "Care_Registry WHERE id_dog",
+                                "Vet WHERE id_dog"
                                };
 
     for(QString id : id_dogs){
