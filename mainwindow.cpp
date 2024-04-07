@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
     connect(ui->foundLostBox, SIGNAL(clicked(bool)), this, SLOT(ToggleFoundBoxText()));
+    connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
 
     InitEditWidgets();
 
@@ -260,6 +261,10 @@ void MainWindow::ToggleModifyButtons()
 
 }
 
+void MainWindow::ToggleReasonEdit(){
+    ui->reasonVetAnimalEdit->setVisible(ui->reasonVetAnimalBox->currentText() == "Autre");
+}
+
 void MainWindow::Search(QString search){
     QString pageName = ui->stackedWidget->currentWidget()->objectName();
     if(pageName == "entryRegistryPage")
@@ -406,6 +411,9 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         query.prepare("SELECT Vet.date, "
                          "Dogs.name, "
                          "Dogs.chip, "
+                         "Dogs.sex, "
+                         "Dogs.birth, "
+                         "Dogs.description, "
                          "Vet.reason, "
                          "Dogs.id_dog  "
                          "FROM Vet "

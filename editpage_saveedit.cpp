@@ -167,6 +167,25 @@ void EditPage::Edit(QString type, QStringList infos){
         }
     }
 
+    else if (type == "vet"){
+        currentPage = findChild<QWidget*>("vetEditPage");
+        if(infos.size() > 6){
+            currentNecessary.append(infos[0]); // date
+            currentNecessary.append(infos[7]); // id_dog
+
+            SetField("dateVetAnimalEdit", infos[0], currentPage);
+            // Reason
+            if(infos[6] == "Vaccin" || infos[6] == "")
+                SetField("reasonVetAnimalBox", infos[6], currentPage);
+            else{
+                SetField("reasonVetAnimalBox", "Autre", currentPage);
+                SetField("reasonVetAnimalEdit", infos[6], currentPage);
+            }
+
+            FillAnimalWidget("VetAnimalEdit", infos[1], infos[2], infos[3], infos[4], infos[5], currentPage);
+        }
+    }
+
     AssignIdPeople(currentPage);
     AssignIdDog(currentPage);
 }
@@ -435,6 +454,7 @@ void EditPage::SaveEdit()
             HandleErrorExec(&query);
         }
     }
+
 
 
     QuitEdit();
