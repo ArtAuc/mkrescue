@@ -101,6 +101,12 @@ void MainWindow::InitEditWidgets(){
 
     ui->lostTab2->layout()->addWidget(new EditPeopleWidget("LostOwnerEdit", true));
 
+    gridLayout = qobject_cast<QGridLayout*>(ui->vetEditPage->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditDogWidget("VetAnimalEdit"), gridLayout->rowCount(), 0, 1, 2);
+    }
+
+
     ui->careTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->entryTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->lostTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
@@ -397,13 +403,22 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     }
 
     else if (type == "vet"){
-        query.prepare("");
+        query.prepare("SELECT Vet.date, "
+                         "Dogs.name, "
+                         "Dogs.chip, "
+                         "Vet.reason, "
+                         "Dogs.id_dog  "
+                         "FROM Vet "
+                         "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
+                         "WHERE Vet.date = '" + necessary[0] +
+                         "' AND Dogs.id_dog = " + necessary[1]);
 
         HandleErrorExec(&query);
         query.next();
 
         for(int i = 0; i < query.record().count(); i++)
             infos.append(query.value(i).toString());
+
     }
 
 

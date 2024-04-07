@@ -226,9 +226,7 @@ QSqlQuery Database::GetRedList(QString search) {
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
 
-    if (!query.exec()) {
-        qDebug() << "Error executing query:" << query.lastError().text();
-    }
+    HandleErrorExec(&query);
 
     return query;
 }

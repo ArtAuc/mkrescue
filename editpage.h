@@ -10,8 +10,8 @@ class EditPage : public QWidget
     Q_OBJECT
 public:
     explicit EditPage(QWidget *parent = nullptr);
-    QString CreatePersonIfNeeded(QString last_name, QString first_name, QString phone, QString email, QString address, QString old_id_people);
-    QString CreateDogIfNeeded(QString name, QString chip, QString sex, QString description, QString birth, QString old_id_dog);
+    QString CreatePersonIfNeeded(QString nameEnd, QWidget *parent = nullptr);
+    QString CreateDogIfNeeded(QString nameEnd, QWidget *parent = nullptr);
     void resizeEvent(QResizeEvent *event) override;
     void AssignIdPeople(QWidget *page);
     void AssignIdDog(QWidget *page);
@@ -22,6 +22,7 @@ public slots:
     void AddMember();
     void AddRedList();
     void AddLost();
+    void AddVet();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
     void SaveEdit();
@@ -40,6 +41,8 @@ private:
     void SwitchPage(QString pageName);
     void AddDestPage();
     void UpdateButtons();
+    void FillAnimalWidget(QString nameEnd, QString dogName, QString chip, QString sex, QString birthDate, QString description, QWidget *parent = nullptr);
+    void FillPeopleWidget(QString nameEnd, QString lastName, QString firstName, QString address, QString phone, QString email, QWidget *parent = nullptr);
 
 private:
     QString lastType;

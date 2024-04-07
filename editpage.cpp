@@ -26,6 +26,10 @@ void EditPage::AddLost(){
     Edit("lost", {});
 }
 
+void EditPage::AddVet(){
+    Edit("vet", {});
+}
+
 void EditPage::SwitchPage(QString pageName){
     resizeEvent(nullptr);
     qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);
@@ -33,7 +37,20 @@ void EditPage::SwitchPage(QString pageName){
 }
 
 // Returns id_people newly created, or already existent
-QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QString phone, QString email, QString address, QString old_id_people) {
+QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
+    if(parent == nullptr)
+        parent = this;
+
+    QString last_name = GetField("lastName" + nameEnd, parent);
+    QString first_name = GetField("firstName" + nameEnd, parent);
+    QString phone = GetField("phone" + nameEnd, parent);
+    QString email = GetField("email" + nameEnd, parent);
+    QString address = GetField("address" + nameEnd, parent) + "\n" +
+                      GetField("address2" + nameEnd, parent) + "\n" +
+                      GetField("postalCode" + nameEnd, parent) + " " +
+                      GetField("city" + nameEnd, parent);
+    QString old_id_people = parent->findChild<EditPeopleWidget*>(nameEnd)->GetOldId();
+
     QSqlQuery query;
 
     // If already modified, do not ask again
@@ -171,7 +188,17 @@ QString EditPage::CreatePersonIfNeeded(QString last_name, QString first_name, QS
 
 
 // Returns id_dog newly created, or already existent
-QString EditPage::CreateDogIfNeeded(QString name, QString chip, QString sex, QString description, QString birth, QString old_id_dog) {
+QString EditPage::CreateDogIfNeeded(QString nameEnd, QWidget *parent) {
+    if(parent == nullptr)
+        parent = this;
+
+    QString name = GetField("dogName" + nameEnd, parent);
+    QString chip = GetField("chip" + nameEnd, parent);
+    QString sex = GetField("sex" + nameEnd, parent);
+    QString description = GetField("description" + nameEnd, parent);
+    QString birth = GetField("birthDate" + nameEnd, parent);
+    QString old_id_dog = parent->findChild<EditDogWidget*>(nameEnd)->GetOldId();
+
     QSqlQuery query;
 
     // If already modified, do not ask again
