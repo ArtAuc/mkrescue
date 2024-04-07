@@ -87,8 +87,8 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
         "WHERE strftime('%Y', ES_registry.date_prov) = :year "
-        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
-        "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search "
+        "AND (People_prov.last_name LIKE :search OR People_prov.first_name LIKE :search OR People_prov.phone LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
         ")"
@@ -133,7 +133,7 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
         "LEFT JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
         "WHERE strftime('%Y', Care_registry.entry_date) = :year "
         "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
-        "OR People_dest.last_name LIKE :search OR People_dest.phone LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search " +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
         ") "
@@ -164,7 +164,7 @@ QSqlQuery Database::GetMembers(QString year, QString search) {
         "FROM Members "
         "JOIN People ON Members.id_people = People.id_people "
         "WHERE strftime('%Y', Members.date) = :year "
-        "AND (People.last_name LIKE :search OR People.phone LIKE :search " +
+        "AND (People.last_name LIKE :search OR People.first_name LIKE :search OR People.phone LIKE :search " +
         QString((search.contains("@") ? " OR People.email LIKE :searchb" : "")) +
         ") "
         "ORDER BY Members.id_adhesion;";
@@ -219,7 +219,7 @@ QSqlQuery Database::GetRedList(QString search) {
                           "People.id_people "
                           "FROM People "
                           "JOIN Red_list ON People.id_people = Red_list.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search) "
+                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR People.phone LIKE :search) "
                           "GROUP BY People.id_people "
                           "ORDER BY People.id_people DESC;";
 

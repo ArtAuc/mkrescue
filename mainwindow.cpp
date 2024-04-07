@@ -5,13 +5,15 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    if(!savedData.Load()){
-        // TODO : Initial login page (choose pwd and drive API)
-    }
-
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
-    ui->stackedWidget->setCurrentWidget(ui->dogCardsPage);
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+    ToggleLock();
+
+    ui->loginPage->SetMode(!savedData.Load());
+
+    connect(ui->loginPage, SIGNAL(Unlock(QByteArray)), this, SLOT(ToggleLock(QByteArray)));
+
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
@@ -59,8 +61,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lostPage->SetType("lost");
     ui->vetPage->SetType("vet");
 
-
-    LoadDogCards();
 
     Clean();
 }
@@ -116,6 +116,26 @@ void MainWindow::InitEditWidgets(){
     ui->lostTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 
+void MainWindow::ToggleLock(QByteArray h){
+    ui->topHorizontalWidget->hide();
+    ui->menuTree->hide();
+
+    if(h != ""){
+        if(!savedData.HashExists()){ // New installation
+            savedData.SetHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256));
+            savedData.Save();
+        }
+
+        else if(!savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
+            return;
+
+        // Login sucessful
+        ChangePage(ui->menuTree->topLevelItem(0));
+        ui->topHorizontalWidget->show();
+        ui->menuTree->show();
+    }
+
+}
 
 void MainWindow::ToggleFoundBoxText(){
     QString newText = "Retrouvé";

@@ -10,11 +10,13 @@ public:
     SavedData();
     void Save();
     bool Load();
-    bool CompareHash(QString hash){return accessHash == hash;}
+    bool CompareHash(QByteArray h){return accessHash == h.toHex();}
     QStringList GetShelterInfos();
+    bool HashExists(){return !accessHash.isEmpty();}
+    void SetHash(QByteArray h){accessHash = h.toHex();}
 
 private:
-    QString accessHash;
+    QString accessHash = "";
 };
 
 #endif // SAVEDDATA_H

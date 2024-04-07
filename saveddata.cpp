@@ -6,7 +6,16 @@ SavedData::SavedData()
 }
 
 void SavedData::Save(){
+    QFile file("save");
+    if(!file.open(QIODevice::WriteOnly)){
+        QMessageBox::critical(nullptr, "Erreur", "Sauvegarde locale des données impossible.");
+    }
 
+    else{
+        QTextStream out(&file);
+
+        out << accessHash;
+    }
 }
 
 bool SavedData::Load(){

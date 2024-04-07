@@ -36,6 +36,7 @@ HEADERS += \
     editdogwidget.h \
     editpage.h \
     editpeoplewidget.h \
+    loginpage.h \
     mainwindow.h \
     menutree.h \
     registry.h \

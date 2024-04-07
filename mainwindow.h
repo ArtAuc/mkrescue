@@ -48,6 +48,7 @@ public slots:
     void UnselectDogCard();
     void ToggleFoundBoxText();
     void ToggleReasonEdit();
+    void ToggleLock(QByteArray h = NULL);
 
 private:
     void ExportRegistry(QString type);

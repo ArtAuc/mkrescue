@@ -238,8 +238,13 @@ QString EditPage::CreateDogIfNeeded(QString nameEnd, QWidget *parent) {
         if(message.count("\n") < 10 && query.next())
             message += "Registre Garderie\n";
 
+        // Vet
+        HandleErrorExec(&query, "SELECT * "
+                            "FROM Vet "
+                            "WHERE Vet.id_dog = " + old_id_dog + ";");
+
         if(message.count("\n") < 10 && query.next())
-            message += "Liste rouge\n";
+            message += "RDV Vétérinaire\n";
 
         QMessageBox::StandardButton reply = QMessageBox::No;
         if(message.count("\n") > 1) {
