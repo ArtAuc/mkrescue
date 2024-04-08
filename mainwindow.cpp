@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
+    setWindowTitle("MouchkiNet");
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
     ToggleLock();
 
