@@ -489,7 +489,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>11</number>
+         <number>9</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -1724,32 +1724,33 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
 </string>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
-          <item row="5" column="1">
-           <layout class="QVBoxLayout" name="cityShelterEditLayout">
+          <item row="1" column="1">
+           <layout class="QVBoxLayout" name="phoneShelterEditLayout">
             <item>
-             <widget class="QLabel" name="cityShelterEditLabel">
+             <widget class="QLabel" name="phoneShelterEditLabel">
               <property name="text">
-               <string>VILLE</string>
+               <string>TÉLÉPHONE</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="cityShelterEdit"/>
+             <widget class="QLineEdit" name="phoneShelterEdit"/>
             </item>
            </layout>
           </item>
-          <item row="7" column="0" colspan="2">
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
+          <item row="3" column="0" colspan="2">
+           <layout class="QVBoxLayout" name="addressShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="addressShelterEditLabel">
+              <property name="text">
+               <string>ADRESSE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="addressShelterEdit"/>
+            </item>
+           </layout>
           </item>
           <item row="4" column="0" colspan="2">
            <layout class="QVBoxLayout" name="address2ShelterEditLayout">
@@ -1765,17 +1766,38 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
             </item>
            </layout>
           </item>
-          <item row="1" column="1">
-           <layout class="QVBoxLayout" name="phoneShelterEditLayout">
+          <item row="6" column="0" colspan="2">
+           <widget class="QPushButton" name="saveSettingsButton">
+            <property name="text">
+             <string>Sauvegarder</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <layout class="QVBoxLayout" name="postalCodeShelterEditLayout">
             <item>
-             <widget class="QLabel" name="phoneShelterEditLabel">
+             <widget class="QLabel" name="postalCodeShelterEditLabel">
               <property name="text">
-               <string>TÉLÉPHONE</string>
+               <string>CODE POSTAL</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="phoneShelterEdit"/>
+             <widget class="QLineEdit" name="postalCodeShelterEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QVBoxLayout" name="nameShelterEditLayout">
+            <item>
+             <widget class="QLabel" name="nameShelterEditLabel">
+              <property name="text">
+               <string>NOM</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="nameShelterEdit"/>
             </item>
            </layout>
           </item>
@@ -1804,52 +1826,40 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
             </property>
            </widget>
           </item>
-          <item row="3" column="0" colspan="2">
-           <layout class="QVBoxLayout" name="addressShelterEditLayout">
+          <item row="8" column="0" colspan="2">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="5" column="1">
+           <layout class="QVBoxLayout" name="cityShelterEditLayout">
             <item>
-             <widget class="QLabel" name="addressShelterEditLabel">
+             <widget class="QLabel" name="cityShelterEditLabel">
               <property name="text">
-               <string>ADRESSE</string>
+               <string>VILLE</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="addressShelterEdit"/>
+             <widget class="QLineEdit" name="cityShelterEdit"/>
             </item>
            </layout>
           </item>
-          <item row="1" column="0">
-           <layout class="QVBoxLayout" name="nameShelterEditLayout">
-            <item>
-             <widget class="QLabel" name="nameShelterEditLabel">
-              <property name="text">
-               <string>NOM</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="nameShelterEdit"/>
-            </item>
-           </layout>
-          </item>
-          <item row="5" column="0">
-           <layout class="QVBoxLayout" name="postalCodeShelterEditLayout">
-            <item>
-             <widget class="QLabel" name="postalCodeShelterEditLabel">
-              <property name="text">
-               <string>CODE POSTAL</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="postalCodeShelterEdit"/>
-            </item>
-           </layout>
-          </item>
-          <item row="6" column="0" colspan="2">
-           <widget class="QPushButton" name="saveSettingsButton">
+          <item row="7" column="0" colspan="2">
+           <widget class="QLabel" name="savedLabel">
             <property name="text">
-             <string>Sauvegarder</string>
+             <string>✅ Données sauvegardées</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
             </property>
            </widget>
           </item>
@@ -2324,7 +2334,135 @@ QCheckBox::indicator:unchecked{
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="adoptionDemandPage"/>
+        <widget class="DogRegistry" name="adoptionDemandPage">
+         <layout class="QVBoxLayout" name="verticalLayout_17">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="adoptionDemandLabelLayout">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="adoptionDemandLabel1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight:bold;
+color:#212834;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="text">
+               <string>PERSONNE</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="adoptionDemandLabel2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight:bold;
+color:#212834;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="text">
+               <string>CHIEN RECHERCHÉ</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="adoptionDemandLabel3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight:bold;
+color:#212834;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="HoverToolButton" name="adoptionDemandAddButton">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="adoptionDemandTable">
+            <column>
+             <property name="text">
+              <string>Nom</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Téléphone</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Sexe</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Âge</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Race</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Informations complémentaires</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string> </string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
         <widget class="Registry" name="membersPage">
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <property name="spacing">

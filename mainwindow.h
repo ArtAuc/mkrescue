@@ -41,6 +41,7 @@ public slots:
     void LoadMembers(QString year, QString search = "");
     void LoadLost(QString search = "");
     void LoadVet(QString search = "");
+    void LoadAdoptionDemand(QString search = "");
     void ToggleModifyButtons();
     void Search(QString search);
     void TriggerEdit(QString type, QStringList infos);

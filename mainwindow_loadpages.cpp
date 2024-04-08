@@ -366,7 +366,7 @@ void MainWindow::LoadVet(QString search){
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
-        table->setItem(nb, 3, new QTableWidgetItem("")); // reason
+        table->setItem(nb, 3, new QTableWidgetItem(""));
         table->item(nb, 3)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 3, modifyButton);
 
@@ -384,3 +384,45 @@ void MainWindow::LoadVet(QString search){
 
 }
 
+
+void MainWindow::LoadAdoptionDemand(QString search){
+    QTableWidget* table = ui->adoptionDemandTable;
+    table->clearContents();
+    table->setRowCount(0);
+    modifyButtons.clear();
+
+    QSqlQuery query = db.GetAdoptionDemand(search);
+
+    while(query.next() && query.record().count() > 0)
+    {
+        int nb = table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString() + " " + query.value(1).toString())); // last_name + first_name
+        table->setItem(nb, 1, new QTableWidgetItem(query.value(2).toString())); // phone
+        table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // sex
+        table->setItem(nb, 3, new QTableWidgetItem(query.value(4).toString())); // age
+        table->setItem(nb, 4, new QTableWidgetItem(query.value(5).toString())); // breed
+        table->setItem(nb, 5, new QTableWidgetItem(query.value(6).toString())); // infos
+
+        // Modify icon
+        HoverToolButton* modifyButton = new HoverToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->setItem(nb, 6, new QTableWidgetItem(""));
+        table->item(nb, 6)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 6, modifyButton);
+
+        QStringList necessary = {query.value(6).toString(), query.value(7).toString()}; // infos + id_people
+
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
+            TriggerEdit("adoptionDemand", necessary);
+        });
+
+        modifyButtons.append(modifyButton);
+    }
+
+    ui->adoptionDemandPage->showEvent(nullptr);
+    ui->adoptionDemandPage->resizeEvent(nullptr);
+
+}

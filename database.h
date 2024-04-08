@@ -21,6 +21,7 @@ public:
     QSqlQuery GetRedList(QString search);
     QSqlQuery GetLost(QString search, bool found = false);
     QSqlQuery GetVet(QString search);
+    QSqlQuery GetAdoptionDemand(QString search);
     std::vector<QString> GetRegistryYears(QString type);
     void CleanDogs();
     void CleanPeople();

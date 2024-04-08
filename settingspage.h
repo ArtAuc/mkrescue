@@ -12,6 +12,7 @@
 #include <QSqlQuery>
 #include <QDoubleSpinBox>
 #include <QMessageBox>
+#include <QTimer>
 
 #include "utils.h"
 #include "simplecrypt.h"
@@ -27,6 +28,8 @@ public:
     void showEvent(QShowEvent *event) override {
         QWidget::showEvent(event);
         connect(findChild<QPushButton*>("saveSettingsButton"), &QPushButton::clicked, this, &SettingsPage::SaveSettings);
+
+        findChild<QLabel*>("savedLabel")->hide();
     }
 
     void SetCrypto(SimpleCrypt *crypto){this->crypto = crypto;}
@@ -103,6 +106,12 @@ public slots:
 
         if(!query.exec()){
             QMessageBox::critical(nullptr, "Erreur", "Erreur dans la sauvegarde des informations sur le refuge");
+        }
+
+        else{
+            QLabel *savedLabel = findChild<QLabel*>("savedLabel");
+            savedLabel->show();
+            QTimer::singleShot(3000, [=]() {savedLabel->hide();});
         }
     }
 

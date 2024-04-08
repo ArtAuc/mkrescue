@@ -282,3 +282,26 @@ QSqlQuery Database::GetVet(QString search) {
 
     return query;
 }
+
+QSqlQuery Database::GetAdoptionDemand(QString search) {
+    QSqlQuery query;
+    QString queryString = "SELECT People.last_name, "
+                          "People.first_name, "
+                          "People.phone, "
+                          "Adoption_demand.sex, "
+                          "Adoption_demand.age, "
+                          "Adoption_demand.breed, "
+                          "Adoption_demand.infos, "
+                          "People.id_people "
+                          "FROM Adoption_demand "
+                          "JOIN People ON People.id_people = Adoption_demand.id_people "
+                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR Adoption_demand.sex LIKE :search OR Adoption_demand.breed LIKE :search);";
+
+
+    query.prepare(queryString);
+    query.bindValue(":search", search + "%");
+
+    HandleErrorExec(&query);
+
+    return query;
+}

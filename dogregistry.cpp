@@ -20,19 +20,21 @@ void DogRegistry::showEvent(QShowEvent* event) {
     }
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
-        table->horizontalHeaderItem(1)->setText("Date\nd'entrée");
-        table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
-        table->horizontalHeaderItem(6)->setText("Date de\nnaissance");
-        table->horizontalHeaderItem(7)->setText("Date de\nsortie");
-        if(type == "entry")
-            table->horizontalHeaderItem(9)->setText("Cause de\nla mort");
+        if(type != "adoptionDemand"){
+            table->horizontalHeaderItem(1)->setText("Date\nd'entrée");
+            table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
+            table->horizontalHeaderItem(6)->setText("Date de\nnaissance");
+            table->horizontalHeaderItem(7)->setText("Date de\nsortie");
+            if(type == "entry")
+                table->horizontalHeaderItem(9)->setText("Cause de\nla mort");
 
-        // Bold first column #
-        if(table->item(0,0) != nullptr){
-            QFont font(table->item(0, 0)->font());
-            font.setBold(true);
-            for(int row = 0; row < table->rowCount(); row++)
-                table->item(row, 0)->setFont(font);
+            // Bold first column #
+            if(table->item(0,0) != nullptr){
+                QFont font(table->item(0, 0)->font());
+                font.setBold(true);
+                for(int row = 0; row < table->rowCount(); row++)
+                    table->item(row, 0)->setFont(font);
+            }
         }
     }
 }
@@ -42,13 +44,21 @@ void DogRegistry::resizeEvent(QResizeEvent *event){
 
     if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
         // Supcategories labels' widths according to table's width
-        label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
-        label2->setMaximumWidth(table->columnWidth(3) + table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
+        if(type == "adoptionDemand"){
+            label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1));
+            label2->setMaximumWidth(table->columnWidth(2) + table->columnWidth(3) + table->columnWidth(4));
+            label3->setMaximumWidth(table->columnWidth(5));
+        }
 
+        else{
+            label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1) + table->columnWidth(2));
+            label2->setMaximumWidth(table->columnWidth(3) + table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
 
-        type == "care" ?
-            label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8)) :
-            label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8) + table->columnWidth(9));
+            if(type == "care")
+                label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8));
+            else if (type == "entry")
+                label3->setMaximumWidth(table->columnWidth(7) + table->columnWidth(8) + table->columnWidth(9));
+        }
 
         QFont font = table->font();
         float fontSize = font.pointSize();

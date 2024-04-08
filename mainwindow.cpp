@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->redListPage->SetType("redList");
     ui->lostPage->SetType("lost");
     ui->vetPage->SetType("vet");
+    ui->adoptionDemandPage->SetType("adoptionDemand");
 
 
     Clean();
@@ -191,11 +192,11 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     else if (txt == "Animaux perdus"){
         stacked->setCurrentWidget(ui->lostPage);
         LoadLost();
-        resizeEvent(nullptr);
     }
-    else if (txt == "Demandes d'adoption")
+    else if (txt == "Demandes d'adoption"){
         stacked->setCurrentWidget(ui->adoptionDemandPage);
-
+        LoadAdoptionDemand();
+    }
 
     else{
         ui->menuTree->collapseAllExcept(txt);
@@ -223,6 +224,8 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
         ui->searchLine->setVisible(txt != "Accueil" && txt != "Paramètres");
     }
+
+    resizeEvent(nullptr);
 }
 
 void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care and entry
@@ -319,6 +322,8 @@ void MainWindow::Search(QString search){
         LoadLost(search);
     else if (pageName == "vetPage")
         LoadVet(search);
+    else if(pageName == "adoptionDemandPage")
+        LoadAdoptionDemand(search);
 
     findChild<Registry*>(pageName)->resizeEvent(nullptr);
 }
@@ -490,6 +495,10 @@ void MainWindow::RefreshPage(QString type){
 
     else if(type == "vet"){
         LoadVet();
+    }
+
+    else if(type == "adoptionDemand"){
+        LoadAdoptionDemand();
     }
 
 
