@@ -118,7 +118,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->setItem(nb, 10, new QTableWidgetItem(""));
 
         // Modify icon
-        QToolButton* modifyButton = new QToolButton(table);
+        HoverToolButton* modifyButton = new HoverToolButton(table);
 
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
@@ -128,7 +128,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
         QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
-        connect(modifyButton, &QToolButton::clicked, this, [=](){
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("entry", necessary);
         });
 
@@ -179,7 +179,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->setItem(nb, 9, new QTableWidgetItem(""));
 
         // Modify icon
-        QToolButton* modifyButton = new QToolButton(table);
+        HoverToolButton* modifyButton = new HoverToolButton(table);
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
@@ -188,7 +188,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
 
         QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
-        connect(modifyButton, &QToolButton::clicked, this, [=](){
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("care", necessary);
         });
 
@@ -230,7 +230,7 @@ void MainWindow::LoadMembers(QString year, QString search)
                                                    query.value(8).toString() + "€")); // amount
 
         // Modify icon
-        QToolButton* modifyButton = new QToolButton(table);
+        HoverToolButton* modifyButton = new HoverToolButton(table);
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
@@ -240,7 +240,7 @@ void MainWindow::LoadMembers(QString year, QString search)
 
         QStringList necessary = {query.value(0).toString(), query.value(1).toString()};
 
-        connect(modifyButton, &QToolButton::clicked, this, [=](){
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("members", necessary);
         });
 
@@ -279,7 +279,7 @@ void MainWindow::LoadRedList(QString search){
 
         // Delete icon
         table->setItem(nb, 3, new QTableWidgetItem(""));
-        QToolButton* deleteButton = new QToolButton(table);
+        HoverToolButton* deleteButton = new HoverToolButton(table);
         deleteButton->setIcon(QIcon("media/trash.svg"));
         deleteButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
@@ -288,7 +288,7 @@ void MainWindow::LoadRedList(QString search){
 
         QStringList necessary = {query.value(4).toString()};
 
-        connect(deleteButton, &QToolButton::clicked, this, [=](){
+        connect(deleteButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("redList", necessary);
         });
 
@@ -323,7 +323,7 @@ void MainWindow::LoadLost(QString search){
         table->setItem(nb, 7, new QTableWidgetItem(""));
 
         // Modify icon
-        QToolButton* modifyButton = new QToolButton(table);
+        HoverToolButton* modifyButton = new HoverToolButton(table);
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
@@ -332,7 +332,7 @@ void MainWindow::LoadLost(QString search){
 
         QStringList necessary = {query.value(1).toString(), query.value(5).toString(), query.value(11).toString()}; // name + date + id_people
 
-        connect(modifyButton, &QToolButton::clicked, this, [=](){
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("lost", necessary);
         });
 
@@ -362,7 +362,7 @@ void MainWindow::LoadVet(QString search){
         table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // reason
 
         // Modify icon
-        QToolButton* modifyButton = new QToolButton(table);
+        HoverToolButton* modifyButton = new HoverToolButton(table);
         modifyButton->setIcon(QIcon("media/modify.svg"));
         modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
@@ -372,7 +372,7 @@ void MainWindow::LoadVet(QString search){
 
         QStringList necessary = {query.value(0).toString(), query.value(4).toString()}; // date + id_dog
 
-        connect(modifyButton, &QToolButton::clicked, this, [=](){
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("vet", necessary);
         });
 

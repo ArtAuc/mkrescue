@@ -17,6 +17,7 @@
 #include "saveddata.h"
 #include "settingspage.h"
 #include "simplecrypt.h"
+#include "hovertoolbutton.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

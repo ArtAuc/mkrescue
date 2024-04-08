@@ -87,8 +87,8 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
         "WHERE strftime('%Y', ES_registry.date_prov) = :year "
-        "AND (People_prov.last_name LIKE :searche OR People_prov.first_name LIKE :search OR People_prov.phone LIKE :search "
-        "OR People_dest.last_name LIKE :searche OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
+        "AND (People_prov.last_name LIKE :search OR People_prov.first_name LIKE :search OR People_prov.phone LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
         ")"
@@ -132,8 +132,8 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
         "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
         "LEFT JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
         "WHERE strftime('%Y', Care_registry.entry_date) = :year "
-        "AND (People_prov.last_name LIKE :searche OR People_prov.phone LIKE :search "
-        "OR People_dest.last_name LIKE :searche OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
+        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
+        "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search " +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
         ") "
@@ -247,7 +247,7 @@ QSqlQuery Database::GetLost(QString search, bool found) {
                           "People.id_people "
                           "FROM Lost "
                           "JOIN People ON People.id_people = Lost.id_people "
-                          "WHERE (People.last_name LIKE :searche OR People.phone LIKE :search OR identification LIKE :search OR name LIKE :search) ";
+                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search OR identification LIKE :search OR name LIKE :search) ";
 
     if(!found) // Remove dogs already found
         queryString += "AND found = 0 ";

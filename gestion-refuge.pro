@@ -37,6 +37,7 @@ HEADERS += \
     editdogwidget.h \
     editpage.h \
     editpeoplewidget.h \
+    hovertoolbutton.h \
     loginpage.h \
     mainwindow.h \
     menutree.h \
