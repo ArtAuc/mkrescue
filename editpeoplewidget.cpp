@@ -148,7 +148,7 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
             QString first_name = query.value(2).toString().isNull() ? "" : query.value(2).toString();
             QString phone = query.value(3).toString().isNull() ? "" : query.value(3).toString();
             QString email = query.value(4).toString().isNull() ? "" : query.value(4).toString();
-            QString address = query.value(5).toString().isNull() ? "" : query.value(5).toString();
+            QString address = query.value(5).toString().isNull() ? "" : crypto->decryptToString(query.value(5).toString());
 
             QStringList addressComponents = address.split("\n");
             if (addressComponents.size() == 3) {

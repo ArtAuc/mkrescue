@@ -24,7 +24,7 @@ void Database::Create()
     QSqlQuery query;
     HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS People ("
                "id_people INTEGER PRIMARY KEY,"
-               "last_name VARCHAR(255),"
+               "last_name TEXT,"
                "first_name VARCHAR(255),"
                "address TEXT,"
                "phone VARCHAR(20),"
@@ -292,4 +292,27 @@ void Database::CleanPeople(){
             HandleErrorExec(&query);
         }
     }
+}
+
+void Database::SetCrypto(SimpleCrypt *crypto){
+    this->crypto = crypto;
+    QSqlQuery query;
+    query.prepare("UPDATE People "
+                  "SET address = :empty "
+                  "WHERE id_people = -1");
+
+    query.bindValue(":empty", crypto->encryptToString(QString("\n\n ")));
+    HandleErrorExec(&query);
+
+    HandleErrorExec(&query, "SELECT address "
+                            "FROM People "
+                            "WHERE id_people = -2");
+    query.next();
+    if(query.value(0).toString() == "\n\n ")
+        query.prepare("UPDATE People "
+                      "SET address = :empty "
+                      "WHERE id_people = -2");
+
+        query.bindValue(":empty", crypto->encryptToString(QString("\n\n ")));
+        HandleErrorExec(&query);
 }

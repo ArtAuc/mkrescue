@@ -16,6 +16,7 @@
 #include <QRegularExpression>
 #include <QTimer>
 #include <QRegularExpressionValidator>
+#include "simplecrypt.h"
 
 #include "utils.h"
 
@@ -28,6 +29,7 @@ public:
     void showEvent(QShowEvent *event) override;
     QString GetOldId(){ return oldId; }
     void SetOldId(QString oldId){ this->oldId = oldId; }
+    void SetCrypto(SimpleCrypt *crypto){this->crypto = crypto;}
 
 public slots:
     void FillOtherFields(QString s);
@@ -35,6 +37,7 @@ public slots:
 
 private:
     QString oldId = "-1";
+    SimpleCrypt *crypto;
 };
 
 #endif // EDITPEOPLEWIDGET_H

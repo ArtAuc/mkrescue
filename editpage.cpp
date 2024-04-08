@@ -51,6 +51,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
                       GetField("city" + nameEnd, parent);
     QString old_id_people = parent->findChild<EditPeopleWidget*>(nameEnd)->GetOldId();
 
+
     QSqlQuery query;
 
     // If already modified, do not ask again
@@ -63,10 +64,11 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
                "AND first_name = '" + first_name + "' "
                "AND phone = '" + phone + "' "
                "AND email = '" + email + "' "
-               "AND address = '" + address + "';");
+               "AND address = '" + crypto->encryptToString(address) + "';");
 
-    if (query.next())
+    if(query.next())
         return query.value(0).toString();
+
     query.clear();
 
     if(old_id_people.toInt() > 0){
@@ -154,7 +156,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
             query.bindValue(":id", old_id_people);
             query.bindValue(":last_name", last_name);
             query.bindValue(":first_name", first_name);
-            query.bindValue(":address", address);
+            query.bindValue(":address", crypto->encryptToString(address));
             query.bindValue(":phone", phone);
             query.bindValue(":email", email);
 
@@ -178,7 +180,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
     query.bindValue(":id", newId);
     query.bindValue(":last_name", last_name);
     query.bindValue(":first_name", first_name);
-    query.bindValue(":address", address);
+    query.bindValue(":address", crypto->encryptToString(address));
     query.bindValue(":phone", phone);
     query.bindValue(":email", email);
     HandleErrorExec(&query);
@@ -454,6 +456,8 @@ void EditPage::AssignIdPeople(QWidget *currentPage){
 
     QSqlQuery query;
     for(EditPeopleWidget *editPeopleWidget : currentPage->findChildren<EditPeopleWidget*>()){
+        editPeopleWidget->SetCrypto(crypto);
+
         query.prepare("SELECT id_people "
                       "FROM People "
                       "WHERE last_name = :last_name "
@@ -473,7 +477,7 @@ void EditPage::AssignIdPeople(QWidget *currentPage){
 
         query.bindValue(":last_name", lastName);
         query.bindValue(":first_name", firstName);
-        query.bindValue(":address", address);
+        query.bindValue(":address", crypto->encryptToString(address));
         query.bindValue(":phone", phone);
         query.bindValue(":email", email);
 

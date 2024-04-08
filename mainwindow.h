@@ -16,6 +16,7 @@
 #include "registry.h"
 #include "saveddata.h"
 #include "settingspage.h"
+#include "simplecrypt.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -63,5 +64,6 @@ private:
     QList<QToolButton*> modifyButtons;
     int rowClicked;
     SavedData savedData;
+    SimpleCrypt *crypto;
 };
 #endif // MAINWINDOW_H

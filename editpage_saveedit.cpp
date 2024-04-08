@@ -17,7 +17,7 @@ void EditPage::FillPeopleWidget(QString nameEnd, QString lastName, QString first
     SetField("lastName" + nameEnd, lastName, parent);
     SetField("firstName" + nameEnd, firstName, parent);
 
-    QStringList addressList = AddressList(address);
+    QStringList addressList = AddressList(crypto->decryptToString(address));
     SetField("address" + nameEnd, addressList[0], parent);
     SetField("address2" + nameEnd, addressList[1], parent);
     SetField("postalCode" + nameEnd, addressList[2], parent);

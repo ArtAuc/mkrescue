@@ -119,11 +119,15 @@ void EditPage::NextDestPage(){
     }
 }
 
-void EditPage::AddDestPage(){
+void EditPage::AddDestPage(){    
     QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
     DestinationPage* page = new DestinationPage(QString::number(destinationsNumber + 1));
     destStacked->insertWidget(destinationsNumber, page);
     page->ChangeDestType("");
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), page, SLOT(ChangeDestType(QString)));
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
+
+    for(EditPeopleWidget *c : findChildren<EditPeopleWidget*>()){
+        c->SetCrypto(crypto);
+    }
 }

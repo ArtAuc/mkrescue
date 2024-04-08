@@ -14,6 +14,7 @@
 #include <QMessageBox>
 
 #include "utils.h"
+#include "simplecrypt.h"
 
 class SettingsPage : public QWidget
 {
@@ -27,6 +28,8 @@ public:
         QWidget::showEvent(event);
         connect(findChild<QPushButton*>("saveSettingsButton"), &QPushButton::clicked, this, &SettingsPage::SaveSettings);
     }
+
+    void SetCrypto(SimpleCrypt *crypto){this->crypto = crypto;}
 
     void resizeEvent(QResizeEvent *event) override{
         QWidget::resizeEvent(event);
@@ -77,7 +80,7 @@ public:
         if(query.next()){
             SetField("nameShelterEdit", query.value(0).toString(), this);
             SetField("phoneShelterEdit", query.value(1).toString(), this);
-            QStringList addressList = AddressList(query.value(2).toString());
+            QStringList addressList = AddressList(crypto->decryptToString(query.value(2).toString()));
             SetField("addressShelterEdit", addressList[0], this);
             SetField("address2ShelterEdit", addressList[1], this);
             SetField("postalCodeShelterEdit", addressList[2], this);
@@ -94,14 +97,17 @@ public slots:
                       "VALUES (-2, :name, :phone, :address, '', '');");
         query.bindValue(":name", GetField("nameShelterEdit", this));
         query.bindValue(":phone", GetField("phoneShelterEdit", this));
-        query.bindValue(":address", GetField("addressShelterEdit", this) + "\n" +
-                                    GetField("address2ShelterEdit", this) + "\n" +
-                                    GetField("postalCodeShelterEdit", this) + " " + GetField("cityShelterEdit", this));
+        query.bindValue(":address",crypto->encryptToString(GetField("addressShelterEdit", this) + "\n" +
+                                                            GetField("address2ShelterEdit", this) + "\n" +
+                                                            GetField("postalCodeShelterEdit", this) + " " + GetField("cityShelterEdit", this)));
 
         if(!query.exec()){
             QMessageBox::critical(nullptr, "Erreur", "Erreur dans la sauvegarde des informations sur le refuge");
         }
     }
+
+private:
+    SimpleCrypt *crypto;
 };
 
 #endif // SETTINGSPAGE_H

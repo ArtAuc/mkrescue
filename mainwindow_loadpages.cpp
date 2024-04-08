@@ -37,6 +37,7 @@ void MainWindow::LoadDogCards(QString search){
         }
     }
 
+
     resizeEvent(nullptr);
 }
 
@@ -68,7 +69,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         else if (prov_type[0] == "Abandon")
             table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
                                                       query.value(3).toString() + " " + query.value(4).toString() + "\n" + //prov_lastname + prov_firstname
-                                                      query.value(5).toString().replace("\\n", "\n") + "\n" + // prov_address
+                                                      crypto->decryptToString(query.value(5).toString()).replace("\\n", "\n") + "\n" + // prov_address
                                                       query.value(6).toString() + "\n" + // prov_phone
                                                       query.value(7).toString()))); //prov_email
 
@@ -103,7 +104,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
 
                 destString = ClearUselessBreaks(p[1] + "\n" + // dest_type
                         p[2] + " " + p[3] + "\n" + //dest_lastname + dest_firstname
-                        p[4].replace("\\n", "\n") + "\n" + // dest_address
+                        crypto->decryptToString(p[4]).replace("\\n", "\n") + "\n" + // dest_address
                         p[5] + "\n" + // dest_phone
                         p[6]); //dest_email
             }
@@ -161,7 +162,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_care
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // entry_date
         table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + " " + query.value(3).toString() + "\n" + //prov_lastname + prov_firstname
-                                                  query.value(4).toString().replace("\\n", "\n") + "\n" + // prov_address
+                                                  crypto->decryptToString(query.value(4).toString()).replace("\\n", "\n") + "\n" + // prov_address
                                                   query.value(5).toString() + "\n" + // prov_phone
                                                   query.value(6).toString()))); //prov_email
         table->setItem(nb, 3, new QTableWidgetItem("Chien\n" + query.value(7).toString())); // sex
@@ -171,7 +172,7 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
         table->setItem(nb, 6, new QTableWidgetItem(query.value(11).toDate().toString("dd/MM/yyyy"))); // birth
         table->setItem(nb, 7, new QTableWidgetItem(query.value(12).toDate().toString("dd/MM/yyyy"))); // exit_date
         table->setItem(nb, 8, new QTableWidgetItem(ClearUselessBreaks(query.value(13).toString() + " " + query.value(14).toString() + "\n" + //dest_lastname + dest_firstname
-                                                  query.value(15).toString().replace("\\n", "\n") + "\n" + // dest_address
+                                                  crypto->decryptToString(query.value(15).toString()).replace("\\n", "\n") + "\n" + // dest_address
                                                   query.value(16).toString() + "\n" + // dest_phone
                                                   query.value(17).toString()))); //dest_email
 
@@ -220,7 +221,7 @@ void MainWindow::LoadMembers(QString year, QString search)
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_adhesion
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date
         table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + "\n" + query.value(3).toString()))); //lastname + firstname
-        table->setItem(nb, 3, new QTableWidgetItem(ClearUselessBreaks(query.value(4).toString().replace("\\n", "\n")))); // address
+        table->setItem(nb, 3, new QTableWidgetItem(ClearUselessBreaks(crypto->decryptToString(query.value(4).toString()).replace("\\n", "\n")))); // address
         table->setItem(nb, 4, new QTableWidgetItem(query.value(5).toString())); // phone
         table->setItem(nb, 5, new QTableWidgetItem(query.value(6).toString())); // email
         QDate endDate = query.value(1).toDate().addYears(1);

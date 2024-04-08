@@ -130,6 +130,19 @@ void MainWindow::ToggleLock(QByteArray h){
             return;
 
         // Login sucessful
+        crypto = new SimpleCrypt;
+        quint64 key;
+        QDataStream stream(&h, QIODevice::ReadOnly);
+        stream >> key;
+        crypto->setKey(key);
+
+        db.SetCrypto(crypto);
+        ui->settingsPage->SetCrypto(crypto);
+
+        for(EditPage *c : findChildren<EditPage*>()){
+            c->SetCrypto(crypto);
+        }
+
         ChangePage(ui->menuTree->topLevelItem(0));
         ui->topHorizontalWidget->show();
         ui->menuTree->show();

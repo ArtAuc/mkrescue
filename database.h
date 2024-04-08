@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include "utils.h"
+#include "simplecrypt.h"
 
 class Database
 {
@@ -24,10 +25,11 @@ public:
     void CleanDogs();
     void CleanPeople();
     void MakeRedList();
+    void SetCrypto(SimpleCrypt *crypto);
 
  private:
     QSqlDatabase _database;
-
+    SimpleCrypt *crypto;
 };
 
 #endif // DATABASE_H

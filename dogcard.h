@@ -18,6 +18,7 @@
 
 #include "tristatecheckbox.h"
 #include "utils.h"
+#include "simplecrypt.h"
 
 class DogCard : public QFrame
 {

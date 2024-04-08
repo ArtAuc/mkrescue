@@ -26,7 +26,8 @@ SOURCES += \
     mainwindow_exportpdf.cpp \
     mainwindow_loadpages.cpp \
     registry.cpp \
-    saveddata.cpp
+    saveddata.cpp \
+    simplecrypt.cpp
 
 HEADERS += \
     database.h \
@@ -42,6 +43,7 @@ HEADERS += \
     registry.h \
     saveddata.h \
     settingspage.h \
+    simplecrypt.h \
     tristatecheckbox.h \
     utils.h
 

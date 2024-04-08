@@ -4,6 +4,7 @@
 #include "destinationpage.h"
 #include "editdogwidget.h"
 #include "utils.h"
+#include "simplecrypt.h"
 
 class EditPage : public QWidget
 {
@@ -15,6 +16,8 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     void AssignIdPeople(QWidget *page);
     void AssignIdDog(QWidget *page);
+    void SetCrypto(SimpleCrypt *crypto) {this->crypto = crypto;}
+    SimpleCrypt* GetCrypto() {return crypto;}
 
 public slots:
     void AddEntry();
@@ -52,6 +55,7 @@ private:
     QToolButton* removeButton;
     QStringList dealtIdPeople;
     QStringList dealtIdDog;
+    SimpleCrypt *crypto;
 };
 
 #endif // EDITPAGE_H
