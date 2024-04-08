@@ -138,6 +138,7 @@ void MainWindow::ToggleLock(QByteArray h){
 
         db.SetCrypto(crypto);
         ui->settingsPage->SetCrypto(crypto);
+        ui->loginPage->setContentsMargins(0,0,0,0);
 
         for(EditPage *c : findChildren<EditPage*>()){
             c->SetCrypto(crypto);
