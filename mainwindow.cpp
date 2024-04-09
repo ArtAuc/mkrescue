@@ -128,6 +128,7 @@ void MainWindow::InitEditWidgets(){
 void MainWindow::ToggleLock(QByteArray h){
     ui->topHorizontalWidget->hide();
     ui->menuTree->hide();
+    ui->menuLogoLabel->hide();
 
     if(h != ""){
         if(!savedData.HashExists()){ // New installation
@@ -156,6 +157,7 @@ void MainWindow::ToggleLock(QByteArray h){
         ChangePage(ui->menuTree->topLevelItem(0));
         ui->topHorizontalWidget->show();
         ui->menuTree->show();
+        ui->menuLogoLabel->show();
     }
 
 }
@@ -180,6 +182,8 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0).trimmed();
+    if(txt == "MouchkiNet")
+        txt = "Accueil";
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
@@ -239,6 +243,8 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
         ui->searchLine->setVisible(txt != "Accueil" && txt != "Paramètres");
     }
+
+
 
     resizeEvent(nullptr);
 }

@@ -7,6 +7,8 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 #include <QToolButton>
+#include <QFontDatabase>
+#include <QLabel>
 
 class MenuTree : public QTreeWidget
 {
@@ -24,6 +26,8 @@ public:
         palette.setColor(QPalette::Highlight, QColor("#45556c"));
         palette.setColor(QPalette::HighlightedText, Qt::white);
         setPalette(palette);
+
+        logo = QPixmap("media/logo_title_dark.png");
     }
 
     void collapseAllExcept(QString txt){
@@ -57,8 +61,15 @@ public slots:
         animation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 
-
 protected:
+    void showEvent(QShowEvent *event) override{
+        QTreeWidget::showEvent(event);
+
+        menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
+
+        resizeEvent(nullptr);
+    }
+
     void mouseMoveEvent(QMouseEvent *event) override {
         QTreeWidgetItem *item = itemAt(event->pos());
         if(lastHovered != nullptr){
@@ -71,19 +82,27 @@ protected:
         }
 
         lastHovered = item;
+
         QTreeWidget::mouseMoveEvent(event);
     }
 
     void resizeEvent(QResizeEvent *event) override {
         QTreeWidget::resizeEvent(event);
-        if(width() > 50){
+        if(width() > 10){
             QFont font = this->font();
-            font.setPointSize(width() * 0.05);
+            font.setPointSizeF(width() * 0.05);
             this->setFont(font);
 
             int iconSize = width() * 0.11;
             setIconSize(QSize(iconSize, iconSize));
         }
+
+        if(menuLogoLabel != nullptr){
+            menuLogoLabel->setPixmap(logo.scaled(width(), width(), Qt::KeepAspectRatio));
+            menuLogoLabel->setVisible(width() > 10);
+        }
+        else
+            menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
     }
 
     void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const override {
@@ -100,6 +119,8 @@ protected:
 private:
     QTreeWidgetItem* lastHovered = nullptr;
     int initialWidth = 300;
+    QLabel *menuLogoLabel = nullptr;
+    QPixmap logo;
 };
 
 #endif // MENUTREE_H

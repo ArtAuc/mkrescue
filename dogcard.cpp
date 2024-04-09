@@ -449,7 +449,8 @@ void DogCard::HandlePrescription(){
     msgBox.setWindowTitle("Ordonnances");
 
     QPushButton *addButton = msgBox.addButton("Ajouter", QMessageBox::AcceptRole);
-    QPushButton *browseButton = msgBox.addButton("Parcourir", QMessageBox::RejectRole);
+    QPushButton *browseButton = msgBox.addButton("Parcourir", QMessageBox::HelpRole);
+    QPushButton *cancelButton = msgBox.addButton("Annuler", QMessageBox::RejectRole);
 
     // Show the message box
     msgBox.exec();
@@ -459,4 +460,5 @@ void DogCard::HandlePrescription(){
         AddPrescription();
     else if (msgBox.clickedButton() == browseButton)
         OpenPrescriptionFolder();
+    else if(msgBox.clickedButton() == cancelButton);
 }
