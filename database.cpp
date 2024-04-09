@@ -267,6 +267,7 @@ void Database::CleanPeople(){
                                 "Red_list WHERE id_people",
                                 "Members WHERE id_people",
                                 "Lost WHERE id_people"
+                                "Adoption_demand WHERE id_people)"
                                };
 
     for(QString id : id_peoples){

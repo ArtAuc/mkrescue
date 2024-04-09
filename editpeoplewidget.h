@@ -25,7 +25,7 @@ class EditPeopleWidget : public QWidget
     Q_OBJECT
 public:
     explicit EditPeopleWidget(QWidget *parent = nullptr);
-    EditPeopleWidget(QString nameEnd, bool simplified = false);
+    EditPeopleWidget(QString nameEnd);
     void showEvent(QShowEvent *event) override;
     QString GetOldId(){ return oldId; }
     void SetOldId(QString oldId){ this->oldId = oldId; }

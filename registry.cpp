@@ -62,6 +62,12 @@ void Registry::showEvent(QShowEvent* event) {
         }
 
         horizontalPlacehold = findChild<QWidget*>(type + "HorizontalPlacehold");
+
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setFrameStyle(QFrame::NoFrame);
     }
 
 }

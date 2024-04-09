@@ -84,7 +84,7 @@ void MainWindow::InitEditWidgets(){
     }
     ui->entryTab2->layout()->addWidget(new EditDogWidget("EntryAnimalEdit"));
 
-    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit", true));
+    ui->redListEditPage->layout()->addWidget(new EditPeopleWidget("RedListEdit"));
 
     gridLayout = qobject_cast<QGridLayout*>(ui->careTab1->layout());
     if(gridLayout){
@@ -107,14 +107,14 @@ void MainWindow::InitEditWidgets(){
     }
 
 
-    ui->lostTab2->layout()->addWidget(new EditPeopleWidget("LostOwnerEdit", true));
+    ui->lostTab2->layout()->addWidget(new EditPeopleWidget("LostOwnerEdit"));
 
     gridLayout = qobject_cast<QGridLayout*>(ui->vetEditPage->layout());
     if(gridLayout){
         gridLayout->addWidget(new EditDogWidget("VetAnimalEdit"), gridLayout->rowCount(), 0, 1, 2);
     }
 
-    ui->adoptionDemandTab2->layout()->addWidget(new EditPeopleWidget("AdoptionDemandEdit", true));
+    ui->adoptionDemandTab2->layout()->addWidget(new EditPeopleWidget("AdoptionDemandEdit"));
 
 
     ui->careTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));

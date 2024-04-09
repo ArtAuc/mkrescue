@@ -447,6 +447,14 @@ void EditPage::RemoveCurrent(){
             query.bindValue(":id_dog", currentNecessary[1]);
         }
 
+        else if(lastType == "adoptionDemand"){
+            query.prepare("DELETE FROM adoptionDemand "
+                          "WHERE breed = :breed "
+                          "AND id_people = :id_people;");
+            query.bindValue(":breed", currentNecessary[0]);
+            query.bindValue(":id_people", currentNecessary[1]);
+        }
+
         HandleErrorExec(&query);
 
 

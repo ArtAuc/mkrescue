@@ -13,7 +13,7 @@ class LoginPage : public QWidget
     Q_OBJECT
 public:
     explicit LoginPage(QWidget *parent = nullptr) : QWidget(parent){
-        icon = QPixmap("media/logo.png");
+        icon = QPixmap("media/logo_title.png");
     }
 
 
