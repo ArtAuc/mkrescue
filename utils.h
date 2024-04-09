@@ -49,6 +49,7 @@ inline QString GetField(QString name, QWidget* parent){
     QObject *childObject = parent->findChild<QWidget*>(name);
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
+    QTextEdit *textEdit = qobject_cast<QTextEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
     QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox*>(childObject);
 
@@ -56,6 +57,8 @@ inline QString GetField(QString name, QWidget* parent){
         return dateEdit->date().toString("yyyy-MM-dd");
     else if (lineEdit)
         return lineEdit->text();
+    else if (textEdit)
+        return textEdit->toPlainText();
     else if (box)
         return box->currentText();
     else if (spinBox)

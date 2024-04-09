@@ -190,7 +190,7 @@ void EditPage::Edit(QString type, QStringList infos){
         currentPage = findChild<QWidget*>("adoptionDemandEditPage");
         findChild<QTabWidget*>("adoptionDemandTabWidget")->setCurrentIndex(0);
         if(infos.size() > 10){
-            currentNecessary.append(infos[9]); // infos
+            currentNecessary.append(infos[7]); // breed
             currentNecessary.append(infos[10]); // id_people
 
             // Chien
@@ -439,10 +439,11 @@ void EditPage::SaveEdit()
                                   "identification = :identification, "
                                   "sex = :sex, "
                                   "date = :date, "
-                                  "place = :place "
+                                  "place = :place, "
+                                  "id_people = :id_people"
                                   "WHERE name = :name_nec "
                                   "AND date = :date_nec "
-                                  "AND id_people = :id_people;";
+                                  "AND id_people = :id_nec;";
 
             QSqlQuery query;
             query.prepare(queryString);
@@ -454,9 +455,10 @@ void EditPage::SaveEdit()
             query.bindValue(":sex", sex);
             query.bindValue(":date", date);
             query.bindValue(":place", place);
+            query.bindValue(":id_people", id_people);
             query.bindValue(":name_nec", currentNecessary[0]);
             query.bindValue(":date_nec", currentNecessary[1]);
-            query.bindValue(":id_people", currentNecessary[2]);
+            query.bindValue(":id_nec", currentNecessary[2]);
             HandleErrorExec(&query);
         }
         else { // Creating
@@ -516,64 +518,52 @@ void EditPage::SaveEdit()
         }
     }
 
-    /*else if(lastType == "lost"){
-        QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
-        QString id_people = CreatePersonIfNeeded("LostOwnerEdit", lostEditPage);
-        QString species = GetField("speciesLostEdit", lostEditPage);
-        QString name = GetField("nameLostEdit", lostEditPage);
-        QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
-        QString description = GetField("descriptionLostEdit", lostEditPage);
-        QString identification = GetField("idLostEdit", lostEditPage);
-        QString sex = GetField("sexLostEdit", lostEditPage);
-        QString date = GetField("lossDateEdit", lostEditPage);
-        QString place = GetField("lossPlaceEdit", lostEditPage);
+    else if(lastType == "adoptionDemand"){
+        QWidget *adoptionDemandEditPage = findChild<QWidget*>("adoptionDemandEditPage");
+        QString id_people = CreatePersonIfNeeded("AdoptionDemandEdit", adoptionDemandEditPage);
+        QString age = GetField("ageAdoptionDemandEdit", adoptionDemandEditPage);
+        QString satisfied = adoptionDemandEditPage->findChild<QCheckBox*>("satisfiedAdoptionDemandBox")->isChecked() ? "1" : "0";
+        QString breed = GetField("breedAdoptionDemandEdit", adoptionDemandEditPage);
+        QString sex = GetField("sexAdoptionDemandEdit", adoptionDemandEditPage);
+        QString infos = GetField("infosAdoptionDemandEdit", adoptionDemandEditPage);
 
         if (!currentNecessary.isEmpty()) { // Modifying
-            QString queryString = "UPDATE Lost "
-                                  "SET species = :species, "
-                                  "name = :name, "
-                                  "found = :found, "
-                                  "description = :description, "
-                                  "identification = :identification, "
-                                  "sex = :sex, "
-                                  "date = :date, "
-                                  "place = :place "
-                                  "WHERE name = :name_nec "
-                                  "AND date = :date_nec "
-                                  "AND id_people = :id_people;";
+            QString queryString = "UPDATE Adoption_demand "
+                                  "SET sex = :sex, "
+                                  "age = :age, "
+                                  "breed = :breed, "
+                                  "infos = :infos, "
+                                  "id_people = :id_people, "
+                                  "satisfied = :satisfied "
+                                  "WHERE breed = :breed_nec "
+                                  "AND id_people = :id_nec;";
 
             QSqlQuery query;
             query.prepare(queryString);
-            query.bindValue(":species", species);
-            query.bindValue(":name", name);
-            query.bindValue(":found", found);
-            query.bindValue(":description", description);
-            query.bindValue(":identification", identification);
             query.bindValue(":sex", sex);
-            query.bindValue(":date", date);
-            query.bindValue(":place", place);
-            query.bindValue(":name_nec", currentNecessary[0]);
-            query.bindValue(":date_nec", currentNecessary[1]);
-            query.bindValue(":id_people", currentNecessary[2]);
+            query.bindValue(":age", age);
+            query.bindValue(":breed", breed);
+            query.bindValue(":infos", infos);
+            query.bindValue(":satisfied", satisfied);
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":breed_nec", currentNecessary[0]);
+            query.bindValue(":id_nec", currentNecessary[1]);
             HandleErrorExec(&query);
         }
         else { // Creating
             QSqlQuery query;
-            query.prepare("INSERT INTO Lost (id_people, species, name, found, description, identification, sex, date, place) "
-                          "VALUES (:id_people, :species, :name, :found, :description, :identification, :sex, :date, :place)");
+            query.prepare("INSERT INTO Adoption_demand (id_people, sex, breed, age, satisfied, infos) "
+                          "VALUES (:id_people, :sex, :breed, :age, :satisfied, :infos)");
 
             query.bindValue(":id_people", id_people);
-            query.bindValue(":species", species);
-            query.bindValue(":name", name);
-            query.bindValue(":found", found);
-            query.bindValue(":description", description);
-            query.bindValue(":identification", identification);
             query.bindValue(":sex", sex);
-            query.bindValue(":date", date);
-            query.bindValue(":place", place);
+            query.bindValue(":breed", breed);
+            query.bindValue(":age", age);
+            query.bindValue(":satisfied", satisfied);
+            query.bindValue(":infos", infos);
             HandleErrorExec(&query);
         }
-    }*/
+    }
 
 
     QuitEdit();

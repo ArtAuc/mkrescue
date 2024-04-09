@@ -391,7 +391,7 @@ void MainWindow::LoadAdoptionDemand(QString search){
     table->setRowCount(0);
     modifyButtons.clear();
 
-    QSqlQuery query = db.GetAdoptionDemand(search, ui->satisfiedCheckbox->isChecked());
+    QSqlQuery query = db.GetAdoptionDemand(search, ui->satisfiedCheckBox->isChecked());
 
     while(query.next() && query.record().count() > 0)
     {
@@ -413,7 +413,7 @@ void MainWindow::LoadAdoptionDemand(QString search){
         table->item(nb, 6)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 6, modifyButton);
 
-        QStringList necessary = {query.value(6).toString(), query.value(7).toString()}; // infos + id_people
+        QStringList necessary = {query.value(5).toString(), query.value(7).toString()}; // breed + id_people
 
         connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("adoptionDemand", necessary);

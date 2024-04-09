@@ -489,7 +489,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>9</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -2464,7 +2464,7 @@ QCheckBox::indicator:unchecked{
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_14">
             <item>
-             <widget class="QCheckBox" name="satisfiedCheckbox">
+             <widget class="QCheckBox" name="satisfiedCheckBox">
               <property name="styleSheet">
                <string notr="true">QCheckBox:checked{
 	background-color:#3b4b64;

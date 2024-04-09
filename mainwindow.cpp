@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->membersAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddMember()));
     connect(ui->lostAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddLost()));
     connect(ui->vetAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddVet()));
+    connect(ui->adoptionDemandAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddAdoptionDemand()));
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
     connect(ui->foundLostBox, SIGNAL(clicked(bool)), this, SLOT(ToggleFoundBoxText()));
+    connect(ui->satisfiedAdoptionDemandBox, SIGNAL(clicked(bool)), this, SLOT(ToggleSatisfiedBoxText()));
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
     ui->reasonVetAnimalEdit->hide();
 
@@ -49,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->outCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->careCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->foundCheckBox, &QCheckBox::clicked, this, [this]() {LoadLost(ui->searchLine->text());});
-    connect(ui->satisfiedCheckbox, &QCheckBox::clicked, this, [this]() {LoadAdoptionDemand(ui->searchLine->text());});
+    connect(ui->satisfiedCheckBox, &QCheckBox::clicked, this, [this]() {LoadAdoptionDemand(ui->searchLine->text());});
 
 
     ui->entryRegistryPage->SetType("entry");
@@ -163,6 +165,13 @@ void MainWindow::ToggleFoundBoxText(){
     if(!ui->foundLostBox->isChecked())
         newText = "Non Retrouvé";
     ui->foundLostBox->setText(newText);
+}
+
+void MainWindow::ToggleSatisfiedBoxText(){
+    QString newText = "Satisfaite";
+    if(!ui->satisfiedAdoptionDemandBox->isChecked())
+        newText = "Non Satisfaite";
+    ui->satisfiedAdoptionDemandBox->setText(newText);
 }
 
 
@@ -292,6 +301,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->outCheckbox->setFont(checkboxFont);
     checkboxFont.setPointSize(0.01 * ui->lostPage->width());
     ui->foundCheckBox->setFont(checkboxFont);
+    checkboxFont.setPointSize(0.01 * ui->adoptionDemandPage->width());
+    ui->satisfiedCheckBox->setFont(checkboxFont);
 }
 
 void MainWindow::ToggleModifyButtons()
@@ -492,7 +503,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                       "People.id_people "
                       "FROM Adoption_demand "
                       "JOIN People ON People.id_people = Adoption_demand.id_people "
-                      "WHERE Adoption_demand.infos = '" + necessary[0] +
+                      "WHERE Adoption_demand.breed = '" + necessary[0] +
                       "' AND People.id_people = " + necessary[1]);
 
         HandleErrorExec(&query);

@@ -50,6 +50,7 @@ public slots:
     void SelectDogCard();
     void UnselectDogCard();
     void ToggleFoundBoxText();
+    void ToggleSatisfiedBoxText();
     void ToggleReasonEdit();
     void ToggleLock(QByteArray h = NULL);
 
