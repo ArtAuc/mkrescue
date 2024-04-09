@@ -489,7 +489,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>9</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -588,8 +588,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>969</width>
-               <height>558</height>
+               <width>68</width>
+               <height>84</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -838,7 +838,7 @@ QLabel{
 	qproperty-alignment: AlignBottom
 }
 
-QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
+QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox, QTextEdit {
 	border: 2px solid #e7e9ed;
 	border-radius: 5px;
 	font-weight:normal;
@@ -876,7 +876,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1220,6 +1220,128 @@ QTabBar::tab:selected {
                   <string>Propriétaire</string>
                  </attribute>
                  <layout class="QVBoxLayout" name="verticalLayout_14"/>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="adoptionDemandEditPage">
+             <layout class="QVBoxLayout" name="verticalLayout_19">
+              <item>
+               <widget class="QTabWidget" name="adoptionDemandTabWidget">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="adoptionDemandTab1">
+                 <attribute name="title">
+                  <string>Chien</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_12">
+                  <item row="0" column="0" colspan="2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_12">
+                    <item>
+                     <widget class="QCheckBox" name="satisfiedAdoptionDemandBox">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Satisfaite</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="4" column="0" colspan="2">
+                   <layout class="QVBoxLayout" name="infosAdoptionDemandEditLayout">
+                    <item>
+                     <widget class="QLabel" name="infosAdoptionDemandEditLabel">
+                      <property name="text">
+                       <string>INFORMATIONS COMPLÉMENTAIRES</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QTextEdit" name="infosAdoptionDemandEdit">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="0">
+                   <layout class="QVBoxLayout" name="sexAdoptionDemandEditLayout">
+                    <item>
+                     <widget class="QLabel" name="sexAdoptionDemandEditLabel">
+                      <property name="text">
+                       <string>SEXE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="sexAdoptionDemandEdit">
+                      <item>
+                       <property name="text">
+                        <string>Mâle</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Femelle</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="1">
+                   <layout class="QVBoxLayout" name="ageAdoptionDemandEditLayout">
+                    <item>
+                     <widget class="QLabel" name="ageAdoptionDemandEditLabel">
+                      <property name="text">
+                       <string>ÂGE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="ageAdoptionDemandEdit">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <layout class="QVBoxLayout" name="breedAdoptionDemandEditLayout">
+                    <item>
+                     <widget class="QLabel" name="breedAdoptionDemandEditLabel">
+                      <property name="text">
+                       <string>RACE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="breedAdoptionDemandEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="adoptionDemandTab2">
+                 <attribute name="title">
+                  <string>Personne</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_18"/>
                 </widget>
                </widget>
               </item>
@@ -1859,7 +1981,7 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
              <string>✅ Données sauvegardées</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+             <set>Qt::AlignBottom</set>
             </property>
            </widget>
           </item>
@@ -2340,6 +2462,49 @@ QCheckBox::indicator:unchecked{
            <number>0</number>
           </property>
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <widget class="QCheckBox" name="satisfiedCheckbox">
+              <property name="styleSheet">
+               <string notr="true">QCheckBox:checked{
+	background-color:#3b4b64;
+}
+
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray;
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
+}
+
+QCheckBox{
+	margin-bottom:10px;
+}</string>
+              </property>
+              <property name="text">
+               <string>Satisfaites</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="adoptionDemandLabelLayout">
             <property name="spacing">
              <number>0</number>
@@ -2456,7 +2621,7 @@ color:#212834;</string>
             </column>
             <column>
              <property name="text">
-              <string> </string>
+              <string/>
              </property>
             </column>
            </widget>

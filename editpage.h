@@ -26,6 +26,7 @@ public slots:
     void AddRedList();
     void AddLost();
     void AddVet();
+    void AddAdoptionDemand();
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
     void SaveEdit();

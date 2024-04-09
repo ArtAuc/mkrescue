@@ -391,7 +391,7 @@ void MainWindow::LoadAdoptionDemand(QString search){
     table->setRowCount(0);
     modifyButtons.clear();
 
-    QSqlQuery query = db.GetAdoptionDemand(search);
+    QSqlQuery query = db.GetAdoptionDemand(search, ui->satisfiedCheckbox->isChecked());
 
     while(query.next() && query.record().count() > 0)
     {

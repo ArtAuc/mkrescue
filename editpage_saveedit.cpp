@@ -186,6 +186,28 @@ void EditPage::Edit(QString type, QStringList infos){
         }
     }
 
+    else if (type == "adoptionDemand"){
+        currentPage = findChild<QWidget*>("adoptionDemandEditPage");
+        findChild<QTabWidget*>("adoptionDemandTabWidget")->setCurrentIndex(0);
+        if(infos.size() > 10){
+            currentNecessary.append(infos[9]); // infos
+            currentNecessary.append(infos[10]); // id_people
+
+            // Chien
+            SetField("sexAdoptionDemandEdit", infos[5], currentPage);
+            SetField("ageAdoptionDemandEdit", infos[6], currentPage);
+            SetField("breedAdoptionDemandEdit", infos[7], currentPage);
+            SetField("infosAdoptionDemandEdit", infos[9], currentPage);
+            QCheckBox *satisfiedAdoptionDemandBox = currentPage->findChild<QCheckBox*>("satisfiedAdoptionDemandBox");
+            satisfiedAdoptionDemandBox->setChecked(infos[8] == "1");
+            satisfiedAdoptionDemandBox->setText(QString((infos[8] == "1") ? "" : "Non ") + "Satisfaite");
+
+            // Personne
+            FillPeopleWidget("AdoptionDemandEdit", infos[0], infos[1], infos[2], infos[3], infos[4], currentPage);
+        }
+    }
+
+
     AssignIdPeople(currentPage);
     AssignIdDog(currentPage);
 }
@@ -493,6 +515,65 @@ void EditPage::SaveEdit()
             HandleErrorExec(&query);
         }
     }
+
+    /*else if(lastType == "lost"){
+        QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
+        QString id_people = CreatePersonIfNeeded("LostOwnerEdit", lostEditPage);
+        QString species = GetField("speciesLostEdit", lostEditPage);
+        QString name = GetField("nameLostEdit", lostEditPage);
+        QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
+        QString description = GetField("descriptionLostEdit", lostEditPage);
+        QString identification = GetField("idLostEdit", lostEditPage);
+        QString sex = GetField("sexLostEdit", lostEditPage);
+        QString date = GetField("lossDateEdit", lostEditPage);
+        QString place = GetField("lossPlaceEdit", lostEditPage);
+
+        if (!currentNecessary.isEmpty()) { // Modifying
+            QString queryString = "UPDATE Lost "
+                                  "SET species = :species, "
+                                  "name = :name, "
+                                  "found = :found, "
+                                  "description = :description, "
+                                  "identification = :identification, "
+                                  "sex = :sex, "
+                                  "date = :date, "
+                                  "place = :place "
+                                  "WHERE name = :name_nec "
+                                  "AND date = :date_nec "
+                                  "AND id_people = :id_people;";
+
+            QSqlQuery query;
+            query.prepare(queryString);
+            query.bindValue(":species", species);
+            query.bindValue(":name", name);
+            query.bindValue(":found", found);
+            query.bindValue(":description", description);
+            query.bindValue(":identification", identification);
+            query.bindValue(":sex", sex);
+            query.bindValue(":date", date);
+            query.bindValue(":place", place);
+            query.bindValue(":name_nec", currentNecessary[0]);
+            query.bindValue(":date_nec", currentNecessary[1]);
+            query.bindValue(":id_people", currentNecessary[2]);
+            HandleErrorExec(&query);
+        }
+        else { // Creating
+            QSqlQuery query;
+            query.prepare("INSERT INTO Lost (id_people, species, name, found, description, identification, sex, date, place) "
+                          "VALUES (:id_people, :species, :name, :found, :description, :identification, :sex, :date, :place)");
+
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":species", species);
+            query.bindValue(":name", name);
+            query.bindValue(":found", found);
+            query.bindValue(":description", description);
+            query.bindValue(":identification", identification);
+            query.bindValue(":sex", sex);
+            query.bindValue(":date", date);
+            query.bindValue(":place", place);
+            HandleErrorExec(&query);
+        }
+    }*/
 
 
     QuitEdit();

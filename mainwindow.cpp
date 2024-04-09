@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->outCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->careCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->foundCheckBox, &QCheckBox::clicked, this, [this]() {LoadLost(ui->searchLine->text());});
+    connect(ui->satisfiedCheckbox, &QCheckBox::clicked, this, [this]() {LoadAdoptionDemand(ui->searchLine->text());});
 
 
     ui->entryRegistryPage->SetType("entry");
@@ -111,11 +112,15 @@ void MainWindow::InitEditWidgets(){
         gridLayout->addWidget(new EditDogWidget("VetAnimalEdit"), gridLayout->rowCount(), 0, 1, 2);
     }
 
+    ui->adoptionDemandTab2->layout()->addWidget(new EditPeopleWidget("AdoptionDemandEdit", true));
+
 
     ui->careTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->entryTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->lostTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->lostTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->adoptionDemandTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->adoptionDemandTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 
 void MainWindow::ToggleLock(QByteArray h){
@@ -471,6 +476,30 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         for(int i = 0; i < query.record().count(); i++)
             infos.append(query.value(i).toString());
 
+    }
+
+    else if(type == "adoptionDemand"){
+        query.prepare("SELECT People.last_name, "
+                      "People.first_name, "
+                      "People.address, "
+                      "People.phone, "
+                      "People.email, "
+                      "Adoption_demand.sex, "
+                      "Adoption_demand.age, "
+                      "Adoption_demand.breed, "
+                      "Adoption_demand.satisfied, "
+                      "Adoption_demand.infos, "
+                      "People.id_people "
+                      "FROM Adoption_demand "
+                      "JOIN People ON People.id_people = Adoption_demand.id_people "
+                      "WHERE Adoption_demand.infos = '" + necessary[0] +
+                      "' AND People.id_people = " + necessary[1]);
+
+        HandleErrorExec(&query);
+        query.next();
+
+        for(int i = 0; i < query.record().count(); i++)
+            infos.append(query.value(i).toString());
     }
 
 

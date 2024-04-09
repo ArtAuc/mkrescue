@@ -79,6 +79,7 @@ void Database::Create()
                "sex VARCHAR(10),"
                "breed VARCHAR(100),"
                "age VARCHAR(50),"
+               "satisfied BOOLEAN,"
                "infos TEXT,"
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
@@ -308,11 +309,12 @@ void Database::SetCrypto(SimpleCrypt *crypto){
                             "FROM People "
                             "WHERE id_people = -2");
     query.next();
-    if(query.value(0).toString() == "\n\n ")
+    if(query.value(0).toString() == "\n\n "){
         query.prepare("UPDATE People "
                       "SET address = :empty "
                       "WHERE id_people = -2");
 
         query.bindValue(":empty", crypto->encryptToString(QString("\n\n ")));
         HandleErrorExec(&query);
+    }
 }

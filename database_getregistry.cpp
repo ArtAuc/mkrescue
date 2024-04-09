@@ -283,7 +283,7 @@ QSqlQuery Database::GetVet(QString search) {
     return query;
 }
 
-QSqlQuery Database::GetAdoptionDemand(QString search) {
+QSqlQuery Database::GetAdoptionDemand(QString search, bool satisfied) {
     QSqlQuery query;
     QString queryString = "SELECT People.last_name, "
                           "People.first_name, "
@@ -295,10 +295,14 @@ QSqlQuery Database::GetAdoptionDemand(QString search) {
                           "People.id_people "
                           "FROM Adoption_demand "
                           "JOIN People ON People.id_people = Adoption_demand.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR Adoption_demand.sex LIKE :search OR Adoption_demand.breed LIKE :search);";
+                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR Adoption_demand.sex LIKE :search OR Adoption_demand.breed LIKE :search)";
 
+
+    if(!satisfied) // Remove dogs already found
+        queryString += " AND Adoption_demand.satisfied = 0;";
 
     query.prepare(queryString);
+    query.bindValue(":search", search + "%");
     query.bindValue(":search", search + "%");
 
     HandleErrorExec(&query);

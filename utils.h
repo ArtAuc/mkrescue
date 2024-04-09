@@ -22,24 +22,25 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QCheckBox>
+#include <QTextEdit>
 
 
 inline void SetField(QString name, QString value, QWidget* parent){
     QObject *childObject = parent->findChild<QWidget*>(name);
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
+    QTextEdit *textEdit = qobject_cast<QTextEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
     QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox*>(childObject);
 
     if(dateEdit)
         dateEdit->setDate(QDate::fromString(value, "yyyy-MM-dd"));
-
     else if (lineEdit)
         lineEdit->setText(value);
-
+    else if (textEdit)
+        textEdit->setText(value);
     else if (box)
         box->setCurrentText(value);
-
     else if (spinBox)
         spinBox->setValue(value.toDouble());
 }
