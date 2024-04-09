@@ -65,9 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lostPage->SetType("lost");
     ui->vetPage->SetType("vet");
     ui->adoptionDemandPage->SetType("adoptionDemand");
-
-
-    Clean();
 }
 
 
@@ -158,6 +155,8 @@ void MainWindow::ToggleLock(QByteArray h){
         ui->topHorizontalWidget->show();
         ui->menuTree->show();
         ui->menuLogoLabel->show();
+        Clean();
+        resizeEvent(nullptr);
     }
 
 }
@@ -182,8 +181,6 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0).trimmed();
-    if(txt == "MouchkiNet")
-        txt = "Accueil";
 
     QComboBox* box = ui->yearBox;
     QObject::disconnect(box, nullptr, this, nullptr);
@@ -328,6 +325,10 @@ void MainWindow::ToggleReasonEdit(){
 }
 
 void MainWindow::Search(QString search){
+    QDate dateSearch = QDate::fromString(search, "dd/MM/yyyy");
+    if(dateSearch.isValid())
+        search = dateSearch.toString("yyyy-MM-dd");
+
     QString pageName = ui->stackedWidget->currentWidget()->objectName();
     if(pageName == "entryRegistryPage")
         LoadEntryRegistry(ui->yearBox->currentText(), search);

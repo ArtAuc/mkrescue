@@ -43,6 +43,8 @@ void EditPage::ClearAllPages()
             lineEdit->clear();
         else if (QComboBox *box = qobject_cast<QComboBox*>(widget))
             box->setCurrentIndex(0);
+        else if (QTextEdit *textEdit = qobject_cast<QTextEdit*>(widget))
+            textEdit->clear();
     }
     ChangeEntryType("Abandon");
 

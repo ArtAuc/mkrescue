@@ -30,7 +30,7 @@ public:
 
  private:
     QSqlDatabase _database;
-    SimpleCrypt *crypto;
+    SimpleCrypt *crypto = nullptr;
 };
 
 #endif // DATABASE_H

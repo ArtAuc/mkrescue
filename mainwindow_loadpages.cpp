@@ -26,7 +26,8 @@ void MainWindow::LoadDogCards(QString search){
                                        query.value(2).toString(),
                                        query.value(3).toString(),
                                        query.value(4).toString(),
-                                       query.value(5).toString());
+                                       query.value(5).toString(),
+                                       crypto);
 
         layout->addWidget(dogCard, row, col);
 
@@ -61,7 +62,7 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
         table->insertRow(nb);
         table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString())); // id_ES
         table->setItem(nb, 1, new QTableWidgetItem(query.value(1).toDate().toString("dd/MM/yyyy"))); // date_prov
-        QStringList prov_type = query.value(2).toString().split("_|_");
+        QStringList prov_type = crypto->decryptToString(query.value(2).toString()).split("_|_");
         if(prov_type[0] == "Fourrière"){
             table->setItem(nb, 2, new QTableWidgetItem(ClearUselessBreaks(prov_type[0] + "\n" + // prov_type
                                                       prov_type[1]))); //place

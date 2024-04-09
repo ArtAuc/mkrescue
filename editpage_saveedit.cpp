@@ -56,7 +56,7 @@ void EditPage::Edit(QString type, QStringList infos){
             // Entrée
             SetField("entryDateEdit", infos[1], currentPage);
 
-            QString type_prov = infos[2].split("_|_")[0];
+            QString type_prov = crypto->decryptToString(infos[2]).split("_|_")[0];
             SetField("entryTypeBox", type_prov, currentPage);
 
             if(type_prov == "Fourrière"){
@@ -277,7 +277,7 @@ void EditPage::SaveEdit()
             query.bindValue(":id_dog", id_dog);
             query.bindValue(":date_prov", date_prov);
             query.bindValue(":id_people_prov", id_people_prov);
-            query.bindValue(":type_prov", type_prov);
+            query.bindValue(":type_prov", crypto->encryptToString(type_prov));
             query.bindValue(":death_cause", death_causes[0]);
             query.bindValue(":id_ES", currentNecessary[0]);
             query.bindValue(":current_date_prov", currentNecessary[1]);
@@ -288,7 +288,7 @@ void EditPage::SaveEdit()
 
             query.prepare(queryString);
             query.bindValue(":id_dog", id_dog);
-            query.bindValue(":type_prov", type_prov);
+            query.bindValue(":type_prov", crypto->encryptToString(type_prov));
             query.bindValue(":date_prov", date_prov);
             query.bindValue(":id_people_prov", id_people_prov);
             query.bindValue(":death_cause", death_causes[0]);

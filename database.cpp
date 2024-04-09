@@ -221,31 +221,32 @@ void Database::CleanDogs(){
 }
 
 void Database::MakeRedList(){
-    QSqlQuery query;
+    if(crypto){
+        QSqlQuery query;
 
-    HandleErrorExec(&query, "DELETE FROM Red_list "
-               "WHERE reason LIKE 'Abandon de % le __/__/____';");
+        HandleErrorExec(&query, "DELETE FROM Red_list "
+                   "WHERE reason LIKE 'Abandon de % le __/__/____';");
 
 
-    HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, date_prov "
-               "FROM ES_Registry "
-               "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
-               "WHERE type_prov = 'Abandon'");
+        HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, date_prov "
+                   "FROM ES_Registry "
+                   "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
+                   "WHERE type_prov = '" + crypto->encryptToString(QString("Abandon")) + "'");
 
-    QStringList id_peoples;
-    QStringList reasons;
-    while(query.next()){
-        id_peoples.append(query.value(0).toString());
-        reasons.append("Abandon de " + query.value(1).toString() + " le " + QDate::fromString(query.value(2).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
-    }
+        QStringList id_peoples;
+        QStringList reasons;
+        while(query.next()){
+            id_peoples.append(query.value(0).toString());
+            reasons.append("Abandon de " + query.value(1).toString() + " le " + QDate::fromString(query.value(2).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        }
 
-    for(int i = 0; i < reasons.length(); i++){
-        query.prepare("INSERT INTO Red_list (id_people, reason) "
-                      "VALUES (:id, :reason)");
-        query.bindValue(":id", id_peoples[i]);
-        query.bindValue(":reason", reasons[i]);
-        HandleErrorExec(&query);
-
+        for(int i = 0; i < reasons.length(); i++){
+            query.prepare("INSERT INTO Red_list (id_people, reason) "
+                          "VALUES (:id, :reason)");
+            query.bindValue(":id", id_peoples[i]);
+            query.bindValue(":reason", reasons[i]);
+            HandleErrorExec(&query);
+        }
     }
 }
 

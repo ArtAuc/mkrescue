@@ -1,7 +1,8 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info2, QString description, QString info1) : DogCard(parent)
+DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info2, QString description, QString info1, SimpleCrypt *crypto) : DogCard(parent)
 {
+    this->crypto = crypto;
     this->chip = chip;
     this->dogName = name;
     mainWindow = parent;
@@ -57,7 +58,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     QString info1String;
     if(typeInfo == "current" || typeInfo == "out"){
         QStringList splitted = info1.split("_|_");
-        QString type_prov = splitted[1];
+        QString type_prov = crypto->decryptToString(splitted[1]);
         QString date_prov = splitted[0];
         info1String = type_prov + " : ";
         info1String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
@@ -332,14 +333,16 @@ void DogCard::CreateHistory(){
         QLabel* histLabel = new QLabel();
         QString colorString;
         QString dateString(QDate::fromString(query.value(4).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        QString type_prov = query.value(0).toString();
         if(type == "ES"){
-            if(query.value(0).toString().startsWith("Fourrière_|_"))
+            type_prov = crypto->decryptToString(type_prov);
+            if(type_prov.startsWith("Fourrière_|_"))
                 histLabel->setText(dateString + " : <b>Fourrière</b> (" +
-                               query.value(0).toString().split("_|_")[1] + ")");
+                               type_prov.split("_|_")[1] + ")");
 
             else
                 histLabel->setText(dateString + " : <b>" +
-                               query.value(0).toString() + "</b> (" +
+                               type_prov + "</b> (" +
                                (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
             colorString = "#3b4b64";
         }

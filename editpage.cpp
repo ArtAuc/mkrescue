@@ -85,7 +85,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
                         "WHERE id_people_prov = " + old_id_people + ";");
 
         while(message.count("\n") < 10 && query.next()){
-            message += "Registre E/S : " + query.value(0).toString().split("_|_")[0] + " (" + query.value(1).toString() + ")\n";
+            message += "Registre E/S : " + crypto->decryptToString(query.value(0).toString()).split("_|_")[0] + " (" + query.value(1).toString() + ")\n";
         }
 
         // Care_registry
@@ -233,7 +233,7 @@ QString EditPage::CreateDogIfNeeded(QString nameEnd, QWidget *parent) {
                         "WHERE ES_registry.id_dog = " + old_id_dog + ";");
 
         while(message.count("\n") < 10 && query.next()){
-            message += "Registre E/S : " + query.value(0).toString().split("_|_")[0] + "\n";
+            message += "Registre E/S : " + crypto->decryptToString(query.value(0).toString()).split("_|_")[0] + "\n";
         }
 
         // Care_registry
@@ -393,6 +393,8 @@ void EditPage::RemoveCurrent(){
         message = "Voulez-vous supprimer cette entrée des animaux perdus ?";
     else if (lastType == "vet")
         message = "Voulez-vous supprimer ce RDV Vétérinaire ?";
+    else if (lastType == "adoptionDemand")
+        message = "Voulez-vous supprimer cette demande d'adoption ?";
 
     reply = QMessageBox::question(nullptr, "Confirmation de suppression", message,
                                               QMessageBox::Yes | QMessageBox::No);
@@ -448,7 +450,7 @@ void EditPage::RemoveCurrent(){
         }
 
         else if(lastType == "adoptionDemand"){
-            query.prepare("DELETE FROM adoptionDemand "
+            query.prepare("DELETE FROM Adoption_demand "
                           "WHERE breed = :breed "
                           "AND id_people = :id_people;");
             query.bindValue(":breed", currentNecessary[0]);
@@ -456,7 +458,6 @@ void EditPage::RemoveCurrent(){
         }
 
         HandleErrorExec(&query);
-
 
         QuitEdit();
     }

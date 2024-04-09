@@ -10,7 +10,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                           "    GROUP BY id_dog "
                           ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
                           "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
-                          "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
+                          "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
+                          "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr) "
                           "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') "
                           "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry)";
 
@@ -28,6 +29,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
                 "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date AND Destinations.id_people = LastDest.max_people_id "
                 "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
+                "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR Destinations.date = :exact OR Destinations.type = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr "
                 "AND NOT (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') "
                 "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry)";
 
@@ -44,7 +46,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 ") AS LastCare ON Dogs.id_dog = LastCare.id_dog "
                 "LEFT JOIN Care_registry ON Care_registry.id_dog = Care_registry.id_dog AND Care_registry.entry_date = LastCare.max_date "
                 "JOIN People ON Care_registry.id_people_prov = People.id_people "
-                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search)";
+                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
+                "OR Dogs.sex = :exact OR Dogs.description = :exact OR Dogs.birth = :exact OR LastCare.max_date = :exact OR People.last_name = :exact)";
     }
 
 
@@ -57,6 +60,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
+    query.bindValue(":exact_encr", crypto->encryptToString(search));
     HandleErrorExec(&query);
 
 
@@ -91,7 +96,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
-        ")"
+        " OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr OR ES_Registry.death_cause = :exact OR Destinations.date = :exact OR Destinations.type = :exact)"
         "GROUP BY Dogs.id_dog "
         "ORDER BY ES_registry.id_ES;";
 
@@ -99,6 +104,8 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
     query.bindValue(":year", year);
     query.bindValue(":search", search + "%");
     query.bindValue(":searchb", "%" + search + "%");
+    query.bindValue(":exact", search);
+    query.bindValue(":exact_encr", crypto->encryptToString(search));
 
 
     HandleErrorExec(&query);
@@ -132,16 +139,17 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
         "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
         "LEFT JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
         "WHERE strftime('%Y', Care_registry.entry_date) = :year "
-        "AND (People_prov.last_name LIKE :search OR People_prov.phone LIKE :search "
+        "AND (People_prov.last_name LIKE :search OR People_prov.first_name LIKE :search OR People_prov.phone LIKE :search "
         "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR People_dest.phone LIKE :search "
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search " +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
-        ") "
+        " OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR Care_registry.entry_date = :exact) "
         "ORDER BY Care_registry.id_care;";
 
     query.prepare(queryString);
     query.bindValue(":year", year);
     query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
     query.bindValue(":searchb", "%" + search + "%");
 
     HandleErrorExec(&query);
@@ -166,12 +174,13 @@ QSqlQuery Database::GetMembers(QString year, QString search) {
         "WHERE strftime('%Y', Members.date) = :year "
         "AND (People.last_name LIKE :search OR People.first_name LIKE :search OR People.phone LIKE :search " +
         QString((search.contains("@") ? " OR People.email LIKE :searchb" : "")) +
-        ") "
+        " OR Members.amount = :exact OR Members.amount = :exact OR Members.date = :exact) "
         "ORDER BY Members.id_adhesion;";
 
     query.prepare(queryString);
     query.bindValue(":year", year);
     query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
     query.bindValue(":searchb", "%" + search + "%");
 
     HandleErrorExec(&query);
@@ -219,12 +228,14 @@ QSqlQuery Database::GetRedList(QString search) {
                           "People.id_people "
                           "FROM People "
                           "JOIN Red_list ON People.id_people = Red_list.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR People.phone LIKE :search) "
+                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR People.phone LIKE :search "
+                          "OR Red_list.reason = :exact) "
                           "GROUP BY People.id_people "
                           "ORDER BY People.id_people DESC;";
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
 
     HandleErrorExec(&query);
 
@@ -247,7 +258,8 @@ QSqlQuery Database::GetLost(QString search, bool found) {
                           "People.id_people "
                           "FROM Lost "
                           "JOIN People ON People.id_people = Lost.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search OR identification LIKE :search OR name LIKE :search) ";
+                          "WHERE (People.last_name LIKE :search OR People.phone LIKE :search OR identification LIKE :search OR name LIKE :search "
+                          "OR date = :exact OR place = :exact OR description = :exact OR People.first_name = :exact OR sex = :exact) ";
 
     if(!found) // Remove dogs already found
         queryString += "AND found = 0 ";
@@ -256,6 +268,7 @@ QSqlQuery Database::GetLost(QString search, bool found) {
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
 
     HandleErrorExec(&query);
 
@@ -271,12 +284,14 @@ QSqlQuery Database::GetVet(QString search) {
                           "Dogs.id_dog  "
                           "FROM Vet "
                           "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
-                          "WHERE (Dogs.name LIKE :search OR Dogs.chip LIKE :search) "
+                          "WHERE (Dogs.name LIKE :search OR Dogs.chip LIKE :search "
+                          "OR Dogs.sex = :exact OR Vet.reason = :exact) "
                           "ORDER BY date;";
 
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
 
     HandleErrorExec(&query);
 
@@ -295,7 +310,8 @@ QSqlQuery Database::GetAdoptionDemand(QString search, bool satisfied) {
                           "People.id_people "
                           "FROM Adoption_demand "
                           "JOIN People ON People.id_people = Adoption_demand.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR Adoption_demand.sex LIKE :search OR Adoption_demand.breed LIKE :search)";
+                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR People.phone LIKE :search OR Adoption_demand.breed LIKE :search "
+                          "OR Adoption_demand.sex = :exact OR Adoption_demand.infos = :exact OR Adoption_demand.age = :exact)";
 
 
     if(!satisfied) // Remove dogs already found
@@ -303,7 +319,7 @@ QSqlQuery Database::GetAdoptionDemand(QString search, bool satisfied) {
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");
-    query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
 
     HandleErrorExec(&query);
 

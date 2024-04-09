@@ -25,7 +25,7 @@ class DogCard : public QFrame
     Q_OBJECT
 public:
     explicit DogCard(QWidget *parent = nullptr) : QFrame(parent) {}
-    DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2);
+    DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2, SimpleCrypt *crypto);
     void resizeEvent(QResizeEvent *event);
     void CreateHistory();
 
@@ -48,6 +48,7 @@ private:
     QPixmap sexIcon;
     TriStateCheckBox *sterilizedBox, *compatDogBox, *compatCatBox;
     QString type;
+    SimpleCrypt *crypto;
 };
 
 #endif // DOGCARD_H

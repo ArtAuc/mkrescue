@@ -90,7 +90,7 @@ QPushButton:hover {
     background-color: #4c5c75;
 }
 
-QPushButton{
+QPushButton, QToolButton{
 	border:none;
 }
 
@@ -515,7 +515,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>9</number>
         </property>
         <widget class="QWidget" name="homePage"/>
         <widget class="QWidget" name="dogCardsPage">
@@ -614,7 +614,7 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>68</width>
+               <width>98</width>
                <height>84</height>
               </rect>
              </property>
@@ -1274,7 +1274,7 @@ QTabBar::tab:selected {
                        </sizepolicy>
                       </property>
                       <property name="text">
-                       <string>Satisfaite</string>
+                       <string>Non Satisfaite</string>
                       </property>
                      </widget>
                     </item>
