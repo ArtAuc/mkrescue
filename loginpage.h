@@ -46,9 +46,9 @@ public:
 
         lineEdit->setFont(font);
         lineEdit->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
-        nextButtonGeometry = nextButton->geometry();
 
         label->setFont(font);
+
 
         nextButton->setFont(font);
         nextButton->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
@@ -62,20 +62,24 @@ public:
 
     void ShakeButton(){
         // Shake if wrong password
-        nextButton->setGeometry(nextButtonGeometry);
-        QPropertyAnimation *shakeAnimation = new QPropertyAnimation(nextButton, "geometry");
-        shakeAnimation->setDuration(100);
-        shakeAnimation->setLoopCount(2);
-        shakeAnimation->setEasingCurve(QEasingCurve::OutInQuad);
+        if (!shakeAnimation || shakeAnimation->state() != QAbstractAnimation::Running){
+            if(shakeAnimation != nullptr)
+                delete shakeAnimation;
 
-        QRect startRect = nextButton->geometry();
-        QRect endRect = startRect.translated(10, 0);
+            shakeAnimation = new QPropertyAnimation(nextButton, "geometry");
+            shakeAnimation->setDuration(100);
+            shakeAnimation->setLoopCount(2);
+            shakeAnimation->setEasingCurve(QEasingCurve::OutInQuad);
 
-        shakeAnimation->setStartValue(startRect);
-        shakeAnimation->setKeyValueAt(0.5, endRect);
-        shakeAnimation->setEndValue(startRect);
+            QRect startRect = nextButton->geometry();
+            QRect endRect = startRect.translated(10, 0);
 
-        shakeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            shakeAnimation->setStartValue(startRect);
+            shakeAnimation->setKeyValueAt(0.5, endRect);
+            shakeAnimation->setEndValue(startRect);
+
+            shakeAnimation->start();
+        }
     }
 
 
@@ -120,7 +124,6 @@ private:
     QByteArray hash;
     QPushButton *nextButton;
     QPropertyAnimation *shakeAnimation = nullptr;
-    QRect nextButtonGeometry;
 };
 
 #endif // LOGINPAGE_H
