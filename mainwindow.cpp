@@ -46,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     InitEditWidgets();
 
-
     // Filter checkboxes
     connect(ui->outCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->careCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
@@ -121,6 +120,7 @@ void MainWindow::InitEditWidgets(){
     ui->adoptionDemandTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->adoptionDemandTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
+
 
 void MainWindow::ToggleLock(QByteArray h){
     ui->topHorizontalWidget->hide();
@@ -216,8 +216,9 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     else{
         ui->menuTree->collapseAllExcept(txt);
-        if(txt == "Accueil")
+        if(txt == "Accueil"){
             stacked->setCurrentWidget(ui->homePage);
+        }
         else if (txt == "Fiches chiens"){
             LoadDogCards();
             stacked->setCurrentWidget(ui->dogCardsPage);
@@ -240,8 +241,6 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
         ui->searchLine->setVisible(txt != "Accueil" && txt != "Paramètres");
     }
-
-
 
     resizeEvent(nullptr);
 }

@@ -136,6 +136,9 @@ QCheckBox::indicator {
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_15">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -515,9 +518,16 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>9</number>
+         <number>0</number>
         </property>
-        <widget class="QWidget" name="homePage"/>
+        <widget class="HomePage" name="homePage">
+         <property name="styleSheet">
+          <string notr="true">QScrollArea{
+	 background: #efefef;
+	border:none;
+ }</string>
+         </property>
+        </widget>
         <widget class="QWidget" name="dogCardsPage">
          <property name="styleSheet">
           <string notr="true">QFrame{
@@ -528,7 +538,7 @@ border:1px solid gray;</string>
 }
 
 QWidget#dogCardsContent, QScrollArea{
-	background-color:#fafafa;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #eee);
 	border:none;
 }
 
@@ -538,6 +548,15 @@ QLabel{
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
@@ -614,7 +633,7 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
+               <width>86</width>
                <height>84</height>
               </rect>
              </property>
@@ -2931,6 +2950,12 @@ color:#212834;</string>
    <class>HoverToolButton</class>
    <extends>QToolButton</extends>
    <header>hovertoolbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>HomePage</class>
+   <extends>QWidget</extends>
+   <header>homepage.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

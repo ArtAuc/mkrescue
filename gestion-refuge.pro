@@ -37,6 +37,7 @@ HEADERS += \
     editdogwidget.h \
     editpage.h \
     editpeoplewidget.h \
+    homepage.h \
     hovertoolbutton.h \
     loginpage.h \
     mainwindow.h \
@@ -45,6 +46,7 @@ HEADERS += \
     saveddata.h \
     settingspage.h \
     simplecrypt.h \
+    statwidget.h \
     tristatecheckbox.h \
     utils.h
 
