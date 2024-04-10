@@ -18,13 +18,13 @@ public:
         QWidget::showEvent(event);
 
         if(alertsWidget == nullptr){
-            QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
+            QGridLayout* layout = qobject_cast<QGridLayout*>(this->layout());
             layout->setContentsMargins(0,0,0,0);
 
             alertsLabel = new QLabel("NOTIFICATIONS");
-            alertsLabel->setStyleSheet("color:#333; padding:20px; background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fafafa, stop:1 white);font-weight:bold;border-bottom:1px solid #aaa");
+            alertsLabel->setStyleSheet("color:#333; padding:20px; background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fafafa, stop:1 white);font-weight:bold;border-bottom:1px solid #aaa;border-left:1px solid #aaa;");
             alertsLabel->setAlignment(Qt::AlignCenter);
-            layout->insertWidget(0, alertsLabel);
+            layout->addWidget(alertsLabel, 1, 1, 1, 1);
 
 
             QWidget *horizontalWidget = new QWidget(this);
@@ -36,12 +36,12 @@ public:
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
             horizontalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
-            layout->insertWidget(0, horizontalWidget);
+            layout->addWidget(horizontalWidget, 0, 0, 1, 2);
 
             alertsWidget = findChild<QWidget*>("homeScrollContents");
             layout->setSpacing(0);
 
-            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea{background-color:white;border:none;margin-bottom:20px;}");
+            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea{background-color:white;border:none;border-left:1px solid #aaa;}");
         }
 
         alertDays = 0;
@@ -63,6 +63,12 @@ public:
 
             for (QPushButton *but : findChildren<QPushButton*>()){
                 but->setFont(font);
+                but->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
+            }
+
+            for (QLabel *lab : alertsWidget->findChildren<QLabel*>()){
+                lab->setFont(font);
+                lab->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
         }
     }
@@ -70,6 +76,7 @@ public:
     void LoadAlerts(){
         if(alertsWidget != nullptr){
             qDeleteAll(alertsWidget->findChildren<QPushButton*>());
+            qDeleteAll(alertsWidget->findChildren<QLabel*>());
 
             alertsWidget->layout()->removeItem(spacer);
             delete spacer;
@@ -101,23 +108,24 @@ public:
 
             HandleErrorExec(&query);
             while(query.next()){
-                QString dateString = query.value(0).toDate().toString("dd/MM/yy");
+                QString dateString = query.value(0).toDate().toString("dd/MM/yyyy");
+                QString timeString;
                 QString type = query.value(1).toString();
-                QString stylesheet = "QPushButton{padding-top:20px;padding-bottom:20px;margin-top:20px;";
+                QString stylesheet = "QPushButton{padding-top:20px;padding-bottom:20px;margin-bottom:5px;";
                 QStringList necessary;
 
                 if(query.value(0).toDate() == QDate::currentDate()){
                     stylesheet += "border:2px solid #634049;";
-                    dateString = "Aujourd'hui";
+                    dateString = "AUJOURD'HUI - " + dateString;
                 }
 
                 else if(QDate::currentDate().daysTo(query.value(0).toDate()) == 1)
-                    dateString = "Demain";
+                    dateString = "DEMAIN - " + dateString;
 
                 QColor color;
                 if(type == "RDV Vétérinaire"){
                     color = QColor("#2cc09d");
-                    dateString += " " + query.value(0).toDateTime().toString("h:mm");
+                    timeString = query.value(0).toDateTime().toString("h:mm") + " - ";
                     necessary = {query.value(0).toString(), query.value(4).toString()};
                 }
 
@@ -126,11 +134,20 @@ public:
                     necessary = {query.value(4).toString()};
                 }
 
+                if(lastDate != dateString){
+                    QLabel *dateLabel = new QLabel(dateString);
+                    dateLabel->setAlignment(Qt::AlignCenter);
+                    dateLabel->setStyleSheet("font-weight:bold;border-bottom:1px solid #aaa;color:#333;margin:10px;");
+                    alertsWidget->layout()->addWidget(dateLabel);
+                }
+
+                lastDate = dateString;
 
                 stylesheet += "background-color:" + color.name() + ";}"
                               "QPushButton:hover{background-color:" + color.lighter(110).name() + ";}";
 
-                QPushButton *but = new QPushButton(dateString + " - " + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
+                QPushButton *but = new QPushButton(timeString + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
+
                 connect(but, &QPushButton::clicked, this, [=]() {
                     TriggerEditSlot("vet", necessary);
                 });
@@ -183,6 +200,9 @@ public slots:
             alertDays = -std::abs(alertDays);
         }
 
+        if(alertDays > 1)
+            alertsLabel->setText(QString("NOTIFICATIONS (%1 prochains jours)").arg(alertDays));
+
         LoadAlerts();
     }
 
@@ -198,6 +218,7 @@ private:
     QWidget *alertsWidget = nullptr;
     int alertDays{};
     QSpacerItem *spacer = nullptr;
+    QString lastDate;
 };
 
 #endif // HOMEPAGE_H

@@ -27,7 +27,7 @@ public:
         palette.setColor(QPalette::HighlightedText, Qt::white);
         setPalette(palette);
 
-        logo = QPixmap("media/logo_title_dark.png");
+        logo = QPixmap("media/logo_title_side.png");
     }
 
     void collapseAllExcept(QString txt){

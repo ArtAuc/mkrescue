@@ -127,4 +127,5 @@ inline auto dateComparator = [](const QString& dest1, const QString& dest2) {
 };
 
 
+
 #endif // UTILS_H

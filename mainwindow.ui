@@ -518,17 +518,20 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
           <string notr="true"/>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_20">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_13">
+          <item row="2" column="1">
            <widget class="QScrollArea" name="homeScrollArea">
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
             <property name="widgetResizable">
              <bool>true</bool>
@@ -538,8 +541,8 @@ border:1px solid gray;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>966</width>
-               <height>606</height>
+               <width>480</width>
+               <height>574</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -548,6 +551,25 @@ border:1px solid gray;</string>
              <layout class="QVBoxLayout" name="verticalLayout_21"/>
             </widget>
            </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QWidget" name="homePlaceholder" native="true"/>
+          </item>
+          <item row="2" column="0">
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="1">
+           <widget class="QWidget" name="homePlaceholder_2" native="true"/>
           </item>
          </layout>
         </widget>
@@ -1755,6 +1777,19 @@ padding:10px;</string>
         </widget>
         <widget class="LoginPage" name="loginPage">
          <layout class="QVBoxLayout" name="verticalLayout_15">
+          <item>
+           <spacer name="verticalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item>
            <widget class="QLabel" name="loginIcon">
             <property name="sizePolicy">
