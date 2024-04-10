@@ -372,7 +372,7 @@ void EditPage::QuitEdit()
     else
         stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "Page"));
 
-    emit RefreshMainWindow(lastType);
+    emit RefreshMainWindow();
 }
 
 

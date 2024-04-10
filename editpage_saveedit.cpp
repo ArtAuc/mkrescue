@@ -3,6 +3,7 @@
 void EditPage::FillAnimalWidget(QString nameEnd, QString dogName, QString chip, QString sex, QString birthDate, QString description, QWidget *parent){
     if(parent == nullptr)
         parent = this;
+
     SetField("dogName" + nameEnd, dogName, parent);
     SetField("chip" + nameEnd, chip, parent);
     SetField("sex" + nameEnd, sex, parent);

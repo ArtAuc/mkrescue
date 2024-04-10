@@ -35,13 +35,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
     connect(ui->removeButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(RemoveCurrent()));
-    connect(ui->editPage, SIGNAL(RefreshMainWindow(QString)), this, SLOT(RefreshPage(QString)));
+    connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(ChangePage()));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
     connect(ui->foundLostBox, SIGNAL(clicked(bool)), this, SLOT(ToggleFoundBoxText()));
     connect(ui->satisfiedAdoptionDemandBox, SIGNAL(clicked(bool)), this, SLOT(ToggleSatisfiedBoxText()));
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
+    connect(ui->homePage, SIGNAL(TriggerEditHome(QString,QStringList)), this, SLOT(TriggerEdit(QString,QStringList)));
     ui->reasonVetAnimalEdit->hide();
 
     InitEditWidgets();
@@ -179,6 +180,9 @@ void MainWindow::ToggleSatisfiedBoxText(){
 // Change selected page from stacked widget, based on the selected menu item
 void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
+    if(item == nullptr)
+        item = ui->menuTree->currentItem();
+
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0).trimmed();
 
@@ -218,6 +222,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->menuTree->collapseAllExcept(txt);
         if(txt == "Accueil"){
             stacked->setCurrentWidget(ui->homePage);
+            ui->homePage->LoadAlerts();
         }
         else if (txt == "Fiches chiens"){
             LoadDogCards();
@@ -474,25 +479,55 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
     }
 
     else if (type == "vet"){
-        query.prepare("SELECT Vet.date, "
-                         "Dogs.name, "
-                         "Dogs.chip, "
-                         "Dogs.sex, "
-                         "Dogs.birth, "
-                         "Dogs.description, "
-                         "Vet.reason, "
-                         "Dogs.id_dog  "
-                         "FROM Vet "
-                         "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
-                         "WHERE Vet.date = '" + necessary[0] +
-                         "' AND Dogs.id_dog = " + necessary[1]);
+        if(necessary.size() == 2){
+            query.prepare("SELECT Vet.date, "
+                             "Dogs.name, "
+                             "Dogs.chip, "
+                             "Dogs.sex, "
+                             "Dogs.birth, "
+                             "Dogs.description, "
+                             "Vet.reason, "
+                             "Dogs.id_dog  "
+                             "FROM Vet "
+                             "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
+                             "WHERE Vet.date = '" + necessary[0] +
+                             "' AND Dogs.id_dog = " + necessary[1]);
+            HandleErrorExec(&query);
+            query.next();
 
-        HandleErrorExec(&query);
-        query.next();
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
 
-        for(int i = 0; i < query.record().count(); i++)
-            infos.append(query.value(i).toString());
+        }
 
+        else // Add vaccine recall, called by homepage
+        {
+            query.prepare("SELECT Dogs.name, "
+                             "Dogs.chip, "
+                             "Dogs.sex, "
+                             "Dogs.birth, "
+                             "Dogs.description "
+                             "FROM Dogs "
+                             "WHERE Dogs.id_dog = :id");
+            query.bindValue(":id", necessary[0]);
+            HandleErrorExec(&query);
+            if (query.next()) {
+                QString name = query.value(0).toString();
+                QString chip = query.value(1).toString();
+                QString sex = query.value(2).toString();
+                QString birth = query.value(3).toString();
+                QString description = query.value(4).toString();
+
+                ui->editPage->AddVet();
+                QTimer::singleShot(100, [this, name, chip, sex, birth, description, necessary]() {
+                    ui->editPage->FillAnimalWidget("VetAnimalEdit", name, chip, sex, birth, description);
+                    ui->dateVetAnimalEdit->clearFocus();
+                    ui->dateVetAnimalEdit->setDate(QDate::currentDate());
+                    findChild<EditDogWidget*>("VetAnimalEdit")->SetOldId(necessary[0]);
+                });
+
+            }
+        }
     }
 
     else if(type == "adoptionDemand"){
@@ -521,35 +556,6 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
 
     ui->editPage->Edit(type, infos);
-}
-
-void MainWindow::RefreshPage(QString type){
-    if(type == "entry")
-        LoadEntryRegistry(ui->yearBox->currentText());
-    else if(type == "care")
-        LoadCareRegistry(ui->yearBox->currentText());
-    else if(type == "members")
-        LoadMembers(ui->yearBox->currentText());
-
-    else if(type == "redList"){
-        db.MakeRedList();
-        LoadRedList();
-    }
-
-    else if(type == "lost"){
-        LoadLost();
-    }
-
-    else if(type == "vet"){
-        LoadVet();
-    }
-
-    else if(type == "adoptionDemand"){
-        LoadAdoptionDemand();
-    }
-
-
-    resizeEvent(nullptr);
 }
 
 QString MainWindow::ClearUselessBreaks(QString s){

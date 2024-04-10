@@ -34,7 +34,7 @@ public:
     void resizeEvent(QResizeEvent *event) override;
 
 public slots:
-    void ChangePage(QTreeWidgetItem* item);
+    void ChangePage(QTreeWidgetItem* item = nullptr);
     void LoadDogCards(QString search = "");
     void LoadEntryRegistry(QString year, QString search = "");
     void LoadCareRegistry(QString year, QString search = "");
@@ -46,7 +46,6 @@ public slots:
     void ToggleModifyButtons();
     void Search(QString search);
     void TriggerEdit(QString type, QStringList infos);
-    void RefreshPage(QString type);
     void Clean();
     void SelectDogCard();
     void UnselectDogCard();

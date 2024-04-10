@@ -36,8 +36,8 @@ inline void SetField(QString name, QString value, QWidget* parent){
 
     if(dateEdit)
         dateEdit->setDate(QDate::fromString(value, "yyyy-MM-dd"));
-    if(dateEdit)
-        dateTimeEdit->setDate(QDate::fromString(value, "yyyy-MM-ddTHH:mm"));
+    if(dateTimeEdit)
+        dateTimeEdit->setDateTime(QDateTime::fromString(value, "yyyy-MM-ddTHH:mm"));
     else if (lineEdit)
         lineEdit->setText(value);
     else if (textEdit)

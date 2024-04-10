@@ -518,7 +518,7 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -597,7 +597,8 @@ QCheckBox:unchecked {
 
 QCheckBox::indicator:unchecked{
 		image: url('media/cross.png');
-}</string>
+}
+</string>
               </property>
               <property name="text">
                <string>Sortis du refuge</string>
@@ -656,8 +657,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>86</width>
-               <height>84</height>
+               <width>984</width>
+               <height>567</height>
               </rect>
              </property>
              <property name="styleSheet">

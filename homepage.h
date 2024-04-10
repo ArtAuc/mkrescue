@@ -41,10 +41,11 @@ public:
             alertsWidget = findChild<QWidget*>("homeScrollContents");
             layout->setSpacing(0);
 
-            UpAlertDays();
-
-            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea{background-color:white;border:none;}");
+            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea{background-color:white;border:none;margin-bottom:20px;}");
         }
+
+        alertDays = 0;
+        UpAlertDays();
     }
 
     void resizeEvent(QResizeEvent *event) override{
@@ -77,11 +78,11 @@ public:
 
             // Vet main appointments
             QString queryString = "SELECT * FROM ("
-                                  "SELECT Vet.date, 'RDV Vétérinaire', Dogs.name, Vet.reason "
+                                  "SELECT Vet.date, 'RDV Vétérinaire', Dogs.name, Vet.reason, Vet.id_dog "
                                   "FROM Vet "
                                   "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
                                   "UNION "
-                                  "SELECT DATE(Vet.date, '+1 year'), 'Prévoir le rappel de vaccin', Dogs.name, '' "
+                                  "SELECT DATE(Vet.date, '+1 year'), 'Prévoir le rappel de vaccin', Dogs.name, '', Vet.id_dog "
                                   "FROM Vet "
                                   "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
                                   "JOIN ("
@@ -90,7 +91,7 @@ public:
                                   "    WHERE reason = 'Vaccin' "
                                   "    GROUP BY id_dog "
                                   ") AS LatestVet ON Vet.id_dog = LatestVet.id_dog AND Vet.date = LatestVet.max_date "
-                                  "WHERE Vet.reason = 'Vaccin'"
+                                  "WHERE Vet.reason LIKE 'Vaccin%'"
                                   ") AS Results "
                                   "WHERE Results.date BETWEEN DATE('now') AND DATE('now', '+' || :alertDays || ' day') "
                                   "ORDER BY Results.date";
@@ -103,29 +104,36 @@ public:
                 QString dateString = query.value(0).toDate().toString("dd/MM/yy");
                 QString type = query.value(1).toString();
                 QString stylesheet = "QPushButton{padding-top:20px;padding-bottom:20px;margin-top:20px;";
+                QStringList necessary;
+
                 if(query.value(0).toDate() == QDate::currentDate()){
-                    stylesheet += "border:2px solid red;";
+                    stylesheet += "border:2px solid #634049;";
                     dateString = "Aujourd'hui";
                 }
 
                 else if(QDate::currentDate().daysTo(query.value(0).toDate()) == 1)
                     dateString = "Demain";
 
-
                 QColor color;
                 if(type == "RDV Vétérinaire"){
                     color = QColor("#2cc09d");
-                    dateString = query.value(0).toDateTime().toString("dd/MM/yy h:mm");
+                    dateString += " " + query.value(0).toDateTime().toString("h:mm");
+                    necessary = {query.value(0).toString(), query.value(4).toString()};
                 }
 
                 else if(type == "Prévoir le rappel de vaccin"){
-
+                    color = QColor("#20718e");
+                    necessary = {query.value(4).toString()};
                 }
+
 
                 stylesheet += "background-color:" + color.name() + ";}"
                               "QPushButton:hover{background-color:" + color.lighter(110).name() + ";}";
 
                 QPushButton *but = new QPushButton(dateString + " - " + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
+                connect(but, &QPushButton::clicked, this, [=]() {
+                    TriggerEditSlot("vet", necessary);
+                });
                 but->setStyleSheet(stylesheet);
                 alertsWidget->layout()->addWidget(but);
             }
@@ -135,8 +143,10 @@ public:
 
             QPushButton *moreButton = new QPushButton("Notifications suivantes");
             alertsWidget->layout()->addWidget(moreButton);
+            alertsWidget->setLayoutDirection(Qt::RightToLeft);
             connect(moreButton, SIGNAL(clicked(bool)), this, SLOT(UpAlertDays()));
             moreButton->setVisible(alertDays >= 0);
+            moreButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 
             resizeEvent(nullptr);
         }
@@ -176,6 +186,12 @@ public slots:
         LoadAlerts();
     }
 
+    void TriggerEditSlot(QString type, QStringList necessary){
+        emit TriggerEditHome(type, necessary);
+    }
+
+signals:
+    void TriggerEditHome(QString type, QStringList necessary);
 
 private:
     QLabel *alertsLabel;
