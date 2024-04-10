@@ -9,6 +9,7 @@
 #include <QToolButton>
 #include <QPushButton>
 #include <QLayout>
+#include "utils.h"
 
 
 class Registry : public QWidget
@@ -20,6 +21,7 @@ public:
     void showEvent(QShowEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     void SetType(QString type){this->type = type;}
+    float SumWidth();
 
 protected:
     QTableWidget* table;

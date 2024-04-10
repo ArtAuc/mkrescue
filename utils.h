@@ -126,6 +126,29 @@ inline auto dateComparator = [](const QString& dest1, const QString& dest2) {
     return date1 < date2;
 };
 
+inline QString AutoBreak(QString s, int threshold){
+    QString result;
+    while(s.length() > threshold) {
+        int pos = -1; // First ' ' or '-' until threshold
+        for (int i = 0; i < threshold && i < s.length(); ++i) {
+            if (s[i] == ' ' || s[i] == '-') {
+                pos = i;
+            }
+        }
+
+        if (pos != -1)
+            s.insert(pos + 1, '\n');
+        else
+            s.insert(threshold, '\n');
+
+        result += s.split("\n")[0] + "\n";
+        s = s.split("\n")[1];
+    }
+
+    result += s;
+
+    return result;
+}
 
 
 #endif // UTILS_H

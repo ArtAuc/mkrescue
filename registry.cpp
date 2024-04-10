@@ -101,30 +101,36 @@ void Registry::resizeEvent(QResizeEvent *event){
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
 
-        float sumWidth = 0;
+        float factor = table->width() / SumWidth(); // Allows to occupy the whole width of the window
 
-        for (int col = 0; col < table->columnCount(); ++col) {
-            sumWidth += table->columnWidth(col);
+        if(factor < 1){ //Handle table overflow
+            for(int row = 0; row < table->rowCount(); ++row)
+                for(int col = 0; col < table->columnCount(); ++col) {
+                    QTableWidgetItem* item = table->item(row, col);
+                    if(item) {
+                        QString text = item->text();
+                        QString newText = "";
+                        for(QString line : text.split("\n")){
+                            qDebug() << line;
+                            newText += AutoBreak(line, 30) + "\n";
+                        }
+
+                        newText.chop(1);
+                        item->setText(newText);
+                    }
+                }
+
+            resizeEvent(nullptr);
+            return;
         }
 
+        for (int col = 0; col < table->columnCount(); ++col)
+            table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
 
-        if(table->verticalScrollBar()->isVisible())
-            sumWidth += table->verticalScrollBar()->width();
 
-
-        float factor = table->width() / sumWidth; // Allows to occupy the whole width of the window
-        if(factor > 1)
-            for (int col = 0; col < table->columnCount(); ++col)
-                table->setColumnWidth(col, static_cast<int>(table->columnWidth(col) * factor));
-
-        sumWidth = 0;
-
-        for (int col = 0; col < table->columnCount() - 1; ++col) {
-            sumWidth += table->columnWidth(col);
-        }
-
+        // Placeholder width
         if(horizontalPlacehold != nullptr)
-            horizontalPlacehold->setMaximumWidth(sumWidth);
+            horizontalPlacehold->setMaximumWidth(SumWidth() - table->columnWidth(table->columnCount() - 1));
 
         addButton->setFixedSize(QSize(std::max(table->columnWidth(table->columnCount() - 1), int(0.03 * width())), fontSize * 4.5));
         addButton->setIconSize(0.7 * QSize(iconSize, iconSize));
@@ -135,4 +141,16 @@ void Registry::ColorRow(int row, bool gray){
     QColor color = gray ? QColor("#e7e9ed") : QColor("#ffffff");
     for (int col = 0; col < table->columnCount() - 1; ++col)
         table->item(row, col)->setBackground(color);
+}
+
+float Registry::SumWidth(){
+    float sumWidth = 0;
+    for (int col = 0; col < table->columnCount(); ++col) {
+        sumWidth += table->columnWidth(col);
+    }
+
+    if(table->verticalScrollBar()->isVisible())
+        sumWidth += table->verticalScrollBar()->width();
+
+    return sumWidth;
 }

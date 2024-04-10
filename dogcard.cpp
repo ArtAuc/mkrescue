@@ -332,7 +332,7 @@ void DogCard::CreateHistory(){
         QString type = query.value(5).toString();
         QLabel* histLabel = new QLabel();
         QString colorString;
-        QString dateString(QDate::fromString(query.value(4).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+        QString dateString(query.value(4).toDateTime().toString("dd/MM/yyyy h:mm"));
         QString type_prov = query.value(0).toString();
         if(type == "ES"){
             type_prov = crypto->decryptToString(type_prov);

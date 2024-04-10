@@ -21,12 +21,6 @@ public:
             QGridLayout* layout = qobject_cast<QGridLayout*>(this->layout());
             layout->setContentsMargins(0,0,0,0);
 
-            alertsLabel = new QLabel("NOTIFICATIONS");
-            alertsLabel->setStyleSheet("color:#333; padding:20px; background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fafafa, stop:1 white);font-weight:bold;border-bottom:1px solid #aaa;border-left:1px solid #aaa;");
-            alertsLabel->setAlignment(Qt::AlignCenter);
-            layout->addWidget(alertsLabel, 1, 1, 1, 1);
-
-
             QWidget *horizontalWidget = new QWidget(this);
             horizontalWidget->setLayout(new QHBoxLayout());
             horizontalWidget->layout()->addWidget(new StatWidget("currentDogs"));
@@ -44,8 +38,8 @@ public:
             alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea{background-color:white;border:none;border-left:1px solid #aaa;}");
         }
 
-        alertDays = 0;
-        UpAlertDays();
+        alertDays = 7;
+        LoadAlerts();
     }
 
     void resizeEvent(QResizeEvent *event) override{
@@ -57,16 +51,17 @@ public:
             for(StatWidget *c : findChildren<StatWidget*>())
                 c->resizeEvent(event);
 
-            QFont font = alertsLabel->font();
-            font.setPointSizeF(0.01 * width());
-            alertsLabel->setFont(font);
 
             for (QPushButton *but : findChildren<QPushButton*>()){
+                QFont font = but->font();
+                font.setPointSizeF(0.01 * width());
                 but->setFont(font);
                 but->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
 
             for (QLabel *lab : alertsWidget->findChildren<QLabel*>()){
+                QFont font = lab->font();
+                font.setPointSizeF(0.01 * width());
                 lab->setFont(font);
                 lab->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
@@ -99,16 +94,25 @@ public:
                                   "    GROUP BY id_dog "
                                   ") AS LatestVet ON Vet.id_dog = LatestVet.id_dog AND Vet.date = LatestVet.max_date "
                                   "WHERE Vet.reason LIKE 'Vaccin%'"
-                                  ") AS Results "
-                                  "WHERE Results.date BETWEEN DATE('now') AND DATE('now', '+' || :alertDays || ' day') "
-                                  "ORDER BY Results.date";
+                                  ") AS Results ";
+
+
+
+            if(alertDays >= 0){
+                queryString += "WHERE Results.date BETWEEN DATE('now') AND DATE('now', '+' || " + QString::number(alertDays) + " || ' day') ";
+            }
+
+            queryString +="ORDER BY Results.date;";
 
             query.prepare(queryString);
-            query.bindValue(":alertDays", std::abs(alertDays));
 
             HandleErrorExec(&query);
+
             while(query.next()){
-                QString dateString = query.value(0).toDate().toString("dd/MM/yyyy");
+                QLocale locale = QLocale(QLocale::French);
+
+                QString dateString = locale.toString(query.value(0).toDate());
+                dateString = dateString.toUpper();
                 QString timeString;
                 QString type = query.value(1).toString();
                 QString stylesheet = "QPushButton{padding-top:20px;padding-bottom:20px;margin-bottom:5px;";
@@ -146,11 +150,13 @@ public:
                 stylesheet += "background-color:" + color.name() + ";}"
                               "QPushButton:hover{background-color:" + color.lighter(110).name() + ";}";
 
+
                 QPushButton *but = new QPushButton(timeString + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
 
                 connect(but, &QPushButton::clicked, this, [=]() {
                     TriggerEditSlot("vet", necessary);
                 });
+
                 but->setStyleSheet(stylesheet);
                 alertsWidget->layout()->addWidget(but);
             }
@@ -158,12 +164,13 @@ public:
             spacer = new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding);
             alertsWidget->layout()->addItem(spacer);
 
-            QPushButton *moreButton = new QPushButton("Notifications suivantes");
-            alertsWidget->layout()->addWidget(moreButton);
-            alertsWidget->setLayoutDirection(Qt::RightToLeft);
-            connect(moreButton, SIGNAL(clicked(bool)), this, SLOT(UpAlertDays()));
-            moreButton->setVisible(alertDays >= 0);
-            moreButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+            if(alertDays >= 0){
+                QPushButton *moreButton = new QPushButton("Notifications suivantes");
+                alertsWidget->layout()->addWidget(moreButton);
+                alertsWidget->setLayoutDirection(Qt::RightToLeft);
+                connect(moreButton, SIGNAL(clicked(bool)), this, SLOT(UpAlertDays()));
+                moreButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+            }
 
             resizeEvent(nullptr);
         }
@@ -171,38 +178,7 @@ public:
 
 public slots:
     void UpAlertDays(){
-        QSqlQuery query;
-        query.prepare("SELECT MIN(Results.date) FROM ("
-                      "SELECT Vet.date "
-                      "FROM Vet "
-                      "UNION "
-                      "SELECT DATE(Vet.date, '+1 year') "
-                      "FROM Vet "
-                      "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
-                      "JOIN ("
-                      "    SELECT id_dog, MAX(date) AS max_date "
-                      "    FROM Vet "
-                      "    WHERE reason = 'Vaccin' "
-                      "    GROUP BY id_dog "
-                      ") AS LatestVet ON Vet.id_dog = LatestVet.id_dog AND Vet.date = LatestVet.max_date "
-                      "WHERE Vet.reason = 'Vaccin') AS Results "
-                      "WHERE Results.date > DATE('now', '+' || :alertDays || ' day')");
-
-        query.bindValue(":alertDays", std::abs(alertDays));
-        HandleErrorExec(&query);
-
-
-        if(query.next() && query.value(0).toString() != ""){
-            alertDays = QDate::currentDate().daysTo(query.value(0).toDate()) + 7;
-        }
-
-        else{
-            alertDays = -std::abs(alertDays);
-        }
-
-        if(alertDays > 1)
-            alertsLabel->setText(QString("NOTIFICATIONS (%1 prochains jours)").arg(alertDays));
-
+        alertDays = -1;
         LoadAlerts();
     }
 
@@ -214,7 +190,6 @@ signals:
     void TriggerEditHome(QString type, QStringList necessary);
 
 private:
-    QLabel *alertsLabel;
     QWidget *alertsWidget = nullptr;
     int alertDays{};
     QSpacerItem *spacer = nullptr;
