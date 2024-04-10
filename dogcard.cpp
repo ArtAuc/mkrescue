@@ -69,7 +69,9 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     }
 
 
+    info1String = AutoBreak(info1String, 25).split("\n")[0];
     QLabel *info1Label = new QLabel(info1String, this);
+
 
     QString info2String;
 
@@ -108,9 +110,10 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
         info2String = "Dernière garde : " + QDate::fromString(info2, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
+    info2String = AutoBreak(info2String, 25).split("\n")[0];
     info2Label = new QLabel(info2String, this);
 
-    descriptionLabel = new QLabel(description, this);
+    descriptionLabel = new QLabel(AutoBreak(description, 25).split("\n")[0], this);
 
 
     int iconSize = 40;

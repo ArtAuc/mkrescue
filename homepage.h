@@ -151,7 +151,7 @@ public:
                               "QPushButton:hover{background-color:" + color.lighter(110).name() + ";}";
 
 
-                QPushButton *but = new QPushButton(timeString + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
+                QPushButton *but = new QPushButton(AutoBreak(timeString + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"), 50));
 
                 connect(but, &QPushButton::clicked, this, [=]() {
                     TriggerEditSlot("vet", necessary);

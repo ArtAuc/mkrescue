@@ -131,13 +131,17 @@ inline QString AutoBreak(QString s, int threshold){
     while(s.length() > threshold) {
         int pos = -1; // First ' ' or '-' until threshold
         for (int i = 0; i < threshold && i < s.length(); ++i) {
-            if (s[i] == ' ' || s[i] == '-') {
+            if (s[i] == ' ' || s[i] == '-' || s[i] == '/') {
                 pos = i;
             }
         }
 
-        if (pos != -1)
-            s.insert(pos + 1, '\n');
+        if (pos != -1){
+            if(s[pos] == '/')
+                s.insert(pos, '\n');
+            else
+                s.insert(pos + 1, '\n');
+        }
         else
             s.insert(threshold, '\n');
 
