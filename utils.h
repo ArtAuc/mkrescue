@@ -28,6 +28,7 @@
 inline void SetField(QString name, QString value, QWidget* parent){
     QObject *childObject = parent->findChild<QWidget*>(name);
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
+    QDateTimeEdit *dateTimeEdit = qobject_cast<QDateTimeEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
     QTextEdit *textEdit = qobject_cast<QTextEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
@@ -35,6 +36,8 @@ inline void SetField(QString name, QString value, QWidget* parent){
 
     if(dateEdit)
         dateEdit->setDate(QDate::fromString(value, "yyyy-MM-dd"));
+    if(dateEdit)
+        dateTimeEdit->setDate(QDate::fromString(value, "yyyy-MM-ddTHH:mm"));
     else if (lineEdit)
         lineEdit->setText(value);
     else if (textEdit)
@@ -48,6 +51,7 @@ inline void SetField(QString name, QString value, QWidget* parent){
 inline QString GetField(QString name, QWidget* parent){
     QObject *childObject = parent->findChild<QWidget*>(name);
     QDateEdit *dateEdit = qobject_cast<QDateEdit*>(childObject);
+    QDateTimeEdit *dateTimeEdit = qobject_cast<QDateTimeEdit*>(childObject);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(childObject);
     QTextEdit *textEdit = qobject_cast<QTextEdit*>(childObject);
     QComboBox *box = qobject_cast<QComboBox*>(childObject);
@@ -55,6 +59,8 @@ inline QString GetField(QString name, QWidget* parent){
 
     if(dateEdit)
         return dateEdit->date().toString("yyyy-MM-dd");
+    if(dateEdit)
+        return dateTimeEdit->dateTime().toString("yyyy-MM-ddTHH:mm");
     else if (lineEdit)
         return lineEdit->text();
     else if (textEdit)

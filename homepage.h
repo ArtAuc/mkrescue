@@ -111,15 +111,21 @@ public:
                 else if(QDate::currentDate().daysTo(query.value(0).toDate()) == 1)
                     dateString = "Demain";
 
-                QPushButton *but = new QPushButton(dateString + " - " + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
 
                 QColor color;
-                if(type == "RDV Vétérinaire")
+                if(type == "RDV Vétérinaire"){
                     color = QColor("#2cc09d");
+                    dateString = query.value(0).toDateTime().toString("dd/MM/yy h:mm");
+                }
+
+                else if(type == "Prévoir le rappel de vaccin"){
+
+                }
 
                 stylesheet += "background-color:" + color.name() + ";}"
                               "QPushButton:hover{background-color:" + color.lighter(110).name() + ";}";
 
+                QPushButton *but = new QPushButton(dateString + " - " + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"));
                 but->setStyleSheet(stylesheet);
                 alertsWidget->layout()->addWidget(but);
             }

@@ -358,7 +358,7 @@ void MainWindow::LoadVet(QString search){
     {
         int nb = table->rowCount();
         table->insertRow(nb);
-        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toDate().toString("dd/MM/yyyy"))); // date
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toDateTime().toString("dd/MM/yyyy\nhh:mm"))); // date
         table->setItem(nb, 1, new QTableWidgetItem(ClearUselessBreaks(query.value(1).toString() + "\n" + query.value(2).toString()))); // name + chip
         table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // reason
 
