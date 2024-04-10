@@ -518,15 +518,38 @@ border:1px solid gray;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
-          <string notr="true">QScrollArea{
-	 background: #efefef;
-	border:none;
- }</string>
+          <string notr="true"/>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_20">
+          <item>
+           <widget class="QScrollArea" name="homeScrollArea">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="homeScrollContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>966</width>
+               <height>606</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_21"/>
+            </widget>
+           </widget>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="dogCardsPage">
          <property name="styleSheet">
@@ -921,7 +944,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>2</number>
+             <number>6</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1620,7 +1643,7 @@ QTabBar::tab:selected {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDateEdit" name="dateVetAnimalEdit">
+                 <widget class="QDateTimeEdit" name="dateVetAnimalEdit">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
