@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
+    connect(ui->searchIcon, SIGNAL(clicked(bool)), ui->searchLine, SLOT(setFocus()));
+    ui->searchIcon->setIcon(QIcon("media/search.svg"));
 
     InitExportButtons();
 
@@ -148,8 +150,6 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         savedData.SetCrypto(crypto, email, appPassword);
         savedData.Save();
 
-        MoveSaveThread();
-
         ui->settingsPage->SetCrypto(crypto);
         ui->loginPage->setContentsMargins(0,0,0,0);
 
@@ -260,6 +260,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->titleLabel->setText(txt);
         box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
         ui->searchLine->setVisible(txt != "Accueil" && txt != "Paramètres");
+        ui->searchIcon->setVisible(txt != "Accueil" && txt != "Paramètres");
     }
 
     resizeEvent(nullptr);
@@ -325,6 +326,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->foundCheckBox->setFont(checkboxFont);
     checkboxFont.setPointSize(0.01 * ui->adoptionDemandPage->width());
     ui->satisfiedCheckBox->setFont(checkboxFont);
+
+    ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
+    ui->searchIcon->setFixedHeight(ui->searchLine->height());
 }
 
 void MainWindow::ToggleModifyButtons()

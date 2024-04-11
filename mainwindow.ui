@@ -369,6 +369,9 @@ QTreeView::item { margin-top: 30px; }</string>
          <string notr="true"/>
         </property>
         <layout class="QHBoxLayout" name="topHorizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <property name="leftMargin">
           <number>5</number>
          </property>
@@ -446,6 +449,10 @@ border-style:none;</string>
              <underline>false</underline>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">margin-left:6px;
+margin-right:6px;</string>
+           </property>
            <property name="text">
             <string>Accueil</string>
            </property>
@@ -497,12 +504,29 @@ QComboBox {
           </spacer>
          </item>
          <item>
+          <widget class="QToolButton" name="searchIcon">
+           <property name="styleSheet">
+            <string notr="true">margin-left:30px;
+border-top-left-radius:5px;
+border-bottom-left-radius:5px;
+border:1px solid gray;
+border-right:none;
+</string>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLineEdit" name="searchLine">
            <property name="styleSheet">
-            <string notr="true">margin-right:30px;
-padding:10px;
-border-radius:5px;
-border:1px solid gray;</string>
+            <string notr="true">padding:10px;
+border-top-right-radius:5px;
+border-bottom-right-radius:5px;
+border:1px solid gray;
+border-left:none;
+</string>
            </property>
           </widget>
          </item>
@@ -541,8 +565,8 @@ border:1px solid gray;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>480</width>
-               <height>574</height>
+               <width>54</width>
+               <height>18</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -679,7 +703,7 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
+               <width>86</width>
                <height>84</height>
               </rect>
              </property>
@@ -967,7 +991,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>6</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
