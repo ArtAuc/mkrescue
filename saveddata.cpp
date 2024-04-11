@@ -16,7 +16,8 @@ void SavedData::Save(){
 
         out << accessHash << "\n";
         out << encryptedEmail << "\n";
-        out << encryptedAppPassword;
+        out << encryptedAppPassword << "\n";
+        out << lastTimeSync;
     }
 
     file.close();
@@ -39,8 +40,9 @@ bool SavedData::Load(){
         accessHash = in.readLine();
         encryptedEmail = in.readLine();
         encryptedAppPassword = in.readLine();
+        lastTimeSync = in.readLine();
 
-        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty()){
+        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty()){
             file.close();
 
             return true;
@@ -55,11 +57,11 @@ bool SavedData::Load(){
     return false;
 }
 
-void SavedData::SendEmail(QString subject, QString filePath){
+QString SavedData::SendEmail(QString subject, QString filePath){
     if(crypto){
         QString from = crypto->decryptToString(encryptedEmail);
         QString to = from;
-        subject += " " + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
+        subject += " - " + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
         QString body = "";
         QString password = crypto->decryptToString(encryptedAppPassword);
         QString smtpServer = "smtp.gmail.com";
@@ -69,72 +71,61 @@ void SavedData::SendEmail(QString subject, QString filePath){
          QSslSocket socket;
          socket.connectToHostEncrypted(smtpServer, port);
          if (!socket.waitForConnected()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             if(socket.errorString().contains("Host not found"))
+                return "Pas de connexion internet";
+             else
+                return socket.errorString();
          }
 
          // Read initial server response
          if (!socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          // Send EHLO command
          socket.write("EHLO localhost\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          // Login with username and password
          QString loginCommand = "AUTH LOGIN\r\n";
          socket.write(loginCommand.toUtf8());
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          QString username = QByteArray().append(from.toUtf8()).toBase64();
          QString pass = QByteArray().append(password.toUtf8()).toBase64();
          socket.write(username.toUtf8() + "\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          socket.write(pass.toUtf8() + "\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
+         if(socket.readAll().contains("Username and Password not accepted")){
+             return "Les identifiants de sauvegarde n'ont pas été acceptés.";
+         }
 
          // Send mail from and to
          socket.write("MAIL FROM: <" + from.toUtf8() + ">\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          socket.write("RCPT TO: <" + to.toUtf8() + ">\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          // Send data
          socket.write("DATA\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          // Send mail content
          QByteArray boundary = "boundary_" + QByteArray::number(QDateTime::currentMSecsSinceEpoch());
@@ -165,28 +156,61 @@ void SavedData::SendEmail(QString subject, QString filePath){
              socket.write(file.readAll().toBase64());
              file.close();
          }
+         else{
+            return "Fichier " + file.fileName() + " non trouvé.";
+         }
 
          // End of email
          QString endPart = "\r\n--" + boundary + "--\r\n.\r\n";
          socket.write(endPart.toUtf8());
 
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
          // Quit
          socket.write("QUIT\r\n");
          if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             qDebug() << "Error: " << socket.errorString();
-             return;
+             return socket.errorString();
          }
-         qDebug() << "Response:" << socket.readAll();
 
         socket.close();
+
+        return "";
     }
+
+    return "Encryption non initialisée";
 }
 
 void SavedData::Synchronize(){
+    QStringList errors;
+    errors.append(SendEmail("BDD", "data.db"));
+
+    // Prescriptions save
+    QDirIterator iterator("prescriptions/", QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+    while(iterator.hasNext()){
+        QThread::msleep(200);
+        QString fileName = iterator.next();
+        QString dateTimeString = fileName.section('_', 2, 2).section('.', 0, 0);
+        QDateTime dateTime = QDateTime::fromString(dateTimeString, "dd-MM-yyyy_hh-mm-ss");
+
+        if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
+            SendEmail("Ordonnance", fileName);
+    }
+
+    bool success = true;
+    for (QString e : errors){
+        if(e != ""){
+            QMessageBox::critical(nullptr, "Erreur de sauvegarde", e);
+            success = false;
+            break;
+        }
+    }
+
+    if(success){
+        QMessageBox::information(nullptr, "Succès", "La sauvegarde a réussi.");
+        lastTimeSync = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
+    }
+
+    Save();
 }

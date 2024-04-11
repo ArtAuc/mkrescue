@@ -148,7 +148,8 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         savedData.SetCrypto(crypto, email, appPassword);
         savedData.Save();
 
-        savedData.Synchronize();
+        MoveSaveThread();
+
         ui->settingsPage->SetCrypto(crypto);
         ui->loginPage->setContentsMargins(0,0,0,0);
 
@@ -164,6 +165,16 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         resizeEvent(nullptr);
     }
 
+}
+
+void MainWindow::MoveSaveThread(){
+    QThread* thread = new QThread();
+    savedData.moveToThread(thread);
+
+    QObject::connect(thread, &QThread::started, &savedData, &SavedData::Synchronize);
+    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+
+    thread->start();
 }
 
 void MainWindow::ToggleFoundBoxText(){

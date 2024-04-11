@@ -20,7 +20,7 @@ public:
     void SetHash(QByteArray h){accessHash = h.toHex();}
     void Synchronize();
     void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword);
-    void SendEmail(QString subject, QString filePath);
+    QString SendEmail(QString subject, QString filePath);
 
 public slots:
 
@@ -29,6 +29,7 @@ private:
     QString accessHash;
     QString encryptedEmail;
     QString encryptedAppPassword;
+    QString lastTimeSync;
 };
 
 #endif // SAVEDDATA_H
