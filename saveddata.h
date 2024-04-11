@@ -3,8 +3,12 @@
 
 #include <QFile>
 #include <QMessageBox>
+#include <QtNetwork>
+#include <QStringConverter>
 
-class SavedData
+#include "simplecrypt.h"
+
+class SavedData : public QObject
 {
 public:
     SavedData();
@@ -14,9 +18,17 @@ public:
     QStringList GetShelterInfos();
     bool HashExists(){return !accessHash.isEmpty();}
     void SetHash(QByteArray h){accessHash = h.toHex();}
+    void Synchronize();
+    void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword);
+    void SendEmail(QString subject, QString filePath);
+
+public slots:
 
 private:
-    QString accessHash = "";
+    SimpleCrypt *crypto = nullptr;
+    QString accessHash;
+    QString encryptedEmail;
+    QString encryptedAppPassword;
 };
 
 #endif // SAVEDDATA_H

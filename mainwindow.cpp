@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->loginPage->SetMode(!savedData.Load());
 
-    connect(ui->loginPage, SIGNAL(Unlock(QByteArray)), this, SLOT(ToggleLock(QByteArray)));
+    connect(ui->loginPage, SIGNAL(Unlock(QByteArray, QString, QString)), this, SLOT(ToggleLock(QByteArray, QString, QString)));
 
 
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
     connect(ui->homePage, SIGNAL(TriggerEditHome(QString,QStringList)), this, SLOT(TriggerEdit(QString,QStringList)));
     ui->reasonVetAnimalEdit->hide();
+    ui->removeButton->setIcon(QIcon("media/trash.svg"));
 
     InitEditWidgets();
 
@@ -123,7 +124,7 @@ void MainWindow::InitEditWidgets(){
 }
 
 
-void MainWindow::ToggleLock(QByteArray h){
+void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
     ui->topHorizontalWidget->hide();
     ui->menuTree->hide();
     ui->menuLogoLabel->hide();
@@ -131,10 +132,9 @@ void MainWindow::ToggleLock(QByteArray h){
     if(h != ""){
         if(!savedData.HashExists()){ // New installation
             savedData.SetHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256));
-            savedData.Save();
         }
 
-        else if(!savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
+        else if(email == "" && !savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
             return;
 
         // Login sucessful
@@ -145,6 +145,10 @@ void MainWindow::ToggleLock(QByteArray h){
         crypto->setKey(key);
 
         db.SetCrypto(crypto);
+        savedData.SetCrypto(crypto, email, appPassword);
+        savedData.Save();
+
+        savedData.Synchronize();
         ui->settingsPage->SetCrypto(crypto);
         ui->loginPage->setContentsMargins(0,0,0,0);
 

@@ -52,7 +52,7 @@ public slots:
     void ToggleFoundBoxText();
     void ToggleSatisfiedBoxText();
     void ToggleReasonEdit();
-    void ToggleLock(QByteArray h = NULL);
+    void ToggleLock(QByteArray h = NULL, QString email = "", QString appPassword = "");
 
 private:
     void ExportRegistry(QString type);

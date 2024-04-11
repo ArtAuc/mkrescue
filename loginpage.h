@@ -93,7 +93,7 @@ public slots:
         else if(label->text().startsWith("Confirmez")){
             QByteArray newHash = QCryptographicHash::hash((lineEdit->text() + "refuge").toUtf8(), QCryptographicHash::Sha256);
             if(newHash == hash){
-                label->setText("Entrez la clé Google Drive API (non modifiable)");
+                label->setText("Entrez l'adresse email de sauvegarde");
                 lineEdit->setEchoMode(QLineEdit::Normal);
             }
             else{
@@ -102,8 +102,14 @@ public slots:
             }
         }
 
-        else if(label->text().startsWith("Entrez")){
-            emit Unlock(hash);
+        else if(label->text().startsWith("Entrez l'adresse email de sauvegarde")){
+            email = lineEdit->text();
+            label->setText("Entrez le mot de passe application correspondant");
+        }
+
+        else if(label->text().startsWith("Entrez le mot de passe application correspondant")){
+            appPassword = lineEdit->text();
+            emit Unlock(hash, email, appPassword);
         }
 
         else if(label->text().startsWith("Veuillez")){
@@ -115,13 +121,15 @@ public slots:
     }
 
 signals:
-    void Unlock(QByteArray h);
+    void Unlock(QByteArray h, QString email = "", QString appPassword = "");
 
 private:
     QPixmap icon;
     QLabel *label, *iconLabel;
     QLineEdit *lineEdit;
     QByteArray hash;
+    QString email;
+    QString appPassword;
     QPushButton *nextButton;
     QPropertyAnimation *shakeAnimation = nullptr;
 };
