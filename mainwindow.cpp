@@ -19,8 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
+    connect(ui->syncButton, SIGNAL(clicked(bool)), this, SLOT(MoveSaveThread()));
     connect(ui->searchIcon, SIGNAL(clicked(bool)), ui->searchLine, SLOT(setFocus()));
     ui->searchIcon->setIcon(QIcon("media/search.svg"));
+
+    ui->syncButton->setIcon(QIcon("media/sync.svg"));
 
     InitExportButtons();
 
@@ -68,6 +71,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lostPage->SetType("lost");
     ui->vetPage->SetType("vet");
     ui->adoptionDemandPage->SetType("adoptionDemand");
+
+    syncMovie = new QMovie();
+    syncMovie->setFileName("media/sync.gif");
+
 }
 
 
@@ -164,7 +171,6 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         Clean();
         resizeEvent(nullptr);
     }
-
 }
 
 void MainWindow::MoveSaveThread(){
@@ -172,7 +178,23 @@ void MainWindow::MoveSaveThread(){
     savedData.moveToThread(thread);
 
     QObject::connect(thread, &QThread::started, &savedData, &SavedData::Synchronize);
-    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+
+    QObject::connect(&savedData, &SavedData::SynchronizationStarted, this, [this]() {
+        connect(syncMovie, &QMovie::frameChanged, [=]{
+            ui->syncButton->setIcon(syncMovie->currentPixmap());
+        });
+        syncMovie->start();
+    });
+
+
+    QObject::connect(&savedData, &SavedData::SynchronizationFinished, this, [this]() {
+        syncMovie->stop();
+        ui->syncButton->setIcon(QIcon("media/sync.svg"));
+    });
+
+    QObject::connect(thread, &QThread::finished, thread, [thread, this]() {
+        thread->deleteLater();
+    });
 
     thread->start();
 }
@@ -329,6 +351,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
     ui->searchIcon->setFixedHeight(ui->searchLine->height());
+
+    ui->syncButton->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
+    ui->syncButton->setFixedHeight(ui->searchLine->height());
 }
 
 void MainWindow::ToggleModifyButtons()

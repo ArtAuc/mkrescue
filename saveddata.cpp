@@ -154,7 +154,6 @@ QString SavedData::SendEmail(QString subject, QString filePath){
                                       "\r\n";
              socket.write(attachmentPart.toUtf8());
              socket.write(file.readAll().toBase64());
-             file.close();
          }
          else{
             return "Fichier " + file.fileName() + " non trouvé.";
@@ -183,13 +182,13 @@ QString SavedData::SendEmail(QString subject, QString filePath){
 }
 
 void SavedData::Synchronize(){
+    emit SynchronizationStarted();
     QStringList errors;
     errors.append(SendEmail("BDD", "data.db"));
 
     // Prescriptions save
     QDirIterator iterator("prescriptions/", QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while(iterator.hasNext()){
-        QThread::msleep(200);
         QString fileName = iterator.next();
         QString dateTimeString = fileName.section('_', 2, 2).section('.', 0, 0);
         QDateTime dateTime = QDateTime::fromString(dateTimeString, "dd-MM-yyyy_hh-mm-ss");
@@ -197,6 +196,10 @@ void SavedData::Synchronize(){
         if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
             SendEmail("Ordonnance", fileName);
     }
+
+    emit SynchronizationFinished();
+
+    moveToThread(QCoreApplication::instance()->thread());
 
     bool success = true;
     for (QString e : errors){

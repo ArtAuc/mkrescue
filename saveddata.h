@@ -10,6 +10,7 @@
 
 class SavedData : public QObject
 {
+    Q_OBJECT
 public:
     SavedData();
     void Save();
@@ -22,7 +23,10 @@ public:
     void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword);
     QString SendEmail(QString subject, QString filePath);
 
-public slots:
+
+signals:
+    void SynchronizationStarted();
+    void SynchronizationFinished();
 
 private:
     SimpleCrypt *crypto = nullptr;

@@ -9,6 +9,7 @@
 #include <QPageSize>
 #include <QPainter>
 #include <QStandardPaths>
+#include <QMovie>
 
 #include "database.h"
 #include "menutree.h"
@@ -76,5 +77,6 @@ private:
     int rowClicked;
     SavedData savedData;
     SimpleCrypt *crypto;
+    QMovie *syncMovie = nullptr;
 };
 #endif // MAINWINDOW_H
