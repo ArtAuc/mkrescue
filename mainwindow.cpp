@@ -134,9 +134,10 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
     if(h != ""){
         if(!savedData.HashExists()){ // New installation
             savedData.SetHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256));
+            savedData.SetLastTimeSync(QDateTime::currentDateTime());
         }
 
-        else if(email == "" && !savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
+        else if(!savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
             return;
 
         // Login sucessful
@@ -227,6 +228,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->menuTree->collapseAllExcept(txt);
         if(txt == "Accueil"){
             stacked->setCurrentWidget(ui->homePage);
+            ui->homePage->LoadAlerts(savedData.GetLastTimeExport());
         }
         else if (txt == "Fiches chiens"){
             LoadDogCards();

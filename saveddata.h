@@ -20,7 +20,9 @@ public:
     SavedData();
     bool Load();
     bool CompareHash(QByteArray h){return accessHash == h.toHex();}
-    QStringList GetShelterInfos();
+    QDate GetLastTimeExport(){return QDate::fromString(lastTimeExport, "yyyy-MM-dd");}
+    void SetLastTimeExport(QDate date){lastTimeExport = date.toString("yyyy-MM-dd");}
+    void SetLastTimeSync(QDateTime dateTime){lastTimeSync = dateTime.toString("yyyy-MM-ddTHH:mm:ss");}
     bool HashExists(){return !accessHash.isEmpty();}
     void SetHash(QByteArray h){accessHash = h.toHex();}
     void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton);
@@ -37,9 +39,8 @@ signals:
 private:
     SimpleCrypt *crypto = nullptr;
     QString accessHash;
-    QString encryptedEmail;
-    QString encryptedAppPassword;
-    QString lastTimeSync;
+    QString encryptedEmail, encryptedAppPassword;
+    QString lastTimeSync, lastTimeExport;
     QToolButton *syncButton;
     bool synchronizing = false;
     QMovie *syncMovie;

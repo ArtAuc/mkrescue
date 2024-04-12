@@ -548,7 +548,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -571,8 +571,8 @@ margin-right:30px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>54</width>
-               <height>18</height>
+               <width>480</width>
+               <height>574</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -1001,7 +1001,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>2</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1026,7 +1026,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1059,9 +1059,6 @@ QTabBar::tab:selected {
                     </item>
                     <item>
                      <widget class="QDateEdit" name="entryDateEdit">
-                      <property name="calendarPopup">
-                       <bool>true</bool>
-                      </property>
                       <property name="currentSectionIndex">
                        <number>0</number>
                       </property>
@@ -1512,7 +1509,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1545,9 +1542,6 @@ QTabBar::tab:selected {
                     </item>
                     <item>
                      <widget class="QDateEdit" name="careEntryDateEdit">
-                      <property name="calendarPopup">
-                       <bool>true</bool>
-                      </property>
                       <property name="currentSectionIndex">
                        <number>0</number>
                       </property>
@@ -1585,9 +1579,6 @@ QTabBar::tab:selected {
                     </item>
                     <item>
                      <widget class="QDateEdit" name="careDestDateEdit">
-                      <property name="calendarPopup">
-                       <bool>true</bool>
-                      </property>
                       <property name="currentSectionIndex">
                        <number>0</number>
                       </property>

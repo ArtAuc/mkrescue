@@ -63,7 +63,7 @@ public slots:
     void ToggleLock(QByteArray h = NULL, QString email = "", QString appPassword = "");
 
 private:
-    void ExportRegistry(QString type);
+    void ExportRegistry(QString type, QString year = "");
     QString ClearUselessBreaks(QString s);
     void InitYearRegistry(QString type, QString year);
     void InitExportButtons();

@@ -12,9 +12,6 @@ class HoverToolButton : public QToolButton {
     Q_OBJECT
 public:
     HoverToolButton(QWidget *parent = nullptr) : QToolButton(parent) {
-        animation = new QPropertyAnimation(this, "maximumHeight", this);
-        animation->setDuration(200);
-        animation->setEasingCurve(QEasingCurve::InOutQuad);
         connect(this, &HoverToolButton::entered, this, &HoverToolButton::startAnimation);
         connect(this, &HoverToolButton::left, this, &HoverToolButton::stopAnimation);
     }
@@ -36,20 +33,16 @@ signals:
 
 private slots:
     void startAnimation() {
-        originalHeight = maximumHeight();
-        animation->setStartValue(originalHeight);
-        animation->setEndValue(0.9 * originalHeight);
-        animation->start();
+        originalSize = iconSize();
+        setIconSize(1.3 * originalSize);
     }
 
     void stopAnimation() {
-        animation->stop();
-        setMaximumHeight(originalHeight);
+        setIconSize(originalSize);
     }
 
 private:
-    QPropertyAnimation *animation;
-    int originalHeight;
+    QSize originalSize;
 };
 
 #endif // HOVERTOOLBUTTON_H

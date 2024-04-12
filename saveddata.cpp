@@ -18,7 +18,7 @@ SavedData::SavedData()
 
         if(success){
             QMessageBox::information(nullptr, "Succès", "La sauvegarde a réussi.");
-            lastTimeSync = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
+            lastTimeSync = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
         }
 
         Save();
@@ -27,8 +27,42 @@ SavedData::SavedData()
     });
 }
 
-void SavedData::Save(){
+bool SavedData::Load(){
+    QFile file("save");
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&file);
 
+        accessHash = in.readLine();
+        encryptedEmail = in.readLine();
+        encryptedAppPassword = in.readLine();
+        lastTimeSync = in.readLine();
+        lastTimeExport = in.readLine();
+
+
+        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty() && !lastTimeExport.isEmpty()){
+            file.close();
+
+            return true;
+        }
+
+        file.close();
+    }
+
+    accessHash.clear();
+    encryptedEmail.clear();
+    encryptedAppPassword.clear();
+    lastTimeSync.clear();
+    lastTimeExport.clear();
+
+
+    file.open(QIODevice::ReadWrite); // (Re)create file if not valid
+    file.close();
+
+    return false;
+}
+
+
+void SavedData::Save(){
     QFile file("save");
     if(!file.open(QIODevice::WriteOnly)){
         QMessageBox::critical(nullptr, "Erreur", "Sauvegarde locale des données impossible.");
@@ -40,11 +74,17 @@ void SavedData::Save(){
         out << accessHash << "\n";
         out << encryptedEmail << "\n";
         out << encryptedAppPassword << "\n";
-        out << lastTimeSync;
+        out << lastTimeSync << "\n";
+        if(!QDate::fromString(lastTimeExport, "yyyy-MM-dd").isValid())
+            out << "Never";
+        else
+            out << lastTimeExport;
     }
 
     file.close();
 }
+
+
 
 void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton){
     this->crypto = crypto;
@@ -57,42 +97,18 @@ void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPasswor
 
     connect(syncButton, &QToolButton::clicked, this, &SavedData::Synchronize);
 
-    if(lastTimeSync == "" || QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss").daysTo(QDateTime::currentDateTime()) > 1)
+    if(lastTimeSync == "" || QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss").daysTo(QDateTime::currentDateTime()) > 1)
         syncButton->setIcon(QIcon("media/sync_red.svg"));
     else
         syncButton->setIcon(QIcon("media/sync.svg"));
 }
 
-bool SavedData::Load(){
-    QFile file("save");
-    if (file.open(QIODevice::ReadOnly)) {
-        QTextStream in(&file);
-
-        accessHash = in.readLine();
-        encryptedEmail = in.readLine();
-        encryptedAppPassword = in.readLine();
-        lastTimeSync = in.readLine();
-
-        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty()){
-            file.close();
-
-            return true;
-        }
-
-        file.close();
-    }
-
-    file.open(QIODevice::ReadWrite); // (Re)create file if not valid
-    file.close();
-
-    return false;
-}
 
 void SavedData::SynchronizeWorker(){
     QStringList errors;
     QFileInfo lastTimeInfo("data.db");
     QDateTime lastTimeModif = lastTimeInfo.lastModified();
-    if(lastTimeSync == "" || lastTimeModif > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
+    if(lastTimeSync == "" || lastTimeModif > QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss"))
         errors.append(SendEmail("BDD", "data.db"));
 
     // Prescriptions save
@@ -102,7 +118,7 @@ void SavedData::SynchronizeWorker(){
         QString dateTimeString = fileName.section('_', 2, 2).section('.', 0, 0);
         QDateTime dateTime = QDateTime::fromString(dateTimeString, "dd-MM-yyyy_hh-mm-ss");
 
-        if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
+        if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss"))
             SendEmail("Ordonnance", fileName);
     }
 
@@ -114,7 +130,7 @@ QString SavedData::SendEmail(QString subject, QString filePath){
         QString from = crypto->decryptToString(encryptedEmail);
         QString password = crypto->decryptToString(encryptedAppPassword);
         QString to = from;
-        subject += " - " + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
+        subject += " - " + QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
         QString body = "";
         QString smtpServer = "smtp.gmail.com";
         int port = 465; // Gmail SMTP port

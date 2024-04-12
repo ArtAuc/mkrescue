@@ -25,7 +25,7 @@ public:
             horizontalWidget->setLayout(new QHBoxLayout());
             horizontalWidget->layout()->addWidget(new StatWidget("currentDogs"));
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
+            horizontalWidget->layout()->addWidget(new StatWidget("numberAdoptions"));
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
             horizontalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
@@ -35,12 +35,14 @@ public:
             alertsWidget = findChild<QWidget*>("homeScrollContents");
             layout->setSpacing(0);
 
-            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea{background-color:white;border:none;border-left:1px solid #aaa;}");
+            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea {"
+                                        "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fafafa, stop:1 white);"
+                                        "border: none;"
+                                        "border-left: 1px solid #aaa;"
+                                        "}");
         }
 
         alertDays = 7;
-        lastDate = "";
-        LoadAlerts();
     }
 
     void resizeEvent(QResizeEvent *event) override{
@@ -69,7 +71,14 @@ public:
         }
     }
 
-    void LoadAlerts(){
+    void LoadAlerts(QDate lastTimeExport = QDate()){
+        QString lastDate = "";
+
+        if(lastTimeExport.isNull())
+            lastTimeExport = this->lastTimeExport;
+
+        this->lastTimeExport = lastTimeExport;
+
         if(alertsWidget != nullptr){
             qDeleteAll(alertsWidget->findChildren<QPushButton*>());
             qDeleteAll(alertsWidget->findChildren<QLabel*>());
@@ -94,7 +103,9 @@ public:
                                   "    WHERE reason = 'Vaccin' "
                                   "    GROUP BY id_dog "
                                   ") AS LatestVet ON Vet.id_dog = LatestVet.id_dog AND Vet.date = LatestVet.max_date "
-                                  "WHERE Vet.reason LIKE 'Vaccin%'"
+                                  "WHERE Vet.reason LIKE 'Vaccin%' "
+                                  "UNION "
+                                  "SELECT :scheduledExportDate AS date, 'Prévoir l''exportation PDF du registre E/S',  '', strftime('%Y', :lastTimeExport), '' "
                                   ") AS Results ";
 
 
@@ -105,7 +116,21 @@ public:
 
             queryString +="ORDER BY Results.date;";
 
+
             query.prepare(queryString);
+
+            query.bindValue(":lastTimeExport", lastTimeExport);
+            if(lastTimeExport.isValid()){
+                if(lastTimeExport.addMonths(1) >= QDate::currentDate())
+                    query.bindValue(":scheduledExportDate", lastTimeExport.addMonths(1));
+                else // scheduled date has passed
+                    query.bindValue(":scheduledExportDate", QDate::currentDate());
+            }
+            else{
+                query.bindValue(":scheduledExportDate", QDate::currentDate());
+                lastTimeExport = QDate::currentDate();
+            }
+
 
             HandleErrorExec(&query);
 
@@ -134,10 +159,16 @@ public:
                     necessary = {query.value(0).toString(), query.value(4).toString()};
                 }
 
-                else if(type == "Prévoir le rappel de vaccin"){
+                else if(type.startsWith("Prévoir le rappel de vaccin")){
                     color = QColor("#20718e");
                     necessary = {query.value(4).toString()};
                 }
+
+                else if(type.startsWith("Prévoir l'exportation")){
+                    color = QColor("#984800");
+                    necessary = {QString::number(lastTimeExport.year())};
+                }
+
 
                 if(lastDate != dateString){
                     QLabel *dateLabel = new QLabel(dateString);
@@ -152,10 +183,10 @@ public:
                               "QPushButton:hover{background-color:" + color.lighter(110).name() + ";}";
 
 
-                QPushButton *but = new QPushButton(AutoBreak(timeString + type + " : " + query.value(2).toString() + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"), 50));
+                QPushButton *but = new QPushButton(AutoBreak(timeString + type + QString(query.value(2).toString().isEmpty() ? "" : " : " + query.value(2).toString()) + QString(query.value(3).toString().isEmpty() ? "" : " (" + query.value(3).toString() + ")"), 50));
 
                 connect(but, &QPushButton::clicked, this, [=]() {
-                    TriggerEditSlot("vet", necessary);
+                    HandleAlertPress(type, necessary);
                 });
 
                 but->setStyleSheet(stylesheet);
@@ -183,18 +214,23 @@ public slots:
         LoadAlerts();
     }
 
-    void TriggerEditSlot(QString type, QStringList necessary){
-        emit TriggerEditHome(type, necessary);
+    void HandleAlertPress(QString type, QStringList necessary){
+        if(type.startsWith("Prévoir l'exportation"))
+            emit ExportES(necessary[0]);
+
+        else
+            emit TriggerEditHome("vet", necessary);
     }
 
 signals:
     void TriggerEditHome(QString type, QStringList necessary);
+    void ExportES(QString year);
 
 private:
     QWidget *alertsWidget = nullptr;
     int alertDays{};
     QSpacerItem *spacer = nullptr;
-    QString lastDate;
+    QDate lastTimeExport;
 };
 
 #endif // HOMEPAGE_H

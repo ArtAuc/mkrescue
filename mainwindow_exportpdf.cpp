@@ -5,10 +5,23 @@ void MainWindow::InitExportButtons(){
     connect(ui->entryExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("entryRegistry");});
     connect(ui->careExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("careRegistry");});
     connect(ui->membersExportButton, &QPushButton::clicked, this, [=]() {ExportRegistry("members");});
+
+    connect(ui->homePage, &HomePage::ExportES, this, [=](QString year) {ExportRegistry("entryRegistry", year);});
 }
 
-void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "careRegistry" || "members"
+void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryRegistry" || "careRegistry" || "members"
+    if(year.isEmpty())
+        year = ui->yearBox->currentText();
+
     ui->searchLine->clear();
+
+    if(type.contains("entry"))
+        ChangePage(ui->menuTree->topLevelItem(2)->child(0));
+    else if(type.contains("care"))
+        ChangePage(ui->menuTree->topLevelItem(2)->child(1));
+    else if(type.contains("members"))
+        ChangePage(ui->menuTree->topLevelItem(2)->child(2));
+
 
     QString suggestedName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Registre ";
     if(type.contains("entry"))
@@ -18,7 +31,7 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     else if(type.contains("members"))
         suggestedName += "Adherents";
 
-    suggestedName += " " + ui->yearBox->currentText();
+    suggestedName += " " + year;
     suggestedName = QDir::toNativeSeparators(suggestedName) + ".pdf";
 
     QString fileName = QFileDialog::getSaveFileName(nullptr, "Enregistrement du registre", suggestedName, "Fichiers PDF (*.pdf)");
@@ -86,7 +99,7 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     x = (pageSize.width() - rect.width()) / 2;
     painter.drawText(QPointF(x, pageSize.height() / 2), txt);
 
-    txt = ui->yearBox->currentText();
+    txt = year;
     rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
     x = (pageSize.width() - rect.width()) / 2;
     painter.drawText(QPointF(x, 0.6 * pageSize.height()), txt);
@@ -160,12 +173,14 @@ void MainWindow::ExportRegistry(QString type){ // type = "entryRegistry" || "car
     table->verticalScrollBar()->show();
 
     if(type == "entryRegistry")
-        LoadEntryRegistry(ui->yearBox->currentText(), ui->searchLine->text());
+        LoadEntryRegistry(year, ui->searchLine->text());
     else if(type == "careRegistry")
-        LoadCareRegistry(ui->yearBox->currentText(), ui->searchLine->text());
+        LoadCareRegistry(year, ui->searchLine->text());
     else if(type == "members")
-        LoadMembers(ui->yearBox->currentText(), ui->searchLine->text());
+        LoadMembers(year, ui->searchLine->text());
 
     page->resizeEvent(nullptr);
 
+    savedData.SetLastTimeExport(QDate::currentDate());
+    savedData.Save();
 }

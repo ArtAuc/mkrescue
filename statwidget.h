@@ -28,6 +28,10 @@ public:
             infoLabel->setText("ADHÉRENTS");
         }
 
+        else if(type == "numberAdoptions"){
+            hColor = "";
+        }
+
         infoLabel->setStyleSheet("color:#" + hColor + ";");
         infoLabel->setAlignment(Qt::AlignCenter);
 
