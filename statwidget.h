@@ -28,8 +28,9 @@ public:
             infoLabel->setText("ADHÉRENTS");
         }
 
-        else if(type == "numberAdoptions"){
-            hColor = "";
+        else if(type == "adoptions"){
+            hColor = "a86ba2";
+            infoLabel->setText("ADOPTIONS " + QString::number(QDate::currentDate().year()));
         }
 
         infoLabel->setStyleSheet("color:#" + hColor + ";");
@@ -73,6 +74,18 @@ public:
             query.prepare("SELECT COUNT(DISTINCT id_people) "
                           "FROM Members "
                           "WHERE date(Members.date, '+1 year') > date('now')");
+        }
+
+        else if(type == "adoptions"){
+            query.prepare("SELECT COUNT(*) "
+                          "FROM Dogs "
+                          "WHERE id_dog IN "
+                          "(SELECT id_dog "
+                          "FROM Destinations "
+                          "WHERE strftime('%Y', Destinations.date) = :year "
+                          "AND type = 'Adoption')");
+
+            query.bindValue(":year", QDate::currentDate().year());
         }
 
 

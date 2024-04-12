@@ -321,8 +321,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
     ui->searchIcon->setFixedHeight(ui->searchLine->height());
 
-    ui->syncButton->setIconSize(QSize(ui->titleLabel->height(), ui->titleLabel->height()));
-    ui->syncButton->setFixedHeight(ui->titleLabel->height());
+    int syncWidth = 0.03 * width();
+    ui->syncButton->setIconSize(QSize(syncWidth, syncWidth));
+    ui->syncButton->setFixedHeight(syncWidth);
 }
 
 void MainWindow::ToggleModifyButtons()
@@ -371,6 +372,9 @@ void MainWindow::Search(QString search){
 
 // Only necessary infos are sent because the list is stored when the slot is connected
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
+    ui->searchLine->hide();
+    ui->searchIcon->hide();
+
     QSqlQuery query;
     QStringList infos;
 

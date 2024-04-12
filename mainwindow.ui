@@ -548,7 +548,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -1749,7 +1749,7 @@ QTabBar::tab:selected {
           <item>
            <layout class="QHBoxLayout" name="editButtonsLayout">
             <item>
-             <widget class="QToolButton" name="removeButton">
+             <widget class="HoverToolButton" name="removeButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>

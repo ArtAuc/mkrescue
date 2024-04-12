@@ -25,7 +25,7 @@ public:
             horizontalWidget->setLayout(new QHBoxLayout());
             horizontalWidget->layout()->addWidget(new StatWidget("currentDogs"));
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            horizontalWidget->layout()->addWidget(new StatWidget("numberAdoptions"));
+            horizontalWidget->layout()->addWidget(new StatWidget("adoptions"));
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
             horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
             horizontalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");

@@ -34,7 +34,7 @@ signals:
 private slots:
     void startAnimation() {
         originalSize = iconSize();
-        setIconSize(1.3 * originalSize);
+        setIconSize(1.2 * originalSize);
     }
 
     void stopAnimation() {
