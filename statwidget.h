@@ -10,6 +10,7 @@
 class GraphWidget : public QWidget {
 public:
     GraphWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+    GraphWidget(QString hColor) {color = QColor("#" + hColor);}
 
     void setData(const std::vector<QPointF>& data) {
         this->data = data;
@@ -40,7 +41,7 @@ protected:
             qreal yScale = (height() - 40) / (maxY - minY);
 
             // Draw graph
-            painter.setPen(QPen(Qt::blue, 2));
+            painter.setPen(QPen(color, 2));
             QPointF prevPoint;
             for (size_t i = 0; i < data.size(); ++i) {
                 QPointF point(i * xScale, (data[i].y() - minY) * yScale);
@@ -56,6 +57,7 @@ private:
     std::vector<QPointF> data;
     qreal minY;
     qreal maxY;
+    QColor color;
 };
 
 class StatWidget : public QFrame
@@ -97,7 +99,7 @@ public:
 
         layout()->addWidget(infoLabel);
 
-        statGraph = new GraphWidget;
+        statGraph = new GraphWidget(hColor);
         statGraph->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
         statGraph->setStyleSheet("background-color:white;");
         layout()->addWidget(statGraph);
@@ -112,51 +114,62 @@ public:
     void UpdateStat(){
         QSqlQuery query;
 
-        if(type == "currentDogs"){
-            query.prepare("SELECT COUNT(*) "
-                          "FROM Dogs "
-                          "WHERE id_dog NOT IN "
-                          "(SELECT id_dog "
-                          "FROM Destinations "
-                          "WHERE type = 'Entrée au refuge' "
-                          "OR type = 'Mort' "
-                          "UNION "
-                          "SELECT id_dog "
-                          "FROM Care_registry) "
-                          "AND id_dog IN "
-                          "(SELECT id_dog FROM ES_Registry)");
-        }
-
-        else if(type == "currentMembers"){
-            query.prepare("SELECT COUNT(DISTINCT id_people) "
-                          "FROM Members "
-                          "WHERE date(Members.date, '+1 year') > date('now')");
-        }
-
-        else if(type == "adoptions"){
-            query.prepare("SELECT COUNT(*) "
-                          "FROM Dogs "
-                          "WHERE id_dog IN "
-                          "(SELECT id_dog "
-                          "FROM Destinations "
-                          "WHERE strftime('%Y', Destinations.date) = :year "
-                          "AND type = 'Adoption')");
-
-            query.bindValue(":year", QString::number(QDate::currentDate().year()));
-        }
 
         // Charts
         std::vector<QPointF> points;
-        points.push_back(QPointF(1, 2));
-        points.push_back(QPointF(2, 3));
-        points.push_back(QPointF(3, 2));
+
+        int x = 0;
+        for(QDate date = QDate::currentDate().addDays(-370); date <= QDate::currentDate(); date = date.addDays(10)){
+            if(type == "currentDogs"){
+                query.prepare("SELECT COUNT(*) "
+                              "FROM Dogs "
+                              "WHERE id_dog NOT IN "
+                              "(SELECT id_dog "
+                              "FROM Destinations "
+                              "WHERE Destinations.date <= :date "
+                              "AND (type = 'Entrée au refuge' "
+                              "OR type = 'Mort') "
+                              "UNION "
+                              "SELECT id_dog "
+                              "FROM Care_registry) "
+                              "AND id_dog IN "
+                              "(SELECT id_dog FROM ES_Registry WHERE date_prov <= :date)");
+            }
+
+            else if(type == "currentMembers"){
+                query.prepare("SELECT COUNT(DISTINCT id_people) "
+                              "FROM Members "
+                              "WHERE date(Members.date, '+1 year') > date('now') "
+                              "AND date <= :date");
+            }
+
+            else if(type == "adoptions"){
+                query.prepare("SELECT COUNT(*) "
+                              "FROM Dogs "
+                              "WHERE id_dog IN "
+                              "(SELECT id_dog "
+                              "FROM Destinations "
+                              "WHERE strftime('%Y', Destinations.date) = :currentYear "
+                              "AND type = 'Adoption'"
+                              "AND Destinations.date <= :date)");
+
+                query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
+            }
+
+            query.bindValue(":date", date);
+
+            HandleErrorExec(&query);
+            query.next();
+
+            points.push_back(QPointF(x, query.value(0).toFloat()));
+
+            x += 1;
+        }
 
         statGraph->setData(points);
 
-        HandleErrorExec(&query);
-        query.next();
 
-        statLabel->setText(query.value(0).toString());
+        statLabel->setText(QString::number(points[points.size() - 1].y()));
     }
 
     void resizeEvent(QResizeEvent *event) override{
