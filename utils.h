@@ -109,6 +109,41 @@ inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
             QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text() + "\n" + query->executedQuery());
         }
     }
+
+    // Save query into history
+    queryString = query->executedQuery();
+
+    QRegularExpression abandonRegex("Abandon de .* le ..\\/..\\/....");
+    if(query->boundValues().size() == 0 || abandonRegex.match(query->boundValue(1).toString()).hasMatch() || queryString.contains("SET address = :empty"))
+        return; // Filter out some unwanted queries
+
+    if(queryString.contains("INSERT INTO") || queryString.contains("UPDATE") || queryString.contains("DELETE FROM")){
+        QFile file("history");
+        if (!file.exists()) {
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                QMessageBox::critical(nullptr, "Erreur d'exécution SQL", "Le fichier d'historique n'a pas pu être créé.");
+                return;
+            }
+            file.close();
+        }
+
+        if (file.open(QIODevice::Append | QIODevice::Text)) {
+            QTextStream out(&file);
+            out << queryString;
+            out << ";\n\n";
+
+            QString values;
+            for (QVariant v : query->boundValues())
+                values += v.toString() + ", ";
+
+            values.chop(2);
+
+            out << values << "\n\n;;;;;\n\n";
+            file.close();
+        }
+        else
+            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", "Le fichier d'historique n'a pas pu être ouvert.");
+    }
 }
 
 inline bool IsInTable(QString table, QString attribute, QString value){

@@ -79,12 +79,10 @@ EditDogWidget::EditDogWidget(QString nameEnd){
        QRegularExpression disallowSeparator("\\A[^|]{0,255}\\z");
        QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowSeparator, this); // To prevent parsing problems (separators are made of |)
 
-       dogNameEdit->setValidator(validator);
-       chipEdit->setValidator(validator);
-       descriptionEdit->setValidator(validator);
-
-       for(QLineEdit *lineEdit : findChildren<QLineEdit*>())
+       for(QLineEdit *lineEdit : findChildren<QLineEdit*>()){
+           lineEdit->setValidator(validator);
            QObject::connect(lineEdit, &QLineEdit::textEdited, this, &EditDogWidget::LineEditFormat);
+       }
 }
 
 void EditDogWidget::showEvent(QShowEvent* event){

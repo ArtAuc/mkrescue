@@ -69,8 +69,8 @@ protected:
 
         // Check if mouse is over an ellipse
         for (size_t i = 0; i < points.size(); ++i) {
-            if (QRectF(points[i].x() - 5, points[i].y() - 5, 10, 10).contains(event->pos())) {
-                QToolTip::showText(event->globalPosition().toPoint(), data[i].first);
+            if (QRectF(points[i].x() - 10, points[i].y() - 10, 20, 20).contains(event->pos())) {
+                QToolTip::showText(event->globalPosition().toPoint(), (data[i].first + " : " + QString::number(data[i].second)));
                 return;
             }
         }
