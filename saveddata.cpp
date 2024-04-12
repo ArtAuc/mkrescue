@@ -56,6 +56,11 @@ void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPasswor
     }
 
     connect(syncButton, &QToolButton::clicked, this, &SavedData::Synchronize);
+
+    if(lastTimeSync == "" || QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss").daysTo(QDateTime::currentDateTime()) > 1)
+        syncButton->setIcon(QIcon("media/sync_red.svg"));
+    else
+        syncButton->setIcon(QIcon("media/sync.svg"));
 }
 
 bool SavedData::Load(){
@@ -81,6 +86,27 @@ bool SavedData::Load(){
     file.close();
 
     return false;
+}
+
+void SavedData::SynchronizeWorker(){
+    QStringList errors;
+    QFileInfo lastTimeInfo("data.db");
+    QDateTime lastTimeModif = lastTimeInfo.lastModified();
+    if(lastTimeSync == "" || lastTimeModif > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
+        errors.append(SendEmail("BDD", "data.db"));
+
+    // Prescriptions save
+    QDirIterator iterator("prescriptions/", QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+    while(iterator.hasNext()){
+        QString fileName = iterator.next();
+        QString dateTimeString = fileName.section('_', 2, 2).section('.', 0, 0);
+        QDateTime dateTime = QDateTime::fromString(dateTimeString, "dd-MM-yyyy_hh-mm-ss");
+
+        if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
+            SendEmail("Ordonnance", fileName);
+    }
+
+    emit SynchronizationFinished(errors);
 }
 
 QString SavedData::SendEmail(QString subject, QString filePath){
@@ -205,24 +231,6 @@ QString SavedData::SendEmail(QString subject, QString filePath){
     }
 
     return "Crypto non initialisée";
-}
-
-void SavedData::SynchronizeWorker(){
-    QStringList errors;
-    errors.append(SendEmail("BDD", "data.db"));
-
-    // Prescriptions save
-    QDirIterator iterator("prescriptions/", QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
-    while(iterator.hasNext()){
-        QString fileName = iterator.next();
-        QString dateTimeString = fileName.section('_', 2, 2).section('.', 0, 0);
-        QDateTime dateTime = QDateTime::fromString(dateTimeString, "dd-MM-yyyy_hh-mm-ss");
-
-        if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-dd_HH:mm:ss"))
-            SendEmail("Ordonnance", fileName);
-    }
-
-    emit SynchronizationFinished(errors);
 }
 
 void SavedData::Synchronize(){

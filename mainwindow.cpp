@@ -22,8 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->searchIcon, SIGNAL(clicked(bool)), ui->searchLine, SLOT(setFocus()));
     ui->searchIcon->setIcon(QIcon("media/search.svg"));
 
-    ui->syncButton->setIcon(QIcon("media/sync.svg"));
-
     InitExportButtons();
 
     // editPage
