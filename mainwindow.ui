@@ -491,13 +491,6 @@ QComboBox {
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="syncButton">
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -536,6 +529,13 @@ margin-right:30px;</string>
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QToolButton" name="syncButton">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -548,7 +548,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -650,6 +650,10 @@ QCheckBox:unchecked {
 QCheckBox::indicator:unchecked{
 		image: url('media/cross.png');
 }
+
+QCheckBox{
+	margin-left:5px;
+}
 </string>
               </property>
               <property name="text">
@@ -709,8 +713,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>86</width>
-               <height>84</height>
+               <width>984</width>
+               <height>567</height>
               </rect>
              </property>
              <property name="styleSheet">

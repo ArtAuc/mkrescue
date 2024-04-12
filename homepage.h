@@ -39,6 +39,7 @@ public:
         }
 
         alertDays = 7;
+        lastDate = "";
         LoadAlerts();
     }
 

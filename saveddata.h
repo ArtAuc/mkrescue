@@ -41,6 +41,8 @@ private:
     QString encryptedAppPassword;
     QString lastTimeSync;
     QToolButton *syncButton;
+    bool synchronizing = false;
+    QMovie *syncMovie;
 };
 
 #endif // SAVEDDATA_H

@@ -3,6 +3,10 @@
 SavedData::SavedData()
 {
     QObject::connect(this, &SavedData::SynchronizationFinished, this, [this](QStringList errors){
+        syncMovie->stop();
+        syncButton->setIcon(QIcon("media/sync.svg"));
+        delete syncMovie;
+
         bool success = true;
         for (QString e : errors){
             if(e != ""){
@@ -18,6 +22,8 @@ SavedData::SavedData()
         }
 
         Save();
+
+        synchronizing = false;
     });
 }
 
@@ -202,14 +208,6 @@ QString SavedData::SendEmail(QString subject, QString filePath){
 }
 
 void SavedData::SynchronizeWorker(){
-    // Sync button animation
-    QMovie *syncMovie = new QMovie;
-    syncMovie->setFileName("media/sync.gif");
-    syncMovie->start();
-    QObject::connect(syncMovie, &QMovie::frameChanged, [=]{
-        syncButton->setIcon(syncMovie->currentPixmap());
-    });
-
     QStringList errors;
     errors.append(SendEmail("BDD", "data.db"));
 
@@ -224,15 +222,21 @@ void SavedData::SynchronizeWorker(){
             SendEmail("Ordonnance", fileName);
     }
 
-    syncMovie->stop();
-    syncButton->setIcon(QIcon("media/sync.svg"));
-    delete syncMovie;
-
     emit SynchronizationFinished(errors);
 }
 
 void SavedData::Synchronize(){
-    if(crypto){
+    if(crypto && !synchronizing){
+        // Sync button animation
+        synchronizing = true;
+        syncMovie = new QMovie;
+        syncMovie->setFileName("media/sync.gif");
+        QObject::connect(syncMovie, &QMovie::frameChanged, [this](){
+            syncButton->setIcon(syncMovie->currentPixmap());
+        });
+
+        syncMovie->start();
+
         QtConcurrent::run(&SavedData::SynchronizeWorker, this);
     }
 }

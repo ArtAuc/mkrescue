@@ -160,6 +160,7 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         }
 
         ChangePage(ui->menuTree->topLevelItem(0));
+        ui->menuTree->topLevelItem(0)->setSelected(true);
         ui->topHorizontalWidget->show();
         ui->menuTree->show();
         ui->menuLogoLabel->show();
@@ -228,7 +229,6 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         ui->menuTree->collapseAllExcept(txt);
         if(txt == "Accueil"){
             stacked->setCurrentWidget(ui->homePage);
-            ui->homePage->LoadAlerts();
         }
         else if (txt == "Fiches chiens"){
             LoadDogCards();
@@ -321,8 +321,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
     ui->searchIcon->setFixedHeight(ui->searchLine->height());
 
-    ui->syncButton->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
-    ui->syncButton->setFixedHeight(ui->searchLine->height());
+    ui->syncButton->setIconSize(QSize(ui->titleLabel->height(), ui->titleLabel->height()));
+    ui->syncButton->setFixedHeight(ui->titleLabel->height());
 }
 
 void MainWindow::ToggleModifyButtons()
