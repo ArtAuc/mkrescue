@@ -106,20 +106,31 @@ void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPasswor
 
 void SavedData::SynchronizeWorker(){
     QStringList errors;
-    QFileInfo lastTimeInfo("data.db");
-    QDateTime lastTimeModif = lastTimeInfo.lastModified();
-    if(lastTimeSync == "" || lastTimeModif > QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss"))
+
+    // history
+    QFile historyFile("history");
+    if (historyFile.exists()){
+        errors.append(SendEmail("History", "history"));
+        historyFile.remove();
+
+        // data.db
         errors.append(SendEmail("BDD", "data.db"));
+    }
+
+
 
     // Prescriptions save
     QDirIterator iterator("prescriptions/", QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while(iterator.hasNext()){
         QString fileName = iterator.next();
-        QString dateTimeString = fileName.section('_', 2, 2).section('.', 0, 0);
-        QDateTime dateTime = QDateTime::fromString(dateTimeString, "dd-MM-yyyy_hh-mm-ss");
+        QRegularExpression regex("(\\d{2}-\\d{2}-\\d{4}_\\d{2}-\\d{2}-\\d{2})");
+        QRegularExpressionMatch match = regex.match(fileName);
+        if (match.hasMatch()) {
+             QDateTime dateTime = QDateTime::fromString(match.captured(1), "dd-MM-yyyy_hh-mm-ss");
 
-        if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss"))
-            SendEmail("Ordonnance", fileName);
+             if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss"))
+                 SendEmail("Ordonnance", fileName);
+        }
     }
 
     emit SynchronizationFinished(errors);

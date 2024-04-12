@@ -129,6 +129,7 @@ inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
 
         if (file.open(QIODevice::Append | QIODevice::Text)) {
             QTextStream out(&file);
+            out << QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss") << "\n";
             out << queryString;
             out << ";\n\n";
 

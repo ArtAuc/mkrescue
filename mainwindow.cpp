@@ -325,6 +325,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     int syncWidth = 0.03 * width();
     ui->syncButton->setIconSize(QSize(syncWidth, syncWidth));
     ui->syncButton->setFixedHeight(syncWidth);
+    ui->removeButton->setFixedWidth(ui->removeButton->height());
 }
 
 void MainWindow::ToggleModifyButtons()
