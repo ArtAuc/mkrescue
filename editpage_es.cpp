@@ -53,6 +53,12 @@ void EditPage::ClearAllPages()
     ChangeEntryType("Abandon");
 
     UpdateButtons();
+
+    for(EditDogWidget *c : findChildren<EditDogWidget*>())
+        c->SetOldId("-1");
+
+    for(EditPeopleWidget *c : findChildren<EditPeopleWidget*>())
+        c->SetOldId("-1");
 }
 
 void EditPage::UpdateDestinationPages(QString type){

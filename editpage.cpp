@@ -45,6 +45,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
     if(parent == nullptr)
         parent = this;
 
+
     QString last_name = GetField("lastName" + nameEnd, parent);
     QString first_name = GetField("firstName" + nameEnd, parent);
     QString phone = GetField("phone" + nameEnd, parent);

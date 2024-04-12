@@ -90,6 +90,8 @@ void EditDogWidget::showEvent(QShowEvent* event){
     QSqlQuery query;
 
     QStringList dogNameList, chipList, descriptionList;
+    birthList.clear();
+    sexList.clear();
 
     HandleErrorExec(&query, "SELECT name, chip, description, sex, birth "
                "FROM Dogs;");
