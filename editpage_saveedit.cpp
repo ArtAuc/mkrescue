@@ -263,17 +263,18 @@ void EditPage::SaveEdit()
         if(death_causes.isEmpty())
             death_causes.append("");
 
-        // Verify that there is not an entry with this dog the same day
-        query.prepare("SELECT * "
-                      "FROM ES_registry "
-                      "WHERE id_dog = :id_dog "
-                      "AND date_prov = :date_prov");
-        query.bindValue(":id_dog", id_dog);
-        query.bindValue(":date_prov", date_prov);
-        HandleErrorExec(&query);
-        if(query.next()){
-            QMessageBox::critical(nullptr, "Erreur", "Impossible de créer deux entrées avec le même chien arrivant le même jour");
-            return;
+        if(id_dog != entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId()){// Verify that there is not an entry with this dog the same day
+            query.prepare("SELECT * "
+                          "FROM ES_registry "
+                          "WHERE id_dog = :id_dog "
+                          "AND date_prov = :date_prov");
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":date_prov", date_prov);
+            HandleErrorExec(&query);
+            if(query.next()){
+                QMessageBox::critical(nullptr, "Erreur", "Impossible de créer deux entrées avec le même chien arrivant le même jour");
+                return;
+            }
         }
 
 
@@ -314,9 +315,8 @@ void EditPage::SaveEdit()
 
         query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
         query.bindValue(":id_dog", id_dog);
-        query.bindValue(":date_prov", date_prov);
+        query.bindValue(":date", date_prov);
         HandleErrorExec(&query);
-
 
 
         for(int i = 0; i < id_peoples.count(); i++){

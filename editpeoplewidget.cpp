@@ -112,19 +112,11 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
 
     QRegularExpression disallowUnderscore("\\A[^_|]{0,255}\\z");
     QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowUnderscore, this); // To prevent parsing problems (separators are made of _, |)
-    lastNameEdit->setValidator(validator);
-    firstNameEdit->setValidator(validator);
-    phoneEdit->setValidator(validator);
-    emailEdit->setValidator(validator);
-    addressEdit->setValidator(validator);
-    address2Edit->setValidator(validator);
-    QRegularExpression disallowUnderscoreSpace("\\A[^_|\\s]{0,255}\\z");
-    validator = new QRegularExpressionValidator(disallowUnderscoreSpace, this);
-    postalCodeEdit->setValidator(validator);
-    cityEdit->setValidator(validator);
 
-    for(QLineEdit *lineEdit : findChildren<QLineEdit*>())
+    for(QLineEdit *lineEdit : findChildren<QLineEdit*>()){
+        lineEdit->setValidator(validator);
         QObject::connect(lineEdit, &QLineEdit::textEdited, this, &EditPeopleWidget::LineEditFormat);
+    }
 }
 
 
@@ -170,29 +162,29 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
     foreach (QLineEdit* lineEdit, lineEdits) {
         QString editName = lineEdit->objectName();
-        if (!editName.contains("spinbox")) {
+        if (!editName.startsWith("spinbox")) {
             QCompleter* completer = nullptr;
-            if (editName.contains("address2"))
+            if (editName.startsWith("address2"))
                 completer = new QCompleter(new QStringListModel(address2List, this), lineEdit);
-            else if (editName.contains("firstName"))
+            else if (editName.startsWith("firstName"))
                 completer = new QCompleter(new QStringListModel(firstNameList, this), lineEdit);
-            else if (editName.contains("address"))
+            else if (editName.startsWith("address"))
                 completer = new QCompleter(new QStringListModel(addressList, this), lineEdit);
-            else if (editName.contains("postalCode"))
+            else if (editName.startsWith("postalCode"))
                 completer = new QCompleter(new QStringListModel(postalCodeList, this), lineEdit);
-            else if (editName.contains("city"))
+            else if (editName.startsWith("city"))
                 completer = new QCompleter(new QStringListModel(cityList, this), lineEdit);
-            else if (editName.contains("lastName"))
+            else if (editName.startsWith("lastName"))
                 completer = new QCompleter(new QStringListModel(lastNameList, this), lineEdit);
-            else if (editName.contains("phone"))
+            else if (editName.startsWith("phone"))
                 completer = new QCompleter(new QStringListModel(phoneList, this), lineEdit);
-            else if (editName.contains("email"))
+            else if (editName.startsWith("email"))
                 completer = new QCompleter(new QStringListModel(emailList, this), lineEdit);
 
             if (completer) {
                 completer->setCaseSensitivity(Qt::CaseInsensitive);
                 lineEdit->setCompleter(completer);
-                if(editName.contains("lastName") || editName.contains("firstName") || editName.contains("phone") || editName.contains("email")){
+                if(editName.startsWith("lastName") || editName.startsWith("firstName") || editName.startsWith("phone") || editName.startsWith("email")){
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
                     connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));
@@ -299,6 +291,21 @@ void EditPeopleWidget::PreviewOtherFields(QString s){
 
 void EditPeopleWidget::LineEditFormat(QString text) {
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
-    if(lineEdit->objectName().contains("lastName"))
+    QString name = lineEdit->objectName();
+    if(name.startsWith("lastName"))
         lineEdit->setText(text.toUpper());
+    else if(name.startsWith("firstName") || name.startsWith("city") || name.startsWith("postalCode")){
+        QString formattedText;
+        QRegularExpression regex("[-\\s]");
+        QStringList words = text.split(regex);
+        for (const QString &word : words) {
+            if (!formattedText.isEmpty())
+                formattedText.append("-");
+            formattedText.append(word.left(1).toUpper() + word.mid(1).toLower());
+        }
+        lineEdit->setText(formattedText);
+    }
+
+    else if(name.startsWith("email"))
+        lineEdit->setText(text.toLower());
 }

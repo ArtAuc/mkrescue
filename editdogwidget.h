@@ -22,11 +22,12 @@ public:
     EditDogWidget(QString nameEnd);
     void showEvent(QShowEvent *event) override;
     QString GetOldId(){ return oldId; }
-    void SetOldId(QString oldId){ this->oldId = oldId; }
+    void SetOldId(QString oldId){ this->oldId = oldId;}
 
 public slots:
     void FillOtherFields(QString s);
     void PreviewOtherFields(QString s = "");
+    void LineEditFormat(QString text);
 
 private:
     QStringList sexList, birthList;

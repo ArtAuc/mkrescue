@@ -83,6 +83,8 @@ EditDogWidget::EditDogWidget(QString nameEnd){
        chipEdit->setValidator(validator);
        descriptionEdit->setValidator(validator);
 
+       for(QLineEdit *lineEdit : findChildren<QLineEdit*>())
+           QObject::connect(lineEdit, &QLineEdit::textEdited, this, &EditDogWidget::LineEditFormat);
 }
 
 void EditDogWidget::showEvent(QShowEvent* event){
@@ -242,5 +244,21 @@ void EditDogWidget::PreviewOtherFields(QString s){
     else{
         foreach (QLineEdit* lineEdit, lineEdits)
             lineEdit->setPlaceholderText("");
+    }
+}
+
+void EditDogWidget::LineEditFormat(QString text){
+    QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
+
+    if(lineEdit->objectName().startsWith("dogName")){
+        QString formattedText;
+        QRegularExpression regex("[-\\s]");
+        QStringList words = text.split(regex);
+        for (const QString &word : words) {
+            if (!formattedText.isEmpty())
+                formattedText.append("-");
+            formattedText.append(word.left(1).toUpper() + word.mid(1).toLower());
+        }
+        lineEdit->setText(formattedText);
     }
 }
