@@ -34,10 +34,10 @@ public:
     ~MainWindow();
     void resizeEvent(QResizeEvent *event) override;
     void changeEvent(QEvent *event) override {
-        QMainWindow::changeEvent(event);
-
         if (event->type() == QEvent::ActivationChange || event->type() == QEvent::WindowStateChange)
             resizeEvent(nullptr);
+
+        QMainWindow::changeEvent(event);
     }
 
 

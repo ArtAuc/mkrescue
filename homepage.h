@@ -18,27 +18,23 @@ public:
         QWidget::showEvent(event);
 
         if(alertsWidget == nullptr){
-            QGridLayout* layout = qobject_cast<QGridLayout*>(this->layout());
-            layout->setContentsMargins(0,0,0,0);
+            layout()->setContentsMargins(0,0,0,0);
 
-            QWidget *horizontalWidget = new QWidget(this);
-            horizontalWidget->setLayout(new QHBoxLayout());
-            horizontalWidget->layout()->addWidget(new StatWidget("currentDogs"));
-            horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            horizontalWidget->layout()->addWidget(new StatWidget("adoptions"));
-            horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            horizontalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            horizontalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
+            QWidget *verticalWidget = new QWidget(this);
+            verticalWidget->setLayout(new QVBoxLayout());
+            verticalWidget->layout()->addWidget(new StatWidget("currentDogs"));
+            verticalWidget->layout()->addWidget(new StatWidget("currentMembers"));
+            verticalWidget->layout()->addWidget(new StatWidget("adoptions"));
+            verticalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
-            layout->addWidget(horizontalWidget, 0, 0, 1, 2);
+            qobject_cast<QHBoxLayout*>(layout())->insertWidget(0, verticalWidget);
 
             alertsWidget = findChild<QWidget*>("homeScrollContents");
-            layout->setSpacing(0);
+            layout()->setSpacing(0);
 
             alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea {"
-                                        "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fafafa, stop:1 white);"
+                                        "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);"
                                         "border: none;"
-                                        "border-left: 1px solid #aaa;"
                                         "}");
         }
 
@@ -49,7 +45,7 @@ public:
         QWidget::resizeEvent(event);
 
         if(alertsWidget != nullptr){
-
+            findChild<QScrollArea*>()->setMinimumWidth(0.75 * width());
             alertsWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
             for(StatWidget *c : findChildren<StatWidget*>())
                 c->resizeEvent(event);
@@ -72,6 +68,9 @@ public:
     }
 
     void LoadAlerts(QDate lastTimeExport = QDate()){
+        for(StatWidget *c : findChildren<StatWidget*>())
+            c->UpdateStat();
+
         QString lastDate = "";
 
         if(lastTimeExport.isNull())
@@ -121,8 +120,8 @@ public:
 
             query.bindValue(":lastTimeExport", lastTimeExport);
             if(lastTimeExport.isValid()){
-                if(lastTimeExport.addMonths(1) >= QDate::currentDate())
-                    query.bindValue(":scheduledExportDate", lastTimeExport.addMonths(1));
+                if(lastTimeExport.addMonths(6) >= QDate::currentDate())
+                    query.bindValue(":scheduledExportDate", lastTimeExport.addMonths(6));
                 else // scheduled date has passed
                     query.bindValue(":scheduledExportDate", QDate::currentDate());
             }

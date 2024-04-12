@@ -548,15 +548,21 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
           <string notr="true"/>
          </property>
-         <layout class="QGridLayout" name="gridLayout_13">
-          <item row="2" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_13">
+          <item>
            <widget class="QScrollArea" name="homeScrollArea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
@@ -571,8 +577,8 @@ margin-right:30px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>480</width>
-               <height>574</height>
+               <width>966</width>
+               <height>606</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -581,25 +587,6 @@ margin-right:30px;</string>
              <layout class="QVBoxLayout" name="verticalLayout_21"/>
             </widget>
            </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QWidget" name="homePlaceholder" native="true"/>
-          </item>
-          <item row="2" column="0">
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <widget class="QWidget" name="homePlaceholder_2" native="true"/>
           </item>
          </layout>
         </widget>
@@ -713,8 +700,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>984</width>
-               <height>567</height>
+               <width>86</width>
+               <height>84</height>
               </rect>
              </property>
              <property name="styleSheet">

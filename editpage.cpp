@@ -348,6 +348,7 @@ void EditPage::resizeEvent(QResizeEvent *event){
         font.setPointSize(width() * 0.01);
         bar->setFont(font);
     }
+
 }
 
 void EditPage::SameDestCare(){
