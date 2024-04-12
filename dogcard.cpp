@@ -43,8 +43,6 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
 
 
     QLabel *nameLabel = new QLabel(name, this);
-    nameLabel->setStyleSheet("font-size:23pt;"
-                             "font-weight:bold;");
 
     nameSexWidget = new QWidget(this);
     QHBoxLayout *nameSexLayout = new QHBoxLayout(nameSexWidget);
@@ -53,7 +51,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     nameSexLayout->addWidget(nameLabel);
     nameSexLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Preferred));
     nameSexWidget->setLayout(nameSexLayout);
-    nameSexWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    nameSexWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 
     QString info1String;
     if(typeInfo == "current" || typeInfo == "out"){
@@ -121,7 +119,6 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     detailsButton = new QToolButton(this);
     detailsButton->setIcon(QIcon("media/right.png"));
     detailsButton->setIconSize(QSize(iconSize, iconSize));
-    detailsButton->setFixedSize(iconSize, iconSize);
 
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
@@ -131,9 +128,13 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     compatDogBox = new TriStateCheckBox("Compatibilité chien", this);
     compatCatBox = new TriStateCheckBox("Compatibilité chat", this);
     historyScroll = new QScrollArea();
-    historyScroll->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     historyScroll->setObjectName("historyScroll" + chip);
-    historyScroll->setLayout(new QVBoxLayout());
+    QWidget *historyWidget = new QWidget(historyScroll);
+    historyWidget->setLayout(new QVBoxLayout());
+    historyWidget->setStyleSheet("background:white;");
+    historyWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    historyScroll->setWidgetResizable(true);
+    historyScroll->setWidget(historyWidget);
 
     // Make labels copiable
     info2Label->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -151,6 +152,8 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     layout->addWidget(descriptionLabel, 5, 0);
     layout->addWidget(detailsButton, 5, 2);
 
+
+
     nameLabel->setObjectName("nameLabel" + chip);
 
     setLayout(layout);
@@ -165,18 +168,20 @@ void DogCard::resizeEvent(QResizeEvent *event){
         layout->setSpacing(height() / 100);
 
         setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        factor = 0.7;
+        factor = 2;
     }
     else{
         setMaximumSize(parentSize / 4);
-        factor = 1.5;
+        factor = 1;
     }
 
 
     for(QWidget *c : findChildren<QWidget*>()){
         if(c->objectName() == "nameLabel" + chip){
-            c->setStyleSheet("font-size:" + QString::number(0.013 * mainWindow->width()) + "pt;"
-                                 "font-weight:bold;");
+            QFont font = c->font();
+            font.setBold(true);
+            font.setPointSizeF(factor * 0.013 * mainWindow->width());
+            c->setFont(font);
         }
 
         else if (qobject_cast<QLabel*>(c)){
@@ -195,12 +200,12 @@ void DogCard::resizeEvent(QResizeEvent *event){
     historyScroll->setStyleSheet("QScrollArea{"
                                     "background-color:white;"
                                     "margin-left:30px;"
-                                    "padding:30px;"
+                                    "padding-left:30px;"
                                     "border-left: 2px solid gray;"
                                     "border-radius:0px;"
                                  "}");
 
-    sexLabel->setPixmap(sexIcon.scaled(factor * size() / 10, Qt::KeepAspectRatio));
+    sexLabel->setPixmap(sexIcon.scaled(0.02 * factor * mainWindow->width(), 0.02 * factor * mainWindow->width(), Qt::KeepAspectRatio));
 }
 
 void DogCard::SelectThis(){
@@ -227,6 +232,7 @@ void DogCard::SelectThis(){
     birthLabel = new QLabel();
     chipLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     chipLabel->setCursor(QCursor(Qt::IBeamCursor));
+
     birthLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     birthLabel->setCursor(QCursor(Qt::IBeamCursor));
 
@@ -244,7 +250,7 @@ void DogCard::SelectThis(){
     if(type == "current"){
         birthLabel->setText(birthLabel->text() + "Âge : " + info2Label->text() + "\n");
         layout->removeWidget(info2Label);
-        info2Label->setText("");
+        info2Label->hide();
     }
 
     descriptionLabel->setText(descriptionLabel->text() + "\n");
@@ -289,7 +295,7 @@ void DogCard::SaveCard(){
 void DogCard::CreateHistory(){
     QSqlQuery query;
     QString queryString;
-    QVBoxLayout* histLayout = qobject_cast<QVBoxLayout*>(historyScroll->layout());
+    QVBoxLayout* histLayout = qobject_cast<QVBoxLayout*>(historyScroll->widget()->layout());
 
     // ES
     queryString = "SELECT ES_Registry.type_prov, People.last_name, People.first_name, People.phone, ES_Registry.date_prov AS date, 'ES' "
