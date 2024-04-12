@@ -4,24 +4,26 @@
 #include <QVBoxLayout>
 #include <QFrame>
 #include <QPainter>
+#include <QToolTip>
+#include <QMouseEvent>
 
 #include "utils.h"
 
 class GraphWidget : public QWidget {
 public:
-    GraphWidget(QWidget *parent = nullptr) : QWidget(parent) {}
-    GraphWidget(QString hColor) {color = QColor("#" + hColor);}
+    GraphWidget(QWidget *parent = nullptr) : QWidget(parent) {setMouseTracking(true);}
+    GraphWidget(QString hColor) : GraphWidget(nullptr) {color = QColor("#" + hColor);}
 
-    void setData(const std::vector<QPointF>& data) {
+    void setData(const std::vector<QPair<QString, int>>& data) {
         this->data = data;
         update();
 
-        minY = data[0].y();
-        maxY = data[0].y();
+        minY = data[0].second;
+        maxY = data[0].second;
 
-        for (QPointF point : data) {
-            minY = std::min(minY, point.y());
-            maxY = std::max(maxY, point.y());
+        for (QPair<QString, int> point : data) {
+            minY = std::min(minY, point.second);
+            maxY = std::max(maxY, point.second);
         }
     }
 
@@ -37,14 +39,22 @@ protected:
 
 
         if (!data.empty()) {
+
             qreal xScale = (width() - 40) / (data.size() - 1);
-            qreal yScale = (height() - 40) / (maxY - minY);
+            qreal yScale;
+            if(minY == maxY)
+                yScale = 1;
+            else
+                yScale = (height() - 40) / (maxY - minY);
 
             // Draw graph
             painter.setPen(QPen(color, 2));
+            points.clear();
             QPointF prevPoint;
             for (size_t i = 0; i < data.size(); ++i) {
-                QPointF point(i * xScale, (data[i].y() - minY) * yScale);
+                QPointF point(i * xScale, (data[i].second - minY) * yScale);
+                points.push_back(QPointF(point.x(), -point.y()) + QPointF(20, height() - 20));
+                painter.drawEllipse(point, 2, 2);
                 if (i > 0) {
                     painter.drawLine(prevPoint, point);
                 }
@@ -53,10 +63,26 @@ protected:
         }
     }
 
+    void mouseMoveEvent(QMouseEvent *event) override {
+        QWidget::mouseMoveEvent(event);
+
+
+        // Check if mouse is over an ellipse
+        for (size_t i = 0; i < points.size(); ++i) {
+            if (QRectF(points[i].x() - 5, points[i].y() - 5, 10, 10).contains(event->pos())) {
+                QToolTip::showText(event->globalPosition().toPoint(), data[i].first);
+                return;
+            }
+        }
+
+        QToolTip::hideText();
+    }
+
 private:
-    std::vector<QPointF> data;
-    qreal minY;
-    qreal maxY;
+    std::vector<QPair<QString, int>> data;
+    std::vector<QPointF> points;
+    int minY;
+    int maxY;
     QColor color;
 };
 
@@ -68,17 +94,19 @@ public:
     StatWidget(QString type) : StatWidget(nullptr){
         this->type = type;
 
-        setLayout(new QVBoxLayout());
+        QGridLayout *layout = new QGridLayout();
+        setLayout(layout);
+        layout->setSpacing(0);
+        layout->setContentsMargins(0,6,0,0);
 
         statLabel = new QLabel("x");
         statLabel->setStyleSheet("color:#333;");
         statLabel->setAlignment(Qt::AlignCenter);
 
-        layout()->addWidget(statLabel);
+        layout->addWidget(statLabel, 0, 0, 1, 1);
 
 
         infoLabel = new QLabel;
-        QString hColor;
         if(type == "currentDogs"){
             hColor = "20718e";
             infoLabel->setText("CHIENS AU REFUGE");
@@ -97,16 +125,69 @@ public:
         infoLabel->setStyleSheet("color:#" + hColor + ";");
         infoLabel->setAlignment(Qt::AlignCenter);
 
-        layout()->addWidget(infoLabel);
+        layout->addWidget(infoLabel, 1, 0, 1, 1);
 
         statGraph = new GraphWidget(hColor);
-        statGraph->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        statGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         statGraph->setStyleSheet("background-color:white;");
-        layout()->addWidget(statGraph);
+        layout->addWidget(statGraph, 2, 0, 3, 1);
 
-        setStyleSheet("QFrame {border:2px solid #" + hColor + "; border-radius:5px;background-color:white;} "
-                      "QLabel {border:none;}");
 
+        // daysInterval buttons
+        weekButton = new QPushButton();
+        weekButton->setText("Sem.");
+        layout->addWidget(weekButton, 2, 1, 1, 1);
+        connect(weekButton, &QPushButton::clicked, this, [=](){
+            SelectDaysInterval(weekButton);
+        });
+
+        monthButton = new QPushButton();
+        monthButton->setText("Mois");
+        connect(monthButton, &QPushButton::clicked, this, [=](){
+            SelectDaysInterval(monthButton);
+        });
+        layout->addWidget(monthButton, 3, 1, 1, 1);
+
+        yearButton = new QPushButton();
+        yearButton->setText("An");
+        layout->addWidget(yearButton, 4, 1, 1, 1);
+        connect(yearButton, &QPushButton::clicked, this, [=](){
+            SelectDaysInterval(yearButton);
+        });
+
+
+        SelectDaysInterval(monthButton);
+
+        setStyleSheet("QFrame {border:2px solid #" + hColor + "; border-radius:5px;background-color:white;padding-right:0;} "
+                      "QLabel {border:none;}"
+                      "QPushButton{"
+                      "background:white;"
+                      "color:#" + hColor + ";"
+                      "border:2px solid #" + hColor + ";"
+                      "border-radius:0px;"
+                      "border-bottom:none;"
+                      "border-right:none;"
+                      "margin-right:0;"
+                      "}");
+
+
+
+        UpdateStat();
+    }
+
+    void SelectDaysInterval(QPushButton *but){
+        if(but == weekButton)
+            daysInterval = 1;
+        else if(but == monthButton)
+            daysInterval = 4;
+        else if(but == yearButton)
+            daysInterval = 37;
+
+        weekButton->setStyleSheet("");
+        monthButton->setStyleSheet("");
+        yearButton->setStyleSheet("");
+
+        but->setStyleSheet("background-color:#" + hColor + ";color:white");
 
         UpdateStat();
     }
@@ -116,10 +197,10 @@ public:
 
 
         // Charts
-        std::vector<QPointF> points;
+        std::vector<QPair<QString, int>> points;
 
         int x = 0;
-        for(QDate date = QDate::currentDate().addDays(-370); date <= QDate::currentDate(); date = date.addDays(10)){
+        for(QDate date = QDate::currentDate().addDays(-daysInterval * 7); date <= QDate::currentDate(); date = date.addDays(daysInterval)){
             if(type == "currentDogs"){
                 query.prepare("SELECT COUNT(*) "
                               "FROM Dogs "
@@ -161,7 +242,7 @@ public:
             HandleErrorExec(&query);
             query.next();
 
-            points.push_back(QPointF(x, query.value(0).toFloat()));
+            points.push_back(QPair<QString, int>(date.toString("dd/MM/yyyy"), query.value(0).toInt()));
 
             x += 1;
         }
@@ -169,7 +250,7 @@ public:
         statGraph->setData(points);
 
 
-        statLabel->setText(QString::number(points[points.size() - 1].y()));
+        statLabel->setText(QString::number(points[points.size() - 1].second));
     }
 
     void resizeEvent(QResizeEvent *event) override{
@@ -194,6 +275,9 @@ private:
     QString type;
     QLabel *statLabel = nullptr, *infoLabel = nullptr;
     GraphWidget *statGraph = nullptr;
+    int daysInterval = 10;
+    QPushButton *weekButton, *monthButton, *yearButton;
+    QString hColor;
 };
 
 

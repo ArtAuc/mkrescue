@@ -193,7 +193,20 @@ public:
             }
 
             spacer = new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding);
+
+            // No alerts found
+            if(alertsWidget->findChildren<QPushButton*>().size() == 0){
+                alertsWidget->layout()->addItem(spacer);
+
+                QLabel *noneLabel = new QLabel("Aucune notification pour les 7 prochains jours");
+                noneLabel->setAlignment(Qt::AlignCenter);
+                noneLabel->setStyleSheet("font-weight:bold;border-bottom:1px solid #aaa;color:#333;margin:10px;");
+                alertsWidget->layout()->addWidget(noneLabel);
+            }
+
             alertsWidget->layout()->addItem(spacer);
+
+
 
             if(alertDays >= 0){
                 QPushButton *moreButton = new QPushButton("Notifications suivantes");
@@ -202,6 +215,7 @@ public:
                 connect(moreButton, SIGNAL(clicked(bool)), this, SLOT(UpAlertDays()));
                 moreButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
             }
+
 
             resizeEvent(nullptr);
         }
