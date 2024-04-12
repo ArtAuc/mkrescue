@@ -189,6 +189,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
     query.bindValue(":email", email);
     HandleErrorExec(&query);
 
+
     return newId;
 }
 
@@ -408,6 +409,14 @@ void EditPage::RemoveCurrent(){
                           "AND date_prov = :date;");
             query.bindValue(":id", currentNecessary[0]);
             query.bindValue(":date", currentNecessary[1]);
+            HandleErrorExec(&query);
+
+            query.prepare("DELETE FROM Destinations "
+                          "WHERE id_dog = :id "
+                          "AND date_prov = :date;");
+            query.bindValue(":id", currentNecessary[0]);
+            query.bindValue(":date", currentNecessary[1]);
+            HandleErrorExec(&query);
         }
 
         else if(lastType == "care"){

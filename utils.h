@@ -99,13 +99,15 @@ inline QStringList AddressList(QString address){
 
 inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
     if(queryString.isNull()){
-        if(!query->exec())
-            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text());
+        if(!query->exec()){
+            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text() + "\n" + query->executedQuery());
+        }
     }
 
     else{
-        if(!query->exec(queryString))
-            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text());
+        if(!query->exec(queryString)){
+            QMessageBox::critical(nullptr, "Erreur d'exécution SQL", query->lastError().text() + "\n" + query->executedQuery());
+        }
     }
 }
 

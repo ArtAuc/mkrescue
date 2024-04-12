@@ -115,6 +115,7 @@ void Database::Create()
                "id_people INT,"
                "date DATE,"
                "type VARCHAR(50),"
+               "date_prov DATE,"
                "FOREIGN KEY (id_dog) REFERENCES Dogs(id_dog),"
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
@@ -228,7 +229,7 @@ void Database::MakeRedList(){
                    "WHERE reason LIKE 'Abandon de % le __/__/____';");
 
 
-        HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, date_prov "
+        HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, ES_Registry.date_prov "
                    "FROM ES_Registry "
                    "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
                    "WHERE type_prov = '" + crypto->encryptToString(QString("Abandon")) + "'");
@@ -267,8 +268,8 @@ void Database::CleanPeople(){
                                 "Destinations WHERE id_people",
                                 "Red_list WHERE id_people",
                                 "Members WHERE id_people",
-                                "Lost WHERE id_people"
-                                "Adoption_demand WHERE id_people)"
+                                "Lost WHERE id_people",
+                                "Adoption_demand WHERE id_people"
                                };
 
     for(QString id : id_peoples){

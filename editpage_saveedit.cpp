@@ -208,9 +208,10 @@ void EditPage::Edit(QString type, QStringList infos){
         }
     }
 
-
-    AssignIdPeople(currentPage);
-    AssignIdDog(currentPage);
+    if(infos.size() > 0){
+        AssignIdPeople(currentPage);
+        AssignIdDog(currentPage);
+    }
 }
 
 
@@ -262,6 +263,19 @@ void EditPage::SaveEdit()
         if(death_causes.isEmpty())
             death_causes.append("");
 
+        // Verify that there is not an entry with this dog the same day
+        query.prepare("SELECT * "
+                      "FROM ES_registry "
+                      "WHERE id_dog = :id_dog "
+                      "AND date_prov = :date_prov");
+        query.bindValue(":id_dog", id_dog);
+        query.bindValue(":date_prov", date_prov);
+        HandleErrorExec(&query);
+        if(query.next()){
+            QMessageBox::critical(nullptr, "Erreur", "Impossible de créer deux entrées avec le même chien arrivant le même jour");
+            return;
+        }
+
 
         QString queryString;
         if (!currentNecessary.isEmpty()) { // Modifying
@@ -298,20 +312,22 @@ void EditPage::SaveEdit()
         HandleErrorExec(&query);
 
 
-        query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog");
+        query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
         query.bindValue(":id_dog", id_dog);
+        query.bindValue(":date_prov", date_prov);
         HandleErrorExec(&query);
 
 
 
         for(int i = 0; i < id_peoples.count(); i++){
-            query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type) "
-                          "VALUES (:id_dog, :id_people, :date, :type)");
+            query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type, date_prov) "
+                          "VALUES (:id_dog, :id_people, :date, :type, :date_prov)");
 
             query.bindValue(":id_dog", id_dog);
             query.bindValue(":id_people", id_peoples[i]);
             query.bindValue(":date", dates[i]);
             query.bindValue(":type", types[i]);
+            query.bindValue(":date_prov", date_prov);
 
             HandleErrorExec(&query);
         }

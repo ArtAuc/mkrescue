@@ -89,7 +89,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "FROM ES_registry "
         "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
         "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
-        "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
+        "LEFT JOIN Destinations ON (Dogs.id_dog = Destinations.id_dog AND ES_Registry.date_prov = Destinations.date_prov) "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
         "WHERE strftime('%Y', ES_registry.date_prov) = :year "
         "AND (People_prov.last_name LIKE :search OR People_prov.first_name LIKE :search OR People_prov.phone LIKE :search "
@@ -97,7 +97,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
         QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
         " OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr OR ES_Registry.death_cause = :exact OR Destinations.date = :exact OR Destinations.type = :exact)"
-        "GROUP BY Dogs.id_dog "
+        "GROUP BY Dogs.id_dog, ES_Registry.date_prov, ES_Registry.id_ES "
         "ORDER BY ES_registry.id_ES;";
 
     query.prepare(queryString);
@@ -192,7 +192,7 @@ QSqlQuery Database::GetMembers(QString year, QString search) {
 std::vector<QString> Database::GetRegistryYears(QString type) {
     QSqlQuery query;
     if (type == "entry"){
-        HandleErrorExec(&query, "SELECT DISTINCT strftime('%Y', date_prov) AS year "
+        HandleErrorExec(&query, "SELECT DISTINCT strftime('%Y', ES_Registry.date_prov) AS year "
                    "FROM ES_Registry "
                    "ORDER BY year ASC;");
     }

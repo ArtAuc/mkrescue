@@ -109,6 +109,7 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     postalCodeEdit->setMaxLength(20);
     cityEdit->setMaxLength(255);
 
+
     QRegularExpression disallowUnderscore("\\A[^_|]{0,255}\\z");
     QRegularExpressionValidator *validator = new QRegularExpressionValidator(disallowUnderscore, this); // To prevent parsing problems (separators are made of _, |)
     lastNameEdit->setValidator(validator);
@@ -121,6 +122,9 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
     validator = new QRegularExpressionValidator(disallowUnderscoreSpace, this);
     postalCodeEdit->setValidator(validator);
     cityEdit->setValidator(validator);
+
+    for(QLineEdit *lineEdit : findChildren<QLineEdit*>())
+        QObject::connect(lineEdit, &QLineEdit::textEdited, this, &EditPeopleWidget::LineEditFormat);
 }
 
 
@@ -291,4 +295,10 @@ void EditPeopleWidget::PreviewOtherFields(QString s){
         foreach (QLineEdit* lineEdit, lineEdits)
             lineEdit->setPlaceholderText("");
     }
+}
+
+void EditPeopleWidget::LineEditFormat(QString text) {
+    QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
+    if(lineEdit->objectName().contains("lastName"))
+        lineEdit->setText(text.toUpper());
 }

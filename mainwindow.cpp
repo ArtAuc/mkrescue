@@ -399,7 +399,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
                     "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
                     "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
-                    "WHERE id_ES = " + necessary[0] + " AND date_prov = '" + necessary[1] + "'"
+                    "WHERE id_ES = " + necessary[0] + " AND ES_registry.date_prov = '" + necessary[1] + "'"
                     "GROUP BY Dogs.id_dog ");
 
         query.next();

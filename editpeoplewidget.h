@@ -34,6 +34,7 @@ public:
 public slots:
     void FillOtherFields(QString s);
     void PreviewOtherFields(QString s = "");
+    void LineEditFormat(QString text);
 
 private:
     QString oldId = "-1";

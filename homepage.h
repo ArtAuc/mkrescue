@@ -45,7 +45,7 @@ public:
         QWidget::resizeEvent(event);
 
         if(alertsWidget != nullptr){
-            findChild<QScrollArea*>()->setMinimumWidth(0.75 * width());
+            findChild<QScrollArea*>()->setMinimumWidth(0.7 * width());
             alertsWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
             for(StatWidget *c : findChildren<StatWidget*>())
                 c->resizeEvent(event);

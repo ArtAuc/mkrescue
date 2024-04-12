@@ -466,5 +466,5 @@ void DogCard::HandlePrescription(){
         AddPrescription();
     else if (msgBox.clickedButton() == browseButton)
         OpenPrescriptionFolder();
-    else if(msgBox.clickedButton() == cancelButton);
+    else if(msgBox.clickedButton() == cancelButton){}
 }

@@ -105,6 +105,7 @@ public slots:
         else if(label->text().startsWith("Entrez l'adresse email de sauvegarde")){
             email = lineEdit->text();
             label->setText("Entrez le mot de passe application correspondant");
+            lineEdit->setEchoMode(QLineEdit::Password);
         }
 
         else if(label->text().startsWith("Entrez le mot de passe application correspondant")){
