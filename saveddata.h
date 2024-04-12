@@ -5,28 +5,34 @@
 #include <QMessageBox>
 #include <QtNetwork>
 #include <QStringConverter>
+#include <QToolButton>
+#include <QRunnable>
+#include <QMovie>
+#include <QtConcurrent/QtConcurrent>
 
 #include "simplecrypt.h"
+
 
 class SavedData : public QObject
 {
     Q_OBJECT
 public:
     SavedData();
-    void Save();
     bool Load();
     bool CompareHash(QByteArray h){return accessHash == h.toHex();}
     QStringList GetShelterInfos();
     bool HashExists(){return !accessHash.isEmpty();}
     void SetHash(QByteArray h){accessHash = h.toHex();}
+    void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton);
     void Synchronize();
-    void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword);
+    void SynchronizeWorker();
     QString SendEmail(QString subject, QString filePath);
 
+public slots:
+    void Save();
 
 signals:
-    void SynchronizationStarted();
-    void SynchronizationFinished();
+    void SynchronizationFinished(QStringList errors);
 
 private:
     SimpleCrypt *crypto = nullptr;
@@ -34,6 +40,7 @@ private:
     QString encryptedEmail;
     QString encryptedAppPassword;
     QString lastTimeSync;
+    QToolButton *syncButton;
 };
 
 #endif // SAVEDDATA_H

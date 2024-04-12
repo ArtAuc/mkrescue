@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(clicked(bool)), ui->menuTree, SLOT(Toggle()));
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
-    connect(ui->syncButton, SIGNAL(clicked(bool)), this, SLOT(MoveSaveThread()));
     connect(ui->searchIcon, SIGNAL(clicked(bool)), ui->searchLine, SLOT(setFocus()));
     ui->searchIcon->setIcon(QIcon("media/search.svg"));
 
@@ -71,10 +70,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lostPage->SetType("lost");
     ui->vetPage->SetType("vet");
     ui->adoptionDemandPage->SetType("adoptionDemand");
-
-    syncMovie = new QMovie();
-    syncMovie->setFileName("media/sync.gif");
-
 }
 
 
@@ -154,7 +149,7 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         crypto->setKey(key);
 
         db.SetCrypto(crypto);
-        savedData.SetCrypto(crypto, email, appPassword);
+        savedData.SetCrypto(crypto, email, appPassword, ui->syncButton);
         savedData.Save();
 
         ui->settingsPage->SetCrypto(crypto);
@@ -171,32 +166,6 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         Clean();
         resizeEvent(nullptr);
     }
-}
-
-void MainWindow::MoveSaveThread(){
-    QThread* thread = new QThread();
-    savedData.moveToThread(thread);
-
-    QObject::connect(thread, &QThread::started, &savedData, &SavedData::Synchronize);
-
-    QObject::connect(&savedData, &SavedData::SynchronizationStarted, this, [this]() {
-        connect(syncMovie, &QMovie::frameChanged, [=]{
-            ui->syncButton->setIcon(syncMovie->currentPixmap());
-        });
-        syncMovie->start();
-    });
-
-
-    QObject::connect(&savedData, &SavedData::SynchronizationFinished, this, [this]() {
-        syncMovie->stop();
-        ui->syncButton->setIcon(QIcon("media/sync.svg"));
-    });
-
-    QObject::connect(thread, &QThread::finished, thread, [thread, this]() {
-        thread->deleteLater();
-    });
-
-    thread->start();
 }
 
 void MainWindow::ToggleFoundBoxText(){

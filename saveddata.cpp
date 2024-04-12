@@ -2,6 +2,23 @@
 
 SavedData::SavedData()
 {
+    QObject::connect(this, &SavedData::SynchronizationFinished, this, [this](QStringList errors){
+        bool success = true;
+        for (QString e : errors){
+            if(e != ""){
+                QMessageBox::critical(nullptr, "Erreur de sauvegarde", e);
+                success = false;
+                break;
+            }
+        }
+
+        if(success){
+            QMessageBox::information(nullptr, "Succès", "La sauvegarde a réussi.");
+            lastTimeSync = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
+        }
+
+        Save();
+    });
 }
 
 void SavedData::Save(){
@@ -23,13 +40,16 @@ void SavedData::Save(){
     file.close();
 }
 
-void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword){
+void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton){
     this->crypto = crypto;
+    this->syncButton = syncButton;
 
     if(!email.isEmpty() && !appPassword.isEmpty()){
         encryptedEmail = crypto->encryptToString(email);
         encryptedAppPassword = crypto->encryptToString(appPassword);
     }
+
+    connect(syncButton, &QToolButton::clicked, this, &SavedData::Synchronize);
 }
 
 bool SavedData::Load(){
@@ -60,10 +80,10 @@ bool SavedData::Load(){
 QString SavedData::SendEmail(QString subject, QString filePath){
     if(crypto){
         QString from = crypto->decryptToString(encryptedEmail);
+        QString password = crypto->decryptToString(encryptedAppPassword);
         QString to = from;
         subject += " - " + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
         QString body = "";
-        QString password = crypto->decryptToString(encryptedAppPassword);
         QString smtpServer = "smtp.gmail.com";
         int port = 465; // Gmail SMTP port
 
@@ -178,11 +198,18 @@ QString SavedData::SendEmail(QString subject, QString filePath){
         return "";
     }
 
-    return "Encryption non initialisée";
+    return "Crypto non initialisée";
 }
 
-void SavedData::Synchronize(){
-    emit SynchronizationStarted();
+void SavedData::SynchronizeWorker(){
+    // Sync button animation
+    QMovie *syncMovie = new QMovie;
+    syncMovie->setFileName("media/sync.gif");
+    syncMovie->start();
+    QObject::connect(syncMovie, &QMovie::frameChanged, [=]{
+        syncButton->setIcon(syncMovie->currentPixmap());
+    });
+
     QStringList errors;
     errors.append(SendEmail("BDD", "data.db"));
 
@@ -197,23 +224,15 @@ void SavedData::Synchronize(){
             SendEmail("Ordonnance", fileName);
     }
 
-    emit SynchronizationFinished();
+    syncMovie->stop();
+    syncButton->setIcon(QIcon("media/sync.svg"));
+    delete syncMovie;
 
-    moveToThread(QCoreApplication::instance()->thread());
+    emit SynchronizationFinished(errors);
+}
 
-    bool success = true;
-    for (QString e : errors){
-        if(e != ""){
-            QMessageBox::critical(nullptr, "Erreur de sauvegarde", e);
-            success = false;
-            break;
-        }
+void SavedData::Synchronize(){
+    if(crypto){
+        QtConcurrent::run(&SavedData::SynchronizeWorker, this);
     }
-
-    if(success){
-        QMessageBox::information(nullptr, "Succès", "La sauvegarde a réussi.");
-        lastTimeSync = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH:mm:ss");
-    }
-
-    Save();
 }
