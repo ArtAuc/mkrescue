@@ -15,7 +15,8 @@ class MenuTree : public QTreeWidget
     Q_OBJECT
 public:
     explicit MenuTree(QWidget *parent = nullptr) : QTreeWidget(parent) {
-        connect(this, SIGNAL(itemClicked(QTreeWidgetItem*, int)), parent->parent(), SLOT(ChangePage(QTreeWidgetItem*)));
+        connect(this, SIGNAL(itemPressed(QTreeWidgetItem*, int)),
+                parent->parent(), SLOT(ChangePage(QTreeWidgetItem*)));
 
         setMouseTracking(true);
 

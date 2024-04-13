@@ -548,7 +548,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -988,7 +988,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>1</number>
+             <number>5</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1640,6 +1640,9 @@ QTabBar::tab:selected {
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
+                    </property>
+                    <property name="maximum">
+                     <double>999.990000000000009</double>
                     </property>
                    </widget>
                   </item>

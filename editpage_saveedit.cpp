@@ -45,6 +45,7 @@ void EditPage::Edit(QString type, QStringList infos){
 
     QWidget *currentPage = nullptr;
 
+
     if(type == "entry"){
         findChild<QTabWidget*>("entryTabWidget")->setCurrentIndex(0);
         currentPage = findChild<QWidget*>("entryEditPage");
@@ -61,7 +62,7 @@ void EditPage::Edit(QString type, QStringList infos){
             SetField("entryTypeBox", type_prov, currentPage);
 
             if(type_prov == "Fourrière"){
-                SetField("poundPlaceEdit", infos[2].split("_|_")[1], currentPage);
+                SetField("poundPlaceEdit", crypto->decryptToString(infos[2]).split("_|_")[1], currentPage);
             }
 
             else{
