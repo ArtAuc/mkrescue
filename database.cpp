@@ -323,3 +323,64 @@ void Database::SetCrypto(SimpleCrypt *crypto){
         HandleErrorExec(&query);
     }
 }
+
+void Database::ChangePassword(QString oldPassword, QString newPassword){
+    SimpleCrypt oldCrypto, newCrypto;
+    QByteArray old_h = QCryptographicHash::hash((oldPassword + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256);
+    quint64 old_key;
+    QDataStream old_stream(&old_h, QIODevice::ReadOnly);
+    old_stream >> old_key;
+    oldCrypto.setKey(old_key);
+
+    QByteArray new_h = QCryptographicHash::hash((newPassword + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256);
+    quint64 new_key;
+    QDataStream new_stream(&new_h, QIODevice::ReadOnly);
+    new_stream >> new_key;
+
+    newCrypto.setKey(new_key);
+
+    QSqlQuery loadQuery;
+    HandleErrorExec(&loadQuery, "SELECT id_people, address FROM People");
+    while(loadQuery.next()){
+        QSqlQuery saveQuery;
+        saveQuery.prepare("UPDATE People "
+                          "SET address = :address "
+                          "WHERE id_people = :id_people");
+        saveQuery.bindValue(":id_people", loadQuery.value(0).toInt());
+        saveQuery.bindValue(":address", newCrypto.encryptToString(oldCrypto.decryptToString(loadQuery.value(1).toString())));
+        HandleErrorExec(&saveQuery);
+    }
+
+    HandleErrorExec(&loadQuery, "SELECT id_ES, date_prov, type_prov FROM ES_Registry");
+    while(loadQuery.next()){
+        QSqlQuery saveQuery;
+        saveQuery.prepare("UPDATE ES_Registry "
+                          "SET type_prov = :type_prov "
+                          "WHERE id_ES = :id_ES "
+                          "AND date_prov = :date_prov");
+        saveQuery.bindValue(":id_ES", loadQuery.value(0).toInt());
+        saveQuery.bindValue(":date_prov", loadQuery.value(1).toDate());
+        saveQuery.bindValue(":type_prov", newCrypto.encryptToString(oldCrypto.decryptToString(loadQuery.value(2).toString())));
+        HandleErrorExec(&saveQuery);
+    }
+
+    // Replace first line of save (hashed password)
+    QFile file("save");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream in(&file);
+    QStringList lines;
+    while (!in.atEnd()) {
+        lines.append(in.readLine());
+    }
+    file.close();
+
+    lines[0] = QCryptographicHash::hash(QString(new_h.toHex() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256).toHex();
+
+    file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+    QTextStream out(&file);
+    for (const QString& line : lines)
+        out << line << '\n';
+    file.close();
+}

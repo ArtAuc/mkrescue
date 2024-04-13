@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <QThread>
+#include <QCryptographicHash>
 
 #include "utils.h"
 #include "simplecrypt.h"
@@ -29,6 +30,7 @@ public:
     void CleanPeople();
     void MakeRedList();
     void SetCrypto(SimpleCrypt *crypto);
+    static void ChangePassword(QString oldPassword, QString newPassword);
 
  private:
     QSqlDatabase _database;

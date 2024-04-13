@@ -591,11 +591,12 @@ QString MainWindow::ClearUselessBreaks(QString s){
 }
 
 void MainWindow::Clean(){
+    QSqlDatabase::removeDatabase("secondary");
+
     CleanThread *thread = new CleanThread(crypto);
 
     QObject::connect(thread, &CleanThread::finished, ui->editPage, &EditPage::FinishedCleaning);
     QObject::connect(thread, &CleanThread::finished, thread, &CleanThread::deleteLater);
-
 
     thread->start();
 
