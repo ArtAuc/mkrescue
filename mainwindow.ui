@@ -548,7 +548,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">

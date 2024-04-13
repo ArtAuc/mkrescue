@@ -232,7 +232,9 @@ void Database::MakeRedList(){
         HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, ES_Registry.date_prov "
                    "FROM ES_Registry "
                    "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
-                   "WHERE type_prov = '" + crypto->encryptToString(QString("Abandon")) + "'");
+                   "JOIN People ON id_people_prov = People.id_people "
+                   "WHERE type_prov = '" + crypto->encryptToString(QString("Abandon")) + "' "
+                   "AND (People.last_name != '' OR People.first_name != '' OR People.phone != '')");
 
         QStringList id_peoples;
         QStringList reasons;

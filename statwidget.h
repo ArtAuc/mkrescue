@@ -34,6 +34,7 @@ protected:
         QPainter painter(this);
 
         painter.setRenderHint(QPainter::Antialiasing, true);
+
         painter.translate(20, height() - 20);
         painter.scale(1, -1);
 
@@ -271,6 +272,7 @@ public:
             setMaximumHeight(parent->height() / 4);
         }
 
+        statGraph->setMaximumWidth(0.7 * width());
     }
 
 private:

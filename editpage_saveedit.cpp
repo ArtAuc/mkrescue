@@ -235,6 +235,8 @@ void EditPage::SaveEdit()
 
         // Animal
         QString id_dog = CreateDogIfNeeded("EntryAnimalEdit", entryEditPage);
+        if(id_dog == "-2")
+            return;
         // Sortie
         QStringList death_causes, id_peoples, dates, types;
 
@@ -315,10 +317,9 @@ void EditPage::SaveEdit()
 
 
         query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
-        query.bindValue(":id_dog", id_dog);
-        query.bindValue(":date", date_prov);
+        query.bindValue(":id_dog", entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId());
+        query.bindValue(":date", currentNecessary[1]);
         HandleErrorExec(&query);
-
 
         for(int i = 0; i < id_peoples.count(); i++){
             query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type, date_prov) "
@@ -356,6 +357,8 @@ void EditPage::SaveEdit()
 
         // Animal
         QString id_dog = CreateDogIfNeeded("CareAnimalEdit", careEditPage);
+        if(id_dog == "-2")
+            return;
 
         // Sortie
         QString exit_date = GetField("careDestDateEdit", careEditPage);
@@ -506,6 +509,8 @@ void EditPage::SaveEdit()
             reason = vetEditPage->findChild<QLineEdit*>("reasonVetAnimalEdit")->text();
 
         QString id_dog = CreateDogIfNeeded("VetAnimalEdit", vetEditPage);
+        if(id_dog == "-2")
+            return;
 
         if (!currentNecessary.isEmpty()) { // Modifying
             QString queryString = "UPDATE Vet "

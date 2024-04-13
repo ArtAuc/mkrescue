@@ -21,13 +21,14 @@ public:
             layout()->setContentsMargins(0,0,0,0);
 
             QWidget *verticalWidget = new QWidget(this);
+            verticalWidget->setObjectName("statVerticalWidget");
             verticalWidget->setLayout(new QVBoxLayout());
             verticalWidget->layout()->addWidget(new StatWidget("currentDogs"));
             verticalWidget->layout()->addWidget(new StatWidget("currentMembers"));
             verticalWidget->layout()->addWidget(new StatWidget("adoptions"));
             verticalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
-            qobject_cast<QHBoxLayout*>(layout())->insertWidget(0, verticalWidget);
+            qobject_cast<QHBoxLayout*>(layout())->addWidget(verticalWidget);
 
             alertsWidget = findChild<QWidget*>("homeScrollContents");
             layout()->setSpacing(0);
@@ -36,6 +37,8 @@ public:
                                         "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);"
                                         "border: none;"
                                         "}");
+
+            alertsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         }
 
         alertDays = 7;
@@ -45,10 +48,8 @@ public:
         QWidget::resizeEvent(event);
 
         if(alertsWidget != nullptr){
-            findChild<QScrollArea*>()->setMinimumWidth(0.7 * width());
-            alertsWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
-            for(StatWidget *c : findChildren<StatWidget*>())
-                c->resizeEvent(event);
+            layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
+            findChild<QWidget*>("statVerticalWidget")->setMaximumWidth(width() / 3);
 
 
             for (QPushButton *but : findChildren<QPushButton*>()){
@@ -64,6 +65,7 @@ public:
                 lab->setFont(font);
                 lab->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
+
         }
     }
 
@@ -104,7 +106,7 @@ public:
                                   ") AS LatestVet ON Vet.id_dog = LatestVet.id_dog AND Vet.date = LatestVet.max_date "
                                   "WHERE Vet.reason LIKE 'Vaccin%' "
                                   "UNION "
-                                  "SELECT :scheduledExportDate AS date, 'Prévoir l''exportation PDF du registre E/S',  '', strftime('%Y', :lastTimeExport), '' "
+                                  "SELECT :scheduledExportDate AS date, 'Prévoir l''export PDF du registre E/S',  '', strftime('%Y', :lastTimeExport), '' "
                                   ") AS Results ";
 
 
@@ -163,7 +165,7 @@ public:
                     necessary = {query.value(4).toString()};
                 }
 
-                else if(type.startsWith("Prévoir l'exportation")){
+                else if(type.startsWith("Prévoir l'export")){
                     color = QColor("#984800");
                     necessary = {QString::number(lastTimeExport.year())};
                 }
@@ -211,11 +213,8 @@ public:
             if(alertDays >= 0){
                 QPushButton *moreButton = new QPushButton("Notifications suivantes");
                 alertsWidget->layout()->addWidget(moreButton);
-                alertsWidget->setLayoutDirection(Qt::RightToLeft);
                 connect(moreButton, SIGNAL(clicked(bool)), this, SLOT(UpAlertDays()));
-                moreButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
             }
-
 
             resizeEvent(nullptr);
         }
@@ -228,7 +227,7 @@ public slots:
     }
 
     void HandleAlertPress(QString type, QStringList necessary){
-        if(type.startsWith("Prévoir l'exportation"))
+        if(type.startsWith("Prévoir l'export"))
             emit ExportES(necessary[0]);
 
         else
