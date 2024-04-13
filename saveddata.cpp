@@ -18,6 +18,7 @@ SavedData::SavedData()
 
         if(success){
             QMessageBox::information(nullptr, "Succès", "La sauvegarde a réussi.");
+            QFile("history").remove();
             lastTimeSync = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
         }
 
@@ -111,7 +112,6 @@ void SavedData::SynchronizeWorker(){
     QFile historyFile("history");
     if (historyFile.exists()){
         errors.append(SendEmail("History", "history"));
-        historyFile.remove();
 
         // data.db
         errors.append(SendEmail("BDD", "data.db"));

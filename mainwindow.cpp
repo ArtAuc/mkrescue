@@ -186,11 +186,14 @@ void MainWindow::ToggleSatisfiedBoxText(){
 // Change selected page from stacked widget, based on the selected menu item
 void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
-    if(item == nullptr)
+    if(item == nullptr) // Coming back from edit page
         item = ui->menuTree->currentItem();
+
+    ui->searchLine->clear();
 
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0).trimmed();
+
 
 
     if (txt == "Entrées/Sorties"){
@@ -254,14 +257,16 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     resizeEvent(nullptr);
 }
 
-void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care and entry
+void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care, entry and members
     db.ReorderEntryRegistry();
 
     // Init yearBox
     std::vector<QString> years = db.GetRegistryYears(type);
 
     QComboBox* box = ui->yearBox;
-    QObject::disconnect(box, nullptr, this, nullptr);
+
+    disconnect(box, nullptr, nullptr, nullptr);
+
     box->clear();
 
     for(QString y : years){
@@ -279,6 +284,8 @@ void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care 
         box->setCurrentIndex(yearIndex);
     else
         box->setCurrentIndex(box->count() - 1);
+
+    connect(box, &QComboBox::currentTextChanged, this, [=](){Search();});
 
     resizeEvent(nullptr);
 }
@@ -404,7 +411,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                         "FROM ES_registry "
                         "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
                         "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
-                        "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
+                        "LEFT JOIN Destinations ON (Dogs.id_dog = Destinations.id_dog AND ES_Registry.date_prov = Destinations.date_prov) "
                         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
                         "WHERE id_ES = " + necessary[0] + " AND ES_registry.date_prov = '" + necessary[1] + "'"
                         "GROUP BY Dogs.id_dog ");

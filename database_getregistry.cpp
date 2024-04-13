@@ -26,7 +26,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "    SELECT id_dog, date, MAX(date) AS max_date, MAX(id_people) AS max_people_id "
                 "    FROM Destinations "
                 "    GROUP BY id_dog "
-                ") AS LastDest ON Dogs.id_dog = LastDest.id_dog "
+                ") AS LastDest ON (Dogs.id_dog = LastDest.id_dog) "
                 "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date AND Destinations.id_people = LastDest.max_people_id "
                 "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search) "
                 "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR Destinations.date = :exact OR Destinations.type = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr "
