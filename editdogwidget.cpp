@@ -89,7 +89,7 @@ void EditDogWidget::showEvent(QShowEvent* event){
     QWidget::showEvent(event);
     QSqlQuery query;
 
-    QStringList dogNameList, chipList, descriptionList;
+    QStringList chipList, dogNameList;
     birthList.clear();
     sexList.clear();
 
@@ -121,24 +121,23 @@ void EditDogWidget::showEvent(QShowEvent* event){
             else if (editName.contains("chip"))
                 completer = new QCompleter(new QStringListModel(chipList, this), lineEdit);
             else if (editName.contains("description"))
-                completer = new QCompleter(new QStringListModel(descriptionList, this), lineEdit);
+                completer = new QCompleter(new QStringListModel(UniqueList(descriptionList), this), lineEdit);
 
 
             if (completer) {
                 completer->setCaseSensitivity(Qt::CaseInsensitive);
                 lineEdit->setCompleter(completer);
                 if(editName.contains("dogName") || editName.contains("chip")){
-                    connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
-                    connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));
-                    connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(PreviewOtherFields()));
+                    connect(completer, QOverload<const QString&>::of(&QCompleter::activated), this, [=](const QString& s){ ProcessFields(s, false); });
+                    connect(completer, QOverload<const QString&>::of(&QCompleter::highlighted), this, [=](const QString& s){ ProcessFields(s, true); });
+                    connect(lineEdit, &QLineEdit::editingFinished, this, [=](){ ProcessFields("", true); });
                 }
             }
         }
     }
 }
 
-
-void EditDogWidget::FillOtherFields(QString s){
+void EditDogWidget::ProcessFields(QString s, bool isPreview){
     QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
     QAbstractItemModel *model = nullptr;
     if(completer)
@@ -161,75 +160,30 @@ void EditDogWidget::FillOtherFields(QString s){
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
     if(row >= 0){
         foreach (QLineEdit* lineEdit, lineEdits) {
-            if (!lineEdit->objectName().contains("spinbox")) {
+            QString editName = lineEdit->objectName();
+            if (!editName.contains("spinbox")) {
                 QStringList list;
-                QAbstractItemModel *model = lineEdit->completer()->model();
+                if(editName.startsWith("description"))
+                    list = descriptionList;
+                else{
+                    QAbstractItemModel *model = lineEdit->completer()->model();
 
-                if (model) {
-                    int rowCount = model->rowCount();
-                    for (int i = 0; i < rowCount; ++i) {
-                        QModelIndex index = model->index(i, 0);
-                        QVariant data = model->data(index, Qt::DisplayRole);
-                        if (data.isValid())
-                            list << data.toString();
+                    if (model) {
+                        int rowCount = model->rowCount();
+                        for (int i = 0; i < rowCount; ++i) {
+                            QModelIndex index = model->index(i, 0);
+                            QVariant data = model->data(index, Qt::DisplayRole);
+                            if (data.isValid())
+                                list << data.toString();
+                        }
                     }
                 }
 
                 QTimer::singleShot(50, [=]() {
-                    lineEdit->setText(list[row].split("|")[0]);
-                });
-            }
-        }
-
-        QComboBox* sexBox = findChild<QComboBox*>();
-        sexBox->setCurrentText(sexList[row]);
-
-        QDateEdit* birthEdit = findChild<QDateEdit*>();
-        birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-mm-dd"));
-    }
-
-}
-
-
-void EditDogWidget::PreviewOtherFields(QString s){
-    QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
-    QAbstractItemModel *model = nullptr;
-    if(completer)
-        model = completer->model();
-
-    int row = -1;
-
-    if (model) {
-        int rowCount = model->rowCount();
-        for (int i = 0; i < rowCount; ++i) {
-            QModelIndex index = model->index(i, 0);
-            QVariant data = model->data(index, Qt::DisplayRole);
-            if (data.isValid() && data.toString() == s){
-                row = i;
-                break;
-            }
-        }
-    }
-
-    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
-    if(row >= 0){
-        foreach (QLineEdit* lineEdit, lineEdits) {
-            if (!lineEdit->objectName().contains("spinbox")) {
-                QStringList list;
-                QAbstractItemModel *model = lineEdit->completer()->model();
-
-                if (model) {
-                    int rowCount = model->rowCount();
-                    for (int i = 0; i < rowCount; ++i) {
-                        QModelIndex index = model->index(i, 0);
-                        QVariant data = model->data(index, Qt::DisplayRole);
-                        if (data.isValid())
-                            list << data.toString();
-                    }
-                }
-
-                QTimer::singleShot(50, [=]() {
-                    lineEdit->setPlaceholderText(list[row].split("|")[0]);
+                    if (isPreview)
+                        lineEdit->setPlaceholderText(list[row].split("|")[0]);
+                    else
+                        lineEdit->setText(list[row].split("|")[0]);
                 });
             }
         }
@@ -249,6 +203,7 @@ void EditDogWidget::PreviewOtherFields(QString s){
 
 void EditDogWidget::LineEditFormat(QString text){
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
+    int cursorPosition = lineEdit->cursorPosition();
 
     if(lineEdit->objectName().startsWith("dogName")){
         QString formattedText;
@@ -261,4 +216,6 @@ void EditDogWidget::LineEditFormat(QString text){
         }
         lineEdit->setText(formattedText);
     }
+
+    lineEdit->setCursorPosition(cursorPosition);
 }

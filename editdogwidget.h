@@ -25,12 +25,11 @@ public:
     void SetOldId(QString oldId){ this->oldId = oldId;}
 
 public slots:
-    void FillOtherFields(QString s);
-    void PreviewOtherFields(QString s = "");
+    void ProcessFields(QString s, bool isPreview);
     void LineEditFormat(QString text);
 
 private:
-    QStringList sexList, birthList;
+    QStringList sexList, birthList, descriptionList;
     QString oldId = "-1";
 };
 

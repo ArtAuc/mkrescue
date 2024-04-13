@@ -192,5 +192,13 @@ inline QString AutoBreak(QString s, int threshold){
     return result;
 }
 
+inline QStringList UniqueList(QStringList list){
+    QSet<QString> set;
+    for(QString s : list)
+        set.insert(s);
+
+    return set.values();
+}
+
 
 #endif // UTILS_H

@@ -376,6 +376,8 @@ void Database::ChangePassword(QString oldPassword, QString newPassword){
     file.close();
 
     lines[0] = QCryptographicHash::hash(QString(new_h.toHex() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256).toHex();
+    lines[1] = newCrypto.encryptToString(oldCrypto.decryptToString(lines[1]));
+    lines[2] = newCrypto.encryptToString(oldCrypto.decryptToString(lines[2]));
 
     file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 

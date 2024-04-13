@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(clicked(bool)), this, SLOT(ToggleModifyButtons()));
     connect(ui->searchLine, SIGNAL(textChanged(QString)), this, SLOT(Search(QString)));
     connect(ui->searchIcon, SIGNAL(clicked(bool)), ui->searchLine, SLOT(setFocus()));
+    connect(ui->yearBox, &QComboBox::currentTextChanged, this, [=]() {Search();});
     ui->searchIcon->setIcon(QIcon("media/search.svg"));
 
     InitExportButtons();
@@ -191,9 +192,6 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     QStackedWidget* stacked = ui->stackedWidget;
     QString txt = item->text(0).trimmed();
 
-    QComboBox* box = ui->yearBox;
-    QObject::disconnect(box, nullptr, this, nullptr);
-
 
     if (txt == "Entrées/Sorties"){
         stacked->setCurrentWidget(ui->entryRegistryPage);
@@ -248,7 +246,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
 
     else{
         ui->titleLabel->setText(txt);
-        box->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
+        ui->yearBox     ->setVisible(txt == "Entrées/Sorties" || txt == "Garderie" || txt == "Adhérents");
         ui->searchLine->setVisible(txt != "Accueil" && txt != "Paramètres");
         ui->searchIcon->setVisible(txt != "Accueil" && txt != "Paramètres");
     }
@@ -346,6 +344,9 @@ void MainWindow::ToggleReasonEdit(){
 }
 
 void MainWindow::Search(QString search){
+    if(search == nullptr)
+        search = ui->searchLine->text();
+
     QDate dateSearch = QDate::fromString(search, "dd/MM/yyyy");
     if(dateSearch.isValid())
         search = dateSearch.toString("yyyy-MM-dd");
@@ -359,6 +360,7 @@ void MainWindow::Search(QString search){
         LoadRedList(search);
     else if(pageName == "dogCardsPage"){
         LoadDogCards(search);
+        resizeEvent(nullptr);
         return; // As this page is not a registry
     }
     else if (pageName == "membersPage")

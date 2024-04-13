@@ -124,7 +124,7 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
     QWidget::showEvent(event);
     QSqlQuery query;
 
-    QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List, postalCodeList, cityList;
+    QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List;
 
     HandleErrorExec(&query, "SELECT id_people, last_name, first_name, phone, email, address "
                "FROM People "
@@ -171,9 +171,9 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
             else if (editName.startsWith("address"))
                 completer = new QCompleter(new QStringListModel(addressList, this), lineEdit);
             else if (editName.startsWith("postalCode"))
-                completer = new QCompleter(new QStringListModel(postalCodeList, this), lineEdit);
+                completer = new QCompleter(new QStringListModel(UniqueList(postalCodeList), this), lineEdit);
             else if (editName.startsWith("city"))
-                completer = new QCompleter(new QStringListModel(cityList, this), lineEdit);
+                completer = new QCompleter(new QStringListModel(UniqueList(cityList), this), lineEdit);
             else if (editName.startsWith("lastName"))
                 completer = new QCompleter(new QStringListModel(lastNameList, this), lineEdit);
             else if (editName.startsWith("phone"))
@@ -185,17 +185,16 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
                 completer->setCaseSensitivity(Qt::CaseInsensitive);
                 lineEdit->setCompleter(completer);
                 if(editName.startsWith("lastName") || editName.startsWith("firstName") || editName.startsWith("phone") || editName.startsWith("email")){
-                    connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
-                    connect(completer, SIGNAL(activated(QString)), this, SLOT(FillOtherFields(QString)));
-                    connect(completer, SIGNAL(highlighted(QString)), this, SLOT(PreviewOtherFields(QString)));
-                    connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(PreviewOtherFields()));
+                    connect(completer, QOverload<const QString&>::of(&QCompleter::activated), this, [=](const QString& s){ ProcessFields(s, false); });
+                    connect(completer, QOverload<const QString&>::of(&QCompleter::highlighted), this, [=](const QString& s){ ProcessFields(s, true); });
+                    connect(lineEdit, &QLineEdit::editingFinished, this, [=](){ ProcessFields("", true); });
                 }
             }
         }
     }
 }
 
-void EditPeopleWidget::FillOtherFields(QString s){
+void EditPeopleWidget::ProcessFields(QString s, bool isPreview){
     QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
     QAbstractItemModel *model = nullptr;
     if(completer)
@@ -218,67 +217,32 @@ void EditPeopleWidget::FillOtherFields(QString s){
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
     if(row >= 0){
         foreach (QLineEdit* lineEdit, lineEdits) {
-            if (!lineEdit->objectName().contains("spinbox")) {
+            QString editName = lineEdit->objectName();
+            if (!editName.contains("spinbox")) {
                 QStringList list;
-                QAbstractItemModel *model = lineEdit->completer()->model();
 
-                if (model) {
-                    int rowCount = model->rowCount();
-                    for (int i = 0; i < rowCount; ++i) {
-                        QModelIndex index = model->index(i, 0);
-                        QVariant data = model->data(index, Qt::DisplayRole);
-                        if (data.isValid())
-                            list << data.toString();
+                if(editName.startsWith("city"))
+                    list = cityList;
+                else if(editName.startsWith("postalCode"))
+                    list = postalCodeList;
+                else{
+                    QAbstractItemModel *model = lineEdit->completer()->model();
+
+                    if (model) {
+                        int rowCount = model->rowCount();
+                        for (int i = 0; i < rowCount; ++i) {
+                            QModelIndex index = model->index(i, 0);
+                            QVariant data = model->data(index, Qt::DisplayRole);
+                            if (data.isValid())
+                                list << data.toString();
+                        }
                     }
                 }
 
-                QTimer::singleShot(0, [=]() {
-                    lineEdit->setText(list[row].split("|")[0]);
-                });
-            }
-        }
-    }
-}
-
-
-void EditPeopleWidget::PreviewOtherFields(QString s){
-    QCompleter* completer = qobject_cast<QCompleter*>(QObject::sender());
-    QAbstractItemModel *model = nullptr;
-    if(completer)
-        model = completer->model();
-
-    int row = -1;
-
-    if (model) {
-        int rowCount = model->rowCount();
-        for (int i = 0; i < rowCount; ++i) {
-            QModelIndex index = model->index(i, 0);
-            QVariant data = model->data(index, Qt::DisplayRole);
-            if (data.isValid() && data.toString() == s){
-                row = i;
-                break;
-            }
-        }
-    }
-
-    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
-    if(row >= 0){
-        foreach (QLineEdit* lineEdit, lineEdits) {
-            if (!lineEdit->objectName().contains("spinbox")) {
-                QStringList list;
-                QAbstractItemModel *model = lineEdit->completer()->model();
-
-                if (model) {
-                    int rowCount = model->rowCount();
-                    for (int i = 0; i < rowCount; ++i) {
-                        QModelIndex index = model->index(i, 0);
-                        QVariant data = model->data(index, Qt::DisplayRole);
-                        if (data.isValid())
-                            list << data.toString();
-                    }
-                }
-
-                lineEdit->setPlaceholderText(list[row].split("|")[0]);
+                if(isPreview)
+                    lineEdit->setPlaceholderText(list[row].split("|")[0]);
+                else
+                    QTimer::singleShot(0, [=]() {lineEdit->setText(list[row].split("|")[0]);});
             }
         }
     }
@@ -289,8 +253,11 @@ void EditPeopleWidget::PreviewOtherFields(QString s){
     }
 }
 
+
 void EditPeopleWidget::LineEditFormat(QString text) {
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
+    int cursorPosition = lineEdit->cursorPosition();
+
     QString name = lineEdit->objectName();
     if(name.startsWith("lastName"))
         lineEdit->setText(text.toUpper());
@@ -319,4 +286,6 @@ void EditPeopleWidget::LineEditFormat(QString text) {
         }
         lineEdit->setText(formattedText);
     }
+
+    lineEdit->setCursorPosition(cursorPosition);
 }

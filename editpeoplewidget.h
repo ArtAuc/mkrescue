@@ -32,13 +32,13 @@ public:
     void SetCrypto(SimpleCrypt *crypto){this->crypto = crypto;}
 
 public slots:
-    void FillOtherFields(QString s);
-    void PreviewOtherFields(QString s = "");
+    void ProcessFields(QString s, bool isReview);
     void LineEditFormat(QString text);
 
 private:
     QString oldId = "-1";
     SimpleCrypt *crypto;
+    QStringList cityList, postalCodeList;
 };
 
 #endif // EDITPEOPLEWIDGET_H

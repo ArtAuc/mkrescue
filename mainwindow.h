@@ -52,7 +52,7 @@ public slots:
     void LoadVet(QString search = "");
     void LoadAdoptionDemand(QString search = "");
     void ToggleModifyButtons();
-    void Search(QString search);
+    void Search(QString search = nullptr);
     void TriggerEdit(QString type, QStringList infos);
     void Clean();
     void SelectDogCard();

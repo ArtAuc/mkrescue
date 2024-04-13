@@ -51,8 +51,6 @@ void MainWindow::LoadEntryRegistry(QString year, QString search)
     table->setRowCount(0);
     modifyButtons.clear();
 
-    connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadEntryRegistry(QString)));
-
 
     QSqlQuery query = db.GetEntryRegistry(year, search);
 
@@ -152,8 +150,6 @@ void MainWindow::LoadCareRegistry(QString year, QString search)
     table->setRowCount(0);
     modifyButtons.clear();
 
-    connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadCareRegistry(QString)));
-
     QSqlQuery query = db.GetCareRegistry(year, search);
 
     while(query.next() && query.value(0).toString() != "")
@@ -210,8 +206,6 @@ void MainWindow::LoadMembers(QString year, QString search)
     table->clearContents();
     table->setRowCount(0);
     modifyButtons.clear();
-
-    connect(ui->yearBox, SIGNAL(currentTextChanged(QString)), this, SLOT(LoadMembers(QString)));
 
     QSqlQuery query = db.GetMembers(year, search);
 
