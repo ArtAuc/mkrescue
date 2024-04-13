@@ -171,8 +171,8 @@ void Database::ReorderMembers(){
 
 }
 
-void Database::CleanDogs(){
-    QSqlQuery query;
+void CleanThread::CleanDogs(){
+    QSqlQuery query(threadDb);
 
     HandleErrorExec(&query, "SELECT DISTINCT id_dog "
                "FROM Dogs");
@@ -221,9 +221,9 @@ void Database::CleanDogs(){
     }
 }
 
-void Database::MakeRedList(){
+void CleanThread::MakeRedList(){
     if(crypto){
-        QSqlQuery query;
+        QSqlQuery query(threadDb);
 
         HandleErrorExec(&query, "DELETE FROM Red_list "
                    "WHERE reason LIKE 'Abandon de % le __/__/____';");
@@ -253,8 +253,8 @@ void Database::MakeRedList(){
     }
 }
 
-void Database::CleanPeople(){
-    QSqlQuery query;
+void CleanThread::CleanPeople(){
+    QSqlQuery query(threadDb);
     HandleErrorExec(&query, "SELECT DISTINCT id_people "
                "FROM People "
                "WHERE id_people > 0");

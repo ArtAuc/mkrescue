@@ -219,376 +219,381 @@ void EditPage::Edit(QString type, QStringList infos){
 
 void EditPage::SaveEdit()
 {
-    QSqlQuery query;
-    if(lastType == "entry"){
-        QWidget *entryEditPage = findChild<QWidget*>("entryEditPage");
-        // Entrée
-        QString date_prov = GetField("entryDateEdit", entryEditPage);
-        QString type_prov = GetField("entryTypeBox", entryEditPage);
-        QString id_people_prov = "-1";
-        if(GetField("entryTypeBox", entryEditPage) == "Abandon")
-            id_people_prov = CreatePersonIfNeeded("AbandonEdit", entryEditPage);
+    if(!cleaning){
+        QSqlQuery query;
+        if(lastType == "entry"){
+            QWidget *entryEditPage = findChild<QWidget*>("entryEditPage");
+            // Entrée
+            QString date_prov = GetField("entryDateEdit", entryEditPage);
+            QString type_prov = GetField("entryTypeBox", entryEditPage);
+            QString id_people_prov = "-1";
+            if(GetField("entryTypeBox", entryEditPage) == "Abandon")
+                id_people_prov = CreatePersonIfNeeded("AbandonEdit", entryEditPage);
 
-        else{ // Fourrière
-            type_prov += "_|_" + GetField("poundPlaceEdit", entryEditPage);
-        }
-
-        // Animal
-        QString id_dog = CreateDogIfNeeded("EntryAnimalEdit", entryEditPage);
-        if(id_dog == "-2")
-            return;
-        // Sortie
-        QStringList death_causes, id_peoples, dates, types;
-
-        QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
-        for(int i = 1; i < destStacked->count() + 1; i++){
-            QString iString = QString::number(i);
-            QString type = GetField("destTypeBox" + iString, destStacked);
-            if(type != ""){
-                types.append(type);
-                dates.append(GetField("destDateEdit" + iString, destStacked));
-
-                if(type == "Mort"){
-                    death_causes.append(GetField("deathCauseEdit" + iString, destStacked));
-                    id_peoples.append("-1");
-                }
-
-                else if(type == "Entrée au refuge"){
-                    id_peoples.append("-2");
-                }
-
-                else{
-                    id_peoples.append(CreatePersonIfNeeded("DestEdit" + iString, destStacked));
-                }
+            else{ // Fourrière
+                type_prov += "_|_" + GetField("poundPlaceEdit", entryEditPage);
             }
-        }
 
-        if(death_causes.isEmpty())
-            death_causes.append("");
-
-        if(id_dog != entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId()){// Verify that there is not an entry with this dog the same day
-            query.prepare("SELECT * "
-                          "FROM ES_registry "
-                          "WHERE id_dog = :id_dog "
-                          "AND date_prov = :date_prov");
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":date_prov", date_prov);
-            HandleErrorExec(&query);
-            if(query.next()){
-                QMessageBox::critical(nullptr, "Erreur", "Impossible de créer deux entrées avec le même chien arrivant le même jour");
+            // Animal
+            QString id_dog = CreateDogIfNeeded("EntryAnimalEdit", entryEditPage);
+            if(id_dog == "-2")
                 return;
+            // Sortie
+            QStringList death_causes, id_peoples, dates, types;
+
+            QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
+            for(int i = 1; i < destStacked->count() + 1; i++){
+                QString iString = QString::number(i);
+                QString type = GetField("destTypeBox" + iString, destStacked);
+                if(type != ""){
+                    types.append(type);
+                    dates.append(GetField("destDateEdit" + iString, destStacked));
+
+                    if(type == "Mort"){
+                        death_causes.append(GetField("deathCauseEdit" + iString, destStacked));
+                        id_peoples.append("-1");
+                    }
+
+                    else if(type == "Entrée au refuge"){
+                        id_peoples.append("-2");
+                    }
+
+                    else{
+                        id_peoples.append(CreatePersonIfNeeded("DestEdit" + iString, destStacked));
+                    }
+                }
+            }
+
+            if(death_causes.isEmpty())
+                death_causes.append("");
+
+            if(id_dog != entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId()){// Verify that there is not an entry with this dog the same day
+                query.prepare("SELECT * "
+                              "FROM ES_registry "
+                              "WHERE id_dog = :id_dog "
+                              "AND date_prov = :date_prov");
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":date_prov", date_prov);
+                HandleErrorExec(&query);
+                if(query.next()){
+                    QMessageBox::critical(nullptr, "Erreur", "Impossible de créer deux entrées avec le même chien arrivant le même jour");
+                    return;
+                }
+            }
+
+
+            QString queryString;
+            if (!currentNecessary.isEmpty()) { // Modifying
+                queryString = "UPDATE ES_Registry "
+                              "SET id_dog = :id_dog, "
+                              "date_prov = :date_prov, "
+                              "id_people_prov = :id_people_prov, "
+                              "type_prov = :type_prov, "
+                              "death_cause = :death_cause "
+                              "WHERE id_ES = :id_ES "
+                              "AND date_prov = :current_date_prov";
+
+                query.prepare(queryString);
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":date_prov", date_prov);
+                query.bindValue(":id_people_prov", id_people_prov);
+                query.bindValue(":type_prov", crypto->encryptToString(type_prov));
+                query.bindValue(":death_cause", death_causes[0]);
+                query.bindValue(":id_ES", currentNecessary[0]);
+                query.bindValue(":current_date_prov", currentNecessary[1]);
+            }
+            else { // Creating
+                queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
+                              "VALUES (:id_dog, :type_prov, :date_prov, :id_people_prov, :death_cause)";
+
+                query.prepare(queryString);
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":type_prov", crypto->encryptToString(type_prov));
+                query.bindValue(":date_prov", date_prov);
+                query.bindValue(":id_people_prov", id_people_prov);
+                query.bindValue(":death_cause", death_causes[0]);
+            }
+
+            HandleErrorExec(&query);
+
+            if(currentNecessary.size() > 1){
+                query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
+                query.bindValue(":id_dog", entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId());
+                query.bindValue(":date", currentNecessary[1]);
+                HandleErrorExec(&query);
+            }
+
+            for(int i = 0; i < id_peoples.count(); i++){
+                query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type, date_prov) "
+                              "VALUES (:id_dog, :id_people, :date, :type, :date_prov)");
+
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":id_people", id_peoples[i]);
+                query.bindValue(":date", dates[i]);
+                query.bindValue(":type", types[i]);
+                query.bindValue(":date_prov", date_prov);
+
+                HandleErrorExec(&query);
+            }
+
+        }
+
+        else if(lastType == "redList"){
+            QWidget *redListEditPage = findChild<QWidget*>("redListEditPage");
+            QString id_people = CreatePersonIfNeeded("RedListEdit", redListEditPage);
+            QString reason = GetField("reasonRedListEdit", redListEditPage);
+
+            query.prepare("INSERT INTO Red_list (id_people, reason) "
+                          "VALUES (:id, :reason);");
+            query.bindValue(":id", id_people);
+            query.bindValue(":reason", reason);
+            HandleErrorExec(&query);
+
+        }
+
+        else if(lastType == "care"){
+            QWidget *careEditPage = findChild<QWidget*>("careEditPage");
+            // Entrée
+            QString entry_date = GetField("careEntryDateEdit", careEditPage);
+            QString id_people_prov = CreatePersonIfNeeded("CareEntryEdit", careEditPage);
+
+            // Animal
+            QString id_dog = CreateDogIfNeeded("CareAnimalEdit", careEditPage);
+            if(id_dog == "-2")
+                return;
+
+            // Sortie
+            QString exit_date = GetField("careDestDateEdit", careEditPage);
+
+            QString id_people_dest = CreatePersonIfNeeded("CareDestEdit", careEditPage);
+
+            QString queryString;
+            if (!currentNecessary.isEmpty()) { // Modifying
+                queryString = "UPDATE Care_registry "
+                              "SET id_dog = :id_dog, "
+                              "entry_date = :entry_date, "
+                              "id_people_prov = :id_people_prov, "
+                              "exit_date = :exit_date, "
+                              "id_people_dest = :id_people_dest "
+                              "WHERE id_care = :id_care "
+                              "AND entry_date = :current_entry_date";
+
+                query.prepare(queryString);
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":entry_date", entry_date);
+                query.bindValue(":id_people_prov", id_people_prov);
+                query.bindValue(":exit_date", exit_date);
+                query.bindValue(":id_people_dest", id_people_dest);
+                query.bindValue(":id_care", currentNecessary[0]);
+                query.bindValue(":current_entry_date", currentNecessary[1]);
+            }
+            else { // Creating
+                query.prepare("INSERT INTO Care_registry (id_dog, entry_date, id_people_prov, exit_date, id_people_dest) "
+                              "VALUES (:id_dog, :entry_date, :id_people_prov, :exit_date, :id_people_dest)");
+
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":entry_date", entry_date);
+                query.bindValue(":id_people_prov", id_people_prov);
+                query.bindValue(":exit_date", exit_date);
+                query.bindValue(":id_people_dest", id_people_dest);
+            }
+
+            HandleErrorExec(&query);
+        }
+
+        else if(lastType == "members"){
+            QWidget *membersEditPage = findChild<QWidget*>("membersEditPage");
+            QString id_people = CreatePersonIfNeeded("MembersEdit", membersEditPage);
+            QString type = GetField("typeMembersBox", membersEditPage);
+            QString amount = GetField("amountMembersEdit", membersEditPage);
+            QString date = GetField("dateMembersEdit", membersEditPage);
+
+
+            if (!currentNecessary.isEmpty()) { // Modifying
+                QString queryString;
+                queryString = "UPDATE Members "
+                              "SET date = :date, "
+                              "amount = :amount, "
+                              "type = :type, "
+                              "id_people = :id_people "
+                              "WHERE id_adhesion = :id_adhesion "
+                              "AND date = :current_date";
+
+                query.prepare(queryString);
+                query.bindValue(":date", date);
+                query.bindValue(":amount", amount);
+                query.bindValue(":type", type);
+                query.bindValue(":id_people", id_people);
+                query.bindValue(":id_adhesion", currentNecessary[0]);
+                query.bindValue(":current_date", currentNecessary[1]);
+            }
+            else { // Creating
+                query.prepare("INSERT INTO Members (id_people, date, amount, type) "
+                              "VALUES (:id_people, :date, :amount, :type)");
+
+                query.bindValue(":id_people", id_people);
+                query.bindValue(":date", date);
+                query.bindValue(":amount", amount);
+                query.bindValue(":type", type);
+            }
+
+            HandleErrorExec(&query);
+
+        }
+
+        else if(lastType == "lost"){
+            QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
+            QString id_people = CreatePersonIfNeeded("LostOwnerEdit", lostEditPage);
+            QString species = GetField("speciesLostEdit", lostEditPage);
+            QString name = GetField("nameLostEdit", lostEditPage);
+            QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
+            QString description = GetField("descriptionLostEdit", lostEditPage);
+            QString identification = GetField("idLostEdit", lostEditPage);
+            QString sex = GetField("sexLostEdit", lostEditPage);
+            QString date = GetField("lossDateEdit", lostEditPage);
+            QString place = GetField("lossPlaceEdit", lostEditPage);
+
+            if (!currentNecessary.isEmpty()) { // Modifying
+                QString queryString = "UPDATE Lost "
+                                      "SET species = :species, "
+                                      "name = :name, "
+                                      "found = :found, "
+                                      "description = :description, "
+                                      "identification = :identification, "
+                                      "sex = :sex, "
+                                      "date = :date, "
+                                      "place = :place, "
+                                      "id_people = :id_people"
+                                      "WHERE name = :name_nec "
+                                      "AND date = :date_nec "
+                                      "AND id_people = :id_nec;";
+
+                QSqlQuery query;
+                query.prepare(queryString);
+                query.bindValue(":species", species);
+                query.bindValue(":name", name);
+                query.bindValue(":found", found);
+                query.bindValue(":description", description);
+                query.bindValue(":identification", identification);
+                query.bindValue(":sex", sex);
+                query.bindValue(":date", date);
+                query.bindValue(":place", place);
+                query.bindValue(":id_people", id_people);
+                query.bindValue(":name_nec", currentNecessary[0]);
+                query.bindValue(":date_nec", currentNecessary[1]);
+                query.bindValue(":id_nec", currentNecessary[2]);
+                HandleErrorExec(&query);
+            }
+            else { // Creating
+                QSqlQuery query;
+                query.prepare("INSERT INTO Lost (id_people, species, name, found, description, identification, sex, date, place) "
+                              "VALUES (:id_people, :species, :name, :found, :description, :identification, :sex, :date, :place)");
+
+                query.bindValue(":id_people", id_people);
+                query.bindValue(":species", species);
+                query.bindValue(":name", name);
+                query.bindValue(":found", found);
+                query.bindValue(":description", description);
+                query.bindValue(":identification", identification);
+                query.bindValue(":sex", sex);
+                query.bindValue(":date", date);
+                query.bindValue(":place", place);
+                HandleErrorExec(&query);
+            }
+        }
+
+        else if(lastType == "vet"){
+            QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
+            QString date = vetEditPage->findChild<QDateTimeEdit*>("dateVetAnimalEdit")->dateTime().toString("yyyy-MM-ddTHH:mm");
+            QString reason = vetEditPage->findChild<QComboBox*>("reasonVetAnimalBox")->currentText();
+
+            if(reason == "Autre")
+                reason = vetEditPage->findChild<QLineEdit*>("reasonVetAnimalEdit")->text();
+
+            QString id_dog = CreateDogIfNeeded("VetAnimalEdit", vetEditPage);
+            if(id_dog == "-2")
+                return;
+
+            if (!currentNecessary.isEmpty()) { // Modifying
+                QString queryString = "UPDATE Vet "
+                                      "SET id_dog = :id, "
+                                      "date = :date, "
+                                      "reason = :reason "
+                                      "WHERE date = :date_nec "
+                                      "AND id_dog = :id_nec;";
+
+                QSqlQuery query;
+                query.prepare(queryString);
+                query.bindValue(":id", id_dog);
+                query.bindValue(":date", date);
+                query.bindValue(":reason", reason);
+                query.bindValue(":date_nec", currentNecessary[0]);
+                query.bindValue(":id_nec", currentNecessary[1]);
+                HandleErrorExec(&query);
+            }
+            else { // Creating
+                QSqlQuery query;
+                query.prepare("INSERT INTO Vet (id_dog, date, reason) "
+                              "VALUES (:id_dog, :date, :reason)");
+
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":date", date);
+                query.bindValue(":reason", reason);
+                HandleErrorExec(&query);
+            }
+        }
+
+        else if(lastType == "adoptionDemand"){
+            QWidget *adoptionDemandEditPage = findChild<QWidget*>("adoptionDemandEditPage");
+            QString id_people = CreatePersonIfNeeded("AdoptionDemandEdit", adoptionDemandEditPage);
+            QString age = GetField("ageAdoptionDemandEdit", adoptionDemandEditPage);
+            QString satisfied = adoptionDemandEditPage->findChild<QCheckBox*>("satisfiedAdoptionDemandBox")->isChecked() ? "1" : "0";
+            QString breed = GetField("breedAdoptionDemandEdit", adoptionDemandEditPage);
+            QString sex = GetField("sexAdoptionDemandEdit", adoptionDemandEditPage);
+            QString infos = GetField("infosAdoptionDemandEdit", adoptionDemandEditPage);
+
+            if (!currentNecessary.isEmpty()) { // Modifying
+                QString queryString = "UPDATE Adoption_demand "
+                                      "SET sex = :sex, "
+                                      "age = :age, "
+                                      "breed = :breed, "
+                                      "infos = :infos, "
+                                      "id_people = :id_people, "
+                                      "satisfied = :satisfied "
+                                      "WHERE breed = :breed_nec "
+                                      "AND id_people = :id_nec;";
+
+                QSqlQuery query;
+                query.prepare(queryString);
+                query.bindValue(":sex", sex);
+                query.bindValue(":age", age);
+                query.bindValue(":breed", breed);
+                query.bindValue(":infos", infos);
+                query.bindValue(":satisfied", satisfied);
+                query.bindValue(":id_people", id_people);
+                query.bindValue(":breed_nec", currentNecessary[0]);
+                query.bindValue(":id_nec", currentNecessary[1]);
+                HandleErrorExec(&query);
+            }
+            else { // Creating
+                QSqlQuery query;
+                query.prepare("INSERT INTO Adoption_demand (id_people, sex, breed, age, satisfied, infos) "
+                              "VALUES (:id_people, :sex, :breed, :age, :satisfied, :infos)");
+
+                query.bindValue(":id_people", id_people);
+                query.bindValue(":sex", sex);
+                query.bindValue(":breed", breed);
+                query.bindValue(":age", age);
+                query.bindValue(":satisfied", satisfied);
+                query.bindValue(":infos", infos);
+                HandleErrorExec(&query);
             }
         }
 
 
-        QString queryString;
-        if (!currentNecessary.isEmpty()) { // Modifying
-            queryString = "UPDATE ES_Registry "
-                          "SET id_dog = :id_dog, "
-                          "date_prov = :date_prov, "
-                          "id_people_prov = :id_people_prov, "
-                          "type_prov = :type_prov, "
-                          "death_cause = :death_cause "
-                          "WHERE id_ES = :id_ES "
-                          "AND date_prov = :current_date_prov";
-
-            query.prepare(queryString);
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":date_prov", date_prov);
-            query.bindValue(":id_people_prov", id_people_prov);
-            query.bindValue(":type_prov", crypto->encryptToString(type_prov));
-            query.bindValue(":death_cause", death_causes[0]);
-            query.bindValue(":id_ES", currentNecessary[0]);
-            query.bindValue(":current_date_prov", currentNecessary[1]);
-        }
-        else { // Creating
-            queryString = "INSERT INTO ES_Registry (id_dog, type_prov, date_prov, id_people_prov, death_cause) "
-                          "VALUES (:id_dog, :type_prov, :date_prov, :id_people_prov, :death_cause)";
-
-            query.prepare(queryString);
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":type_prov", crypto->encryptToString(type_prov));
-            query.bindValue(":date_prov", date_prov);
-            query.bindValue(":id_people_prov", id_people_prov);
-            query.bindValue(":death_cause", death_causes[0]);
-        }
-
-        HandleErrorExec(&query);
-
-        if(currentNecessary.size() > 1){
-            query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
-            query.bindValue(":id_dog", entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId());
-            query.bindValue(":date", currentNecessary[1]);
-            HandleErrorExec(&query);
-        }
-
-        for(int i = 0; i < id_peoples.count(); i++){
-            query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type, date_prov) "
-                          "VALUES (:id_dog, :id_people, :date, :type, :date_prov)");
-
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":id_people", id_peoples[i]);
-            query.bindValue(":date", dates[i]);
-            query.bindValue(":type", types[i]);
-            query.bindValue(":date_prov", date_prov);
-
-            HandleErrorExec(&query);
-        }
-
+        QuitEdit();
     }
 
-    else if(lastType == "redList"){
-        QWidget *redListEditPage = findChild<QWidget*>("redListEditPage");
-        QString id_people = CreatePersonIfNeeded("RedListEdit", redListEditPage);
-        QString reason = GetField("reasonRedListEdit", redListEditPage);
-
-        query.prepare("INSERT INTO Red_list (id_people, reason) "
-                      "VALUES (:id, :reason);");
-        query.bindValue(":id", id_people);
-        query.bindValue(":reason", reason);
-        HandleErrorExec(&query);
-
-    }
-
-    else if(lastType == "care"){
-        QWidget *careEditPage = findChild<QWidget*>("careEditPage");
-        // Entrée
-        QString entry_date = GetField("careEntryDateEdit", careEditPage);
-        QString id_people_prov = CreatePersonIfNeeded("CareEntryEdit", careEditPage);
-
-        // Animal
-        QString id_dog = CreateDogIfNeeded("CareAnimalEdit", careEditPage);
-        if(id_dog == "-2")
-            return;
-
-        // Sortie
-        QString exit_date = GetField("careDestDateEdit", careEditPage);
-
-        QString id_people_dest = CreatePersonIfNeeded("CareDestEdit", careEditPage);
-
-        QString queryString;
-        if (!currentNecessary.isEmpty()) { // Modifying
-            queryString = "UPDATE Care_registry "
-                          "SET id_dog = :id_dog, "
-                          "entry_date = :entry_date, "
-                          "id_people_prov = :id_people_prov, "
-                          "exit_date = :exit_date, "
-                          "id_people_dest = :id_people_dest "
-                          "WHERE id_care = :id_care "
-                          "AND entry_date = :current_entry_date";
-
-            query.prepare(queryString);
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":entry_date", entry_date);
-            query.bindValue(":id_people_prov", id_people_prov);
-            query.bindValue(":exit_date", exit_date);
-            query.bindValue(":id_people_dest", id_people_dest);
-            query.bindValue(":id_care", currentNecessary[0]);
-            query.bindValue(":current_entry_date", currentNecessary[1]);
-        }
-        else { // Creating
-            query.prepare("INSERT INTO Care_registry (id_dog, entry_date, id_people_prov, exit_date, id_people_dest) "
-                          "VALUES (:id_dog, :entry_date, :id_people_prov, :exit_date, :id_people_dest)");
-
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":entry_date", entry_date);
-            query.bindValue(":id_people_prov", id_people_prov);
-            query.bindValue(":exit_date", exit_date);
-            query.bindValue(":id_people_dest", id_people_dest);
-        }
-
-        HandleErrorExec(&query);
-    }
-
-    else if(lastType == "members"){
-        QWidget *membersEditPage = findChild<QWidget*>("membersEditPage");
-        QString id_people = CreatePersonIfNeeded("MembersEdit", membersEditPage);
-        QString type = GetField("typeMembersBox", membersEditPage);
-        QString amount = GetField("amountMembersEdit", membersEditPage);
-        QString date = GetField("dateMembersEdit", membersEditPage);
-
-
-        if (!currentNecessary.isEmpty()) { // Modifying
-            QString queryString;
-            queryString = "UPDATE Members "
-                          "SET date = :date, "
-                          "amount = :amount, "
-                          "type = :type, "
-                          "id_people = :id_people "
-                          "WHERE id_adhesion = :id_adhesion "
-                          "AND date = :current_date";
-
-            query.prepare(queryString);
-            query.bindValue(":date", date);
-            query.bindValue(":amount", amount);
-            query.bindValue(":type", type);
-            query.bindValue(":id_people", id_people);
-            query.bindValue(":id_adhesion", currentNecessary[0]);
-            query.bindValue(":current_date", currentNecessary[1]);
-        }
-        else { // Creating
-            query.prepare("INSERT INTO Members (id_people, date, amount, type) "
-                          "VALUES (:id_people, :date, :amount, :type)");
-
-            query.bindValue(":id_people", id_people);
-            query.bindValue(":date", date);
-            query.bindValue(":amount", amount);
-            query.bindValue(":type", type);
-        }
-
-        HandleErrorExec(&query);
-
-    }
-
-    else if(lastType == "lost"){
-        QWidget *lostEditPage = findChild<QWidget*>("lostEditPage");
-        QString id_people = CreatePersonIfNeeded("LostOwnerEdit", lostEditPage);
-        QString species = GetField("speciesLostEdit", lostEditPage);
-        QString name = GetField("nameLostEdit", lostEditPage);
-        QString found = lostEditPage->findChild<QCheckBox*>("foundLostBox")->isChecked() ? "1" : "0";
-        QString description = GetField("descriptionLostEdit", lostEditPage);
-        QString identification = GetField("idLostEdit", lostEditPage);
-        QString sex = GetField("sexLostEdit", lostEditPage);
-        QString date = GetField("lossDateEdit", lostEditPage);
-        QString place = GetField("lossPlaceEdit", lostEditPage);
-
-        if (!currentNecessary.isEmpty()) { // Modifying
-            QString queryString = "UPDATE Lost "
-                                  "SET species = :species, "
-                                  "name = :name, "
-                                  "found = :found, "
-                                  "description = :description, "
-                                  "identification = :identification, "
-                                  "sex = :sex, "
-                                  "date = :date, "
-                                  "place = :place, "
-                                  "id_people = :id_people"
-                                  "WHERE name = :name_nec "
-                                  "AND date = :date_nec "
-                                  "AND id_people = :id_nec;";
-
-            QSqlQuery query;
-            query.prepare(queryString);
-            query.bindValue(":species", species);
-            query.bindValue(":name", name);
-            query.bindValue(":found", found);
-            query.bindValue(":description", description);
-            query.bindValue(":identification", identification);
-            query.bindValue(":sex", sex);
-            query.bindValue(":date", date);
-            query.bindValue(":place", place);
-            query.bindValue(":id_people", id_people);
-            query.bindValue(":name_nec", currentNecessary[0]);
-            query.bindValue(":date_nec", currentNecessary[1]);
-            query.bindValue(":id_nec", currentNecessary[2]);
-            HandleErrorExec(&query);
-        }
-        else { // Creating
-            QSqlQuery query;
-            query.prepare("INSERT INTO Lost (id_people, species, name, found, description, identification, sex, date, place) "
-                          "VALUES (:id_people, :species, :name, :found, :description, :identification, :sex, :date, :place)");
-
-            query.bindValue(":id_people", id_people);
-            query.bindValue(":species", species);
-            query.bindValue(":name", name);
-            query.bindValue(":found", found);
-            query.bindValue(":description", description);
-            query.bindValue(":identification", identification);
-            query.bindValue(":sex", sex);
-            query.bindValue(":date", date);
-            query.bindValue(":place", place);
-            HandleErrorExec(&query);
-        }
-    }
-
-    else if(lastType == "vet"){
-        QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
-        QString date = vetEditPage->findChild<QDateTimeEdit*>("dateVetAnimalEdit")->dateTime().toString("yyyy-MM-ddTHH:mm");
-        QString reason = vetEditPage->findChild<QComboBox*>("reasonVetAnimalBox")->currentText();
-
-        if(reason == "Autre")
-            reason = vetEditPage->findChild<QLineEdit*>("reasonVetAnimalEdit")->text();
-
-        QString id_dog = CreateDogIfNeeded("VetAnimalEdit", vetEditPage);
-        if(id_dog == "-2")
-            return;
-
-        if (!currentNecessary.isEmpty()) { // Modifying
-            QString queryString = "UPDATE Vet "
-                                  "SET id_dog = :id, "
-                                  "date = :date, "
-                                  "reason = :reason "
-                                  "WHERE date = :date_nec "
-                                  "AND id_dog = :id_nec;";
-
-            QSqlQuery query;
-            query.prepare(queryString);
-            query.bindValue(":id", id_dog);
-            query.bindValue(":date", date);
-            query.bindValue(":reason", reason);
-            query.bindValue(":date_nec", currentNecessary[0]);
-            query.bindValue(":id_nec", currentNecessary[1]);
-            HandleErrorExec(&query);
-        }
-        else { // Creating
-            QSqlQuery query;
-            query.prepare("INSERT INTO Vet (id_dog, date, reason) "
-                          "VALUES (:id_dog, :date, :reason)");
-
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":date", date);
-            query.bindValue(":reason", reason);
-            HandleErrorExec(&query);
-        }
-    }
-
-    else if(lastType == "adoptionDemand"){
-        QWidget *adoptionDemandEditPage = findChild<QWidget*>("adoptionDemandEditPage");
-        QString id_people = CreatePersonIfNeeded("AdoptionDemandEdit", adoptionDemandEditPage);
-        QString age = GetField("ageAdoptionDemandEdit", adoptionDemandEditPage);
-        QString satisfied = adoptionDemandEditPage->findChild<QCheckBox*>("satisfiedAdoptionDemandBox")->isChecked() ? "1" : "0";
-        QString breed = GetField("breedAdoptionDemandEdit", adoptionDemandEditPage);
-        QString sex = GetField("sexAdoptionDemandEdit", adoptionDemandEditPage);
-        QString infos = GetField("infosAdoptionDemandEdit", adoptionDemandEditPage);
-
-        if (!currentNecessary.isEmpty()) { // Modifying
-            QString queryString = "UPDATE Adoption_demand "
-                                  "SET sex = :sex, "
-                                  "age = :age, "
-                                  "breed = :breed, "
-                                  "infos = :infos, "
-                                  "id_people = :id_people, "
-                                  "satisfied = :satisfied "
-                                  "WHERE breed = :breed_nec "
-                                  "AND id_people = :id_nec;";
-
-            QSqlQuery query;
-            query.prepare(queryString);
-            query.bindValue(":sex", sex);
-            query.bindValue(":age", age);
-            query.bindValue(":breed", breed);
-            query.bindValue(":infos", infos);
-            query.bindValue(":satisfied", satisfied);
-            query.bindValue(":id_people", id_people);
-            query.bindValue(":breed_nec", currentNecessary[0]);
-            query.bindValue(":id_nec", currentNecessary[1]);
-            HandleErrorExec(&query);
-        }
-        else { // Creating
-            QSqlQuery query;
-            query.prepare("INSERT INTO Adoption_demand (id_people, sex, breed, age, satisfied, infos) "
-                          "VALUES (:id_people, :sex, :breed, :age, :satisfied, :infos)");
-
-            query.bindValue(":id_people", id_people);
-            query.bindValue(":sex", sex);
-            query.bindValue(":breed", breed);
-            query.bindValue(":age", age);
-            query.bindValue(":satisfied", satisfied);
-            query.bindValue(":infos", infos);
-            HandleErrorExec(&query);
-        }
-    }
-
-
-    QuitEdit();
+    else
+        QMessageBox::warning(nullptr, "Mise à jour des données en cours", "Veuillez attendre la fin de la mise à jour des données avant de réessayer.");
 }

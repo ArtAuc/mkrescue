@@ -31,6 +31,7 @@ public slots:
     void UpdateDestinationPages(QString type = "");
     void SameDestCare();
     void RemoveCurrent();
+    void FinishedCleaning(){cleaning = false;}
 
 signals:
     void RefreshMainWindow();
@@ -50,6 +51,8 @@ private:
     QStringList dealtIdPeople;
     QStringList dealtIdDog;
     SimpleCrypt *crypto;
+
+    bool cleaning = false;
 };
 
 #endif // EDITPAGE_H

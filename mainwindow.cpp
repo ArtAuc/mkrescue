@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->adoptionDemandAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("adoptionDemand", {}); });
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
-    connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
     connect(ui->removeButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(RemoveCurrent()));
     connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(ChangePage()));
@@ -164,7 +163,6 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         ui->topHorizontalWidget->show();
         ui->menuTree->show();
         ui->menuLogoLabel->show();
-        Clean();
         resizeEvent(nullptr);
     }
 }
@@ -593,9 +591,14 @@ QString MainWindow::ClearUselessBreaks(QString s){
 }
 
 void MainWindow::Clean(){
-    db.CleanDogs();
-    db.MakeRedList();
-    db.CleanPeople();
+    CleanThread *thread = new CleanThread(crypto);
+
+    QObject::connect(thread, &CleanThread::finished, ui->editPage, &EditPage::FinishedCleaning);
+    QObject::connect(thread, &CleanThread::finished, thread, &CleanThread::deleteLater);
+
+
+    thread->start();
+
 }
 
 void MainWindow::SelectDogCard(){

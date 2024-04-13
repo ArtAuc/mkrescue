@@ -1,6 +1,8 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <QThread>
+
 #include "utils.h"
 #include "simplecrypt.h"
 
@@ -31,6 +33,37 @@ public:
  private:
     QSqlDatabase _database;
     SimpleCrypt *crypto = nullptr;
+};
+
+class CleanThread : public QThread {
+public:
+    CleanThread(SimpleCrypt *crypto){this->crypto = crypto;}
+    ~CleanThread(){
+    }
+
+    void run() override {
+        threadDb = QSqlDatabase::addDatabase("QSQLITE", "secondary");
+        threadDb.setDatabaseName("data.db");
+        threadDb.open();
+
+        CleanDogs();
+        MakeRedList();
+        CleanPeople();
+
+        if (threadDb.transaction()) {
+            threadDb.commit();
+        }
+
+        threadDb.close();
+    }
+
+    void CleanDogs();
+    void MakeRedList();
+    void CleanPeople();
+
+private:
+    QSqlDatabase threadDb;
+    SimpleCrypt *crypto;
 };
 
 #endif // DATABASE_H

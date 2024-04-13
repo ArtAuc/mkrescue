@@ -13,7 +13,6 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     else if (info1.contains("_|_"))
         typeInfo = "current";
 
-    qDebug() << info1;
 
     type = typeInfo;
 

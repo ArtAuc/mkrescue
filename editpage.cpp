@@ -387,6 +387,8 @@ void EditPage::QuitEdit()
     else
         stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "Page"));
 
+    cleaning = true;
+    QSqlDatabase::removeDatabase("secondary");
     emit RefreshMainWindow();
 }
 
