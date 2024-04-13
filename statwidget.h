@@ -43,8 +43,9 @@ protected:
 
             qreal xScale = (width() - 40) / (data.size() - 1);
             qreal yScale;
-            if(minY == maxY)
+            if(minY == maxY){
                 yScale = 1;
+            }
             else
                 yScale = (height() - 40) / (maxY - minY);
 
@@ -54,6 +55,8 @@ protected:
             QPointF prevPoint;
             for (size_t i = 0; i < data.size(); ++i) {
                 QPointF point(i * xScale, (data[i].second - minY) * yScale);
+                if(minY == maxY)
+                    point.setY((height() - 40) / 2);
                 points.push_back(QPointF(point.x(), -point.y()) + QPointF(20, height() - 20));
                 painter.drawEllipse(point, 2, 2);
                 if (i > 0) {

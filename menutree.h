@@ -18,37 +18,22 @@ public:
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override {
         QStyleOptionViewItem newOption(option);
 
-        if(index.column() == 0){
-            if(space == 0)
-                space = option.rect.x();
-            newOption.rect.setX(0);
-        }
-        else if (space != 0)
-            newOption.rect.setX(space);
+        int padding = 20;
+        newOption.rect.setX(padding);
 
-        if (option.state & QStyle::State_MouseOver) {
+        if (option.state & QStyle::State_MouseOver || option.state & QStyle::State_Selected) {
             newOption.palette.setColor(QPalette::Text, Qt::white);
+            painter->fillRect(0, option.rect.top(), 0.9 * padding, option.rect.height(), QColor("#20718e"));
         }
 
         if (option.state & QStyle::State_Selected) {
             newOption.palette.setColor(QPalette::Highlight, QColor("#45556c"));
-            newOption.palette.setColor(QPalette::Text, Qt::white);
         }
 
 
         QStyledItemDelegate::paint(painter, newOption, index);
 
     }
-
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override
-    {
-        QSize size = QStyledItemDelegate::sizeHint(option, index);
-        // Subtract the width of the arrow button
-        size.setWidth(size.width() - 20);
-        return size;
-    }
-private:
-    mutable int space = 0;
 };
 
 
@@ -58,6 +43,7 @@ class MenuTree : public QTreeWidget
 public:
     explicit MenuTree(QWidget *parent = nullptr) : QTreeWidget(parent) {
         setFocusPolicy(Qt::NoFocus);
+        setIndentation(0);
         setSelectionBehavior(QAbstractItemView::SelectRows);
         TreeItemDelegate *delegate = new TreeItemDelegate(this);
         setItemDelegate(delegate);
@@ -114,13 +100,13 @@ protected:
         QTreeWidget::showEvent(event);
 
         menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
-        setColumnWidth(0, 0);
 
         resizeEvent(nullptr);
     }
 
     void resizeEvent(QResizeEvent *event) override {
         QTreeWidget::resizeEvent(event);
+        setColumnWidth(0, 0 * width());
         if(width() > 10){
             QFont font = this->font();
             font.setPointSizeF(width() * 0.05);
@@ -138,7 +124,6 @@ protected:
         else
             menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
     }
-
 
 private:
     int initialWidth = 300;

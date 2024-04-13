@@ -61,8 +61,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     restore.py \
-    src/SimpleMail2Qt6.pc \
-    src/simplemail-qtX.pc.in
-
-SUBDIRS += \
-    src/SMTPEmail.pro

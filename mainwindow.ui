@@ -178,11 +178,7 @@ border-right:1px solid #aaa</string>
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">QTreeView::branch{
-	image:none;
-}
-
-QTreeView::item { margin-top: 30px; padding:0;}
+         <string notr="true">QTreeWidget::item { margin-top: 30px; padding:0;}
 </string>
         </property>
         <property name="frameShape">
@@ -198,7 +194,7 @@ QTreeView::item { margin-top: 30px; padding:0;}
          <bool>true</bool>
         </property>
         <property name="columnCount">
-         <number>2</number>
+         <number>1</number>
         </property>
         <attribute name="headerCascadingSectionResizes">
          <bool>true</bool>
@@ -211,15 +207,7 @@ QTreeView::item { margin-top: 30px; padding:0;}
           <string/>
          </property>
         </column>
-        <column>
-         <property name="text">
-          <string/>
-         </property>
-        </column>
         <item>
-         <property name="text">
-          <string/>
-         </property>
          <property name="text">
           <string> Accueil</string>
          </property>
@@ -231,9 +219,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
         </item>
         <item>
          <property name="text">
-          <string/>
-         </property>
-         <property name="text">
           <string> Fiches chiens</string>
          </property>
          <property name="icon">
@@ -244,9 +229,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
         </item>
         <item>
          <property name="text">
-          <string/>
-         </property>
-         <property name="text">
           <string>  Registres</string>
          </property>
          <property name="icon">
@@ -255,9 +237,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
            <selectedoff>media/registry_white.svg</selectedoff>media/registry_gray.svg</iconset>
          </property>
          <item>
-          <property name="text">
-           <string/>
-          </property>
           <property name="text">
            <string>      Entrées/Sorties</string>
           </property>
@@ -273,9 +252,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
          </item>
          <item>
           <property name="text">
-           <string/>
-          </property>
-          <property name="text">
            <string>      Garderie</string>
           </property>
           <property name="background">
@@ -289,9 +265,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
           </property>
          </item>
          <item>
-          <property name="text">
-           <string/>
-          </property>
           <property name="text">
            <string>      Adhérents</string>
           </property>
@@ -308,9 +281,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
         </item>
         <item>
          <property name="text">
-          <string/>
-         </property>
-         <property name="text">
           <string> Vétérinaire</string>
          </property>
          <property name="icon">
@@ -321,9 +291,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
         </item>
         <item>
          <property name="text">
-          <string/>
-         </property>
-         <property name="text">
           <string> Autres</string>
          </property>
          <property name="icon">
@@ -332,9 +299,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
            <selectedoff>media/circle_white.svg</selectedoff>media/circle_gray.svg</iconset>
          </property>
          <item>
-          <property name="text">
-           <string/>
-          </property>
           <property name="text">
            <string>      Liste rouge adoptants</string>
           </property>
@@ -350,9 +314,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
          </item>
          <item>
           <property name="text">
-           <string/>
-          </property>
-          <property name="text">
            <string>      Animaux perdus</string>
           </property>
           <property name="background">
@@ -366,9 +327,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
           </property>
          </item>
          <item>
-          <property name="text">
-           <string/>
-          </property>
           <property name="text">
            <string>      Demandes d'adoption</string>
           </property>
@@ -384,9 +342,6 @@ QTreeView::item { margin-top: 30px; padding:0;}
          </item>
         </item>
         <item>
-         <property name="text">
-          <string/>
-         </property>
          <property name="text">
           <string> Paramètres</string>
          </property>

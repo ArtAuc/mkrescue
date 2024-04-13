@@ -194,7 +194,7 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
     ui->searchLine->clear();
 
     QStackedWidget* stacked = ui->stackedWidget;
-    QString txt = item->text(1).trimmed();
+    QString txt = item->text(0).trimmed();
 
 
 
