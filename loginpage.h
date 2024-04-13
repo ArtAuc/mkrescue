@@ -86,12 +86,12 @@ public:
 public slots:
     void NextStep(){
         if(label->text().startsWith("Nouvelle")){
-            hash = QCryptographicHash::hash((lineEdit->text() + "refuge").toUtf8(), QCryptographicHash::Sha256);
+            hash = QCryptographicHash::hash((lineEdit->text() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256);
             label->setText("Confirmez le mot de passe");
         }
 
         else if(label->text().startsWith("Confirmez")){
-            QByteArray newHash = QCryptographicHash::hash((lineEdit->text() + "refuge").toUtf8(), QCryptographicHash::Sha256);
+            QByteArray newHash = QCryptographicHash::hash((lineEdit->text() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256);
             if(newHash == hash){
                 label->setText("Entrez l'adresse email de sauvegarde");
                 lineEdit->setEchoMode(QLineEdit::Normal);
@@ -114,7 +114,7 @@ public slots:
         }
 
         else if(label->text().startsWith("Veuillez")){
-            emit Unlock(QCryptographicHash::hash((lineEdit->text() + "refuge").toUtf8(), QCryptographicHash::Sha256));
+            emit Unlock(QCryptographicHash::hash((lineEdit->text() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256));
             ShakeButton();
         }
 

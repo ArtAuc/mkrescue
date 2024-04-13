@@ -308,4 +308,15 @@ void EditPeopleWidget::LineEditFormat(QString text) {
 
     else if(name.startsWith("email"))
         lineEdit->setText(text.toLower());
+    else if(name.startsWith("phone")) {
+        text.remove(" ");
+        QString formattedText;
+        for (int i = 0; i < text.length(); ++i) {
+            formattedText.append(text[i]);
+            if ((i + 1) % 2 == 0 && i != text.length() - 1) {
+                formattedText.append(" ");
+            }
+        }
+        lineEdit->setText(formattedText);
+    }
 }

@@ -6,34 +6,6 @@ EditPage::EditPage(QWidget *parent)
 
 }
 
-void EditPage::AddEntry(){
-    Edit("entry", {});
-}
-
-void EditPage::AddRedList(){
-    Edit("redList", {});
-}
-
-void EditPage::AddCare(){
-    Edit("care", {});
-}
-
-void EditPage::AddMember(){
-    Edit("members", {});
-}
-
-void EditPage::AddLost(){
-    Edit("lost", {});
-}
-
-void EditPage::AddVet(){
-    Edit("vet", {});
-}
-
-void EditPage::AddAdoptionDemand(){
-    Edit("adoptionDemand", {});
-}
-
 void EditPage::SwitchPage(QString pageName){
     resizeEvent(nullptr);
     qobject_cast<QStackedWidget*>(parent())->setCurrentWidget(this);

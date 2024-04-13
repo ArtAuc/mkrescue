@@ -25,13 +25,13 @@ MainWindow::MainWindow(QWidget *parent)
     InitExportButtons();
 
     // editPage
-    connect(ui->entryAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddEntry()));
-    connect(ui->redListAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddRedList()));
-    connect(ui->careAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddCare()));
-    connect(ui->membersAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddMember()));
-    connect(ui->lostAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddLost()));
-    connect(ui->vetAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddVet()));
-    connect(ui->adoptionDemandAddButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(AddAdoptionDemand()));
+    connect(ui->entryAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("entry", {}); });
+    connect(ui->redListAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("redList", {}); });
+    connect(ui->careAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("care", {}); });
+    connect(ui->membersAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("members", {}); });
+    connect(ui->lostAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("lost", {}); });
+    connect(ui->vetAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("vet", {}); });
+    connect(ui->adoptionDemandAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("adoptionDemand", {}); });
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->submitButton, SIGNAL(clicked()), this, SLOT(Clean()));
@@ -134,11 +134,11 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
 
     if(h != ""){
         if(!savedData.HashExists()){ // New installation
-            savedData.SetHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256));
+            savedData.SetHash(QCryptographicHash::hash(QString(h.toHex() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256));
             savedData.SetLastTimeSync(QDateTime::currentDateTime());
         }
 
-        else if(!savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
+        else if(!savedData.CompareHash(QCryptographicHash::hash(QString(h.toHex() + "refuge510refuge").toUtf8(), QCryptographicHash::Sha256))) // Passwords don't match
             return;
 
         // Login sucessful
@@ -376,203 +376,205 @@ void MainWindow::Search(QString search){
 void MainWindow::TriggerEdit(QString type, QStringList necessary){
     ui->searchLine->hide();
     ui->searchIcon->hide();
-
-    QSqlQuery query;
     QStringList infos;
 
-    if(type == "entry"){
-        HandleErrorExec(&query, "SELECT ES_registry.id_ES, "
-                    "ES_registry.date_prov, "
-                    "ES_registry.type_prov, "
-                    "People_prov.last_name, "
-                    "People_prov.first_name, "
-                    "People_prov.address, "
-                    "People_prov.phone, "
-                    "People_prov.email, "
-                    "Dogs.sex, "
-                    "Dogs.chip, "
-                    "Dogs.name, "
-                    "Dogs.description, "
-                    "Dogs.birth, "
-                    "GROUP_CONCAT(Destinations.date || '_|_' || IFNULL(Destinations.type, '') || '_|_' || IFNULL(People_dest.last_name, '') || '_|_' || IFNULL(People_dest.first_name, '') || '_|_' || IFNULL(People_dest.address, '') || '_|_' || IFNULL(People_dest.phone, '') || '_|_' || IFNULL(People_dest.email, ''), '_-_'), "
-                    "ES_registry.death_cause "
-                    "FROM ES_registry "
-                    "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
-                    "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
-                    "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
-                    "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
-                    "WHERE id_ES = " + necessary[0] + " AND ES_registry.date_prov = '" + necessary[1] + "'"
-                    "GROUP BY Dogs.id_dog ");
+    if(!necessary.isEmpty()){ // Editing
 
-        query.next();
+        QSqlQuery query;
 
-        for(int i = 0; i < query.record().count(); i++)
-            infos.append(query.value(i).toString());
-    }
+        if(type == "entry"){
+            HandleErrorExec(&query, "SELECT ES_registry.id_ES, "
+                        "ES_registry.date_prov, "
+                        "ES_registry.type_prov, "
+                        "People_prov.last_name, "
+                        "People_prov.first_name, "
+                        "People_prov.address, "
+                        "People_prov.phone, "
+                        "People_prov.email, "
+                        "Dogs.sex, "
+                        "Dogs.chip, "
+                        "Dogs.name, "
+                        "Dogs.description, "
+                        "Dogs.birth, "
+                        "GROUP_CONCAT(Destinations.date || '_|_' || IFNULL(Destinations.type, '') || '_|_' || IFNULL(People_dest.last_name, '') || '_|_' || IFNULL(People_dest.first_name, '') || '_|_' || IFNULL(People_dest.address, '') || '_|_' || IFNULL(People_dest.phone, '') || '_|_' || IFNULL(People_dest.email, ''), '_-_'), "
+                        "ES_registry.death_cause "
+                        "FROM ES_registry "
+                        "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
+                        "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
+                        "LEFT JOIN Destinations ON Dogs.id_dog = Destinations.id_dog "
+                        "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
+                        "WHERE id_ES = " + necessary[0] + " AND ES_registry.date_prov = '" + necessary[1] + "'"
+                        "GROUP BY Dogs.id_dog ");
 
-    else if (type == "care"){
-        HandleErrorExec(&query, "SELECT Care_registry.id_care, "
-                   "Care_registry.entry_date, "
-                   "People_prov.last_name, "
-                   "People_prov.first_name, "
-                   "People_prov.address, "
-                   "People_prov.phone, "
-                   "People_prov.email, "
-                   "Dogs.name, "
-                   "Dogs.chip, "
-                   "Dogs.sex, "
-                   "Dogs.birth, "
-                   "Dogs.description, "
-                   "Care_registry.exit_date, "
-                   "People_dest.last_name, "
-                   "People_dest.first_name, "
-                   "People_dest.address, "
-                   "People_dest.phone, "
-                   "People_dest.email "
-                   "FROM Care_registry "
-                   "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
-                   "JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
-                   "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
-                   "WHERE id_care = " + necessary[0] +
-                   " AND entry_date = '" + necessary[1] + "';");
+            query.next();
 
-        query.next();
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
+        }
 
-        for(int i = 0; i < query.record().count(); i++)
-            infos.append(query.value(i).toString());
-    }
+        else if (type == "care"){
+            HandleErrorExec(&query, "SELECT Care_registry.id_care, "
+                       "Care_registry.entry_date, "
+                       "People_prov.last_name, "
+                       "People_prov.first_name, "
+                       "People_prov.address, "
+                       "People_prov.phone, "
+                       "People_prov.email, "
+                       "Dogs.name, "
+                       "Dogs.chip, "
+                       "Dogs.sex, "
+                       "Dogs.birth, "
+                       "Dogs.description, "
+                       "Care_registry.exit_date, "
+                       "People_dest.last_name, "
+                       "People_dest.first_name, "
+                       "People_dest.address, "
+                       "People_dest.phone, "
+                       "People_dest.email "
+                       "FROM Care_registry "
+                       "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
+                       "JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
+                       "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
+                       "WHERE id_care = " + necessary[0] +
+                       " AND entry_date = '" + necessary[1] + "';");
 
-    else if (type == "members"){
-        HandleErrorExec(&query,
-                "SELECT Members.id_adhesion, "
-                "       Members.date, "
-                "       People.last_name, "
-                "       People.first_name, "
-                "       People.address, "
-                "       People.phone, "
-                "       People.email, "
-                "       Members.type, "
-                "       Members.amount "
-                "FROM Members "
-                "JOIN People ON Members.id_people = People.id_people "
-                "WHERE Members.id_adhesion = " + necessary[0] +
-                " AND Members.date = '" + necessary[1] + "';");
+            query.next();
 
-        query.next();
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
+        }
 
-        for(int i = 0; i < query.record().count(); i++)
-            infos.append(query.value(i).toString());
-    }
+        else if (type == "members"){
+            HandleErrorExec(&query,
+                    "SELECT Members.id_adhesion, "
+                    "       Members.date, "
+                    "       People.last_name, "
+                    "       People.first_name, "
+                    "       People.address, "
+                    "       People.phone, "
+                    "       People.email, "
+                    "       Members.type, "
+                    "       Members.amount "
+                    "FROM Members "
+                    "JOIN People ON Members.id_people = People.id_people "
+                    "WHERE Members.id_adhesion = " + necessary[0] +
+                    " AND Members.date = '" + necessary[1] + "';");
 
-    // Delete
-    else if (type == "redList"){
-        infos = necessary;
-    }
+            query.next();
 
-    else if (type == "lost"){
-        query.prepare("SELECT identification, "
-                   "name, "
-                   "species, "
-                   "sex, "
-                   "description, "
-                   "date, "
-                   "place, "
-                   "found, "
-                   "People.last_name, "
-                   "People.first_name, "
-                   "People.phone, "
-                   "People.email, "
-                   "People.address, "
-                   "People.id_people "
-                   "FROM Lost "
-                   "JOIN People ON People.id_people = Lost.id_people "
-                   "WHERE name = '" + necessary[0] +
-                   "' AND date = '" + necessary[1] +
-                   "' AND People.id_people = " + necessary[2] + ";");
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
+        }
 
-        HandleErrorExec(&query);
-        query.next();
+        // Delete
+        else if (type == "redList"){
+            infos = necessary;
+        }
 
-        for(int i = 0; i < query.record().count(); i++)
-            infos.append(query.value(i).toString());
-    }
+        else if (type == "lost"){
+            query.prepare("SELECT identification, "
+                       "name, "
+                       "species, "
+                       "sex, "
+                       "description, "
+                       "date, "
+                       "place, "
+                       "found, "
+                       "People.last_name, "
+                       "People.first_name, "
+                       "People.phone, "
+                       "People.email, "
+                       "People.address, "
+                       "People.id_people "
+                       "FROM Lost "
+                       "JOIN People ON People.id_people = Lost.id_people "
+                       "WHERE name = '" + necessary[0] +
+                       "' AND date = '" + necessary[1] +
+                       "' AND People.id_people = " + necessary[2] + ";");
 
-    else if (type == "vet"){
-        if(necessary.size() == 2){
-            query.prepare("SELECT Vet.date, "
-                             "Dogs.name, "
-                             "Dogs.chip, "
-                             "Dogs.sex, "
-                             "Dogs.birth, "
-                             "Dogs.description, "
-                             "Vet.reason, "
-                             "Dogs.id_dog  "
-                             "FROM Vet "
-                             "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
-                             "WHERE Vet.date = '" + necessary[0] +
-                             "' AND Dogs.id_dog = " + necessary[1]);
             HandleErrorExec(&query);
             query.next();
 
             for(int i = 0; i < query.record().count(); i++)
                 infos.append(query.value(i).toString());
-
         }
 
-        else // Add vaccine recall, called by homepage
-        {
-            query.prepare("SELECT Dogs.name, "
-                             "Dogs.chip, "
-                             "Dogs.sex, "
-                             "Dogs.birth, "
-                             "Dogs.description "
-                             "FROM Dogs "
-                             "WHERE Dogs.id_dog = :id");
-            query.bindValue(":id", necessary[0]);
-            HandleErrorExec(&query);
-            if (query.next()) {
-                QString name = query.value(0).toString();
-                QString chip = query.value(1).toString();
-                QString sex = query.value(2).toString();
-                QString birth = query.value(3).toString();
-                QString description = query.value(4).toString();
+        else if (type == "vet"){
+            if(necessary.size() == 2){
+                query.prepare("SELECT Vet.date, "
+                                 "Dogs.name, "
+                                 "Dogs.chip, "
+                                 "Dogs.sex, "
+                                 "Dogs.birth, "
+                                 "Dogs.description, "
+                                 "Vet.reason, "
+                                 "Dogs.id_dog  "
+                                 "FROM Vet "
+                                 "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
+                                 "WHERE Vet.date = '" + necessary[0] +
+                                 "' AND Dogs.id_dog = " + necessary[1]);
+                HandleErrorExec(&query);
+                query.next();
 
-                ui->editPage->AddVet();
-                QTimer::singleShot(100, [this, name, chip, sex, birth, description, necessary]() {
-                    ui->editPage->FillAnimalWidget("VetAnimalEdit", name, chip, sex, birth, description);
-                    ui->dateVetAnimalEdit->clearFocus();
-                    ui->dateVetAnimalEdit->setDate(QDate::currentDate());
-                    findChild<EditDogWidget*>("VetAnimalEdit")->SetOldId(necessary[0]);
-                });
+                for(int i = 0; i < query.record().count(); i++)
+                    infos.append(query.value(i).toString());
 
             }
+
+            else // Add vaccine recall, called by homepage
+            {
+                query.prepare("SELECT Dogs.name, "
+                                 "Dogs.chip, "
+                                 "Dogs.sex, "
+                                 "Dogs.birth, "
+                                 "Dogs.description "
+                                 "FROM Dogs "
+                                 "WHERE Dogs.id_dog = :id");
+                query.bindValue(":id", necessary[0]);
+                HandleErrorExec(&query);
+                if (query.next()) {
+                    QString name = query.value(0).toString();
+                    QString chip = query.value(1).toString();
+                    QString sex = query.value(2).toString();
+                    QString birth = query.value(3).toString();
+                    QString description = query.value(4).toString();
+
+                    ui->editPage->Edit("vet", {});
+                    QTimer::singleShot(100, [this, name, chip, sex, birth, description, necessary]() {
+                        ui->editPage->FillAnimalWidget("VetAnimalEdit", name, chip, sex, birth, description);
+                        ui->dateVetAnimalEdit->clearFocus();
+                        ui->dateVetAnimalEdit->setDate(QDate::currentDate());
+                        findChild<EditDogWidget*>("VetAnimalEdit")->SetOldId(necessary[0]);
+                    });
+                    return;
+                }
+            }
+        }
+
+        else if(type == "adoptionDemand"){
+            query.prepare("SELECT People.last_name, "
+                          "People.first_name, "
+                          "People.address, "
+                          "People.phone, "
+                          "People.email, "
+                          "Adoption_demand.sex, "
+                          "Adoption_demand.age, "
+                          "Adoption_demand.breed, "
+                          "Adoption_demand.satisfied, "
+                          "Adoption_demand.infos, "
+                          "People.id_people "
+                          "FROM Adoption_demand "
+                          "JOIN People ON People.id_people = Adoption_demand.id_people "
+                          "WHERE Adoption_demand.breed = '" + necessary[0] +
+                          "' AND People.id_people = " + necessary[1]);
+
+            HandleErrorExec(&query);
+            query.next();
+
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
         }
     }
-
-    else if(type == "adoptionDemand"){
-        query.prepare("SELECT People.last_name, "
-                      "People.first_name, "
-                      "People.address, "
-                      "People.phone, "
-                      "People.email, "
-                      "Adoption_demand.sex, "
-                      "Adoption_demand.age, "
-                      "Adoption_demand.breed, "
-                      "Adoption_demand.satisfied, "
-                      "Adoption_demand.infos, "
-                      "People.id_people "
-                      "FROM Adoption_demand "
-                      "JOIN People ON People.id_people = Adoption_demand.id_people "
-                      "WHERE Adoption_demand.breed = '" + necessary[0] +
-                      "' AND People.id_people = " + necessary[1]);
-
-        HandleErrorExec(&query);
-        query.next();
-
-        for(int i = 0; i < query.record().count(); i++)
-            infos.append(query.value(i).toString());
-    }
-
 
     ui->editPage->Edit(type, infos);
 }
