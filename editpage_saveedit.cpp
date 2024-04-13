@@ -315,11 +315,12 @@ void EditPage::SaveEdit()
 
         HandleErrorExec(&query);
 
-
-        query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
-        query.bindValue(":id_dog", entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId());
-        query.bindValue(":date", currentNecessary[1]);
-        HandleErrorExec(&query);
+        if(currentNecessary.size() > 1){
+            query.prepare("DELETE FROM Destinations WHERE id_dog = :id_dog AND date_prov = :date");
+            query.bindValue(":id_dog", entryEditPage->findChild<EditDogWidget*>("EntryAnimalEdit")->GetOldId());
+            query.bindValue(":date", currentNecessary[1]);
+            HandleErrorExec(&query);
+        }
 
         for(int i = 0; i < id_peoples.count(); i++){
             query.prepare("INSERT INTO Destinations (id_dog, id_people, date, type, date_prov) "

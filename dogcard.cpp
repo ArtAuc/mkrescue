@@ -13,6 +13,8 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     else if (info1.contains("_|_"))
         typeInfo = "current";
 
+    qDebug() << info1;
+
     type = typeInfo;
 
     // Header color according to type
@@ -56,7 +58,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     QString info1String;
     if(typeInfo == "current" || typeInfo == "out"){
         QStringList splitted = info1.split("_|_");
-        QString type_prov = crypto->decryptToString(splitted[1]);
+        QString type_prov = crypto->decryptToString(splitted[1]).split("_|_")[0];
         QString date_prov = splitted[0];
         info1String = type_prov + " : ";
         info1String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
@@ -341,7 +343,7 @@ void DogCard::CreateHistory(){
         QString type = query.value(5).toString();
         QLabel* histLabel = new QLabel();
         QString colorString;
-        QString dateString(query.value(4).toDateTime().toString("dd/MM/yyyy h:mm"));
+        QString dateString(query.value(4).toDate().toString("dd/MM/yyyy"));
         QString type_prov = query.value(0).toString();
         if(type == "ES"){
             type_prov = crypto->decryptToString(type_prov);
@@ -379,6 +381,7 @@ void DogCard::CreateHistory(){
         }
 
         else if(type == "Vet"){
+            dateString = (query.value(4).toDateTime().toString("dd/MM/yyyy h:mm"));
             histLabel->setText(dateString +
                                 " : <b>RDV Vétérinaire</b> (" +
                                 query.value(0).toString() + ")");

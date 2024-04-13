@@ -328,7 +328,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->removeButton->setFixedWidth(ui->removeButton->height());
 
 
-   //ui->homePage->resizeEvent(event);
+   ui->homePage->resizeEvent(event);
 }
 
 void MainWindow::ToggleModifyButtons()
