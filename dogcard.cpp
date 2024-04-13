@@ -163,11 +163,11 @@ void DogCard::resizeEvent(QResizeEvent *event){
     QFrame::resizeEvent(event);
 
     float factor;
-    QSize parentSize = qobject_cast<QWidget*>(parent())->size();
+    QSize parentSize = qobject_cast<QWidget*>(parent()->parent())->size();
     if(selected){
         layout->setSpacing(height() / 100);
 
-        setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+        setMaximumSize(QWIDGETSIZE_MAX, 0.95 * parentSize.height());
         factor = 2;
     }
     else{
@@ -276,6 +276,7 @@ void DogCard::SelectThis(){
     layout->addWidget(historyScroll, 1, 1, layout->rowCount() - 1, 1);
 
     layout->setContentsMargins(layout->contentsMargins() + 50);
+    qobject_cast<QWidget*>(parent())->layout()->setContentsMargins(6,0,6,6);
 
 
     resizeEvent(nullptr);
@@ -420,7 +421,7 @@ void DogCard::OpenPrescriptionFolder() {
     }
 
 #ifdef Q_OS_WIN
-    QString command = "explorer.exe /select," + QDir::toNativeSeparators(folderPath);
+    QString command = "explorer.exe /select,\"" + QDir::toNativeSeparators(folderPath) + "\"";
     QProcess::startDetached(command);
 #elif defined(Q_OS_MAC)
     QStringList arguments;

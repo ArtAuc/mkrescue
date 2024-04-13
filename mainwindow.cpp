@@ -333,8 +333,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     checkboxFont.setPointSize(0.01 * ui->adoptionDemandPage->width());
     ui->satisfiedCheckBox->setFont(checkboxFont);
 
+    QTimer::singleShot(50,[this](){
     ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
-    ui->searchIcon->setFixedHeight(ui->searchLine->height());
+    ui->searchIcon->setFixedHeight(ui->searchLine->height());});
 
     int syncWidth = 0.03 * width();
     ui->syncButton->setIconSize(QSize(syncWidth, syncWidth));

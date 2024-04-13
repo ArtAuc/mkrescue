@@ -18,9 +18,13 @@ public:
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override {
         QStyleOptionViewItem newOption(option);
 
-        if(index.column() == 0)
+        if(index.column() == 0){
+            if(space == 0)
+                space = option.rect.x();
             newOption.rect.setX(0);
-
+        }
+        else if (space != 0)
+            newOption.rect.setX(space);
 
         if (option.state & QStyle::State_MouseOver) {
             newOption.palette.setColor(QPalette::Text, Qt::white);
@@ -31,10 +35,18 @@ public:
             newOption.palette.setColor(QPalette::Text, Qt::white);
         }
 
+
         QStyledItemDelegate::paint(painter, newOption, index);
 
     }
 
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override
+    {
+        QSize size = QStyledItemDelegate::sizeHint(option, index);
+        // Subtract the width of the arrow button
+        size.setWidth(size.width() - 20);
+        return size;
+    }
 private:
     mutable int space = 0;
 };
@@ -45,7 +57,7 @@ class MenuTree : public QTreeWidget
     Q_OBJECT
 public:
     explicit MenuTree(QWidget *parent = nullptr) : QTreeWidget(parent) {
-
+        setFocusPolicy(Qt::NoFocus);
         setSelectionBehavior(QAbstractItemView::SelectRows);
         TreeItemDelegate *delegate = new TreeItemDelegate(this);
         setItemDelegate(delegate);
@@ -64,6 +76,7 @@ public:
 
         logo = QPixmap("media/logo_title_side.png");
     }
+
 
     void collapseAllExcept(QString txt){
         for (int i = 0; i < topLevelItemCount(); ++i) {

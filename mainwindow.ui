@@ -182,7 +182,8 @@ border-right:1px solid #aaa</string>
 	image:none;
 }
 
-QTreeView::item { margin-top: 30px; }</string>
+QTreeView::item { margin-top: 30px; padding:0;}
+</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -589,7 +590,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -741,8 +742,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>86</width>
-               <height>84</height>
+               <width>984</width>
+               <height>567</height>
               </rect>
              </property>
              <property name="styleSheet">
