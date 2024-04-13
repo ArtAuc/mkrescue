@@ -325,13 +325,13 @@ void EditPage::resizeEvent(QResizeEvent *event){
 
     if(children.size() > 0){
         QFont font = children[0]->font();
-        float fontSize = std::max(width() * 0.007, (double) 9);
+        float fontSize = width() * 0.007;
         font.setPointSize(fontSize);
 
         for(QWidget* c : children){
             if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QTextEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c) || qobject_cast<QDoubleSpinBox*>(c) || qobject_cast<QCheckBox*>(c))){
                 c->setFont(font);
-                c->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+                c->setStyleSheet("padding:" + QString::number(fontSize / 2) + "px;");
             }
 
             else if (qobject_cast<QLabel*>(c))

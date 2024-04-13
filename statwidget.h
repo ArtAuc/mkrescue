@@ -98,7 +98,6 @@ public:
         QGridLayout *layout = new QGridLayout();
         setLayout(layout);
         layout->setSpacing(0);
-        layout->setContentsMargins(0,6,0,0);
 
         statLabel = new QLabel("x");
         statLabel->setStyleSheet("color:#333;");
@@ -279,9 +278,11 @@ public:
             statLabel->setFont(font);
 
             setMaximumHeight(parent->height() / 4);
+
+
+            statGraph->setMaximumWidth(0.7 * width());
         }
 
-        statGraph->setMaximumWidth(0.7 * width());
     }
 
 private:

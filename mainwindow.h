@@ -77,5 +77,6 @@ private:
     SavedData savedData;
     SimpleCrypt *crypto;
     QMovie *syncMovie = nullptr;
+    QRect screenGeometry;
 };
 #endif // MAINWINDOW_H

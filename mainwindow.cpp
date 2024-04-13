@@ -7,7 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
+    screenGeometry = QApplication::primaryScreen()->geometry();
     setWindowTitle("MouchkiNet");
+
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
     ToggleLock();
 
@@ -292,7 +294,16 @@ void MainWindow::InitYearRegistry(QString type, QString year){ // Only for care,
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
+    if(event){
+        QSize newSize = event->size();
+        if (newSize.width() > screenGeometry.width() || newSize.height() > screenGeometry.height()) {
+            QSize adjustedSize(qMin(newSize.width(), screenGeometry.width()), qMin(newSize.height(), screenGeometry.height()));
+            this->resize(adjustedSize);
+        }
+    }
+
     QMainWindow::resizeEvent(event);
+
     ui->menuTree->SetInitialWidth(width() * 0.15);
 
     QFont font = ui->titleLabel->font();
@@ -331,7 +342,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->removeButton->setFixedWidth(ui->removeButton->height());
 
 
-   ui->homePage->resizeEvent(event);
+    ui->homePage->resizeEvent(event);
 }
 
 void MainWindow::ToggleModifyButtons()
@@ -393,28 +404,33 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         QSqlQuery query;
 
         if(type == "entry"){
-            HandleErrorExec(&query, "SELECT ES_registry.id_ES, "
-                        "ES_registry.date_prov, "
-                        "ES_registry.type_prov, "
-                        "People_prov.last_name, "
-                        "People_prov.first_name, "
-                        "People_prov.address, "
-                        "People_prov.phone, "
-                        "People_prov.email, "
-                        "Dogs.sex, "
-                        "Dogs.chip, "
-                        "Dogs.name, "
-                        "Dogs.description, "
-                        "Dogs.birth, "
-                        "GROUP_CONCAT(Destinations.date || '_|_' || IFNULL(Destinations.type, '') || '_|_' || IFNULL(People_dest.last_name, '') || '_|_' || IFNULL(People_dest.first_name, '') || '_|_' || IFNULL(People_dest.address, '') || '_|_' || IFNULL(People_dest.phone, '') || '_|_' || IFNULL(People_dest.email, ''), '_-_'), "
-                        "ES_registry.death_cause "
-                        "FROM ES_registry "
-                        "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
-                        "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
-                        "LEFT JOIN Destinations ON (Dogs.id_dog = Destinations.id_dog AND ES_Registry.date_prov = Destinations.date_prov) "
-                        "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
-                        "WHERE id_ES = " + necessary[0] + " AND ES_registry.date_prov = '" + necessary[1] + "'"
-                        "GROUP BY Dogs.id_dog ");
+            query.prepare("SELECT ES_registry.id_ES, "
+                                    "ES_registry.date_prov, "
+                                    "ES_registry.type_prov, "
+                                    "People_prov.last_name, "
+                                    "People_prov.first_name, "
+                                    "People_prov.address, "
+                                    "People_prov.phone, "
+                                    "People_prov.email, "
+                                    "Dogs.sex, "
+                                    "Dogs.chip, "
+                                    "Dogs.name, "
+                                    "Dogs.description, "
+                                    "Dogs.birth, "
+                                    "GROUP_CONCAT(Destinations.date || '_|_' || IFNULL(Destinations.type, '') || '_|_' || IFNULL(People_dest.last_name, '') || '_|_' || IFNULL(People_dest.first_name, '') || '_|_' || IFNULL(People_dest.address, '') || '_|_' || IFNULL(People_dest.phone, '') || '_|_' || IFNULL(People_dest.email, ''), '_-_'), "
+                                    "ES_registry.death_cause "
+                                    "FROM ES_registry "
+                                    "JOIN People AS People_prov ON ES_registry.id_people_prov = People_prov.id_people "
+                                    "JOIN Dogs ON ES_registry.id_dog = Dogs.id_dog "
+                                    "LEFT JOIN Destinations ON (Dogs.id_dog = Destinations.id_dog AND ES_Registry.date_prov = Destinations.date_prov) "
+                                    "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
+                                    "WHERE id_ES = :id_ES AND ES_registry.date_prov = :date_prov "
+                                    "GROUP BY Dogs.id_dog ");
+
+            query.bindValue(":id_ES", necessary[0]);
+            query.bindValue(":date_prov", necessary[1]);
+
+            HandleErrorExec(&query);
 
             query.next();
 
@@ -423,30 +439,35 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         }
 
         else if (type == "care"){
-            HandleErrorExec(&query, "SELECT Care_registry.id_care, "
-                       "Care_registry.entry_date, "
-                       "People_prov.last_name, "
-                       "People_prov.first_name, "
-                       "People_prov.address, "
-                       "People_prov.phone, "
-                       "People_prov.email, "
-                       "Dogs.name, "
-                       "Dogs.chip, "
-                       "Dogs.sex, "
-                       "Dogs.birth, "
-                       "Dogs.description, "
-                       "Care_registry.exit_date, "
-                       "People_dest.last_name, "
-                       "People_dest.first_name, "
-                       "People_dest.address, "
-                       "People_dest.phone, "
-                       "People_dest.email "
-                       "FROM Care_registry "
-                       "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
-                       "JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
-                       "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
-                       "WHERE id_care = " + necessary[0] +
-                       " AND entry_date = '" + necessary[1] + "';");
+            query.prepare("SELECT Care_registry.id_care, "
+                                   "Care_registry.entry_date, "
+                                   "People_prov.last_name, "
+                                   "People_prov.first_name, "
+                                   "People_prov.address, "
+                                   "People_prov.phone, "
+                                   "People_prov.email, "
+                                   "Dogs.name, "
+                                   "Dogs.chip, "
+                                   "Dogs.sex, "
+                                   "Dogs.birth, "
+                                   "Dogs.description, "
+                                   "Care_registry.exit_date, "
+                                   "People_dest.last_name, "
+                                   "People_dest.first_name, "
+                                   "People_dest.address, "
+                                   "People_dest.phone, "
+                                   "People_dest.email "
+                                   "FROM Care_registry "
+                                   "JOIN People AS People_prov ON Care_registry.id_people_prov = People_prov.id_people "
+                                   "JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
+                                   "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
+                                   "WHERE id_care = :id_care "
+                                   "AND entry_date = :entry_date");
+
+            query.bindValue(":id_care", necessary[0]);
+            query.bindValue(":entry_date", necessary[1]);
+
+            HandleErrorExec(&query);
 
             query.next();
 
@@ -456,20 +477,24 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
         else if (type == "members"){
             HandleErrorExec(&query,
-                    "SELECT Members.id_adhesion, "
-                    "       Members.date, "
-                    "       People.last_name, "
-                    "       People.first_name, "
-                    "       People.address, "
-                    "       People.phone, "
-                    "       People.email, "
-                    "       Members.type, "
-                    "       Members.amount "
-                    "FROM Members "
-                    "JOIN People ON Members.id_people = People.id_people "
-                    "WHERE Members.id_adhesion = " + necessary[0] +
-                    " AND Members.date = '" + necessary[1] + "';");
+                            "SELECT Members.id_adhesion, "
+                            "       Members.date, "
+                            "       People.last_name, "
+                            "       People.first_name, "
+                            "       People.address, "
+                            "       People.phone, "
+                            "       People.email, "
+                            "       Members.type, "
+                            "       Members.amount "
+                            "FROM Members "
+                            "JOIN People ON Members.id_people = People.id_people "
+                            "WHERE Members.id_adhesion = :id_adhesion "
+                            "AND Members.date = :date");
 
+            query.bindValue(":id_adhesion", necessary[0]);
+            query.bindValue(":date", necessary[1]);
+
+            HandleErrorExec(&query);
             query.next();
 
             for(int i = 0; i < query.record().count(); i++)
@@ -483,24 +508,28 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
         else if (type == "lost"){
             query.prepare("SELECT identification, "
-                       "name, "
-                       "species, "
-                       "sex, "
-                       "description, "
-                       "date, "
-                       "place, "
-                       "found, "
-                       "People.last_name, "
-                       "People.first_name, "
-                       "People.phone, "
-                       "People.email, "
-                       "People.address, "
-                       "People.id_people "
-                       "FROM Lost "
-                       "JOIN People ON People.id_people = Lost.id_people "
-                       "WHERE name = '" + necessary[0] +
-                       "' AND date = '" + necessary[1] +
-                       "' AND People.id_people = " + necessary[2] + ";");
+                                   "name, "
+                                   "species, "
+                                   "sex, "
+                                   "description, "
+                                   "date, "
+                                   "place, "
+                                   "found, "
+                                   "People.last_name, "
+                                   "People.first_name, "
+                                   "People.phone, "
+                                   "People.email, "
+                                   "People.address, "
+                                   "People.id_people "
+                                   "FROM Lost "
+                                   "JOIN People ON People.id_people = Lost.id_people "
+                                   "WHERE name = :name "
+                                   "AND date = :date "
+                                   "AND People.id_people = :id_people");
+
+            query.bindValue(":name", necessary[0]);
+            query.bindValue(":date", necessary[1]);
+            query.bindValue(":id_people", necessary[2]);
 
             HandleErrorExec(&query);
             query.next();
@@ -512,17 +541,21 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         else if (type == "vet"){
             if(necessary.size() == 2){
                 query.prepare("SELECT Vet.date, "
-                                 "Dogs.name, "
-                                 "Dogs.chip, "
-                                 "Dogs.sex, "
-                                 "Dogs.birth, "
-                                 "Dogs.description, "
-                                 "Vet.reason, "
-                                 "Dogs.id_dog  "
-                                 "FROM Vet "
-                                 "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
-                                 "WHERE Vet.date = '" + necessary[0] +
-                                 "' AND Dogs.id_dog = " + necessary[1]);
+                                     "Dogs.name, "
+                                     "Dogs.chip, "
+                                     "Dogs.sex, "
+                                     "Dogs.birth, "
+                                     "Dogs.description, "
+                                     "Vet.reason, "
+                                     "Dogs.id_dog  "
+                                     "FROM Vet "
+                                     "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
+                                     "WHERE Vet.date = :date "
+                                     "AND Dogs.id_dog = :id_dog");
+
+                query.bindValue(":date", necessary[0]);
+                query.bindValue(":id_dog", necessary[1]);
+
                 HandleErrorExec(&query);
                 query.next();
 
@@ -575,8 +608,11 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                           "People.id_people "
                           "FROM Adoption_demand "
                           "JOIN People ON People.id_people = Adoption_demand.id_people "
-                          "WHERE Adoption_demand.breed = '" + necessary[0] +
-                          "' AND People.id_people = " + necessary[1]);
+                          "WHERE Adoption_demand.breed = :breed "
+                          "AND People.id_people = :id_people");
+
+            query.bindValue(":breed", necessary[0]);
+            query.bindValue(":id_people", necessary[1]);
 
             HandleErrorExec(&query);
             query.next();

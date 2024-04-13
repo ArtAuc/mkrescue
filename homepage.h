@@ -20,20 +20,19 @@ public:
         if(alertsWidget == nullptr){
             layout()->setContentsMargins(0,0,0,0);
 
-            QWidget *verticalWidget = new QWidget(this);
-            verticalWidget->setObjectName("statVerticalWidget");
-            verticalWidget->setLayout(new QVBoxLayout());
-            verticalWidget->layout()->addWidget(new StatWidget("currentDogs"));
-            verticalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            verticalWidget->layout()->addWidget(new StatWidget("adoptions"));
-            verticalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
+            statVerticalWidget = new QWidget(this);
+            statVerticalWidget->setLayout(new QVBoxLayout());
+            statVerticalWidget->layout()->addWidget(new StatWidget("currentDogs"));
+            statVerticalWidget->layout()->addWidget(new StatWidget("currentMembers"));
+            statVerticalWidget->layout()->addWidget(new StatWidget("adoptions"));
+            statVerticalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
-            qobject_cast<QHBoxLayout*>(layout())->addWidget(verticalWidget);
+            qobject_cast<QHBoxLayout*>(layout())->addWidget(statVerticalWidget);
 
             alertsWidget = findChild<QWidget*>("homeScrollContents");
             layout()->setSpacing(0);
 
-            alertsWidget->setStyleSheet("QWidget#homeScrollContents, QScrollArea {"
+            setStyleSheet("QWidget#homeScrollContents, QScrollArea {"
                                         "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);"
                                         "border: none;"
                                         "}");
@@ -48,8 +47,9 @@ public:
         QWidget::resizeEvent(event);
 
         if(alertsWidget != nullptr){
-            layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
-            findChild<QWidget*>("statVerticalWidget")->setMaximumWidth(width() / 3);
+            alertsWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
+            statVerticalWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
+            statVerticalWidget->setMaximumWidth(width() / 3);
 
 
             for (QPushButton *but : findChildren<QPushButton*>()){
@@ -65,7 +65,10 @@ public:
                 lab->setFont(font);
                 lab->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
+        }
 
+        for(StatWidget *c : findChildren<StatWidget*>()){
+            c->resizeEvent(event);
         }
     }
 
@@ -239,7 +242,7 @@ signals:
     void ExportES(QString year);
 
 private:
-    QWidget *alertsWidget = nullptr;
+    QWidget *alertsWidget = nullptr, *statVerticalWidget = nullptr;
     int alertDays{};
     QSpacerItem *spacer = nullptr;
     QDate lastTimeExport;

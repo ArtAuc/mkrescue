@@ -52,7 +52,6 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     nameSexLayout->addWidget(nameLabel);
     nameSexLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Preferred));
     nameSexWidget->setLayout(nameSexLayout);
-    nameSexWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 
     QString info1String;
     if(typeInfo == "current" || typeInfo == "out"){
@@ -177,6 +176,8 @@ void DogCard::resizeEvent(QResizeEvent *event){
     }
 
 
+    nameSexWidget->setMaximumWidth(parentSize.width() / 4);
+
     for(QWidget *c : findChildren<QWidget*>()){
         if(c->objectName() == "nameLabel" + chip){
             QFont font = c->font();
@@ -224,9 +225,13 @@ void DogCard::SelectThis(){
 
     // Infos summary (on the left)
     QSqlQuery query;
-    HandleErrorExec(&query, "SELECT chip, birth, sterilized, compat_dog, compat_cat "
+    query.prepare("SELECT chip, birth, sterilized, compat_dog, compat_cat "
                "FROM Dogs "
-               "WHERE chip = " + chip + ";");
+               "WHERE chip = :chip;");
+
+    query.bindValue(":chip", chip);
+    HandleErrorExec(&query);
+
 
     QLabel *chipLabel, *birthLabel;
     chipLabel = new QLabel();
@@ -259,6 +264,7 @@ void DogCard::SelectThis(){
 
     // History (on the right)
     CreateHistory();
+
 
     layout->addWidget(chipLabel, 1, 0);
     layout->addWidget(birthLabel, 2, 0);
