@@ -18,22 +18,25 @@ public:
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override {
         QStyleOptionViewItem newOption(option);
 
-        if(!index.parent().isValid() && topLevelSpace == 0)
-            topLevelSpace = option.rect.x();
+        if(index.column() == 0)
+            newOption.rect.setX(0);
 
-        newOption.rect.setWidth(option.widget->width() + option.rect.x() - topLevelSpace);
-        newOption.rect.setX(0);
 
-        painter->save();
-        painter->translate(10 + option.rect.x() - topLevelSpace, 0);
+        if (option.state & QStyle::State_MouseOver) {
+            newOption.palette.setColor(QPalette::Text, Qt::white);
+        }
+
+        if (option.state & QStyle::State_Selected) {
+            newOption.palette.setColor(QPalette::Highlight, QColor("#45556c"));
+            newOption.palette.setColor(QPalette::Text, Qt::white);
+        }
 
         QStyledItemDelegate::paint(painter, newOption, index);
 
-        painter->restore();
     }
 
 private:
-    mutable int topLevelSpace = 0;
+    mutable int space = 0;
 };
 
 
@@ -57,8 +60,6 @@ public:
         palette.setColor(QPalette::Base, "#3b4b64");
         palette.setColor(QPalette::Text, QColor("#a7b2c8"));
 
-        palette.setColor(QPalette::Highlight, QColor("#45556c"));
-        palette.setColor(QPalette::HighlightedText, Qt::white);
         setPalette(palette);
 
         logo = QPixmap("media/logo_title_side.png");
@@ -100,24 +101,9 @@ protected:
         QTreeWidget::showEvent(event);
 
         menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
+        setColumnWidth(0, 0);
 
         resizeEvent(nullptr);
-    }
-
-    void mouseMoveEvent(QMouseEvent *event) override {
-        QTreeWidgetItem *item = itemAt(event->pos());
-        if(lastHovered != nullptr){
-            lastHovered->setForeground(0, QBrush());
-        }
-
-
-        if (item) {
-            item->setForeground(0, QBrush(Qt::white));
-        }
-
-        lastHovered = item;
-
-        QTreeWidget::mouseMoveEvent(event);
     }
 
     void resizeEvent(QResizeEvent *event) override {
@@ -129,6 +115,7 @@ protected:
 
             int iconSize = width() * 0.11;
             setIconSize(QSize(iconSize, iconSize));
+
         }
 
         if(menuLogoLabel != nullptr){
@@ -139,19 +126,8 @@ protected:
             menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
     }
 
-    void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const override {
-        QTreeWidget::drawBranches(painter, rect, index);
-        if (!index.parent().isValid()) {
-            painter->save();
-            painter->setPen(palette().color(QPalette::Highlight));
-            painter->drawLine(rect.topLeft(), QPoint(rect.right(), rect.top()));
-            painter->restore();
-        }
-    }
-
 
 private:
-    QTreeWidgetItem* lastHovered = nullptr;
     int initialWidth = 300;
     QLabel *menuLogoLabel = nullptr;
     QPixmap logo;

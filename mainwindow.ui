@@ -197,7 +197,7 @@ QTreeView::item { margin-top: 30px; }</string>
          <bool>true</bool>
         </property>
         <property name="columnCount">
-         <number>1</number>
+         <number>2</number>
         </property>
         <attribute name="headerCascadingSectionResizes">
          <bool>true</bool>
@@ -210,7 +210,15 @@ QTreeView::item { margin-top: 30px; }</string>
           <string/>
          </property>
         </column>
+        <column>
+         <property name="text">
+          <string/>
+         </property>
+        </column>
         <item>
+         <property name="text">
+          <string/>
+         </property>
          <property name="text">
           <string> Accueil</string>
          </property>
@@ -222,6 +230,9 @@ QTreeView::item { margin-top: 30px; }</string>
         </item>
         <item>
          <property name="text">
+          <string/>
+         </property>
+         <property name="text">
           <string> Fiches chiens</string>
          </property>
          <property name="icon">
@@ -232,6 +243,9 @@ QTreeView::item { margin-top: 30px; }</string>
         </item>
         <item>
          <property name="text">
+          <string/>
+         </property>
+         <property name="text">
           <string>  Registres</string>
          </property>
          <property name="icon">
@@ -241,7 +255,10 @@ QTreeView::item { margin-top: 30px; }</string>
          </property>
          <item>
           <property name="text">
-           <string> Entrées/Sorties</string>
+           <string/>
+          </property>
+          <property name="text">
+           <string>      Entrées/Sorties</string>
           </property>
           <property name="background">
            <brush brushstyle="NoBrush">
@@ -255,7 +272,10 @@ QTreeView::item { margin-top: 30px; }</string>
          </item>
          <item>
           <property name="text">
-           <string> Garderie</string>
+           <string/>
+          </property>
+          <property name="text">
+           <string>      Garderie</string>
           </property>
           <property name="background">
            <brush brushstyle="NoBrush">
@@ -269,7 +289,10 @@ QTreeView::item { margin-top: 30px; }</string>
          </item>
          <item>
           <property name="text">
-           <string> Adhérents</string>
+           <string/>
+          </property>
+          <property name="text">
+           <string>      Adhérents</string>
           </property>
           <property name="background">
            <brush brushstyle="NoBrush">
@@ -283,6 +306,9 @@ QTreeView::item { margin-top: 30px; }</string>
          </item>
         </item>
         <item>
+         <property name="text">
+          <string/>
+         </property>
          <property name="text">
           <string> Vétérinaire</string>
          </property>
@@ -294,6 +320,9 @@ QTreeView::item { margin-top: 30px; }</string>
         </item>
         <item>
          <property name="text">
+          <string/>
+         </property>
+         <property name="text">
           <string> Autres</string>
          </property>
          <property name="icon">
@@ -303,7 +332,10 @@ QTreeView::item { margin-top: 30px; }</string>
          </property>
          <item>
           <property name="text">
-           <string> Liste rouge adoptants</string>
+           <string/>
+          </property>
+          <property name="text">
+           <string>      Liste rouge adoptants</string>
           </property>
           <property name="background">
            <brush brushstyle="NoBrush">
@@ -317,7 +349,10 @@ QTreeView::item { margin-top: 30px; }</string>
          </item>
          <item>
           <property name="text">
-           <string> Animaux perdus</string>
+           <string/>
+          </property>
+          <property name="text">
+           <string>      Animaux perdus</string>
           </property>
           <property name="background">
            <brush brushstyle="NoBrush">
@@ -331,7 +366,10 @@ QTreeView::item { margin-top: 30px; }</string>
          </item>
          <item>
           <property name="text">
-           <string> Demandes d'adoption</string>
+           <string/>
+          </property>
+          <property name="text">
+           <string>      Demandes d'adoption</string>
           </property>
           <property name="background">
            <brush brushstyle="NoBrush">
@@ -345,6 +383,9 @@ QTreeView::item { margin-top: 30px; }</string>
          </item>
         </item>
         <item>
+         <property name="text">
+          <string/>
+         </property>
          <property name="text">
           <string> Paramètres</string>
          </property>

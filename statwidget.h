@@ -98,6 +98,7 @@ public:
         QGridLayout *layout = new QGridLayout();
         setLayout(layout);
         layout->setSpacing(0);
+        layout->setContentsMargins(0,0,0,0);
 
         statLabel = new QLabel("x");
         statLabel->setStyleSheet("color:#333;");
@@ -158,7 +159,7 @@ public:
 
         SelectDaysInterval(monthButton);
 
-        setStyleSheet("QFrame {border:2px solid #" + hColor + "; border-radius:5px;background-color:white;padding-right:0;} "
+        setStyleSheet("QFrame {border:2px solid #" + hColor + "; border-radius:5px;background-color:white;padding:0;} "
                       "QLabel {border:none;}"
                       "QPushButton{"
                       "background:white;"
@@ -168,6 +169,7 @@ public:
                       "border-bottom:none;"
                       "border-right:none;"
                       "margin-right:0;"
+                      "padding:0;"
                       "}");
 
 
