@@ -9,12 +9,45 @@
 #include <QToolButton>
 #include <QFontDatabase>
 #include <QLabel>
+#include <QStyledItemDelegate>
+
+class TreeItemDelegate : public QStyledItemDelegate {
+public:
+    using QStyledItemDelegate::QStyledItemDelegate;
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override {
+        QStyleOptionViewItem newOption(option);
+
+        if(!index.parent().isValid() && topLevelSpace == 0)
+            topLevelSpace = option.rect.x();
+
+        newOption.rect.setWidth(option.widget->width() + option.rect.x() - topLevelSpace);
+        newOption.rect.setX(0);
+
+        painter->save();
+        painter->translate(10 + option.rect.x() - topLevelSpace, 0);
+
+        QStyledItemDelegate::paint(painter, newOption, index);
+
+        painter->restore();
+    }
+
+private:
+    mutable int topLevelSpace = 0;
+};
+
 
 class MenuTree : public QTreeWidget
 {
     Q_OBJECT
 public:
     explicit MenuTree(QWidget *parent = nullptr) : QTreeWidget(parent) {
+
+        setSelectionBehavior(QAbstractItemView::SelectRows);
+        TreeItemDelegate *delegate = new TreeItemDelegate(this);
+        setItemDelegate(delegate);
+
+        setSelectionMode(QAbstractItemView::SingleSelection);
         connect(this, SIGNAL(itemPressed(QTreeWidgetItem*, int)),
                 parent->parent(), SLOT(ChangePage(QTreeWidgetItem*)));
 
