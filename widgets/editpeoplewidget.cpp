@@ -117,6 +117,8 @@ EditPeopleWidget::EditPeopleWidget(QString nameEnd){
         lineEdit->setValidator(validator);
         QObject::connect(lineEdit, &QLineEdit::textEdited, this, &EditPeopleWidget::LineEditFormat);
     }
+
+    QObject::connect(phoneEdit, &QLineEdit::textChanged, this, [this, phoneEdit](){previousPhone = phoneEdit->text();});
 }
 
 
@@ -176,8 +178,9 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
                 completer = new QCompleter(new QStringListModel(UniqueList(cityList), this), lineEdit);
             else if (editName.startsWith("lastName"))
                 completer = new QCompleter(new QStringListModel(lastNameList, this), lineEdit);
-            else if (editName.startsWith("phone"))
+            else if (editName.startsWith("phone")){
                 completer = new QCompleter(new QStringListModel(phoneList, this), lineEdit);
+            }
             else if (editName.startsWith("email"))
                 completer = new QCompleter(new QStringListModel(emailList, this), lineEdit);
 
@@ -276,12 +279,21 @@ void EditPeopleWidget::LineEditFormat(QString text) {
     else if(name.startsWith("email"))
         lineEdit->setText(text.toLower());
     else if(name.startsWith("phone")) {
+        if(previousPhone.isEmpty()) // In case the phone # was added by code
+            previousPhone = text;
+
+        if(previousPhone.length() > text.length() && previousPhone[cursorPosition] == ' '){// Removing a space removes the digit before it
+            text.remove(cursorPosition - 1, 1);
+            cursorPosition -= 2;
+        }
+        cursorPosition -= text.count(" ");
         text.remove(" ");
         QString formattedText;
         for (int i = 0; i < text.length(); ++i) {
             formattedText.append(text[i]);
             if ((i + 1) % 2 == 0 && i != text.length() - 1) {
                 formattedText.append(" ");
+                cursorPosition++;
             }
         }
         lineEdit->setText(formattedText);

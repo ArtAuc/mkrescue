@@ -33,6 +33,7 @@ private:
     QString oldId = "-1";
     SimpleCrypt *crypto;
     QStringList cityList, postalCodeList;
+    QString previousPhone;
 };
 
 #endif // EDITPEOPLEWIDGET_H

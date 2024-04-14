@@ -20,7 +20,7 @@ public:
 
         if (option.state & QStyle::State_MouseOver || option.state & QStyle::State_Selected) {
             newOption.palette.setColor(QPalette::Text, Qt::white);
-            painter->fillRect(0, option.rect.top(), padding, option.rect.height(), QColor("#45556c"));
+            painter->fillRect(0, option.rect.top(), padding, option.rect.height(), QColor("#0099a3"));
         }
 
         if (option.state & QStyle::State_Selected) {
