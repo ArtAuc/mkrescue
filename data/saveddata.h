@@ -28,7 +28,7 @@ public:
     void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton);
     void Synchronize();
     void SynchronizeWorker();
-    QString SendEmail(QString subject, QString filePath);
+    QString SynchronizeEmail(QString subject, QString filePath);
 
 public slots:
     void Save();

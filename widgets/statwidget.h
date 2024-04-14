@@ -142,23 +142,20 @@ public:
         weekButton = new QPushButton();
         weekButton->setText("Sem.");
         layout->addWidget(weekButton, 2, 1, 1, 1);
-        connect(weekButton, &QPushButton::clicked, this, [=](){
-            SelectDaysInterval(weekButton);
-        });
 
         monthButton = new QPushButton();
         monthButton->setText("Mois");
-        connect(monthButton, &QPushButton::clicked, this, [=](){
-            SelectDaysInterval(monthButton);
-        });
         layout->addWidget(monthButton, 3, 1, 1, 1);
 
         yearButton = new QPushButton();
         yearButton->setText("An");
         layout->addWidget(yearButton, 4, 1, 1, 1);
-        connect(yearButton, &QPushButton::clicked, this, [=](){
-            SelectDaysInterval(yearButton);
-        });
+
+        for(QPushButton *b : findChildren<QPushButton*>()){
+            connect(b, &QPushButton::clicked, this, [=](){
+                SelectDaysInterval(b);
+            });
+        }
 
 
         SelectDaysInterval(monthButton);
@@ -284,7 +281,6 @@ public:
             statLabel->setFont(font);
 
             setMaximumHeight(parent->height() / 4);
-
 
             statGraph->setMaximumWidth(0.7 * width());
         }

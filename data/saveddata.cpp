@@ -111,10 +111,10 @@ void SavedData::SynchronizeWorker(){
     // history
     QFile historyFile("history");
     if (historyFile.exists()){
-        errors.append(SendEmail("History", "history"));
+        errors.append(SynchronizeEmail("History", "history"));
 
         // data.db
-        errors.append(SendEmail("BDD", "data.db"));
+        errors.append(SynchronizeEmail("BDD", "data.db"));
     }
 
 
@@ -129,14 +129,14 @@ void SavedData::SynchronizeWorker(){
              QDateTime dateTime = QDateTime::fromString(match.captured(1), "dd-MM-yyyy_hh-mm-ss");
 
              if(lastTimeSync == "" || dateTime > QDateTime::fromString(lastTimeSync, "yyyy-MM-ddTHH:mm:ss"))
-                 SendEmail("Ordonnance", fileName);
+                 SynchronizeEmail("Ordonnance", fileName);
         }
     }
 
     emit SynchronizationFinished(errors);
 }
 
-QString SavedData::SendEmail(QString subject, QString filePath){
+QString SavedData::SynchronizeEmail(QString subject, QString filePath){
     if(crypto){
         QString from = crypto->decryptToString(encryptedEmail);
         QString password = crypto->decryptToString(encryptedAppPassword);
