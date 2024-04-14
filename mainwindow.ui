@@ -545,7 +545,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -697,8 +697,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>984</width>
-               <height>567</height>
+               <width>86</width>
+               <height>84</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -985,7 +985,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>5</number>
+             <number>6</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1042,8 +1042,8 @@ QTabBar::tab:selected {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDateEdit" name="entryDateEdit">
-                      <property name="currentSectionIndex">
+                     <widget class="CustomDateTimeEdit" name="entryDateEdit">
+                      <property name="currentSectionIndex" stdset="0">
                        <number>0</number>
                       </property>
                      </widget>
@@ -1270,7 +1270,7 @@ QTabBar::tab:selected {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDateEdit" name="lossDateEdit"/>
+                     <widget class="CustomDateTimeEdit" name="lossDateEdit"/>
                     </item>
                    </layout>
                   </item>
@@ -1525,8 +1525,8 @@ QTabBar::tab:selected {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDateEdit" name="careEntryDateEdit">
-                      <property name="currentSectionIndex">
+                     <widget class="CustomDateTimeEdit" name="careEntryDateEdit">
+                      <property name="currentSectionIndex" stdset="0">
                        <number>0</number>
                       </property>
                      </widget>
@@ -1562,8 +1562,8 @@ QTabBar::tab:selected {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDateEdit" name="careDestDateEdit">
-                      <property name="currentSectionIndex">
+                     <widget class="CustomDateTimeEdit" name="careDestDateEdit">
+                      <property name="currentSectionIndex" stdset="0">
                        <number>0</number>
                       </property>
                      </widget>
@@ -1601,7 +1601,7 @@ QTabBar::tab:selected {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDateEdit" name="dateMembersEdit"/>
+                 <widget class="CustomDateTimeEdit" name="dateMembersEdit"/>
                 </item>
                </layout>
               </item>
@@ -1678,7 +1678,7 @@ QTabBar::tab:selected {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDateTimeEdit" name="dateVetAnimalEdit">
+                 <widget class="CustomDateTimeEdit" name="dateVetAnimalEdit">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -3023,6 +3023,11 @@ color:#212834;</string>
    <extends>QWidget</extends>
    <header>pages/homepage.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CustomDateTimeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>widgets/customdatetimeedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

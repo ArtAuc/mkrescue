@@ -4,13 +4,13 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QLineEdit>
-#include <QDateEdit>
 #include <QVBoxLayout>
 #include <QCompleter>
 #include <QStringListModel>
 #include <QTimer>
 
 #include "utils.h"
+#include "widgets/customdatetimeedit.h"
 
 class EditDogWidget : public QWidget
 {

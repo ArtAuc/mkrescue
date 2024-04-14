@@ -20,11 +20,11 @@ public:
 
         if (option.state & QStyle::State_MouseOver || option.state & QStyle::State_Selected) {
             newOption.palette.setColor(QPalette::Text, Qt::white);
-            painter->fillRect(0, option.rect.top(), padding, option.rect.height(), QColor("#0099a3"));
+            painter->fillRect(0, option.rect.top(), padding, option.rect.height(), QColor("#324055"));
         }
 
         if (option.state & QStyle::State_Selected) {
-            newOption.palette.setColor(QPalette::Highlight, QColor("#45556c"));
+            newOption.palette.setColor(QPalette::Highlight, QColor("#324055"));
         }
 
 
@@ -41,7 +41,6 @@ public:
     explicit MenuTree(QWidget *parent = nullptr) : QTreeWidget(parent) {
         setFocusPolicy(Qt::NoFocus);
         setIndentation(0);
-        setSelectionBehavior(QAbstractItemView::SelectRows);
         TreeItemDelegate *delegate = new TreeItemDelegate(this);
         setItemDelegate(delegate);
 

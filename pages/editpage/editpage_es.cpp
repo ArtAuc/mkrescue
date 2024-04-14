@@ -35,13 +35,8 @@ void EditPage::ClearAllPages()
     AddDestPage();
 
     for (QWidget* widget : findChildren<QWidget*>()) {
-        if (QDateEdit *dateEdit = qobject_cast<QDateEdit*>(widget)){
-            dateEdit->setDate(QDate::currentDate());
-            dateEdit->clear();
-        }
-        else if (QDateTimeEdit *dateEdit = qobject_cast<QDateTimeEdit*>(widget)){
-            dateEdit->setDate(QDate::currentDate());
-            dateEdit->clear();
+        if (CustomDateTimeEdit *dateEdit = qobject_cast<CustomDateTimeEdit*>(widget)){
+            dateEdit->SetDate(QDate::currentDate());
         }
         else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget))
             lineEdit->clear();

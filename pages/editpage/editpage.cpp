@@ -23,7 +23,7 @@ void EditPage::resizeEvent(QResizeEvent *event){
         font.setPointSize(fontSize);
 
         for(QWidget* c : children){
-            if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QTextEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c) || qobject_cast<QDoubleSpinBox*>(c) || qobject_cast<QCheckBox*>(c))){
+            if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QTextEdit*>(c) || qobject_cast<QComboBox*>(c) || qobject_cast<QDoubleSpinBox*>(c) || qobject_cast<QCheckBox*>(c))){
                 c->setFont(font);
                 c->setStyleSheet("padding:" + QString::number(fontSize / 2) + "px;");
             }

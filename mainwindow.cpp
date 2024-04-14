@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->homePage, SIGNAL(TriggerEditHome(QString,QStringList)), this, SLOT(TriggerEdit(QString,QStringList)));
     ui->reasonVetAnimalEdit->hide();
     ui->removeButton->setIcon(QIcon("media/trash.svg"));
+    ui->dateVetAnimalEdit->EnableTime();
 
     InitEditWidgets();
 
@@ -586,8 +587,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     ui->editPage->Edit("vet", {});
                     QTimer::singleShot(100, [this, name, chip, sex, birth, description, necessary]() {
                         ui->editPage->FillAnimalWidget("VetAnimalEdit", name, chip, sex, birth, description);
-                        ui->dateVetAnimalEdit->clearFocus();
-                        ui->dateVetAnimalEdit->setDate(QDate::currentDate());
+                        ui->dateVetAnimalEdit->SetDate(QDate::currentDate());
                         findChild<EditDogWidget*>("VetAnimalEdit")->SetOldId(necessary[0]);
                     });
                     return;

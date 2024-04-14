@@ -504,7 +504,7 @@ void EditPage::SaveEdit()
 
         else if(lastType == "vet"){
             QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
-            QString date = vetEditPage->findChild<QDateTimeEdit*>("dateVetAnimalEdit")->dateTime().toString("yyyy-MM-ddTHH:mm");
+            QString date = vetEditPage->findChild<CustomDateTimeEdit*>("dateVetAnimalEdit")->GetDateTime().toString("yyyy-MM-ddTHH:mm");
             QString reason = vetEditPage->findChild<QComboBox*>("reasonVetAnimalBox")->currentText();
 
             if(reason == "Autre")

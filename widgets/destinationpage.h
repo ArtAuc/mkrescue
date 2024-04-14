@@ -3,6 +3,7 @@
 
 
 #include "widgets/editpeoplewidget.h"
+#include "widgets/customdatetimeedit.h"
 
 class DestinationPage : public QWidget {
     Q_OBJECT
@@ -13,7 +14,8 @@ public:
 
         QVBoxLayout *destDateEditLayout = new QVBoxLayout();
         QLabel *destDateEditLabel = new QLabel("DATE");
-        QDateEdit *destDateEdit = new QDateEdit(QDate::currentDate());
+        CustomDateTimeEdit *destDateEdit = new CustomDateTimeEdit();
+        destDateEdit->SetDate(QDate::currentDate());
         destDateEditLayout->addWidget(destDateEditLabel);
         destDateEditLayout->addWidget(destDateEdit);
         gridLayout->addLayout(destDateEditLayout, 0, 1);

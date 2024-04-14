@@ -21,7 +21,7 @@ EditDogWidget::EditDogWidget(QString nameEnd){
        sexBox->addItem("Femelle");
 
        QLabel *birthDateLabel = new QLabel("DATE DE NAISSANCE");
-       QDateEdit *birthDateEdit = new QDateEdit;
+       CustomDateTimeEdit *birthDateEdit = new CustomDateTimeEdit;
 
        chipEdit->setObjectName("chip" + nameEnd);
        chipLabel->setObjectName("chip" + nameEnd + "Label");
@@ -191,8 +191,8 @@ void EditDogWidget::ProcessFields(QString s, bool isPreview){
         QComboBox* sexBox = findChild<QComboBox*>();
         sexBox->setCurrentText(sexList[row]);
 
-        QDateEdit* birthEdit = findChild<QDateEdit*>();
-        birthEdit->setDate(QDate::fromString(birthList[row], "yyyy-MM-dd"));
+        CustomDateTimeEdit* birthEdit = findChild<CustomDateTimeEdit*>();
+        birthEdit->SetDate(QDate::fromString(birthList[row], "yyyy-MM-dd"));
     }
 
     else{
