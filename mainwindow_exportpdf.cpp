@@ -22,6 +22,8 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
     else if(type.contains("members"))
         ChangePage(ui->menuTree->topLevelItem(2)->child(2));
 
+    ui->yearBox->setCurrentText(year);
+
 
     QString suggestedName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Registre ";
     if(type.contains("entry"))
