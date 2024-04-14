@@ -68,11 +68,14 @@ public:
         }
     }
 
-    void mouseDoubleClickEvent(QMouseEvent *event) override {
-        int sectionStart = text().lastIndexOf(QRegularExpression("[\\s/:]"), cursorPosition() - 1) + 1;
+    void mousePressEvent(QMouseEvent *event) override {
+        QLineEdit::mousePressEvent(event);
 
-        setCursorPosition(sectionStart);
-        event->ignore();
+
+        if(cursorPosition() > 0){
+            int sectionStart = text().lastIndexOf(QRegularExpression("[\\s/:]"), cursorPosition() - 1) + 1;
+            setCursorPosition(sectionStart);
+        }
     }
 
 public slots:
