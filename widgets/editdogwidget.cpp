@@ -114,7 +114,7 @@ void EditDogWidget::showEvent(QShowEvent* event){
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
     foreach (QLineEdit* lineEdit, lineEdits) {
         QString editName = lineEdit->objectName();
-        if (!editName.contains("spinbox")) {
+        if (!editName.contains("spinbox") && !editName.startsWith("birthDate")) {
             QCompleter* completer = nullptr;
             if (editName.contains("dogName"))
                 completer = new QCompleter(new QStringListModel(dogNameList, this), lineEdit);
@@ -161,7 +161,7 @@ void EditDogWidget::ProcessFields(QString s, bool isPreview){
     if(row >= 0){
         foreach (QLineEdit* lineEdit, lineEdits) {
             QString editName = lineEdit->objectName();
-            if (!editName.contains("spinbox")) {
+            if (!editName.contains("spinbox") && !editName.startsWith("birthDate")) {
                 QStringList list;
                 if(editName.startsWith("description"))
                     list = descriptionList;

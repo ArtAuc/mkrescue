@@ -1,4 +1,5 @@
 # Restore any file encoded in base64 after being smtp sended
+
 import base64
 import sys
 
