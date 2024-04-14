@@ -5,7 +5,7 @@ void EditPage::ChangeEntryType(QString type)
 {
     QWidget* entreeTab = findChild<QWidget*>("entryTab1");
     for (QWidget* widget : entreeTab->findChildren<QWidget*>()) {
-        if(widget->objectName().startsWith("poundPlaceEdit")) // Pound
+        if(widget->objectName().startsWith("otherTypeEdit")) // Pound || Cession
             widget->setVisible(type != "Abandon");
         else if(widget->objectName().startsWith("firstNameAbandonEdit") ||
                 widget->objectName().startsWith("lastNameAbandonEdit") ||
@@ -17,6 +17,11 @@ void EditPage::ChangeEntryType(QString type)
                 widget->objectName().startsWith("cityAbandonEdit")) // Abandoned
             widget->setVisible(type == "Abandon");
     }
+
+    if(type == "Fourrière")
+        entreeTab->findChild<QLabel*>("otherTypeEditLabel")->setText("LIEU");
+    else if(type == "Cession")
+        entreeTab->findChild<QLabel*>("otherTypeEditLabel")->setText("ENTITÉ");
 }
 
 void EditPage::ClearAllPages()

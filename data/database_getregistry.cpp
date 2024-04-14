@@ -12,8 +12,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                           "LEFT JOIN Destinations ON Destinations.id_dog = Dogs.id_dog AND Destinations.date = LastDest.max_date "
                           "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
                           "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr) "
-                          "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge') "
-                          "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry)";
+                          "AND (Destinations.type IS NULL OR Destinations.type = 'Entrée au refuge')";
 
     if(type.contains("out"))
         queryString +=

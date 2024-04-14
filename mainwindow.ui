@@ -985,7 +985,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>6</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1032,45 +1032,6 @@ QTabBar::tab:selected {
                   <property name="verticalSpacing">
                    <number>10</number>
                   </property>
-                  <item row="0" column="2">
-                   <layout class="QVBoxLayout" name="entryDateEditLayout">
-                    <item>
-                     <widget class="QLabel" name="entryDateEditLabel">
-                      <property name="text">
-                       <string>DATE D'ENTRÉE</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="CustomDateTimeEdit" name="entryDateEdit">
-                      <property name="currentSectionIndex" stdset="0">
-                       <number>0</number>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="1" column="1" colspan="2">
-                   <layout class="QVBoxLayout" name="poundPlaceEditLayout">
-                    <item>
-                     <widget class="QLabel" name="poundPlaceEditLabel">
-                      <property name="text">
-                       <string>LIEU</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="poundPlaceEdit">
-                      <property name="enabled">
-                       <bool>true</bool>
-                      </property>
-                      <property name="text">
-                       <string>Lieu (fourrière)</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
                   <item row="0" column="1">
                    <layout class="QVBoxLayout" name="entryTypeBoxLayout">
                     <item>
@@ -1092,6 +1053,50 @@ QTabBar::tab:selected {
                         <string>Fourrière</string>
                        </property>
                       </item>
+                      <item>
+                       <property name="text">
+                        <string>Cession</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="2">
+                   <layout class="QVBoxLayout" name="entryDateEditLayout">
+                    <item>
+                     <widget class="QLabel" name="entryDateEditLabel">
+                      <property name="text">
+                       <string>DATE D'ENTRÉE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="CustomDateTimeEdit" name="entryDateEdit">
+                      <property name="currentSectionIndex" stdset="0">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="1" colspan="2">
+                   <layout class="QVBoxLayout" name="otherTypeEditLayout">
+                    <item>
+                     <widget class="QLabel" name="otherTypeEditLabel">
+                      <property name="text">
+                       <string>LIEU</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="otherTypeEdit">
+                      <property name="enabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="text">
+                       <string>Lieu (fourrière)</string>
+                      </property>
                      </widget>
                     </item>
                    </layout>
@@ -3056,7 +3061,7 @@ color:#212834;</string>
   <tabstop>menuTree</tabstop>
   <tabstop>careAddButton</tabstop>
   <tabstop>searchLine</tabstop>
-  <tabstop>poundPlaceEdit</tabstop>
+  <tabstop>otherTypeEdit</tabstop>
   <tabstop>yearBox</tabstop>
   <tabstop>entryDateEdit</tabstop>
   <tabstop>entryTypeBox</tabstop>

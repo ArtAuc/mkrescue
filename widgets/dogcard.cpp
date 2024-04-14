@@ -58,6 +58,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
         QStringList splitted = info1.split("_|_");
         QString type_prov = crypto->decryptToString(splitted[1]).split("_|_")[0];
         QString date_prov = splitted[0];
+
         info1String = type_prov + " : ";
         info1String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
@@ -75,6 +76,11 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
 
     if(typeInfo == "out"){ // Here info2 = date_dest_|_type_dest
         QString type_dest = info2.split("_|_")[1];
+        if(type_dest.startsWith("Famille")) // So that it fits
+            type_dest = "FA";
+        else if(type_dest.startsWith("Entrée au"))
+            type_dest = "Refuge";
+
         QString date_dest = info2.split("_|_")[0];
         info2String = type_dest;
         if(sex == "Femelle" && type_dest == "Mort")
@@ -105,7 +111,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     }
 
     else if(typeInfo == "care"){
-        info2String = "Dernière garde : " + QDate::fromString(info2, "yyyy-MM-dd").toString("dd/MM/yyyy");
+        info2String = "Der. garde : " + QDate::fromString(info2, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
 
     info2String = AutoBreak(info2String, 25).split("\n")[0];
@@ -357,6 +363,10 @@ void DogCard::CreateHistory(){
             type_prov = crypto->decryptToString(type_prov);
             if(type_prov.startsWith("Fourrière_|_"))
                 histLabel->setText(dateString + " : <b>Fourrière</b> (" +
+                               type_prov.split("_|_")[1] + ")");
+
+            else if(type_prov.startsWith("Cession_|_"))
+                histLabel->setText(dateString + " : <b>Cession</b> (" +
                                type_prov.split("_|_")[1] + ")");
 
             else

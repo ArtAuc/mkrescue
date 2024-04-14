@@ -61,9 +61,10 @@ void EditPage::Edit(QString type, QStringList infos){
             QString type_prov = crypto->decryptToString(infos[2]).split("_|_")[0];
             SetField("entryTypeBox", type_prov, currentPage);
 
-            if(type_prov == "Fourrière"){
-                SetField("poundPlaceEdit", crypto->decryptToString(infos[2]).split("_|_")[1], currentPage);
+            if(type_prov == "Fourrière" || type_prov == "Cession"){
+                SetField("otherTypeEdit", crypto->decryptToString(infos[2]).split("_|_")[1], currentPage);
             }
+
 
             else{
                 FillPeopleWidget("AbandonEdit", infos[3], infos[4], infos[5], infos[6], infos[7], currentPage);
@@ -227,11 +228,11 @@ void EditPage::SaveEdit()
             QString date_prov = GetField("entryDateEdit", entryEditPage);
             QString type_prov = GetField("entryTypeBox", entryEditPage);
             QString id_people_prov = "-1";
-            if(GetField("entryTypeBox", entryEditPage) == "Abandon")
+            if(type_prov == "Abandon")
                 id_people_prov = CreatePersonIfNeeded("AbandonEdit", entryEditPage);
 
-            else{ // Fourrière
-                type_prov += "_|_" + GetField("poundPlaceEdit", entryEditPage);
+            else{ // Fourrière || Cession
+                type_prov += "_|_" + GetField("otherTypeEdit", entryEditPage);
             }
 
             // Animal

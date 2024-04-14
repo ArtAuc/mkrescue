@@ -15,7 +15,6 @@ SOURCES += \
     data/database.cpp \
     data/database_getregistry.cpp \
     widgets/dogcard.cpp \
-    pages/dogregistry.cpp \
     widgets/editdogwidget.cpp \
     pages/editpage/editpage.cpp \
     pages/editpage/editpage_es.cpp \
