@@ -3,13 +3,10 @@
 
 #include <QTreeWidget>
 #include <QMouseEvent>
-#include <QPainter>
 #include <QPropertyAnimation>
-#include <QTimer>
-#include <QToolButton>
-#include <QFontDatabase>
-#include <QLabel>
 #include <QStyledItemDelegate>
+#include <QPainter>
+#include <QLabel>
 
 class TreeItemDelegate : public QStyledItemDelegate {
 public:

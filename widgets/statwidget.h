@@ -2,10 +2,11 @@
 #define STATWIDGET_H
 
 #include <QVBoxLayout>
-#include <QFrame>
 #include <QPainter>
 #include <QToolTip>
 #include <QMouseEvent>
+#include <QLabel>
+#include <QPushButton>
 
 #include "utils.h"
 

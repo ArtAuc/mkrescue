@@ -31,6 +31,8 @@ public:
     void MakeRedList();
     void SetCrypto(SimpleCrypt *crypto);
     static void ChangePassword(QString oldPassword, QString newPassword);
+    static bool IsInTable(QString table, QString attribute, QString value);
+
 
  private:
     QSqlDatabase _database;

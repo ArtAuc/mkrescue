@@ -5,7 +5,7 @@
 #include <QGridLayout>
 #include <QScrollArea>
 
-#include "statwidget.h"
+#include "widgets/statwidget.h"
 
 class HomePage : public QWidget
 {

@@ -1,15 +1,13 @@
 #ifndef EDITDOGWIDGET_H
 #define EDITDOGWIDGET_H
 
-#include <QWidget>
-#include <QLineEdit>
 #include <QLabel>
 #include <QComboBox>
+#include <QLineEdit>
 #include <QDateEdit>
 #include <QVBoxLayout>
-#include <QSqlQuery>
-#include <QStringListModel>
 #include <QCompleter>
+#include <QStringListModel>
 #include <QTimer>
 
 #include "utils.h"

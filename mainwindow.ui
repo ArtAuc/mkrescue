@@ -574,8 +574,8 @@ margin-right:30px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>966</width>
-               <height>606</height>
+               <width>68</width>
+               <height>18</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -2981,47 +2981,47 @@ color:#212834;</string>
   <customwidget>
    <class>MenuTree</class>
    <extends>QTreeWidget</extends>
-   <header>menutree.h</header>
+   <header>widgets/menutree.h</header>
   </customwidget>
   <customwidget>
    <class>DogRegistry</class>
    <extends>QWidget</extends>
-   <header>dogregistry.h</header>
+   <header>pages/dogregistry.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>EditPage</class>
    <extends>QWidget</extends>
-   <header>editpage.h</header>
+   <header>pages/editpage/editpage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Registry</class>
    <extends>QWidget</extends>
-   <header>registry.h</header>
+   <header>pages/registry.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>SettingsPage</class>
    <extends>QWidget</extends>
-   <header>settingspage.h</header>
+   <header>pages/settingspage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>LoginPage</class>
    <extends>QWidget</extends>
-   <header>loginpage.h</header>
+   <header>pages/loginpage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>HoverToolButton</class>
    <extends>QToolButton</extends>
-   <header>hovertoolbutton.h</header>
+   <header>widgets/hovertoolbutton.h</header>
   </customwidget>
   <customwidget>
    <class>HomePage</class>
    <extends>QWidget</extends>
-   <header>homepage.h</header>
+   <header>pages/homepage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

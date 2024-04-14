@@ -1,25 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QTreeWidgetItem>
 #include <QSqlRecord>
-#include <QMessageBox>
 #include <QPrinter>
-#include <QFileDialog>
-#include <QPageSize>
-#include <QPainter>
-#include <QStandardPaths>
-#include <QMovie>
+#include <QMainWindow>
 
-#include "database.h"
-#include "menutree.h"
-#include "dogcard.h"
-#include "registry.h"
-#include "saveddata.h"
-#include "settingspage.h"
-#include "simplecrypt.h"
-#include "hovertoolbutton.h"
-#include "statwidget.h"
+#include "data/database.h"
+#include "widgets/menutree.h"
+#include "widgets/dogcard.h"
+#include "data/saveddata.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

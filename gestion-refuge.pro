@@ -12,43 +12,43 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    database.cpp \
-    database_getregistry.cpp \
-    destinationpage.cpp \
-    dogcard.cpp \
-    dogregistry.cpp \
-    editdogwidget.cpp \
-    editpage.cpp \
-    editpage_es.cpp \
-    editpage_saveedit.cpp \
-    editpeoplewidget.cpp \
+    data/database.cpp \
+    data/database_getregistry.cpp \
+    widgets/dogcard.cpp \
+    pages/dogregistry.cpp \
+    widgets/editdogwidget.cpp \
+    pages/editpage/editpage.cpp \
+    pages/editpage/editpage_es.cpp \
+    pages/editpage/editpage_saveedit.cpp \
+    pages/editpage/editpage_utils.cpp \
+    widgets/editpeoplewidget.cpp \
     main.cpp \
     mainwindow.cpp \
     mainwindow_exportpdf.cpp \
     mainwindow_loadpages.cpp \
-    registry.cpp \
-    saveddata.cpp \
+    pages/registry.cpp \
+    data/saveddata.cpp \
     simplecrypt.cpp
 
 HEADERS += \
-    database.h \
-    destinationpage.h \
-    dogcard.h \
-    dogregistry.h \
-    editdogwidget.h \
-    editpage.h \
-    editpeoplewidget.h \
-    homepage.h \
-    hovertoolbutton.h \
-    loginpage.h \
+    data/database.h \
+    widgets/destinationpage.h \
+    widgets/dogcard.h \
+    pages/dogregistry.h \
+    widgets/editdogwidget.h \
+    pages/editpage/editpage.h \
+    widgets/editpeoplewidget.h \
+    pages/homepage.h \
+    widgets/hovertoolbutton.h \
+    pages/loginpage.h \
     mainwindow.h \
-    menutree.h \
-    registry.h \
-    saveddata.h \
-    settingspage.h \
+    widgets/menutree.h \
+    pages/registry.h \
+    data/saveddata.h \
+    pages/settingspage.h \
     simplecrypt.h \
-    statwidget.h \
-    tristatecheckbox.h \
+    widgets/statwidget.h \
+    widgets/tristatecheckbox.h \
     utils.h
 
 FORMS += \

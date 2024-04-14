@@ -272,6 +272,7 @@ void SavedData::Synchronize(){
 
         syncMovie->start();
 
-        QtConcurrent::run(&SavedData::SynchronizeWorker, this);
+        auto future = QtConcurrent::run(&SavedData::SynchronizeWorker, this);
+        Q_UNUSED(future);
     }
 }

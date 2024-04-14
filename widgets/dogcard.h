@@ -1,19 +1,14 @@
 #ifndef DOGCARD_H
 #define DOGCARD_H
 
-#include <QFrame>
-#include <QLabel>
+#include <QScrollArea>
 #include <QToolButton>
 #include <QGridLayout>
-#include <QDate>
-#include <QSqlQuery>
-#include <QRegularExpression>
-#include <QScrollArea>
-#include <QMessageBox>
-#include <QProcess>
+#include <QLabel>
 #include <QPushButton>
 #include <QDir>
 #include <QStandardPaths>
+#include <QProcess>
 #include <QFileDialog>
 
 #include "tristatecheckbox.h"

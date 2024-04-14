@@ -16,6 +16,7 @@
 
 #include "utils.h"
 #include "simplecrypt.h"
+#include "editpage/editpage.h"
 
 class SettingsPage : public QWidget
 {
@@ -81,13 +82,13 @@ public:
             QMessageBox::critical(nullptr, "Erreur", "Erreur dans le chargement des informations sur le refuge");
 
         if(query.next()){
-            SetField("nameShelterEdit", query.value(0).toString(), this);
-            SetField("phoneShelterEdit", query.value(1).toString(), this);
-            QStringList addressList = AddressList(crypto->decryptToString(query.value(2).toString()));
-            SetField("addressShelterEdit", addressList[0], this);
-            SetField("address2ShelterEdit", addressList[1], this);
-            SetField("postalCodeShelterEdit", addressList[2], this);
-            SetField("cityShelterEdit", addressList[3], this);
+            EditPage::SetField("nameShelterEdit", query.value(0).toString(), this);
+            EditPage::SetField("phoneShelterEdit", query.value(1).toString(), this);
+            QStringList addressList = EditPage::AddressList(crypto->decryptToString(query.value(2).toString()));
+            EditPage::SetField("addressShelterEdit", addressList[0], this);
+            EditPage::SetField("address2ShelterEdit", addressList[1], this);
+            EditPage::SetField("postalCodeShelterEdit", addressList[2], this);
+            EditPage::SetField("cityShelterEdit", addressList[3], this);
         }
     }
 
@@ -98,11 +99,11 @@ public slots:
         query.prepare("INSERT OR REPLACE INTO People "
                       "(id_people, last_name, phone, address, first_name, email) "
                       "VALUES (-2, :name, :phone, :address, '', '');");
-        query.bindValue(":name", GetField("nameShelterEdit", this));
-        query.bindValue(":phone", GetField("phoneShelterEdit", this));
-        query.bindValue(":address",crypto->encryptToString(GetField("addressShelterEdit", this) + "\n" +
-                                                            GetField("address2ShelterEdit", this) + "\n" +
-                                                            GetField("postalCodeShelterEdit", this) + " " + GetField("cityShelterEdit", this)));
+        query.bindValue(":name", EditPage::GetField("nameShelterEdit", this));
+        query.bindValue(":phone", EditPage::GetField("phoneShelterEdit", this));
+        query.bindValue(":address",crypto->encryptToString(EditPage::GetField("addressShelterEdit", this) + "\n" +
+                                                            EditPage::GetField("address2ShelterEdit", this) + "\n" +
+                                                            EditPage::GetField("postalCodeShelterEdit", this) + " " + EditPage::GetField("cityShelterEdit", this)));
 
         if(!query.exec()){
             QMessageBox::critical(nullptr, "Erreur", "Erreur dans la sauvegarde des informations sur le refuge");

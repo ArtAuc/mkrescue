@@ -78,7 +78,7 @@ void EditPage::Edit(QString type, QStringList infos){
             QStackedWidget* destStacked = findChild<QStackedWidget*>("destStackedWidget");
 
             // Sort the destinations using date
-            std::sort(destinations.begin(), destinations.end(), dateComparator);
+            std::sort(destinations.begin(), destinations.end(), DateComparator);
 
 
             for (int i = 0; i < destinations.size(); i++){

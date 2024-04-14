@@ -1,14 +1,14 @@
 #ifndef SAVEDDATA_H
 #define SAVEDDATA_H
 
-#include <QFile>
-#include <QMessageBox>
-#include <QtNetwork>
-#include <QStringConverter>
 #include <QToolButton>
-#include <QRunnable>
+#include <QDateTime>
+#include <QMessageBox>
+#include <QFile>
 #include <QMovie>
+#include <QDirIterator>
 #include <QtConcurrent/QtConcurrent>
+#include <QSslSocket>
 
 #include "simplecrypt.h"
 

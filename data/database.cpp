@@ -171,6 +171,13 @@ void Database::ReorderMembers(){
 
 }
 
+bool Database::IsInTable(QString table, QString attribute, QString value){
+    QSqlQuery query;
+    HandleErrorExec(&query, "SELECT COUNT(*) FROM " + table + " WHERE " + attribute + " = " + value);
+    query.next();
+    return query.value(0).toInt() > 0;
+}
+
 void CleanThread::CleanDogs(){
     QSqlQuery query(threadDb);
 

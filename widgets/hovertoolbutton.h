@@ -1,12 +1,7 @@
 #ifndef HOVERTOOLBUTTON_H
 #define HOVERTOOLBUTTON_H
 
-#include <QApplication>
-#include <QMainWindow>
 #include <QToolButton>
-#include <QIcon>
-#include <QPropertyAnimation>
-#include <QMouseEvent>
 
 class HoverToolButton : public QToolButton {
     Q_OBJECT

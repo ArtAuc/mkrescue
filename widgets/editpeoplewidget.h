@@ -1,23 +1,17 @@
 #ifndef EDITPEOPLEWIDGET_H
 #define EDITPEOPLEWIDGET_H
 
-#include <QWidget>
 #include <QGridLayout>
-#include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QDateEdit>
-#include <QComboBox>
-#include <QSqlQuery>
+#include <QRegularExpressionValidator>
 #include <QStringListModel>
 #include <QCompleter>
-#include <QStandardItem>
-#include <QAbstractItemView>
-#include <QRegularExpression>
+#include <QDateEdit>
+#include <QComboBox>
 #include <QTimer>
-#include <QRegularExpressionValidator>
-#include "simplecrypt.h"
 
+#include "simplecrypt.h"
 #include "utils.h"
 
 class EditPeopleWidget : public QWidget
