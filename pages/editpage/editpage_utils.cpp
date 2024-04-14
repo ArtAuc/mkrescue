@@ -322,14 +322,14 @@ QString EditPage::CreateDogIfNeeded(QString nameEnd, QWidget *parent) {
         }
 
         // Care_registry
-        query.prepare("SELECT * "
+        query.prepare("SELECT entry_date "
                       "FROM Care_registry "
                       "WHERE Care_registry.id_dog = :old_id_dog");
         query.bindValue(":old_id_dog", old_id_dog);
         HandleErrorExec(&query);
 
-        if(message.count("\n") < 10 && query.next())
-            message += "Registre Garderie\n";
+        while(message.count("\n") < 10 && query.next())
+            message += "Registre Garderie : " + query.value(0).toDate().toString("dd/MM/yyyy") + "\n";
 
         // Vet
         query.prepare("SELECT * "
@@ -346,7 +346,6 @@ QString EditPage::CreateDogIfNeeded(QString nameEnd, QWidget *parent) {
             reply = QMessageBox::warning(nullptr, "Modification sur les informations du chien", "Voulez-vous aussi modifier les informations de " + name +
                     " dans : \n" + message,
                     QMessageBox::Yes | QMessageBox::No);
-
         }
 
         if(reply == QMessageBox::Yes || message.count("\n") <= 1){

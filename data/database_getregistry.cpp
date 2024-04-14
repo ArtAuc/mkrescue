@@ -81,7 +81,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "JOIN People ON Care_registry.id_people_prov = People.id_people "
                 "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
                 "OR Dogs.sex = :exact OR Dogs.description = :exact OR Dogs.birth = :exact OR LastCare.max_date = :exact OR People.last_name = :exact)"
-                "AND Dogs.id_dog IN ( " // Make sure the dog is out
+                "AND (Dogs.id_dog IN ( " // Make sure the dog is out
                 "    SELECT LastestDest.id_dog "
                 "    FROM ( "
                 "        SELECT id_dog, MAX(date_prov) AS max_date_prov "
@@ -99,7 +99,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "        OR LastestDest.type = 'Mort' "
                 "        OR LastestDest.type LIKE 'Famille d_accueil' "
                 "    ) "
-                ") ";
+                ") OR Dogs.id_dog NOT IN (SELECT id_dog FROM ES_Registry)) ";
     }
 
 
