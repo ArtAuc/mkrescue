@@ -587,7 +587,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     ui->editPage->Edit("vet", {});
                     QTimer::singleShot(100, [this, name, chip, sex, birth, description, necessary]() {
                         ui->editPage->FillAnimalWidget("VetAnimalEdit", name, chip, sex, birth, description);
-                        ui->dateVetAnimalEdit->SetDate(QDate::currentDate());
+                            ui->dateVetAnimalEdit->SetDate(QDate::currentDate());
                         findChild<EditDogWidget*>("VetAnimalEdit")->SetOldId(necessary[0]);
                     });
                     return;

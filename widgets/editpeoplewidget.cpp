@@ -163,8 +163,6 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
         }
     }
 
-    qDebug() << postalCodeList.size() << firstNameList.size();
-
 
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
     foreach (QLineEdit* lineEdit, lineEdits) {

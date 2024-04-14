@@ -14,6 +14,7 @@
 #include "tristatecheckbox.h"
 #include "utils.h"
 #include "simplecrypt.h"
+#include "clickablelabel.h"
 
 class DogCard : public QFrame
 {
@@ -30,6 +31,10 @@ private slots:
     void HandlePrescription();
     void OpenPrescriptionFolder();
     void AddPrescription();
+    void HandleClickedHistory(QString type, QStringList necessary){qDebug() << "h";emit ClickedHistory(type, necessary);}
+
+signals:
+    void ClickedHistory(QString type, QStringList necessary);
 
 private:
     QString StateToSql(Qt::CheckState state);

@@ -121,6 +121,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     detailsButton->setIconSize(QSize(iconSize, iconSize));
 
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(SelectDogCard()));
+    connect(this, SIGNAL(ClickedHistory(QString,QStringList)), mainWindow, SLOT(TriggerEdit(QString, QStringList)));
     connect(detailsButton, SIGNAL(clicked()), this, SLOT(SelectThis()));
 
     // Only shown if selected
@@ -306,7 +307,7 @@ void DogCard::CreateHistory(){
     QVBoxLayout* histLayout = qobject_cast<QVBoxLayout*>(historyScroll->widget()->layout());
 
     // ES
-    queryString = "SELECT ES_Registry.type_prov, People.last_name, People.first_name, People.phone, ES_Registry.date_prov AS date, 'ES' "
+    queryString = "SELECT ES_Registry.type_prov, People.last_name, People.first_name, People.phone, ES_Registry.date_prov AS date, 'entry', ES_Registry.id_ES, ES_Registry.date_prov "
                   "FROM ES_Registry "
                   "JOIN People on ES_Registry.id_people_prov = People.id_people "
                   "JOIN Dogs ON ES_Registry.id_dog = Dogs.id_dog "
@@ -314,15 +315,16 @@ void DogCard::CreateHistory(){
 
     // Destinations
     queryString += " UNION "
-                   "SELECT Destinations.type, People.last_name, People.first_name, People.phone, Destinations.date AS date, 'Destination' "
+                   "SELECT Destinations.type, People.last_name, People.first_name, People.phone, Destinations.date AS date, 'destination', ES_Registry.id_ES, ES_Registry.date_prov "
                    "FROM Destinations "
                    "JOIN People on Destinations.id_people = People.id_people "
                    "JOIN Dogs ON Destinations.id_dog = Dogs.id_dog "
+                   "JOIN ES_Registry ON (ES_Registry.id_dog = Dogs.id_dog AND ES_Registry.date_prov = Destinations.date_prov) "
                    "WHERE Dogs.chip = :chip";
 
     // Care
     queryString += " UNION "
-                   "SELECT Care_registry.exit_date, People.last_name, People.first_name, People.phone, Care_registry.entry_date AS date, 'Care' "
+                   "SELECT Care_registry.exit_date, People.last_name, People.first_name, People.phone, Care_registry.entry_date AS date, 'care', Care_registry.id_care, Care_registry.entry_date "
                    "FROM Care_registry "
                    "JOIN People on Care_registry.id_people_prov = People.id_people "
                    "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
@@ -330,7 +332,7 @@ void DogCard::CreateHistory(){
 
     // Vet
     queryString += " UNION "
-                   "SELECT Vet.reason, '', '', '', Vet.date AS date, 'Vet' "
+                   "SELECT Vet.reason, '', '', '', Vet.date AS date, 'vet', Vet.date, Dogs.id_dog "
                    "FROM Vet "
                    "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
                    "WHERE Dogs.chip = :chip";
@@ -347,11 +349,11 @@ void DogCard::CreateHistory(){
 
     while(query.next()){
         QString type = query.value(5).toString();
-        QLabel* histLabel = new QLabel();
+        ClickableLabel* histLabel = new ClickableLabel();
         QString colorString;
         QString dateString(query.value(4).toDate().toString("dd/MM/yyyy"));
         QString type_prov = query.value(0).toString();
-        if(type == "ES"){
+        if(type == "entry"){
             type_prov = crypto->decryptToString(type_prov);
             if(type_prov.startsWith("Fourrière_|_"))
                 histLabel->setText(dateString + " : <b>Fourrière</b> (" +
@@ -364,7 +366,7 @@ void DogCard::CreateHistory(){
             colorString = "#3b4b64";
         }
 
-        else if(type == "Destination"){
+        else if(type == "destination"){
             if(query.value(0).toString() == "Mort")
                 histLabel->setText(dateString + " : <b>Mort</b>");
 
@@ -376,7 +378,7 @@ void DogCard::CreateHistory(){
             colorString = "#a3acbd";
         }
 
-        else if(type == "Care"){
+        else if(type == "care"){
             QString exitDateString(QDate::fromString(query.value(0).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
             histLabel->setText(dateString +
                                 QString(exitDateString.isEmpty() ? "" : (" au " + exitDateString)) +
@@ -386,7 +388,7 @@ void DogCard::CreateHistory(){
             colorString = "#97717a";
         }
 
-        else if(type == "Vet"){
+        else if(type == "vet"){
             dateString = (query.value(4).toDateTime().toString("dd/MM/yyyy h:mm"));
             histLabel->setText(dateString +
                                 " : <b>RDV Vétérinaire</b> (" +
@@ -394,6 +396,11 @@ void DogCard::CreateHistory(){
 
             colorString = "#2cc09d";
         }
+
+        // Handle clicking on hyperlink
+        QStringList necessary = {query.value(6).toString(), query.value(7).toString()};
+        connect(histLabel, &ClickableLabel::clicked, this, [this, type, necessary](){emit ClickedHistory(type, necessary);});
+
 
 
         histLabel->setStyleSheet("QLabel{"

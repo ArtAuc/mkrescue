@@ -32,6 +32,7 @@ SOURCES += \
 
 HEADERS += \
     data/database.h \
+    widgets/clickablelabel.h \
     widgets/customdatetimeedit.h \
     widgets/destinationpage.h \
     widgets/dogcard.h \
