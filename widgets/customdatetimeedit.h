@@ -57,10 +57,39 @@ public:
             setCursorPosition(std::max(0, cursorPosition() - movement));
 
             event->ignore();
-            return;
         }
 
-        if (event->text().size() == 0 || (event->text().size() == 1 && event->text().at(0).isDigit())){
+        else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_Up) {
+            int sectionStart = 0;
+            if(cursorPosition() > 0)
+                sectionStart = text().lastIndexOf(QRegularExpression("[\\s/:]"), cursorPosition() - 1) + 1;
+
+            int sectionEnd = text().indexOf(QRegularExpression("[\\s/:]"), cursorPosition());
+            if (sectionEnd == -1)
+                sectionEnd = text().size();
+
+            QString section = text().mid(sectionStart, sectionEnd - sectionStart);
+
+
+            int sectionValue = section.toInt();
+
+            int increment = (event->key() == Qt::Key_Down) ? -1 : 1;
+            sectionValue += increment;
+
+            QString newSection = QString::number(sectionValue);
+
+            QString newText = text();
+            newText.replace(sectionStart, section.length(), newSection);
+
+            setText(newText);
+            setCursorPosition(sectionStart);
+
+            CorrectDate();
+
+            event->ignore();
+        }
+
+        else if (event->text().size() == 0 || (event->text().size() == 1 && event->text().at(0).isDigit())){
             QLineEdit::keyPressEvent(event);
         }
         else {
@@ -76,6 +105,10 @@ public:
             int sectionStart = text().lastIndexOf(QRegularExpression("[\\s/:]"), cursorPosition() - 1) + 1;
             setCursorPosition(sectionStart);
         }
+    }
+
+    void mouseDoubleClickEvent(QMouseEvent *event) override{
+        mousePressEvent(event);
     }
 
 public slots:
@@ -100,6 +133,8 @@ public slots:
 
     void CorrectDate(){
         QString dateString = text();
+
+        int cursorPosition = this->cursorPosition();
 
         QDateTime currentDateTime;
         if(dateOnly)
@@ -147,6 +182,8 @@ public slots:
             else
                 SetDateTime(QDateTime::currentDateTime());
         }
+
+        setCursorPosition(cursorPosition);
     }
 
     void HandleSelection(){

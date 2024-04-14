@@ -92,6 +92,8 @@ void EditDogWidget::showEvent(QShowEvent* event){
     QStringList chipList, dogNameList;
     birthList.clear();
     sexList.clear();
+    descriptionList.clear();
+
 
     HandleErrorExec(&query, "SELECT name, chip, description, sex, birth "
                "FROM Dogs;");

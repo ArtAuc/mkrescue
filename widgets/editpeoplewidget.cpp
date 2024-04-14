@@ -126,6 +126,9 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
     QWidget::showEvent(event);
     QSqlQuery query;
 
+    cityList.clear();
+    postalCodeList.clear();
+
     QStringList firstNameList, lastNameList, phoneList, emailList, addressList, address2List;
 
     HandleErrorExec(&query, "SELECT id_people, last_name, first_name, phone, email, address "
@@ -159,6 +162,8 @@ void EditPeopleWidget::showEvent(QShowEvent* event){
             emailList << email + (last_name.isEmpty() ? "" : "|") + last_name + (first_name.isEmpty() ? "" : "|") + first_name;
         }
     }
+
+    qDebug() << postalCodeList.size() << firstNameList.size();
 
 
     QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
