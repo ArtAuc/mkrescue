@@ -63,7 +63,7 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
 
     table->verticalScrollBar()->hide();
     table->horizontalScrollBar()->hide();
-    table->viewport()->setFixedHeight(page->width() / 1.5);
+    table->viewport()->setFixedHeight(page->width() / 1.6);
 
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
@@ -124,8 +124,6 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
         printer.newPage();
 
         int lastVisibleRow = table->rowAt(table->viewport()->height()) - 1;
-        while(lastVisibleRow + 1 > 0 && table->item(lastVisibleRow + 1, 0)->text().isEmpty())
-            lastVisibleRow -= 1;
 
         if(lastVisibleRow >= 0){
             for (int row = lastVisibleRow + 1; row <= table->rowCount(); ++row) {
