@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->searchIcon, SIGNAL(clicked(bool)), ui->searchLine, SLOT(setFocus()));
     connect(ui->yearBox, &QComboBox::currentTextChanged, this, [=]() {Search();});
     ui->searchIcon->setIcon(QIcon("media/search.svg"));
+    connect(ui->menuLogoLabel, &ClickableLabel::clicked, this, [=](){ui->menuTree->setCurrentItem(ui->menuTree->topLevelItem(0));}); // Go back to homepage if menu logo clicked
 
     InitExportButtons();
 
@@ -39,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
     connect(ui->removeButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(RemoveCurrent()));
-    connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(ChangePage()));
     connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(Clean()));
+    connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(ChangePage()));
     connect(ui->prevDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(PrevDestPage()));
     connect(ui->nextDestButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(NextDestPage()));
     connect(ui->sameCareButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SameDestCare()));
@@ -189,8 +190,19 @@ void MainWindow::ToggleSatisfiedBoxText(){
 // Change selected page from stacked widget, based on the selected menu item
 void MainWindow::ChangePage(QTreeWidgetItem* item)
 {
-    if(item == nullptr) // Coming back from edit page
-        item = ui->menuTree->currentItem();
+    if(item == nullptr){ // Coming back from edit page
+        if(ui->menuTree->selectedItems().size() > 0)
+            item = ui->menuTree->selectedItems()[0];
+        else
+            item = ui->menuTree->currentItem();
+
+        QString txt = item->text(0).trimmed();
+        if(txt == "Registres" || txt == "Autres")
+            item = item->child(0);
+    }
+
+    if(!item)
+        return;
 
     ui->searchLine->clear();
 
@@ -478,8 +490,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         }
 
         else if (type == "members"){
-            HandleErrorExec(&query,
-                            "SELECT Members.id_adhesion, "
+            query.prepare("SELECT Members.id_adhesion, "
                             "       Members.date, "
                             "       People.last_name, "
                             "       People.first_name, "
@@ -643,6 +654,7 @@ void MainWindow::Clean(){
 
     QObject::connect(thread, &CleanThread::finished, ui->editPage, &EditPage::FinishedCleaning);
     QObject::connect(thread, &CleanThread::finished, thread, &CleanThread::deleteLater);
+    QObject::connect(thread, &CleanThread::finished, this, [=](){ChangePage();});
 
     thread->start();
 

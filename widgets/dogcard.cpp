@@ -409,6 +409,10 @@ void DogCard::CreateHistory(){
 
         // Handle clicking on hyperlink
         QStringList necessary = {query.value(6).toString(), query.value(7).toString()};
+        qDebug() << necessary;
+
+        if(type == "destination")
+            type = "entry";
         connect(histLabel, &ClickableLabel::clicked, this, [this, type, necessary](){emit ClickedHistory(type, necessary);});
 
 
@@ -455,7 +459,7 @@ void DogCard::OpenPrescriptionFolder() {
 }
 
 void DogCard::AddPrescription(){
-    QString dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Documents numérisés/");
+    QString dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Documents\ numérisés/");
     if (!QDir(dirPath).exists())
         dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
     QString filePath = QFileDialog::getOpenFileName(nullptr, "Sélectionnez l'ordonnance", dirPath, "Ordonnances (*.jpg *.jpeg *.png *.gif *.bmp *.pdf);;Tous les fichiers (*)");
@@ -485,6 +489,7 @@ void DogCard::AddPrescription(){
 void DogCard::HandlePrescription(){
     QMessageBox msgBox;
     msgBox.setWindowTitle("Ordonnances");
+    msgBox.setText("Ordonnances de " + dogName);
 
     QPushButton *addButton = msgBox.addButton("Ajouter", QMessageBox::AcceptRole);
     QPushButton *browseButton = msgBox.addButton("Parcourir", QMessageBox::HelpRole);

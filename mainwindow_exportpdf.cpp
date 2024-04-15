@@ -85,7 +85,12 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
     painter.setFont(titleFont);
     QSizeF pageSize = printer.pageRect(QPrinter::DevicePixel).size();
 
-    QString txt = "Refuge"; //TODO : use shelter's name
+    // Get shelter's name
+    QSqlQuery query;
+    HandleErrorExec(&query, "SELECT last_name FROM People WHERE id_people = -2");
+    query.next();
+
+    QString txt = query.value(0).toString();
     QRectF rect = painter.boundingRect(QRectF(), Qt::AlignCenter, txt);
     qreal x = (pageSize.width() - rect.width()) / 2;
     painter.drawText(QPointF(x, 0.4 * pageSize.height()), txt);

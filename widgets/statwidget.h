@@ -234,7 +234,7 @@ public:
             else if(type == "currentMembers"){
                 query.prepare("SELECT COUNT(DISTINCT id_people) "
                               "FROM Members "
-                              "WHERE date(Members.date, '+1 year') > date('now') "
+                              "WHERE date(Members.date, '+1 year') > :date "
                               "AND date <= :date");
             }
 

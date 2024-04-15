@@ -35,7 +35,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
         queryString +=
                 " UNION "
                 ""
-                "SELECT Dogs.chip, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '_|_' || ES_Registry.type_prov), Dogs.id_dog "
+                "SELECT Dogs.chip, Dogs.name, Dogs.sex, MaxDest.max_date || '_|_' || MaxDest.type, Dogs.description, (ES_Registry.date_prov || '_|_' || ES_Registry.type_prov), Dogs.id_dog "
                 "FROM Dogs "
                 "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
                 "JOIN ( "
@@ -43,8 +43,21 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "    FROM ES_Registry "
                 "    GROUP BY id_dog "
                 ") AS MaxProv ON ES_Registry.id_dog = MaxProv.id_dog AND ES_Registry.date_prov = MaxProv.max_date_prov "
-                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
-                "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr) "
+                "JOIN ( "
+                "    SELECT id_dog, MAX(date_prov) AS max_date, type "
+                "    FROM Destinations "
+                "    GROUP BY id_dog, type "
+                ") AS MaxDest ON Dogs.id_dog = MaxDest.id_dog "
+                "WHERE ( "
+                "    Dogs.name LIKE '%' "
+                "    OR chip LIKE '%' "
+                "    OR description LIKE '%' "
+                "    OR Dogs.sex LIKE '%' "
+                "    OR Dogs.birth LIKE '%' "
+                "    OR Dogs.description LIKE '%' "
+                "    OR ES_Registry.date_prov LIKE '%' "
+                "    OR ES_Registry.type_prov LIKE '%' "
+                ") "
                 "AND Dogs.id_dog IN ( "
                 "    SELECT LastestDest.id_dog "
                 "    FROM ( "
@@ -64,7 +77,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "        OR LastestDest.type LIKE 'Famille d_accueil' "
                 "    ) "
                 ") "
-                "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry)";
+                "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry) ";
 
     if(type.contains("care")){
         queryString +=

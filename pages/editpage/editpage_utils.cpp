@@ -203,7 +203,7 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
         query.bindValue(":old_id_people", old_id_people);
         HandleErrorExec(&query);
         while (message.count("\n") < 10 && query.next()) {
-            message += "- Demande d'adoption(" + query.value(0).toString() + ")\n";
+            message += "- Demande d'adoption (" + query.value(0).toString() + ")\n";
         }
 
         if(message.count("\n") == 10)

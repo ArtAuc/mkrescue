@@ -74,13 +74,6 @@ void EditPage::SameDestCare(){
 
 void EditPage::QuitEdit()
 {
-    QStackedWidget* stackedWidget = qobject_cast<QStackedWidget*>(parent());
-    if(lastType == "entry" || lastType == "care")
-        stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "RegistryPage"));
-
-    else
-        stackedWidget->setCurrentWidget(stackedWidget->findChild<QWidget*>(lastType + "Page"));
-
     cleaning = true;
     emit RefreshMainWindow();
 }

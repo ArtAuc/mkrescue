@@ -45,9 +45,9 @@ public:
         setItemDelegate(delegate);
 
         setSelectionMode(QAbstractItemView::SingleSelection);
-        connect(this, SIGNAL(itemPressed(QTreeWidgetItem*, int)),
+        connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
                 parent->parent(), SLOT(ChangePage(QTreeWidgetItem*)));
-
+        connect(this, &QTreeWidget::itemSelectionChanged, this, &MenuTree::PreventNoSelection);
         setMouseTracking(true);
 
         QPalette palette = this->palette();
@@ -121,10 +121,22 @@ protected:
             menuLogoLabel = parent()->findChild<QLabel*>("menuLogoLabel");
     }
 
+public slots:
+    void PreventNoSelection(){
+        if (selectedItems().isEmpty()) {
+            if(lastSelected != nullptr)
+                setCurrentItem(lastSelected);
+            else
+                setCurrentItem(topLevelItem(0));
+        }
+        lastSelected = selectedItems()[0];
+    }
+
 private:
     int initialWidth = 300;
     QLabel *menuLogoLabel = nullptr;
     QPixmap logo;
+    QTreeWidgetItem *lastSelected = nullptr;
 };
 
 #endif // MENUTREE_H

@@ -157,7 +157,7 @@ QCheckBox::indicator {
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="menuLogoLabel">
+       <widget class="ClickableLabel" name="menuLogoLabel">
         <property name="styleSheet">
          <string notr="true">background: white;
 padding-top:5px;
@@ -985,7 +985,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1010,7 +1010,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1191,7 +1191,7 @@ QTabBar::tab:selected {
               <item row="0" column="0" rowspan="2">
                <widget class="QTabWidget" name="lostTabWidget">
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="lostTab1">
                  <attribute name="title">
@@ -1498,7 +1498,7 @@ QTabBar::tab:selected {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -3034,61 +3034,86 @@ color:#212834;</string>
    <extends>QLineEdit</extends>
    <header>widgets/customdatetimeedit.h</header>
   </customwidget>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header>widgets/clickablelabel.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>nameShelterEdit</tabstop>
-  <tabstop>phoneShelterEdit</tabstop>
-  <tabstop>addressShelterEdit</tabstop>
-  <tabstop>address2ShelterEdit</tabstop>
-  <tabstop>postalCodeShelterEdit</tabstop>
-  <tabstop>cityShelterEdit</tabstop>
-  <tabstop>idLostEdit</tabstop>
-  <tabstop>sexLostEdit</tabstop>
-  <tabstop>descriptionLostEdit</tabstop>
+  <tabstop>menuTree</tabstop>
+  <tabstop>menuButton</tabstop>
+  <tabstop>yearBox</tabstop>
+  <tabstop>searchIcon</tabstop>
+  <tabstop>searchLine</tabstop>
+  <tabstop>syncButton</tabstop>
   <tabstop>removeButton</tabstop>
   <tabstop>cancelButton</tabstop>
   <tabstop>submitButton</tabstop>
-  <tabstop>entryTabWidget</tabstop>
-  <tabstop>prevDestButton</tabstop>
-  <tabstop>entryAddButton</tabstop>
-  <tabstop>careTable</tabstop>
-  <tabstop>redListTable</tabstop>
-  <tabstop>outCheckbox</tabstop>
-  <tabstop>careCheckbox</tabstop>
-  <tabstop>dogCardsScrollArea</tabstop>
-  <tabstop>entryExportButton</tabstop>
-  <tabstop>nextDestButton</tabstop>
-  <tabstop>menuTree</tabstop>
-  <tabstop>careAddButton</tabstop>
-  <tabstop>searchLine</tabstop>
-  <tabstop>otherTypeEdit</tabstop>
-  <tabstop>yearBox</tabstop>
-  <tabstop>entryDateEdit</tabstop>
-  <tabstop>entryTypeBox</tabstop>
-  <tabstop>menuButton</tabstop>
-  <tabstop>reasonRedListEdit</tabstop>
+  <tabstop>adoptionDemandTabWidget</tabstop>
+  <tabstop>satisfiedAdoptionDemandBox</tabstop>
+  <tabstop>sexAdoptionDemandEdit</tabstop>
+  <tabstop>ageAdoptionDemandEdit</tabstop>
+  <tabstop>breedAdoptionDemandEdit</tabstop>
+  <tabstop>infosAdoptionDemandEdit</tabstop>
   <tabstop>careTabWidget</tabstop>
   <tabstop>careEntryDateEdit</tabstop>
   <tabstop>careDestDateEdit</tabstop>
   <tabstop>sameCareButton</tabstop>
-  <tabstop>dateMembersEdit</tabstop>
-  <tabstop>typeMembersBox</tabstop>
-  <tabstop>amountMembersEdit</tabstop>
-  <tabstop>entryTable</tabstop>
-  <tabstop>careExportButton</tabstop>
-  <tabstop>redListAddButton</tabstop>
-  <tabstop>foundCheckBox</tabstop>
-  <tabstop>lostAddButton</tabstop>
-  <tabstop>lostTable</tabstop>
-  <tabstop>membersAddButton</tabstop>
-  <tabstop>membersTable</tabstop>
-  <tabstop>membersExportButton</tabstop>
+  <tabstop>entryTabWidget</tabstop>
+  <tabstop>entryTypeBox</tabstop>
+  <tabstop>entryDateEdit</tabstop>
+  <tabstop>otherTypeEdit</tabstop>
+  <tabstop>prevDestButton</tabstop>
+  <tabstop>nextDestButton</tabstop>
   <tabstop>lostTabWidget</tabstop>
   <tabstop>foundLostBox</tabstop>
   <tabstop>lossDateEdit</tabstop>
   <tabstop>lossPlaceEdit</tabstop>
   <tabstop>speciesLostEdit</tabstop>
   <tabstop>nameLostEdit</tabstop>
+  <tabstop>idLostEdit</tabstop>
+  <tabstop>sexLostEdit</tabstop>
+  <tabstop>descriptionLostEdit</tabstop>
+  <tabstop>dateMembersEdit</tabstop>
+  <tabstop>typeMembersBox</tabstop>
+  <tabstop>amountMembersEdit</tabstop>
+  <tabstop>reasonRedListEdit</tabstop>
+  <tabstop>reasonVetAnimalBox</tabstop>
+  <tabstop>reasonVetAnimalEdit</tabstop>
+  <tabstop>dateVetAnimalEdit</tabstop>
+  <tabstop>foundCheckBox</tabstop>
+  <tabstop>lostAddButton</tabstop>
+  <tabstop>lostTable</tabstop>
+  <tabstop>membersAddButton</tabstop>
+  <tabstop>membersTable</tabstop>
+  <tabstop>membersExportButton</tabstop>
+  <tabstop>nameShelterEdit</tabstop>
+  <tabstop>phoneShelterEdit</tabstop>
+  <tabstop>addressShelterEdit</tabstop>
+  <tabstop>address2ShelterEdit</tabstop>
+  <tabstop>postalCodeShelterEdit</tabstop>
+  <tabstop>careAddButton</tabstop>
+  <tabstop>outCheckbox</tabstop>
+  <tabstop>careCheckbox</tabstop>
+  <tabstop>dogCardsScrollArea</tabstop>
+  <tabstop>careTable</tabstop>
+  <tabstop>cityShelterEdit</tabstop>
+  <tabstop>entryAddButton</tabstop>
+  <tabstop>homeScrollArea</tabstop>
+  <tabstop>entryTable</tabstop>
+  <tabstop>careExportButton</tabstop>
+  <tabstop>redListAddButton</tabstop>
+  <tabstop>entryExportButton</tabstop>
+  <tabstop>redListTable</tabstop>
+  <tabstop>loginEdit</tabstop>
+  <tabstop>loginNextButton</tabstop>
+  <tabstop>saveSettingsButton</tabstop>
+  <tabstop>satisfiedCheckBox</tabstop>
+  <tabstop>adoptionDemandAddButton</tabstop>
+  <tabstop>adoptionDemandTable</tabstop>
+  <tabstop>vetAddButton</tabstop>
+  <tabstop>vetTable</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -307,7 +307,7 @@ void MainWindow::LoadLost(QString search){
     {
         int nb = table->rowCount();
         table->insertRow(nb);
-        table->setItem(nb, 0, new QTableWidgetItem(ClearUselessBreaks(query.value(0).toString()) + "\n" + query.value(1).toString())); // identification + name
+        table->setItem(nb, 0, new QTableWidgetItem(ClearUselessBreaks(query.value(0).toString() + "\n" + query.value(1).toString()))); // identification + name
         table->setItem(nb, 1, new QTableWidgetItem(ClearUselessBreaks(query.value(2).toString() + "\n" + query.value(3).toString()))); // species + sex
         table->setItem(nb, 2, new QTableWidgetItem(query.value(4).toString())); // description
         table->setItem(nb, 3, new QTableWidgetItem(query.value(5).toDate().toString("dd/MM/yyyy"))); // date
