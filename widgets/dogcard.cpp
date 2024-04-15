@@ -409,7 +409,6 @@ void DogCard::CreateHistory(){
 
         // Handle clicking on hyperlink
         QStringList necessary = {query.value(6).toString(), query.value(7).toString()};
-        qDebug() << necessary;
 
         if(type == "destination")
             type = "entry";

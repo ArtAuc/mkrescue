@@ -77,6 +77,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "        OR LastestDest.type LIKE 'Famille d_accueil' "
                 "    ) "
                 ") "
+                "AND (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
+                "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr) "
                 "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry) ";
 
     if(type.contains("care")){

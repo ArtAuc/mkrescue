@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->adoptionDemandAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("adoptionDemand", {}); });
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
-    connect(ui->cancelButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(QuitEdit()));
+    connect(ui->cancelButton, SIGNAL(clicked(bool)), this, SLOT(ChangePage()));
     connect(ui->removeButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(RemoveCurrent()));
     connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(Clean()));
     connect(ui->editPage, SIGNAL(RefreshMainWindow()), this, SLOT(ChangePage()));
@@ -404,7 +404,9 @@ void MainWindow::Search(QString search){
     else if(pageName == "adoptionDemandPage")
         LoadAdoptionDemand(search);
 
-    findChild<Registry*>(pageName)->resizeEvent(nullptr);
+    Registry *registry = findChild<Registry*>(pageName);
+    if(registry)
+        registry->resizeEvent(nullptr);
 }
 
 // Only necessary infos are sent because the list is stored when the slot is connected

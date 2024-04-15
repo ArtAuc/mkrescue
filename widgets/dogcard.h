@@ -31,7 +31,7 @@ private slots:
     void HandlePrescription();
     void OpenPrescriptionFolder();
     void AddPrescription();
-    void HandleClickedHistory(QString type, QStringList necessary){qDebug() << "h";emit ClickedHistory(type, necessary);}
+    void HandleClickedHistory(QString type, QStringList necessary){emit ClickedHistory(type, necessary);}
 
 signals:
     void ClickedHistory(QString type, QStringList necessary);

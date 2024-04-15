@@ -73,6 +73,7 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
     printer.setOutputFileName(fileName);
     printer.setResolution(300);
     printer.setPageOrientation(QPageLayout::Landscape);
+    printer.setPageMargins(QMarginsF(5, 5, 5, 0));
 
     QPainter painter;
     painter.begin(&printer);

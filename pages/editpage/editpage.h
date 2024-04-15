@@ -31,12 +31,12 @@ public:
     static void SetField(QString name, QString value, QWidget* parent);
     static QStringList AddressList(QString address);
     static bool DateComparator(const QString& dest1, const QString& dest2);
+    void QuitEdit();
 
 public slots:
     void Edit(QString type, QStringList infos);
     void ChangeEntryType(QString type);
     void SaveEdit();
-    void QuitEdit();
     void PrevDestPage();
     void NextDestPage();
     void UpdateDestinationPages(QString type = "");

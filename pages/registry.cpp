@@ -111,7 +111,6 @@ void Registry::resizeEvent(QResizeEvent *event){
                         QString text = item->text();
                         QString newText = "";
                         for(QString line : text.split("\n")){
-                            qDebug() << line;
                             newText += AutoBreak(line, 30) + "\n";
                         }
 
