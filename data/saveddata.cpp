@@ -11,6 +11,7 @@ SavedData::SavedData()
         for (QString e : errors){
             if(e != ""){
                 QMessageBox::critical(nullptr, "Erreur de sauvegarde", e);
+                syncButton->setIcon(QIcon("media/sync_red.svg"));
                 success = false;
                 break;
             }
