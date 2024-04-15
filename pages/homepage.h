@@ -133,9 +133,11 @@ public:
 
 
 
-            if(alertDays >= 0){
-                queryString += "WHERE Results.date BETWEEN DATE('now') AND DATE('now', '+' || " + QString::number(alertDays) + " || ' day') ";
-            }
+            if(alertDays >= 0)
+                queryString += "WHERE Results.date BETWEEN DATE('now') AND DATE('now', '+' || " + QString::number(alertDays) + " || ' day') ";            
+            else
+                queryString += "WHERE Results.date >= DATE('now')";
+
 
             queryString +="ORDER BY Results.date;";
 

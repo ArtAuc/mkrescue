@@ -104,6 +104,7 @@ public:
         layout->setSpacing(0);
         layout->setContentsMargins(0,0,0,0);
 
+
         statLabel = new QLabel("x");
         statLabel->setStyleSheet("color:#333;");
         statLabel->setAlignment(Qt::AlignCenter);
@@ -132,24 +133,26 @@ public:
 
         layout->addWidget(infoLabel, 1, 0, 1, 1);
 
+        layout->addItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding), 2, 0, 1, 2);
+
         statGraph = new GraphWidget(hColor);
         statGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         statGraph->setStyleSheet("background-color:white;");
-        layout->addWidget(statGraph, 2, 0, 3, 1);
+        layout->addWidget(statGraph, 3, 0, 3, 1);
 
 
         // daysInterval buttons
         weekButton = new QPushButton();
         weekButton->setText("Sem.");
-        layout->addWidget(weekButton, 2, 1, 1, 1);
+        layout->addWidget(weekButton, 3, 1, 1, 1);
 
         monthButton = new QPushButton();
         monthButton->setText("Mois");
-        layout->addWidget(monthButton, 3, 1, 1, 1);
+        layout->addWidget(monthButton, 4, 1, 1, 1);
 
         yearButton = new QPushButton();
         yearButton->setText("An");
-        layout->addWidget(yearButton, 4, 1, 1, 1);
+        layout->addWidget(yearButton, 5, 1, 1, 1);
 
         for(QPushButton *b : findChildren<QPushButton*>()){
             connect(b, &QPushButton::clicked, this, [=](){
