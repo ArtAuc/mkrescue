@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->careCheckbox, &QCheckBox::clicked, this, [this]() {LoadDogCards(ui->searchLine->text());});
     connect(ui->foundCheckBox, &QCheckBox::clicked, this, [this]() {LoadLost(ui->searchLine->text());});
     connect(ui->satisfiedCheckBox, &QCheckBox::clicked, this, [this]() {LoadAdoptionDemand(ui->searchLine->text());});
+    connect(ui->oldCheckBox, &QCheckBox::clicked, this, [this]() {LoadVet(ui->searchLine->text());});
 
 
     ui->entryRegistryPage->SetType("entry");
@@ -345,6 +346,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->foundCheckBox->setFont(checkboxFont);
     checkboxFont.setPointSize(0.01 * ui->adoptionDemandPage->width());
     ui->satisfiedCheckBox->setFont(checkboxFont);
+    checkboxFont.setPointSize(0.01 * ui->vetPage->width());
+    ui->oldCheckBox->setFont(checkboxFont);
 
     QTimer::singleShot(50,[this](){
     ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));

@@ -342,7 +342,7 @@ QSqlQuery Database::GetLost(QString search, bool found) {
     return query;
 }
 
-QSqlQuery Database::GetVet(QString search) {
+QSqlQuery Database::GetVet(QString search, bool old) {
     QSqlQuery query;
     QString queryString = "SELECT Vet.date, "
                           "Dogs.name, "
@@ -352,9 +352,12 @@ QSqlQuery Database::GetVet(QString search) {
                           "FROM Vet "
                           "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
                           "WHERE (Dogs.name LIKE :search OR Dogs.chip LIKE :search "
-                          "OR Dogs.sex = :exact OR Vet.reason = :exact) "
-                          "ORDER BY date;";
+                          "OR Dogs.sex = :exact OR Vet.reason = :exact) ";
 
+    if(!old)
+        queryString += "AND Vet.date > DATE('now') ";
+
+    queryString += "ORDER BY date";
 
     query.prepare(queryString);
     query.bindValue(":search", search + "%");

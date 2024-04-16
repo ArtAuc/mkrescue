@@ -545,7 +545,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>11</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -2869,6 +2869,49 @@ color:#212834;</string>
         </widget>
         <widget class="Registry" name="vetPage">
          <layout class="QVBoxLayout" name="verticalLayout_13">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_16">
+            <item>
+             <widget class="QCheckBox" name="oldCheckBox">
+              <property name="styleSheet">
+               <string notr="true">QCheckBox:checked{
+	background-color:#3b4b64;
+}
+
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray;
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
+}
+
+QCheckBox{
+	margin-bottom:10px;
+}</string>
+              </property>
+              <property name="text">
+               <string>RDV Passés</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <property name="spacing">

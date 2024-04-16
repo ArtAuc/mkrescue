@@ -29,7 +29,6 @@ void EditPage::FillPeopleWidget(QString nameEnd, QString lastName, QString first
 }
 
 
-
 void EditPage::Edit(QString type, QStringList infos){
     if(cleaning){
         QMessageBox::warning(nullptr, "Mise à jour des données en cours", "Veuillez attendre la fin de la mise à jour des données avant de réessayer.");
@@ -100,6 +99,7 @@ void EditPage::Edit(QString type, QStringList infos){
                     SetField("destTypeBox" + iString, p[1], destStacked);
                     SetField("destDateEdit" + iString, p[0], destStacked);
                     FillPeopleWidget("DestEdit" + iString, p[2], p[3], p[4], p[5], p[6], destStacked);
+                    SetField("deathCauseEdit" + iString, infos[14], destStacked);
                 }
             }
         }

@@ -377,12 +377,13 @@ void DogCard::CreateHistory(){
         }
 
         else if(type == "destination"){
-            if(query.value(0).toString() == "Mort")
-                histLabel->setText(dateString + " : <b>Mort</b>");
 
             histLabel->setText(dateString + " : <b>" +
                            query.value(0).toString() + "</b> (" +
                            (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
+
+            if(query.value(0).toString() == "Mort")
+                histLabel->setText(dateString + " : <b>Mort</b>");
 
 
             colorString = "#a3acbd";

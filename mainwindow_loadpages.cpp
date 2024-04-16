@@ -346,7 +346,7 @@ void MainWindow::LoadVet(QString search){
     table->setRowCount(0);
     modifyButtons.clear();
 
-    QSqlQuery query = db.GetVet(search);
+    QSqlQuery query = db.GetVet(search, ui->oldCheckBox->isChecked());
 
     while(query.next() && query.record().count() > 0)
     {
