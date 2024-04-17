@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->satisfiedAdoptionDemandBox, SIGNAL(clicked(bool)), this, SLOT(ToggleSatisfiedBoxText()));
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
     connect(ui->homePage, SIGNAL(TriggerEditHome(QString,QStringList)), this, SLOT(TriggerEdit(QString,QStringList)));
-    ui->reasonVetAnimalEdit->hide();
+    connect(ui->groupedVetButton, &QPushButton::clicked, ui->editPage, &EditPage::GroupedVaccine);
     ui->removeButton->setIcon(QIcon("media/trash.svg"));
     ui->dateVetAnimalEdit->EnableTime();
 
@@ -117,7 +117,7 @@ void MainWindow::InitEditWidgets(){
 
     gridLayout = qobject_cast<QGridLayout*>(ui->vetEditPage->layout());
     if(gridLayout){
-        gridLayout->addWidget(new EditDogWidget("VetAnimalEdit"), gridLayout->rowCount(), 0, 1, 2);
+        gridLayout->addWidget(new EditDogWidget("VetAnimalEdit"), 1, 0, 1, 2);
     }
 
     ui->adoptionDemandTab2->layout()->addWidget(new EditPeopleWidget("AdoptionDemandEdit"));

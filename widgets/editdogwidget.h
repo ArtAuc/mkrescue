@@ -26,6 +26,9 @@ public slots:
     void ProcessFields(QString s, bool isPreview);
     void LineEditFormat(QString text);
 
+signals:
+    void SelectedDog();
+
 private:
     QStringList sexList, birthList, descriptionList;
     QString oldId = "-1";

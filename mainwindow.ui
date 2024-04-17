@@ -545,7 +545,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>11</number>
+         <number>3</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -985,7 +985,7 @@ QTabBar::tab:selected {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>2</number>
+             <number>6</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1673,6 +1673,47 @@ QTabBar::tab:selected {
             </widget>
             <widget class="QWidget" name="vetEditPage">
              <layout class="QGridLayout" name="gridLayout_11">
+              <item row="2" column="0" colspan="2">
+               <widget class="QScrollArea" name="groupedVetScrollArea">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background:white;</string>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="groupedVetScrollWidget">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>948</width>
+                   <height>365</height>
+                  </rect>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_20">
+                  <item>
+                   <spacer name="verticalSpacer_5">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
               <item row="0" column="0">
                <layout class="QVBoxLayout" name="dateVetAnimalEditLayout">
                 <item>
@@ -1694,10 +1735,17 @@ QTabBar::tab:selected {
                 </item>
                </layout>
               </item>
+              <item row="4" column="0" colspan="2">
+               <widget class="QPushButton" name="groupedVetButton">
+                <property name="text">
+                 <string>Ajouter un RDV groupé</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="1">
                <layout class="QVBoxLayout" name="reasonVetAnimalEditLayout">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>6</number>
                 </property>
                 <item>
                  <widget class="QLabel" name="reasonVetAnimalEditLabel">
@@ -1734,6 +1782,9 @@ QTabBar::tab:selected {
                 </item>
                </layout>
               </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QWidget" name="placeholder" native="true"/>
+              </item>
              </layout>
             </widget>
            </widget>
@@ -1766,6 +1817,9 @@ padding:10px;</string>
             </item>
             <item>
              <widget class="QPushButton" name="submitButton">
+              <property name="styleSheet">
+               <string notr="true">background-color:#749674;</string>
+              </property>
               <property name="text">
                <string>Valider</string>
               </property>
@@ -3038,12 +3092,6 @@ QCheckBox{
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>EditPage</class>
-   <extends>QWidget</extends>
-   <header>pages/editpage/editpage.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>Registry</class>
    <extends>QWidget</extends>
    <header>pages/registry.h</header>
@@ -3081,6 +3129,12 @@ QCheckBox{
    <class>ClickableLabel</class>
    <extends>QLabel</extends>
    <header>widgets/clickablelabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EditPage</class>
+   <extends>QWidget</extends>
+   <header>pages/editpage/editpage.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

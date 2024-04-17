@@ -177,6 +177,14 @@ void EditPage::Edit(QString type, QStringList infos){
 
     else if (type == "vet"){
         currentPage = findChild<QWidget*>("vetEditPage");
+        for(QWidget *c : currentPage->findChildren<QWidget*>()){
+            QString name = c->objectName();
+            if (name.contains("VetAnimalEdit") && !name.startsWith("reason"))
+                c->show();
+        }
+
+        findChild<QPushButton*>("groupedVetButton")->setVisible(infos.size() == 0);
+
         if(infos.size() > 6){
             currentNecessary.append(infos[0]); // date
             currentNecessary.append(infos[7]); // id_dog
@@ -514,42 +522,57 @@ void EditPage::SaveEdit()
 
     else if(lastType == "vet"){
         QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
+
         QString date = vetEditPage->findChild<CustomDateTimeEdit*>("dateVetAnimalEdit")->GetDateTime().toString("yyyy-MM-ddTHH:mm");
         QString reason = vetEditPage->findChild<QComboBox*>("reasonVetAnimalBox")->currentText();
-
         if(reason == "Autre")
             reason = vetEditPage->findChild<QLineEdit*>("reasonVetAnimalEdit")->text();
 
-        QString id_dog = CreateDogIfNeeded("VetAnimalEdit", vetEditPage);
-        if(id_dog == "-2")
-            return;
+        if(groupedVetIds.isEmpty()){
+            QString id_dog = CreateDogIfNeeded("VetAnimalEdit", vetEditPage);
+            if(id_dog == "-2")
+                return;
 
-        if (!currentNecessary.isEmpty()) { // Modifying
-            QString queryString = "UPDATE Vet "
-                                  "SET id_dog = :id, "
-                                  "date = :date, "
-                                  "reason = :reason "
-                                  "WHERE date = :date_nec "
-                                  "AND id_dog = :id_nec;";
+            if (!currentNecessary.isEmpty()) { // Modifying
+                QString queryString = "UPDATE Vet "
+                                      "SET id_dog = :id, "
+                                      "date = :date, "
+                                      "reason = :reason "
+                                      "WHERE date = :date_nec "
+                                      "AND id_dog = :id_nec;";
 
-            QSqlQuery query;
-            query.prepare(queryString);
-            query.bindValue(":id", id_dog);
-            query.bindValue(":date", date);
-            query.bindValue(":reason", reason);
-            query.bindValue(":date_nec", currentNecessary[0]);
-            query.bindValue(":id_nec", currentNecessary[1]);
-            HandleErrorExec(&query);
+                QSqlQuery query;
+                query.prepare(queryString);
+                query.bindValue(":id", id_dog);
+                query.bindValue(":date", date);
+                query.bindValue(":reason", reason);
+                query.bindValue(":date_nec", currentNecessary[0]);
+                query.bindValue(":id_nec", currentNecessary[1]);
+                HandleErrorExec(&query);
+            }
+            else { // Creating
+                QSqlQuery query;
+                query.prepare("INSERT INTO Vet (id_dog, date, reason) "
+                              "VALUES (:id_dog, :date, :reason)");
+
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":date", date);
+                query.bindValue(":reason", reason);
+                HandleErrorExec(&query);
+            }
         }
-        else { // Creating
-            QSqlQuery query;
-            query.prepare("INSERT INTO Vet (id_dog, date, reason) "
-                          "VALUES (:id_dog, :date, :reason)");
 
-            query.bindValue(":id_dog", id_dog);
-            query.bindValue(":date", date);
-            query.bindValue(":reason", reason);
-            HandleErrorExec(&query);
+        else{ // Grouped vet
+            for(QString id_dog : groupedVetIds){
+                QSqlQuery query;
+                query.prepare("INSERT INTO Vet (id_dog, date, reason) "
+                              "VALUES (:id_dog, :date, :reason)");
+
+                query.bindValue(":id_dog", id_dog);
+                query.bindValue(":date", date);
+                query.bindValue(":reason", reason);
+                HandleErrorExec(&query);
+            }
         }
     }
 

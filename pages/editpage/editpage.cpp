@@ -37,7 +37,10 @@ void EditPage::resizeEvent(QResizeEvent *event){
         for(QPushButton *b : findChildren<QPushButton*>())
         {
             b->setFont(font);
-            b->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+            if(!b->objectName().startsWith("submitButton"))
+                b->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
+            else
+                b->setStyleSheet("QPushButton{padding:" + QString::number(fontSize) + "px;background:#749674;} QPushButton:hover{background:#91ac91}");
         }
     }
 

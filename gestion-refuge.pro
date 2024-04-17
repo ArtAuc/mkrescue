@@ -14,10 +14,10 @@ CONFIG += c++17
 SOURCES += \
     data/database.cpp \
     data/database_getregistry.cpp \
+    pages/editpage/editpage_specific.cpp \
     widgets/dogcard.cpp \
     widgets/editdogwidget.cpp \
     pages/editpage/editpage.cpp \
-    pages/editpage/editpage_es.cpp \
     pages/editpage/editpage_saveedit.cpp \
     pages/editpage/editpage_utils.cpp \
     widgets/editpeoplewidget.cpp \

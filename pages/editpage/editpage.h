@@ -12,6 +12,7 @@
 #include "widgets/destinationpage.h"
 #include "widgets/editdogwidget.h"
 #include "simplecrypt.h"
+#include "widgets/clickablelabel.h"
 
 class EditPage : public QWidget
 {
@@ -43,6 +44,7 @@ public slots:
     void SameDestCare();
     void RemoveCurrent();
     void FinishedCleaning(){cleaning = false;}
+    void GroupedVaccine();
 
 signals:
     void RefreshMainWindow();
@@ -57,7 +59,7 @@ private:
     QString lastType;
     QStringList currentNecessary = {};
     int destinationsNumber = 0;
-    QStringList autofillList;
+    QStringList autofillList, groupedVetIds;
     QToolButton* removeButton;
     QStringList dealtIdPeople;
     QStringList dealtIdDog;

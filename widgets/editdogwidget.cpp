@@ -184,9 +184,12 @@ void EditDogWidget::ProcessFields(QString s, bool isPreview){
                 QTimer::singleShot(50, [=]() {
                     if (isPreview)
                         lineEdit->setPlaceholderText(list[row].split("|")[0]);
-                    else
+                    else{
                         lineEdit->setText(list[row].split("|")[0]);
+                        emit SelectedDog();
+                    }
                 });
+
             }
         }
 

@@ -52,6 +52,11 @@ void EditPage::ClearAllPages()
     }
     ChangeEntryType("Abandon");
 
+    findChild<QWidget*>("reasonVetAnimalEdit")->hide();
+    for(ClickableLabel *c : findChildren<ClickableLabel*>())
+        if(c->objectName().startsWith("dogGroupedVetLabel"))
+            c->deleteLater();
+
     UpdateButtons();
 
     for(EditDogWidget *c : findChildren<EditDogWidget*>())
@@ -142,4 +147,69 @@ void EditPage::AddDestPage(){
     for(EditPeopleWidget *c : findChildren<EditPeopleWidget*>()){
         c->SetCrypto(crypto);
     }
+}
+
+void EditPage::GroupedVaccine(){
+    QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
+    groupedVetIds.clear();
+    findChild<QPushButton*>("groupedVetButton")->hide();
+
+    for(QWidget *c : vetEditPage->findChildren<QWidget*>()){
+        QString name = c->objectName();
+        if (name.contains("VetAnimalEdit") && !name.startsWith("dogNameVetAnimalEdit") && name != "VetAnimalEdit" && !name.startsWith("date") && !name.startsWith("reason"))
+            c->hide();
+    }
+
+    EditDogWidget *editWidget = vetEditPage->findChild<EditDogWidget*>();
+    disconnect(editWidget, nullptr, nullptr, nullptr);
+
+    connect(editWidget, &EditDogWidget::SelectedDog, [this, vetEditPage]{
+        QTimer::singleShot(100, [=]{
+            QString dogName = GetField("dogNameVetAnimalEdit", vetEditPage);
+            QString chip = GetField("chipVetAnimalEdit", vetEditPage);
+            QString sex = GetField("sexVetAnimalEdit", vetEditPage);
+            QString birthDate = GetField("birthDateVetAnimalEdit", vetEditPage);
+            QString description = GetField("descriptionVetAnimalEdit", vetEditPage);
+
+            QSqlQuery query;
+            query.prepare("SELECT id_dog "
+                          "FROM Dogs "
+                          "WHERE name = :dogName "
+                          "AND chip = :chip "
+                          "AND sex = :sex "
+                          "AND birth = :birthDate "
+                          "AND description = :description");
+
+            query.bindValue(":dogName", dogName);
+            query.bindValue(":chip", chip);
+            query.bindValue(":sex", sex);
+            query.bindValue(":birthDate", birthDate);
+            query.bindValue(":description", description);
+
+            HandleErrorExec(&query);
+            if(query.next()){
+                QString id_dog = query.value(0).toString();
+                if(!groupedVetIds.contains(id_dog)){
+                    groupedVetIds.append(id_dog);
+
+                    ClickableLabel *label = new ClickableLabel();
+                    label->setText(dogName + "|" + chip + "|" + sex + "|" + QDate::fromString(birthDate, "yyyy-MM-dd").toString("dd/MM/yyyy") + "|" + description);
+
+                    connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
+                        groupedVetIds.removeOne(id_dog);
+                        label->deleteLater();
+                    });
+                    label->setObjectName("dogGroupedVetLabel");
+                    qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
+
+                }
+            }
+
+            QLineEdit *edit = vetEditPage->findChild<QLineEdit*>("dogNameVetAnimalEdit");
+            edit->clear();
+            edit->setPlaceholderText("");
+
+            resizeEvent(nullptr);
+        });
+    });
 }
