@@ -14,6 +14,14 @@ void Registry::showEvent(QShowEvent* event) {
     addButton = findChild<QToolButton*>(type + "AddButton");
 
     if(table != nullptr && addButton != nullptr){
+        // Disable horizontal scrolling
+        disconnect(table->horizontalScrollBar(), nullptr, nullptr, nullptr);
+        connect(table->horizontalScrollBar(), &QScrollBar::valueChanged, [this]() {
+            table->horizontalScrollBar()->setValue(0);
+        });
+
+        table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
         // Headers
         table->verticalHeader()->setVisible(false);
         for(int i = 0; i < table->columnCount(); i++)
@@ -147,9 +155,6 @@ float Registry::SumWidth(){
     for (int col = 0; col < table->columnCount(); ++col) {
         sumWidth += table->columnWidth(col);
     }
-
-    if(table->verticalScrollBar()->isVisible())
-        sumWidth += table->verticalScrollBar()->width();
 
     return sumWidth;
 }

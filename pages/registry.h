@@ -9,6 +9,8 @@
 #include <QToolButton>
 #include <QPushButton>
 #include <QLayout>
+#include <QTimer>
+
 #include "utils.h"
 
 

@@ -338,6 +338,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     for (DogCard* c : ui->dogCardsContent->findChildren<DogCard*>())
         c->resizeEvent(event);
 
+
     QFont checkboxFont = ui->careCheckbox->font();
     checkboxFont.setPointSize(0.01 * ui->dogCardsPage->width());
     ui->careCheckbox->setFont(checkboxFont);
@@ -350,8 +351,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->oldCheckBox->setFont(checkboxFont);
 
     QTimer::singleShot(50,[this](){
-    ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
-    ui->searchIcon->setFixedHeight(ui->searchLine->height());});
+        ui->searchIcon->setIconSize(QSize(ui->searchLine->height(), ui->searchLine->height()));
+        ui->searchIcon->setFixedHeight(ui->searchLine->height());
+    });
 
     int syncWidth = 0.03 * width();
     ui->syncButton->setIconSize(QSize(syncWidth, syncWidth));

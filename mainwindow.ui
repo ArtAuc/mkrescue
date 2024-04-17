@@ -545,7 +545,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>11</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -1693,7 +1693,7 @@ QTabBar::tab:selected {
                    <x>0</x>
                    <y>0</y>
                    <width>948</width>
-                   <height>365</height>
+                   <height>355</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -2922,11 +2922,23 @@ color:#212834;</string>
          </layout>
         </widget>
         <widget class="Registry" name="vetPage">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_16">
             <item>
              <widget class="QCheckBox" name="oldCheckBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="styleSheet">
                <string notr="true">QCheckBox:checked{
 	background-color:#3b4b64;
