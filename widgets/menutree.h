@@ -48,6 +48,7 @@ public:
         connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
                 parent->parent(), SLOT(ChangePage(QTreeWidgetItem*)));
         connect(this, &QTreeWidget::itemSelectionChanged, this, &MenuTree::PreventNoSelection);
+        connect(this, &QTreeWidget::itemClicked, this, [=](QTreeWidgetItem *item){setCurrentItem(item);});
         setMouseTracking(true);
 
         QPalette palette = this->palette();
