@@ -170,6 +170,7 @@ void EditPage::GroupedVet(){
             QString sex = GetField("sexVetAnimalEdit", vetEditPage);
             QString birthDate = GetField("birthDateVetAnimalEdit", vetEditPage);
             QString description = GetField("descriptionVetAnimalEdit", vetEditPage);
+            qDebug() << dogName;
 
             QSqlQuery query;
             query.prepare("SELECT id_dog "
@@ -189,21 +190,7 @@ void EditPage::GroupedVet(){
             HandleErrorExec(&query);
             if(query.next()){
                 QString id_dog = query.value(0).toString();
-
-                if(!groupedVetIds.contains(id_dog)){
-                    groupedVetIds.append(id_dog);
-
-                    ClickableLabel *label = new ClickableLabel();
-                    label->setText(dogName + "|" + chip + "|" + sex + "|" + QDate::fromString(birthDate, "yyyy-MM-dd").toString("dd/MM/yyyy") + "|" + description);
-
-                    connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
-                        groupedVetIds.removeOne(id_dog);
-                        label->deleteLater();
-                    });
-                    label->setObjectName("dogGroupedVetLabel");
-                    qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
-
-                }
+                AddVetLabel(id_dog, dogName, chip, sex, birthDate, description);
             }
 
             QLineEdit *edit = vetEditPage->findChild<QLineEdit*>("dogNameVetAnimalEdit");
@@ -216,4 +203,21 @@ void EditPage::GroupedVet(){
 
     if(editWidget->findChild<QLineEdit*>("dogNameVetAnimalEdit")->text() != "")
         editWidget->SelectedDog();
+}
+
+void EditPage::AddVetLabel(QString id_dog, QString dogName, QString chip, QString sex, QString birthDate, QString description){
+    if(!groupedVetIds.contains(id_dog)){
+        groupedVetIds.append(id_dog);
+
+        ClickableLabel *label = new ClickableLabel();
+        label->setText(dogName + "|" + chip + "|" + sex + "|" + QDate::fromString(birthDate, "yyyy-MM-dd").toString("dd/MM/yyyy") + "|" + description);
+
+        connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
+            groupedVetIds.removeOne(id_dog);
+            label->deleteLater();
+        });
+        label->setObjectName("dogGroupedVetLabel");
+        qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
+
+    }
 }

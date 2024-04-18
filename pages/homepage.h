@@ -83,7 +83,9 @@ public:
 
         this->lastTimeExport = lastTimeExport;
         lastVetButton = nullptr;
+        lastVaccineButton = nullptr;
         lastVetDateReason = "";
+        lastVaccineNecessary.clear();
 
         if(alertsWidget != nullptr){
             qDeleteAll(alertsWidget->findChildren<QPushButton*>());
@@ -205,8 +207,31 @@ public:
                 }
 
                 else if(type.startsWith("Prévoir le rappel de vaccin")){
+                    if(lastVaccineButton != nullptr){
+                        // Count number of dogs
+                        int dogCount = 2;
+                        if(lastVaccineButton->text().contains("Prévoir le vaccin groupé")){
+                            QRegularExpressionMatch match = QRegularExpression("Prévoir le vaccin groupé \\((\\d+)").match(lastVaccineButton->text());
+                            if(match.hasMatch()){
+                                dogCount = match.captured(1).toInt() + 1;
+                            }
+                        }
+                        lastVaccineButton->setText("Prévoir le vaccin groupé (" + QString::number(dogCount) + " chiens)");
+
+                        lastVaccineNecessary.append(query.value(4).toString());
+
+                        necessary = lastVaccineNecessary;
+
+                        disconnect(lastVaccineButton, nullptr, nullptr, nullptr);
+                        connect(lastVaccineButton, &QPushButton::clicked, this, [this, necessary]() {
+                            HandleAlertPress("Prévoir le rappel", necessary);
+                        });
+
+                        continue;
+                    }
                     color = QColor("#20718e");
                     necessary = {query.value(4).toString()};
+                    lastVaccineNecessary = necessary;
                 }
 
                 else if(type.startsWith("Prévoir l'export")){
@@ -237,6 +262,13 @@ public:
                 if(type.startsWith("RDV Vétérinaire"))
                     lastVetButton = but;
 
+                else if(type.startsWith("Prévoir le rappel"))
+                    lastVaccineButton = but;
+
+                else{
+                    lastVetButton = nullptr;
+                }
+
                 but->setStyleSheet(stylesheet);
                 alertsWidget->layout()->addWidget(but);
             }
@@ -254,7 +286,6 @@ public:
             }
 
             alertsWidget->layout()->addItem(spacer);
-
 
 
             if(alertDays >= 0){
@@ -277,6 +308,9 @@ public slots:
         if(type.startsWith("Prévoir l'export"))
             emit ExportES(necessary[0]);
 
+        else if (type.startsWith("Prévoir le rappel"))
+            emit TriggerEditHome("vaccine", necessary);
+
         else
             emit TriggerEditHome("vet", necessary);
     }
@@ -292,6 +326,8 @@ private:
     QDate lastTimeExport;
     QString lastVetDateReason;
     QPushButton *lastVetButton;
+    QPushButton *lastVaccineButton;
+    QStringList lastVaccineNecessary;
 };
 
 #endif // HOMEPAGE_H

@@ -559,33 +559,33 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
         }
 
         else if (type == "vet"){
-            if(necessary.size() == 2){
-                query.prepare("SELECT Vet.date, "
-                                     "Dogs.name, "
-                                     "Dogs.chip, "
-                                     "Dogs.sex, "
-                                     "Dogs.birth, "
-                                     "Dogs.description, "
-                                     "Vet.reason, "
-                                     "Dogs.id_dog  "
-                                     "FROM Vet "
-                                     "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
-                                     "WHERE Vet.date = :date "
-                                     "AND Dogs.id_dog = :id_dog");
+            query.prepare("SELECT Vet.date, "
+                                 "Dogs.name, "
+                                 "Dogs.chip, "
+                                 "Dogs.sex, "
+                                 "Dogs.birth, "
+                                 "Dogs.description, "
+                                 "Vet.reason, "
+                                 "Dogs.id_dog  "
+                                 "FROM Vet "
+                                 "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
+                                 "WHERE Vet.date = :date "
+                                 "AND Dogs.id_dog = :id_dog");
 
-                query.bindValue(":date", necessary[0]);
-                query.bindValue(":id_dog", necessary[1]);
+            query.bindValue(":date", necessary[0]);
+            query.bindValue(":id_dog", necessary[1]);
 
-                HandleErrorExec(&query);
-                query.next();
+            HandleErrorExec(&query);
+            query.next();
 
-                for(int i = 0; i < query.record().count(); i++)
-                    infos.append(query.value(i).toString());
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
+        }
 
-            }
-
-            else // Add vaccine recall, called by homepage
-            {
+        else if(type == "vaccine"){ // Add vaccine recall, called by homepage
+            ui->editPage->Edit("vet", {});
+            ui->editPage->GroupedVet();
+            for(QString id_dog : necessary){
                 query.prepare("SELECT Dogs.name, "
                                  "Dogs.chip, "
                                  "Dogs.sex, "
@@ -593,8 +593,9 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                                  "Dogs.description "
                                  "FROM Dogs "
                                  "WHERE Dogs.id_dog = :id");
-                query.bindValue(":id", necessary[0]);
+                query.bindValue(":id", id_dog);
                 HandleErrorExec(&query);
+
                 if (query.next()) {
                     QString name = query.value(0).toString();
                     QString chip = query.value(1).toString();
@@ -602,15 +603,11 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
                     QString birth = query.value(3).toString();
                     QString description = query.value(4).toString();
 
-                    ui->editPage->Edit("vet", {});
-                    QTimer::singleShot(100, [this, name, chip, sex, birth, description, necessary]() {
-                        ui->editPage->FillAnimalWidget("VetAnimalEdit", name, chip, sex, birth, description);
-                            ui->dateVetAnimalEdit->SetDate(QDate::currentDate());
-                        findChild<EditDogWidget*>("VetAnimalEdit")->SetOldId(necessary[0]);
-                    });
-                    return;
+                    ui->editPage->AddVetLabel(id_dog, name, chip, sex, birth, description);
                 }
             }
+
+            return;
         }
 
         else if(type == "adoptionDemand"){

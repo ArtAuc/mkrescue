@@ -350,28 +350,30 @@ void MainWindow::LoadVet(QString search){
 
     while(query.next() && query.record().count() > 0)
     {
-        int nb = table->rowCount();
-        table->insertRow(nb);
-        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toDateTime().toString("dd/MM/yyyy\nhh:mm"))); // date
-        table->setItem(nb, 1, new QTableWidgetItem(ClearUselessBreaks(query.value(1).toString() + "\n" + query.value(2).toString()))); // name + chip
-        table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // reason
+        if(query.value(0).toString().contains("T")){ // Else it is a vaccine before entry
+            int nb = table->rowCount();
+            table->insertRow(nb);
+            table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toDateTime().toString("dd/MM/yyyy\nhh:mm"))); // date
+            table->setItem(nb, 1, new QTableWidgetItem(ClearUselessBreaks(query.value(1).toString() + "\n" + query.value(2).toString()))); // name + chip
+            table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // reason
 
-        // Modify icon
-        HoverToolButton* modifyButton = new HoverToolButton(table);
-        modifyButton->setIcon(QIcon("media/modify.svg"));
-        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+            // Modify icon
+            HoverToolButton* modifyButton = new HoverToolButton(table);
+            modifyButton->setIcon(QIcon("media/modify.svg"));
+            modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
 
-        table->setItem(nb, 3, new QTableWidgetItem(""));
-        table->item(nb, 3)->setBackground(QColor("#749674"));
-        table->setCellWidget(nb, 3, modifyButton);
+            table->setItem(nb, 3, new QTableWidgetItem(""));
+            table->item(nb, 3)->setBackground(QColor("#749674"));
+            table->setCellWidget(nb, 3, modifyButton);
 
-        QStringList necessary = {query.value(0).toString(), query.value(4).toString()}; // date + id_dog
+            QStringList necessary = {query.value(0).toString(), query.value(4).toString()}; // date + id_dog
 
-        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
-            TriggerEdit("vet", necessary);
-        });
+            connect(modifyButton, &HoverToolButton::clicked, this, [=](){
+                TriggerEdit("vet", necessary);
+            });
 
-        modifyButtons.append(modifyButton);
+            modifyButtons.append(modifyButton);
+        }
     }
 
     ui->vetPage->showEvent(nullptr);

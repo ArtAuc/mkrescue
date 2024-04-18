@@ -179,6 +179,9 @@ void EditPage::Edit(QString type, QStringList infos){
         groupedVetIds.clear();
         currentPage = findChild<QWidget*>("vetEditPage");
 
+        disconnect(currentPage->findChild<EditDogWidget*>(), nullptr, nullptr, nullptr);
+
+
         for(QWidget *c : currentPage->findChildren<QWidget*>()){
             QString name = c->objectName();
             if (name.contains("VetAnimalEdit") && !name.startsWith("reason"))
@@ -235,19 +238,8 @@ void EditPage::Edit(QString type, QStringList infos){
 
                     HandleErrorExec(&dogQuery);
 
-                    if(dogQuery.next() && !groupedVetIds.contains(id_dog)){
-                        groupedVetIds.append(id_dog);
-
-                        ClickableLabel *label = new ClickableLabel();
-                        label->setText(dogQuery.value(0).toString() + "|" + dogQuery.value(1).toString() + "|" + dogQuery.value(2).toString() + "|" + dogQuery.value(3).toDate().toString("dd/MM/yyyy") + "|" + dogQuery.value(4).toString());
-
-                        connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
-                            groupedVetIds.removeOne(id_dog);
-                            label->deleteLater();
-                        });
-                        label->setObjectName("dogGroupedVetLabel");
-                        qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
-                    }
+                    if(dogQuery.next())
+                        AddVetLabel(id_dog, dogQuery.value(0).toString(), dogQuery.value(1).toString(), dogQuery.value(2).toString(), dogQuery.value(3).toString(), dogQuery.value(4).toString());
                 }
             }
 
