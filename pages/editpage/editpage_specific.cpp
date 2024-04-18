@@ -149,7 +149,7 @@ void EditPage::AddDestPage(){
     }
 }
 
-void EditPage::GroupedVaccine(){
+void EditPage::GroupedVet(){
     QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
     groupedVetIds.clear();
     findChild<QPushButton*>("groupedVetButton")->hide();
@@ -212,4 +212,7 @@ void EditPage::GroupedVaccine(){
             resizeEvent(nullptr);
         });
     });
+
+    if(editWidget->findChild<QLineEdit*>("dogNameVetAnimalEdit")->text() != "")
+        editWidget->SelectedDog();
 }

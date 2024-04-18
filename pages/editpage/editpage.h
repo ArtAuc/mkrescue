@@ -44,7 +44,7 @@ public slots:
     void SameDestCare();
     void RemoveCurrent();
     void FinishedCleaning(){cleaning = false;}
-    void GroupedVaccine();
+    void GroupedVet();
 
 signals:
     void RefreshMainWindow();

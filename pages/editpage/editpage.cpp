@@ -156,11 +156,16 @@ void EditPage::RemoveCurrent(){
         }
 
         else if(lastType == "vet"){
-            query.prepare("DELETE FROM Vet "
-                          "WHERE date = :date "
-                          "AND id_dog = :id_dog;");
+            QString queryString = "DELETE FROM Vet "
+                                  "WHERE date = :date ";
+
+            if(groupedVetIds.isEmpty()) // Not grouped
+                queryString += " AND id_dog = :id_dog";
+
+            query.prepare(queryString);
             query.bindValue(":date", currentNecessary[0]);
-            query.bindValue(":id_dog", currentNecessary[1]);
+            if(groupedVetIds.isEmpty())
+                query.bindValue(":id_dog", currentNecessary[2]);
         }
 
         else if(lastType == "adoptionDemand"){

@@ -177,28 +177,95 @@ void EditPage::Edit(QString type, QStringList infos){
 
     else if (type == "vet"){
         currentPage = findChild<QWidget*>("vetEditPage");
+
         for(QWidget *c : currentPage->findChildren<QWidget*>()){
             QString name = c->objectName();
             if (name.contains("VetAnimalEdit") && !name.startsWith("reason"))
                 c->show();
         }
 
-        findChild<QPushButton*>("groupedVetButton")->setVisible(infos.size() == 0);
+        findChild<QPushButton*>("groupedVetButton")->show();
 
         if(infos.size() > 6){
-            currentNecessary.append(infos[0]); // date
-            currentNecessary.append(infos[7]); // id_dog
+            // Grouped or not ?
+            QSqlQuery query;
+            query.prepare("SELECT COUNT(*) "
+                          "FROM Vet "
+                          "WHERE date = :date "
+                          "AND reason = :reason");
 
-            SetField("dateVetAnimalEdit", infos[0], currentPage);
-            // Reason
-            if(infos[6] == "Vaccin" || infos[6] == "Stérilisation")
-                SetField("reasonVetAnimalBox", infos[6], currentPage);
-            else{
-                SetField("reasonVetAnimalBox", "Autre", currentPage);
-                SetField("reasonVetAnimalEdit", infos[6], currentPage);
+            query.bindValue(":date", infos[0]);
+            query.bindValue(":reason", infos[6]);
+            HandleErrorExec(&query);
+
+            query.next();
+
+            if(query.value(0).toInt() > 1){
+                currentNecessary = {infos[0], infos[6]};
+                GroupedVet();
+                query.prepare("SELECT id_dog "
+                              "FROM Vet "
+                              "WHERE date = :date "
+                              "AND reason = :reason");
+
+                query.bindValue(":date", infos[0]);
+                query.bindValue(":reason", infos[6]);
+
+                HandleErrorExec(&query);
+
+                while(query.next()){
+                    SetField("dateVetAnimalEdit", infos[0], currentPage);
+                    // Reason
+                    if(infos[6] == "Vaccin" || infos[6] == "Stérilisation")
+                        SetField("reasonVetAnimalBox", infos[6], currentPage);
+                    else{
+                        SetField("reasonVetAnimalBox", "Autre", currentPage);
+                        SetField("reasonVetAnimalEdit", infos[6], currentPage);
+                    }
+
+                    QSqlQuery dogQuery;
+                    dogQuery.prepare("SELECT name, chip, sex, birth, description "
+                                     "FROM Dogs "
+                                     "WHERE id_dog = :id");
+
+                    QString id_dog = query.value(0).toString();
+
+                    dogQuery.bindValue(":id", id_dog);
+
+                    HandleErrorExec(&dogQuery);
+
+                    if(dogQuery.next() && !groupedVetIds.contains(id_dog)){
+                        groupedVetIds.append(id_dog);
+
+                        ClickableLabel *label = new ClickableLabel();
+                        label->setText(dogQuery.value(0).toString() + "|" + dogQuery.value(1).toString() + "|" + dogQuery.value(2).toString() + "|" + dogQuery.value(3).toDate().toString("dd/MM/yyyy") + "|" + dogQuery.value(4).toString());
+
+                        connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
+                            groupedVetIds.removeOne(id_dog);
+                            label->deleteLater();
+                        });
+                        label->setObjectName("dogGroupedVetLabel");
+                        qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
+                    }
+                }
             }
 
-            FillAnimalWidget("VetAnimalEdit", infos[1], infos[2], infos[3], infos[4], infos[5], currentPage);
+            else{
+                currentNecessary.append(infos[0]); // date
+                currentNecessary.append(infos[6]); // reason
+                currentNecessary.append(infos[7]); // id_dog
+
+                SetField("dateVetAnimalEdit", infos[0], currentPage);
+                // Reason
+                if(infos[6] == "Vaccin" || infos[6] == "Stérilisation")
+                    SetField("reasonVetAnimalBox", infos[6], currentPage);
+                else{
+                    SetField("reasonVetAnimalBox", "Autre", currentPage);
+                    SetField("reasonVetAnimalEdit", infos[6], currentPage);
+                }
+
+                FillAnimalWidget("VetAnimalEdit", infos[1], infos[2], infos[3], infos[4], infos[5], currentPage);
+            }
         }
     }
 
@@ -547,7 +614,7 @@ void EditPage::SaveEdit()
                 query.bindValue(":date", date);
                 query.bindValue(":reason", reason);
                 query.bindValue(":date_nec", currentNecessary[0]);
-                query.bindValue(":id_nec", currentNecessary[1]);
+                query.bindValue(":id_nec", currentNecessary[2]);
                 HandleErrorExec(&query);
             }
             else { // Creating
@@ -563,8 +630,18 @@ void EditPage::SaveEdit()
         }
 
         else{ // Grouped vet
-            for(QString id_dog : groupedVetIds){
+            if(!currentNecessary.isEmpty()){
                 QSqlQuery query;
+                query.prepare("DELETE FROM Vet "
+                              "WHERE date = :date_nec "
+                              "AND reason = :reason_nec");
+                query.bindValue(":date_nec", currentNecessary[0]);
+                query.bindValue(":reason_nec", currentNecessary[1]);
+
+                HandleErrorExec(&query);
+            }
+
+            for(QString id_dog : groupedVetIds){
                 query.prepare("INSERT INTO Vet (id_dog, date, reason) "
                               "VALUES (:id_dog, :date, :reason)");
 

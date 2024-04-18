@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->satisfiedAdoptionDemandBox, SIGNAL(clicked(bool)), this, SLOT(ToggleSatisfiedBoxText()));
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
     connect(ui->homePage, SIGNAL(TriggerEditHome(QString,QStringList)), this, SLOT(TriggerEdit(QString,QStringList)));
-    connect(ui->groupedVetButton, &QPushButton::clicked, ui->editPage, &EditPage::GroupedVaccine);
+    connect(ui->groupedVetButton, &QPushButton::clicked, ui->editPage, &EditPage::GroupedVet);
     ui->removeButton->setIcon(QIcon("media/trash.svg"));
     ui->dateVetAnimalEdit->EnableTime();
 
