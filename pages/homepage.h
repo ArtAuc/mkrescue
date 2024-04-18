@@ -82,6 +82,8 @@ public:
             lastTimeExport = this->lastTimeExport;
 
         this->lastTimeExport = lastTimeExport;
+        lastVetButton = nullptr;
+        lastVetDateReason = "";
 
         if(alertsWidget != nullptr){
             qDeleteAll(alertsWidget->findChildren<QPushButton*>());
@@ -182,6 +184,15 @@ public:
                     color = QColor("#2cc09d");
                     timeString = query.value(0).toDateTime().toString("h:mm") + " - ";
                     necessary = {query.value(0).toString(), query.value(4).toString()};
+
+                    QString newVetDateReason = dateString + timeString + query.value(3).toString();
+                    if(lastVetDateReason == newVetDateReason){
+                        if(lastVetButton != nullptr)
+                            lastVetButton->setText(timeString + "RDV groupé (" + query.value(3).toString() + ")");
+                        continue;
+                    }
+
+                    lastVetDateReason = newVetDateReason;
                 }
 
                 else if(type.startsWith("Prévoir le rappel de vaccin")){
@@ -213,6 +224,9 @@ public:
                 connect(but, &QPushButton::clicked, this, [=]() {
                     HandleAlertPress(type, necessary);
                 });
+
+                if(type.startsWith("RDV Vétérinaire"))
+                    lastVetButton = but;
 
                 but->setStyleSheet(stylesheet);
                 alertsWidget->layout()->addWidget(but);
@@ -267,6 +281,8 @@ private:
     int alertDays{};
     QSpacerItem *spacer = nullptr;
     QDate lastTimeExport;
+    QString lastVetDateReason;
+    QPushButton *lastVetButton;
 };
 
 #endif // HOMEPAGE_H

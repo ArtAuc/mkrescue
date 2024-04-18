@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
     screenGeometry = QApplication::primaryScreen()->geometry();
-    setWindowTitle("MouchkiNet");
+    setWindowTitle("MKRescue");
 
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
     ToggleLock();
