@@ -187,8 +187,17 @@ public:
 
                     QString newVetDateReason = dateString + timeString + query.value(3).toString();
                     if(lastVetDateReason == newVetDateReason){
-                        if(lastVetButton != nullptr)
-                            lastVetButton->setText(timeString + "RDV groupé (" + query.value(3).toString() + ")");
+                        if(lastVetButton != nullptr){
+                            // Count number of dogs
+                            int dogCount = 2;
+                            if(lastVetButton->text().contains("RDV groupé")){
+                                QRegularExpressionMatch match = QRegularExpression("RDV groupé (\\d+)").match(lastVetButton->text());
+                                if(match.hasMatch()){
+                                    dogCount = match.captured(1).toInt() + 1;
+                                }
+                            }
+                            lastVetButton->setText(timeString + "RDV groupé " + QString::number(dogCount) + " chiens (" + query.value(3).toString() + ")");
+                        }
                         continue;
                     }
 

@@ -176,6 +176,7 @@ void EditPage::Edit(QString type, QStringList infos){
     }
 
     else if (type == "vet"){
+        groupedVetIds.clear();
         currentPage = findChild<QWidget*>("vetEditPage");
 
         for(QWidget *c : currentPage->findChildren<QWidget*>()){

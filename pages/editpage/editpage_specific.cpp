@@ -189,6 +189,7 @@ void EditPage::GroupedVet(){
             HandleErrorExec(&query);
             if(query.next()){
                 QString id_dog = query.value(0).toString();
+
                 if(!groupedVetIds.contains(id_dog)){
                     groupedVetIds.append(id_dog);
 
