@@ -235,13 +235,13 @@ void CleanThread::MakeRedList(){
         HandleErrorExec(&query, "DELETE FROM Red_list "
                    "WHERE reason LIKE 'Abandon de % le __/__/____';");
 
-
         HandleErrorExec(&query, "SELECT id_people_prov, Dogs.name, ES_Registry.date_prov "
                    "FROM ES_Registry "
                    "JOIN Dogs ON Dogs.id_dog = ES_Registry.id_dog "
                    "JOIN People ON id_people_prov = People.id_people "
                    "WHERE type_prov = '" + crypto->encryptToString(QString("Abandon")) + "' "
                    "AND (People.last_name != '' OR People.first_name != '' OR People.phone != '')");
+
 
         QStringList id_peoples;
         QStringList reasons;
@@ -250,13 +250,21 @@ void CleanThread::MakeRedList(){
             reasons.append("Abandon de " + query.value(1).toString() + " le " + QDate::fromString(query.value(2).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
         }
 
+
+        // Single query to insert is way faster
+        QString insertQuery = "INSERT INTO Red_list (id_people, reason) VALUES ";
         for(int i = 0; i < reasons.length(); i++){
-            query.prepare("INSERT INTO Red_list (id_people, reason) "
-                          "VALUES (:id, :reason)");
-            query.bindValue(":id", id_peoples[i]);
-            query.bindValue(":reason", reasons[i]);
-            HandleErrorExec(&query);
+            insertQuery += "(:id" + QString::number(i) + ", :reason" + QString::number(i) + "), ";
         }
+        insertQuery.chop(2);
+        query.prepare(insertQuery);
+
+        for(int i = 0; i < reasons.length(); i++){
+            query.bindValue(":id" + QString::number(i), id_peoples[i]);
+            query.bindValue(":reason" + QString::number(i), reasons[i]);
+        }
+
+        HandleErrorExec(&query);
     }
 }
 
