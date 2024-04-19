@@ -1,6 +1,7 @@
 #include "database.h"
 
 QSqlQuery Database::GetDogs(QString type, QString search){
+    search = RemoveAccents(search);
     QString queryString = "SELECT Dogs.chip, Dogs.name, Dogs.sex, Dogs.birth, Dogs.description, (ES_Registry.date_prov || '_|_' || ES_Registry.type_prov), Dogs.id_dog "
                           "FROM Dogs "
                           "JOIN ES_Registry ON ES_Registry.id_dog = Dogs.id_dog "
@@ -9,8 +10,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                           "    FROM ES_Registry "
                           "    GROUP BY id_dog "
                           ") AS MaxProv ON ES_Registry.id_dog = MaxProv.id_dog AND ES_Registry.date_prov = MaxProv.max_date_prov "
-                          "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
-                          "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr) "
+                          "WHERE (" + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search OR chip LIKE :search OR " + noaccentbegin + "description" + noaccentend + " LIKE :search "
+                          "OR " + noaccentbegin + "Dogs.sex" + noaccentend + " = :exact OR Dogs.birth = :exact OR ES_Registry.date_prov = :exact OR " + noaccentbegin + "ES_Registry.type_prov" + noaccentend + " = :exact_encr) "
                           "AND Dogs.id_dog NOT IN ( "
                           "    SELECT LastestDest.id_dog "
                           "    FROM ( "
@@ -77,7 +78,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "        OR LastestDest.type LIKE 'Famille d_accueil' "
                 "    ) "
                 ") "
-                "AND (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
+                "AND (" + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search OR chip LIKE :search OR " + noaccentbegin + "description" + noaccentend + " LIKE :search "
                 "OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr) "
                 "AND Dogs.id_dog NOT IN (SELECT id_dog FROM Care_registry) ";
 
@@ -94,8 +95,8 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 ") AS LastCare ON Dogs.id_dog = LastCare.id_dog "
                 "LEFT JOIN Care_registry ON Care_registry.id_dog = Care_registry.id_dog AND Care_registry.entry_date = LastCare.max_date "
                 "JOIN People ON Care_registry.id_people_prov = People.id_people "
-                "WHERE (Dogs.name LIKE :search OR chip LIKE :search OR description LIKE :search "
-                "OR Dogs.sex = :exact OR Dogs.description = :exact OR Dogs.birth = :exact OR LastCare.max_date = :exact OR People.last_name = :exact)"
+                "WHERE (" + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search OR chip LIKE :search OR " + noaccentbegin + "description" + noaccentend + " LIKE :search "
+                "OR " + noaccentbegin + "Dogs.sex" + noaccentend + " = :exact OR " + noaccentbegin + "Dogs.description" + noaccentend + " = :exact OR Dogs.birth = :exact OR LastCare.max_date = :exact OR " + noaccentbegin + "People.last_name" + noaccentend + " = :exact)"
                 "AND (Dogs.id_dog IN ( " // Make sure the dog is out
                 "    SELECT LastestDest.id_dog "
                 "    FROM ( "
@@ -136,6 +137,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
 }
 
 QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString =
         "SELECT ES_registry.id_ES, "
@@ -159,11 +161,11 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
         "LEFT JOIN Destinations ON (Dogs.id_dog = Destinations.id_dog AND ES_Registry.date_prov = Destinations.date_prov) "
         "LEFT JOIN People AS People_dest ON Destinations.id_people = People_dest.id_people "
         "WHERE strftime('%Y', ES_registry.date_prov) = :year "
-        "AND (People_prov.last_name LIKE :search OR People_prov.first_name LIKE :search OR REPLACE(People_prov.phone, ' ', '') LIKE :search "
-        "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR REPLACE(People_dest.phone, ' ', '') LIKE :search "
-        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search" +
-        QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
-        " OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr OR ES_Registry.death_cause = :exact OR Destinations.date = :exact OR Destinations.type = :exact)"
+        "AND (" + noaccentbegin + "People_prov.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People_prov.first_name" + noaccentend + " LIKE :search OR REPLACE(People_prov.phone, ' ', '') LIKE :search "
+        "OR " + noaccentbegin + "People_dest.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People_dest.first_name" + noaccentend + " LIKE :search OR REPLACE(People_dest.phone, ' ', '') LIKE :search "
+        "OR Dogs.chip LIKE :search OR " + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search" +
+        QString((search.contains("@") ? " OR " + noaccentbegin + "People_prov.email" + noaccentend + " LIKE :searchb OR " + noaccentbegin + "People_dest.email" + noaccentend + " LIKE :searchb" : "")) +
+        " OR " + noaccentbegin + "Dogs.sex" + noaccentend + " = :exact OR Dogs.birth = :exact OR " + noaccentbegin + "Dogs.description" + noaccentend + " = :exact OR ES_Registry.date_prov = :exact OR ES_Registry.type_prov = :exact_encr OR " + noaccentbegin + "ES_Registry.death_cause" + noaccentend + " = :exact OR Destinations.date = :exact OR Destinations.type = :exact)"
         "GROUP BY Dogs.id_dog, ES_Registry.date_prov, ES_Registry.id_ES "
         "ORDER BY ES_registry.id_ES;";
 
@@ -181,6 +183,7 @@ QSqlQuery Database::GetEntryRegistry(QString year, QString search) {
 }
 
 QSqlQuery Database::GetCareRegistry(QString year, QString search) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString =
         "SELECT Care_registry.id_care, "
@@ -206,11 +209,11 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
         "JOIN Dogs ON Care_registry.id_dog = Dogs.id_dog "
         "LEFT JOIN People AS People_dest ON Care_registry.id_people_dest = People_dest.id_people "
         "WHERE strftime('%Y', Care_registry.entry_date) = :year "
-        "AND (People_prov.last_name LIKE :search OR People_prov.first_name LIKE :search OR REPLACE(People_prov.phone, ' ', '') LIKE :search "
-        "OR People_dest.last_name LIKE :search OR People_dest.first_name LIKE :search OR REPLACE(People_dest.phone, ' ', '') LIKE :search "
-        "OR Dogs.chip LIKE :search OR Dogs.name LIKE :search " +
-        QString((search.contains("@") ? " OR People_prov.email LIKE :searchb OR People_dest.email LIKE :searchb" : "")) +
-        " OR Dogs.sex = :exact OR Dogs.birth = :exact OR Dogs.description = :exact OR Care_registry.entry_date = :exact) "
+        "AND (" + noaccentbegin + "People_prov.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People_prov.first_name" + noaccentend + " LIKE :search OR REPLACE(People_prov.phone, ' ', '') LIKE :search "
+        "OR " + noaccentbegin + "People_dest.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People_dest.first_name" + noaccentend + " LIKE :search OR REPLACE(People_dest.phone, ' ', '') LIKE :search "
+        "OR Dogs.chip LIKE :search OR " + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search " +
+        QString((search.contains("@") ? " OR " + noaccentbegin + "People_prov.email" + noaccentend + " LIKE :searchb OR " + noaccentbegin + "People_dest.email" + noaccentend + " LIKE :searchb" : "")) +
+        " OR " + noaccentbegin + "Dogs.sex" + noaccentend + " = :exact OR Dogs.birth = :exact OR " + noaccentbegin + "Dogs.description" + noaccentend + " = :exact OR Care_registry.entry_date = :exact) "
         "ORDER BY Care_registry.id_care;";
 
     query.prepare(queryString);
@@ -225,6 +228,7 @@ QSqlQuery Database::GetCareRegistry(QString year, QString search) {
 }
 
 QSqlQuery Database::GetMembers(QString year, QString search) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString =
         "SELECT Members.id_adhesion, "
@@ -239,9 +243,9 @@ QSqlQuery Database::GetMembers(QString year, QString search) {
         "FROM Members "
         "JOIN People ON Members.id_people = People.id_people "
         "WHERE strftime('%Y', Members.date) = :year "
-        "AND (People.last_name LIKE :search OR People.first_name LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search " +
-        QString((search.contains("@") ? " OR People.email LIKE :searchb" : "")) +
-        " OR Members.amount = :exact OR Members.amount = :exact OR Members.date = :exact) "
+        "AND (" + noaccentbegin + "People.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People.first_name" + noaccentend + " LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search " +
+        QString((search.contains("@") ? " OR " + noaccentbegin + "People.email" + noaccentend + " LIKE :searchb" : "")) +
+        " OR Members.amount = :exact OR Members.date = :exact) "
         "ORDER BY Members.id_adhesion;";
 
     query.prepare(queryString);
@@ -287,6 +291,7 @@ std::vector<QString> Database::GetRegistryYears(QString type) {
 }
 
 QSqlQuery Database::GetRedList(QString search) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString = "SELECT People.last_name, "
                           "People.first_name, "
@@ -295,8 +300,8 @@ QSqlQuery Database::GetRedList(QString search) {
                           "People.id_people "
                           "FROM People "
                           "JOIN Red_list ON People.id_people = Red_list.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search "
-                          "OR Red_list.reason = :exact) "
+                          "WHERE (" + noaccentbegin + "People.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People.first_name" + noaccentend + " LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search "
+                          "OR " + noaccentbegin + "Red_list.reason" + noaccentend + " = :exact) "
                           "GROUP BY People.id_people "
                           "ORDER BY People.id_people DESC;";
 
@@ -310,6 +315,7 @@ QSqlQuery Database::GetRedList(QString search) {
 }
 
 QSqlQuery Database::GetLost(QString search, bool found) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString = "SELECT identification, "
                           "name, "
@@ -325,8 +331,8 @@ QSqlQuery Database::GetLost(QString search, bool found) {
                           "People.id_people "
                           "FROM Lost "
                           "JOIN People ON People.id_people = Lost.id_people "
-                          "WHERE (People.last_name LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search OR identification LIKE :search OR name LIKE :search "
-                          "OR date = :exact OR place = :exact OR description = :exact OR People.first_name = :exact OR sex = :exact) ";
+                          "WHERE (" + noaccentbegin + "People.last_name" + noaccentend + " LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search OR identification LIKE :search OR name LIKE :search "
+                          "OR date = :exact OR " + noaccentbegin + "place" + noaccentend + " = :exact OR " + noaccentbegin + "description" + noaccentend + " = :exact OR " + noaccentbegin + "People.first_name" + noaccentend + " = :exact OR " + noaccentbegin + "sex" + noaccentend + " = :exact) ";
 
     if(!found) // Remove dogs already found
         queryString += "AND found = 0 ";
@@ -343,6 +349,7 @@ QSqlQuery Database::GetLost(QString search, bool found) {
 }
 
 QSqlQuery Database::GetVet(QString search, bool old) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString = "SELECT Vet.date, "
                           "Dogs.name, "
@@ -351,8 +358,8 @@ QSqlQuery Database::GetVet(QString search, bool old) {
                           "Dogs.id_dog  "
                           "FROM Vet "
                           "JOIN Dogs ON Dogs.id_dog = Vet.id_dog "
-                          "WHERE (Dogs.name LIKE :search OR Dogs.chip LIKE :search "
-                          "OR Dogs.sex = :exact OR Vet.reason = :exact) ";
+                          "WHERE (" + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search OR Dogs.chip LIKE :search "
+                          "OR " + noaccentbegin + "Dogs.sex" + noaccentend + " = :exact OR " + noaccentbegin + "Vet.reason" + noaccentend + " = :exact) ";
 
     if(!old)
         queryString += "AND Vet.date > DATE('now') ";
@@ -369,6 +376,7 @@ QSqlQuery Database::GetVet(QString search, bool old) {
 }
 
 QSqlQuery Database::GetAdoptionDemand(QString search, bool satisfied) {
+    search = RemoveAccents(search);
     QSqlQuery query;
     QString queryString = "SELECT People.last_name, "
                           "People.first_name, "
@@ -380,8 +388,8 @@ QSqlQuery Database::GetAdoptionDemand(QString search, bool satisfied) {
                           "People.id_people "
                           "FROM Adoption_demand "
                           "JOIN People ON People.id_people = Adoption_demand.id_people "
-                          "WHERE (People.last_name LIKE :search OR People.first_name LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search OR Adoption_demand.breed LIKE :search "
-                          "OR Adoption_demand.sex = :exact OR Adoption_demand.infos = :exact OR Adoption_demand.age = :exact)";
+                          "WHERE (" + noaccentbegin + "People.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People.first_name" + noaccentend + " LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search OR " + noaccentbegin + "Adoption_demand.breed" + noaccentend + " LIKE :search "
+                          "OR " + noaccentbegin + "Adoption_demand.sex" + noaccentend + " = :exact OR " + noaccentbegin + "Adoption_demand.infos" + noaccentend + " = :exact OR " + noaccentbegin + "Adoption_demand.age" + noaccentend + " = :exact)";
 
 
     if(!satisfied) // Remove dogs already found
