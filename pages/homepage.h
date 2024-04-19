@@ -6,6 +6,7 @@
 #include <QScrollArea>
 
 #include "widgets/statwidget.h"
+#include "data/saveddata.h"
 
 class HomePage : public QWidget
 {
@@ -207,7 +208,7 @@ public:
                 }
 
                 else if(type.startsWith("Prévoir le rappel de vaccin")){
-                    if(lastVaccineButton != nullptr){
+                    if(lastVaccineButton != nullptr && lastVaccineNecessary.size() < savedData->MaxDogs().toInt()){
                         // Count number of dogs
                         int dogCount = 2;
                         if(lastVaccineButton->text().contains("Prévoir le vaccin groupé")){
@@ -298,6 +299,8 @@ public:
         }
     }
 
+    void SetSavedData(SavedData *savedData){this->savedData = savedData;}
+
 public slots:
     void UpAlertDays(){
         alertDays = -1;
@@ -328,6 +331,7 @@ private:
     QPushButton *lastVetButton;
     QPushButton *lastVaccineButton;
     QStringList lastVaccineNecessary;
+    SavedData *savedData;
 };
 
 #endif // HOMEPAGE_H

@@ -187,6 +187,6 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
 
     page->resizeEvent(nullptr);
 
-    savedData.SetLastTimeExport(QDate::currentDate());
-    savedData.Save();
+    savedData->SetLastTimeExport(QDate::currentDate());
+    savedData->Save();
 }

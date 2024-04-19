@@ -17,6 +17,7 @@
 #include "utils.h"
 #include "simplecrypt.h"
 #include "editpage/editpage.h"
+#include "../data/saveddata.h"
 
 class SettingsPage : public QWidget
 {
@@ -56,8 +57,6 @@ public:
 
             font.setPointSize(fontSize * 1.2);
 
-            findChild<QLabel*>("shelterInfosLabel")->setFont(font);
-
             for(QPushButton *b : findChildren<QPushButton*>())
             {
                 b->setFont(font);
@@ -90,7 +89,11 @@ public:
             EditPage::SetField("postalCodeShelterEdit", addressList[2], this);
             EditPage::SetField("cityShelterEdit", addressList[3], this);
         }
+
+        EditPage::SetField("maxDogsSpin", savedData->MaxDogs(), this);
     }
+
+    void SetSavedData(SavedData *savedData){this->savedData = savedData;}
 
 
 public slots:
@@ -114,10 +117,13 @@ public slots:
             savedLabel->show();
             QTimer::singleShot(3000, [=]() {savedLabel->hide();});
         }
+
+        savedData->SetMaxDogs(EditPage::GetField("maxDogsSpin", this));
     }
 
 private:
     SimpleCrypt *crypto;
+    SavedData *savedData;
 };
 
 #endif // SETTINGSPAGE_H

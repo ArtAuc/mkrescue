@@ -29,6 +29,8 @@ public:
     void Synchronize();
     void SynchronizeWorker();
     QString SynchronizeEmail(QString subject, QString filePath);
+    QString MaxDogs(){return maxDogs;}
+    void SetMaxDogs(QString maxDogs){this->maxDogs = maxDogs; Save();}
 
 public slots:
     void Save();
@@ -44,6 +46,7 @@ private:
     QToolButton *syncButton;
     bool synchronizing = false;
     QMovie *syncMovie;
+    QString maxDogs = "1";
 };
 
 #endif // SAVEDDATA_H

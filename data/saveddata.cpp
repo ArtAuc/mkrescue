@@ -1,4 +1,4 @@
-#include "saveddata.h"
+   #include "saveddata.h"
 
 SavedData::SavedData()
 {
@@ -39,9 +39,10 @@ bool SavedData::Load(){
         encryptedAppPassword = in.readLine();
         lastTimeSync = in.readLine();
         lastTimeExport = in.readLine();
+        maxDogs = in.readLine();
 
 
-        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty() && !lastTimeExport.isEmpty()){
+        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty() && !lastTimeExport.isEmpty() && !maxDogs.isEmpty()){
             file.close();
 
             return true;
@@ -81,6 +82,8 @@ void SavedData::Save(){
             out << "Never";
         else
             out << lastTimeExport;
+
+        out << "\n" + maxDogs;
     }
 
     file.close();

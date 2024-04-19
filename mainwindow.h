@@ -63,7 +63,7 @@ private:
     Database db;
     QList<QToolButton*> modifyButtons;
     int rowClicked;
-    SavedData savedData;
+    SavedData *savedData;
     SimpleCrypt *crypto;
     QMovie *syncMovie = nullptr;
     QRect screenGeometry;
