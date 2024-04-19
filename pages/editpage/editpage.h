@@ -33,7 +33,7 @@ public:
     static QStringList AddressList(QString address);
     static bool DateComparator(const QString& dest1, const QString& dest2);
     void QuitEdit();
-    void AddVetLabel(QString id_dog, QString dogName, QString chip, QString sex, QString birthDate, QString description);
+    void AddVetLabel(QString id_dog);
     QStringList GroupedVetIds() {return groupedVetIds;}
 
 public slots:

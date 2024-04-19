@@ -59,7 +59,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
         QString type_prov = crypto->decryptToString(splitted[1]).split("_|_")[0];
         QString date_prov = splitted[0];
 
-        if(type_prov.isEmpty())
+        if(type_prov != "Abandon" && type_prov != "Fourrière")
             type_prov = "Arrivée";
 
 

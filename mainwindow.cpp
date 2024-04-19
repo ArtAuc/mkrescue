@@ -590,25 +590,7 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
             ui->editPage->Edit("vet", {});
             ui->editPage->GroupedVet();
             for(QString id_dog : necessary){
-                query.prepare("SELECT Dogs.name, "
-                                 "Dogs.chip, "
-                                 "Dogs.sex, "
-                                 "Dogs.birth, "
-                                 "Dogs.description "
-                                 "FROM Dogs "
-                                 "WHERE Dogs.id_dog = :id");
-                query.bindValue(":id", id_dog);
-                HandleErrorExec(&query);
-
-                if (query.next()) {
-                    QString name = query.value(0).toString();
-                    QString chip = query.value(1).toString();
-                    QString sex = query.value(2).toString();
-                    QString birth = query.value(3).toString();
-                    QString description = query.value(4).toString();
-
-                    ui->editPage->AddVetLabel(id_dog, name, chip, sex, birth, description);
-                }
+                ui->editPage->AddVetLabel(id_dog);
             }
 
             return;

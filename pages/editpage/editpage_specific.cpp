@@ -171,7 +171,6 @@ void EditPage::GroupedVet(){
             QString sex = GetField("sexVetAnimalEdit", vetEditPage);
             QString birthDate = GetField("birthDateVetAnimalEdit", vetEditPage);
             QString description = GetField("descriptionVetAnimalEdit", vetEditPage);
-            qDebug() << dogName;
 
             QSqlQuery query;
             query.prepare("SELECT id_dog "
@@ -191,7 +190,7 @@ void EditPage::GroupedVet(){
             HandleErrorExec(&query);
             if(query.next()){
                 QString id_dog = query.value(0).toString();
-                AddVetLabel(id_dog, dogName, chip, sex, birthDate, description);
+                AddVetLabel(id_dog);
             }
 
             QLineEdit *edit = vetEditPage->findChild<QLineEdit*>("dogNameVetAnimalEdit");
@@ -204,21 +203,51 @@ void EditPage::GroupedVet(){
 
     if(editWidget->findChild<QLineEdit*>("dogNameVetAnimalEdit")->text() != "")
         editWidget->SelectedDog();
+
+    QTimer::singleShot(50, [=](){resizeEvent(nullptr);});
 }
 
-void EditPage::AddVetLabel(QString id_dog, QString dogName, QString chip, QString sex, QString birthDate, QString description){
+void EditPage::AddVetLabel(QString id_dog){
     if(!groupedVetIds.contains(id_dog)){
-        groupedVetIds.append(id_dog);
+        QSqlQuery query;
 
-        ClickableLabel *label = new ClickableLabel();
-        label->setText(dogName + "|" + chip + "|" + sex + "|" + QDate::fromString(birthDate, "yyyy-MM-dd").toString("dd/MM/yyyy") + "|" + description);
+        query.prepare("SELECT Dogs.name, Dogs.description, Vet.date "
+                      "FROM Dogs "
+                      "JOIN Vet ON Dogs.id_dog = Vet.id_dog "
+                      "WHERE Dogs.id_dog = :id "
+                      "AND Vet.date < DATE('now') "
+                      "AND Vet.reason LIKE 'Vaccin%' "
+                      "UNION "
+                      "SELECT Dogs.name, Dogs.description, NULL "
+                      "FROM Dogs "
+                      "WHERE Dogs.id_dog = :id "
+                      "ORDER BY Vet.date DESC");
 
-        connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
-            groupedVetIds.removeOne(id_dog);
-            label->deleteLater();
-        });
-        label->setObjectName("dogGroupedVetLabel");
-        qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
+        query.bindValue(":id", id_dog);
 
+        HandleErrorExec(&query);
+
+        if (query.next()) {
+            QString dogName = query.value(0).toString();
+            QString description = query.value(1).toString();
+            QDate lastVaccineDate = query.value(2).toDate();
+            QString lastVaccineString;
+            groupedVetIds.append(id_dog);
+
+            if(lastVaccineDate.isValid())
+                lastVaccineString = " (Der. vaccin " + lastVaccineDate.toString("dd/MM/yy") + ")";
+            if(!description.isEmpty())
+                description = " - " + description;
+
+            ClickableLabel *label = new ClickableLabel();
+            label->setText("❌ " + dogName + description + lastVaccineString);
+
+            connect(label, &ClickableLabel::clicked, this, [label, id_dog, this](){
+                groupedVetIds.removeOne(id_dog);
+                label->deleteLater();
+            });
+            label->setObjectName("dogGroupedVetLabel");
+            qobject_cast<QVBoxLayout*>(findChild<QWidget*>("groupedVetScrollWidget")->layout())->insertWidget(0, label);
+        }
     }
 }

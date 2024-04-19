@@ -231,19 +231,7 @@ void EditPage::Edit(QString type, QStringList infos){
                         SetField("reasonVetAnimalEdit", infos[6], currentPage);
                     }
 
-                    QSqlQuery dogQuery;
-                    dogQuery.prepare("SELECT name, chip, sex, birth, description "
-                                     "FROM Dogs "
-                                     "WHERE id_dog = :id");
-
-                    QString id_dog = query.value(0).toString();
-
-                    dogQuery.bindValue(":id", id_dog);
-
-                    HandleErrorExec(&dogQuery);
-
-                    if(dogQuery.next())
-                        AddVetLabel(id_dog, dogQuery.value(0).toString(), dogQuery.value(1).toString(), dogQuery.value(2).toString(), dogQuery.value(3).toString(), dogQuery.value(4).toString());
+                    AddVetLabel(query.value(0).toString());
                 }
             }
 

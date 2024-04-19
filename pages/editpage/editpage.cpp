@@ -28,8 +28,9 @@ void EditPage::resizeEvent(QResizeEvent *event){
                 c->setStyleSheet("padding:" + QString::number(fontSize / 2) + "px;");
             }
 
-            else if (qobject_cast<QLabel*>(c))
+            else if (qobject_cast<QLabel*>(c)){
                 c->setFont(font);
+            }
         }
 
         font.setPointSize(fontSize * 1.2);
