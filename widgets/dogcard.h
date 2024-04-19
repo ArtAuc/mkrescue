@@ -15,15 +15,17 @@
 #include "utils.h"
 #include "simplecrypt.h"
 #include "clickablelabel.h"
+#include "customdatetimeedit.h"
 
 class DogCard : public QFrame
 {
     Q_OBJECT
 public:
     explicit DogCard(QWidget *parent = nullptr) : QFrame(parent) {}
-    DogCard(QWidget *parent, QString id_dog, QString name, QString sex, QString info1, QString description, QString info2, SimpleCrypt *crypto);
+    DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info1, QString description, QString info2, SimpleCrypt *crypto);
     void resizeEvent(QResizeEvent *event);
     void CreateHistory();
+    void CreateLastVaccine(QWidget* vaccineWidget);
 
 private slots:
     void SelectThis();

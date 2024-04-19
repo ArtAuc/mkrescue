@@ -25,6 +25,8 @@ public:
         dateOnly = false;
     }
 
+    void SetInvalidable() {invalidable = true;}
+
     bool DateOnly() {return dateOnly;}
 
     QDate GetDate(){
@@ -92,9 +94,11 @@ public:
         else if (event->text().size() == 0 || (event->text().size() == 1 && event->text().at(0).isDigit())){
             QLineEdit::keyPressEvent(event);
         }
-        else {
+        else if(!invalidable) {
             event->ignore();
         }
+        else
+            QLineEdit::keyPressEvent(event);
     }
 
     void mousePressEvent(QMouseEvent *event) override {
@@ -176,11 +180,15 @@ public slots:
             setText(dateString);
         }
 
-        else{
+        else if (!invalidable){ // We need a valid date
             if(dateOnly)
                 SetDate(QDate::currentDate());
             else
                 SetDateTime(QDateTime::currentDateTime());
+        }
+
+        else{
+            setText("xx/xx/xxxx");
         }
 
         setCursorPosition(cursorPosition);
@@ -191,6 +199,7 @@ public slots:
     }
 
 private:
+    bool invalidable = false;
     bool dateOnly;
     const QString displayedFormat = "dd/MM/yyyy";
 };

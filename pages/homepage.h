@@ -97,14 +97,13 @@ public:
 
             QSqlQuery query;
 
-            // Vet main appointments
             QString queryString = "SELECT * FROM ("
                                   "SELECT Vet.date, 'RDV Vétérinaire', Dogs.name, Vet.reason, Vet.id_dog "
                                   "FROM Vet "
                                   "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
                                   "UNION "
                                   ""
-                                  "SELECT DATE(Vet.date, '+1 year'), 'Prévoir le rappel de vaccin', Dogs.name, '', Vet.id_dog "
+                                  "SELECT MAX(DATE(Vet.date, '+1 year'), DATE('now')), 'Prévoir le rappel de vaccin', Dogs.name, '', Vet.id_dog "
                                   "FROM Vet "
                                   "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
                                   "JOIN ("

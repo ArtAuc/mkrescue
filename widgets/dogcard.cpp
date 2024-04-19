@@ -199,7 +199,7 @@ void DogCard::resizeEvent(QResizeEvent *event){
             c->setFont(font);
         }
 
-        if (qobject_cast<TriStateCheckBox*>(c) || qobject_cast<QPushButton*>(c)){
+        if (qobject_cast<TriStateCheckBox*>(c) || qobject_cast<QPushButton*>(c) || qobject_cast<CustomDateTimeEdit*>(c)){
             QFont font = c->font();
             font.setPointSizeF(0.008 * mainWindow->width());
             c->setFont(font);
@@ -268,6 +268,9 @@ void DogCard::SelectThis(){
 
     descriptionLabel->setText(descriptionLabel->text() + "\n");
 
+    QWidget *vaccineWidget = new QWidget;
+
+    CreateLastVaccine(vaccineWidget);
 
     // History (on the right)
     CreateHistory();
@@ -280,6 +283,7 @@ void DogCard::SelectThis(){
     layout->addWidget(compatCatBox, 8, 0);
     layout->addItem(new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Expanding), 9, 0);
     layout->addWidget(prescButton, 10, 0);
+    layout->addWidget(vaccineWidget, 11, 0);
     layout->addWidget(historyScroll, 1, 1, layout->rowCount() - 1, 1);
 
     layout->setContentsMargins(layout->contentsMargins() + 50);
@@ -287,6 +291,61 @@ void DogCard::SelectThis(){
 
 
     resizeEvent(nullptr);
+}
+
+void DogCard::CreateLastVaccine(QWidget *vaccineWidget){
+    vaccineWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    vaccineWidget->setLayout(new QHBoxLayout);
+    QLabel *vaccineLabel = new QLabel("Dernier vaccin : ");
+
+    CustomDateTimeEdit *vaccineEdit = new CustomDateTimeEdit();
+    vaccineEdit->SetInvalidable();
+
+    vaccineWidget->layout()->addWidget(vaccineLabel);
+    vaccineWidget->layout()->addWidget(vaccineEdit);
+
+    QSqlQuery query;
+    query.prepare("SELECT MAX(Dogs.id_dog) FROM Dogs WHERE chip = :chip");
+    query.bindValue(":chip", chip);
+    HandleErrorExec(&query);
+    query.next();
+
+    QString id_dog = query.value(0).toString();
+
+    query.prepare("SELECT Vet.date "
+                  "FROM Vet "
+                  "WHERE Vet.id_dog = :id "
+                  "AND Vet.reason LIKE 'Vaccin%' "
+                  "AND Vet.date < DATE('now') "
+                  "ORDER BY Vet.date DESC");
+    query.bindValue(":id", id_dog);
+    HandleErrorExec(&query);
+
+    if(query.next()){
+        vaccineEdit->SetDate(query.value(0).toDate());
+    }
+
+    else
+        vaccineEdit->setText("xx/xx/xxxx");
+
+    connect(vaccineEdit, &CustomDateTimeEdit::textEdited, this, [this, vaccineEdit, id_dog](){
+        QSqlQuery query;
+        query.prepare("DELETE FROM Vet "
+                      "WHERE Vet.id_dog = :id "
+                      "AND Vet.date NOT LIKE '%T%'");
+        query.bindValue(":id", id_dog);
+        HandleErrorExec(&query);
+
+        QDate vaccineDate = QDate::fromString(vaccineEdit->text(), "dd/MM/yyyy");
+        if(vaccineDate.isValid()){
+            query.prepare("INSERT INTO Vet (id_dog, date, reason) "
+                          "VALUES(:id, :date, 'Vaccin')");
+            query.bindValue(":id", id_dog);
+            query.bindValue(":date", vaccineDate);
+
+            HandleErrorExec(&query);
+        }
+    });
 }
 
 
@@ -304,7 +363,6 @@ void DogCard::SaveCard(){
     query.bindValue(":chip", chip);
 
     HandleErrorExec(&query);
-
 }
 
 void DogCard::CreateHistory(){
@@ -459,7 +517,7 @@ void DogCard::OpenPrescriptionFolder() {
 }
 
 void DogCard::AddPrescription(){
-    QString dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Documents\ numérisés/");
+    QString dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Documents numérisés/");
     if (!QDir(dirPath).exists())
         dirPath = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
     QString filePath = QFileDialog::getOpenFileName(nullptr, "Sélectionnez l'ordonnance", dirPath, "Ordonnances (*.jpg *.jpeg *.png *.gif *.bmp *.pdf);;Tous les fichiers (*)");
