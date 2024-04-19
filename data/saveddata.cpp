@@ -40,9 +40,10 @@ bool SavedData::Load(){
         lastTimeSync = in.readLine();
         lastTimeExport = in.readLine();
         maxDogs = in.readLine();
+        maxDays = in.readLine();
 
 
-        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty() && !lastTimeExport.isEmpty() && !maxDogs.isEmpty()){
+        if(!accessHash.isEmpty() && !encryptedEmail.isEmpty() && !encryptedAppPassword.isEmpty() && !lastTimeSync.isEmpty() && !lastTimeExport.isEmpty() && !maxDogs.isEmpty() && !maxDays.isEmpty()){
             file.close();
 
             return true;
@@ -83,7 +84,8 @@ void SavedData::Save(){
         else
             out << lastTimeExport;
 
-        out << "\n" + maxDogs;
+        out << "\n" + maxDogs + "\n";
+        out << maxDays;
     }
 
     file.close();

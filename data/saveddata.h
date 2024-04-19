@@ -31,6 +31,8 @@ public:
     QString SynchronizeEmail(QString subject, QString filePath);
     QString MaxDogs(){return maxDogs;}
     void SetMaxDogs(QString maxDogs){this->maxDogs = maxDogs; Save();}
+    QString MaxDays(){return maxDays;}
+    void SetMaxDays(QString maxDays){this->maxDays = maxDays; Save();}
 
 public slots:
     void Save();
@@ -47,6 +49,7 @@ private:
     bool synchronizing = false;
     QMovie *syncMovie;
     QString maxDogs = "1";
+    QString maxDays = "0";
 };
 
 #endif // SAVEDDATA_H

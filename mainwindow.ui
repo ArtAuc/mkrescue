@@ -567,7 +567,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>5</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -2042,7 +2042,7 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
           <item row="0" column="0" colspan="2">
            <widget class="QTabWidget" name="settingsTabWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="settingsTab1">
              <attribute name="title">
@@ -2156,6 +2156,30 @@ QLineEdit, QDateTimeEdit, QComboBox, QDoubleSpinBox {
                   </property>
                   <property name="minimum">
                    <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="1">
+               <layout class="QVBoxLayout" name="maxDaysSpinLayout">
+                <item>
+                 <widget class="QLabel" name="maxDaysSpinLabel">
+                  <property name="text">
+                   <string>AVANCE MAXIMALE SUR LE VACCIN (JOURS)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="maxDaysSpin">
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>365.000000000000000</double>
                   </property>
                  </widget>
                 </item>

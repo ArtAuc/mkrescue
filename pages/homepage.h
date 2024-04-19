@@ -77,7 +77,7 @@ public:
         for(StatWidget *c : findChildren<StatWidget*>())
             c->UpdateStat();
 
-        QString lastDate = "";
+        QString lastDate = "", lastVaccineDate = "";
 
         if(lastTimeExport.isNull())
             lastTimeExport = this->lastTimeExport;
@@ -208,7 +208,10 @@ public:
                 }
 
                 else if(type.startsWith("Prévoir le rappel de vaccin")){
-                    if(lastVaccineButton != nullptr && lastVaccineNecessary.size() < savedData->MaxDogs().toInt()){
+                    if(lastVaccineButton != nullptr &&
+                            lastVaccineNecessary.size() < savedData->MaxDogs().toInt() &&
+                            lastVaccineDate != "" &&
+                            QDate::fromString(lastVaccineDate, "yyyy-MM-dd").daysTo(query.value(0).toDate()) < savedData->MaxDays().toInt()){
                         // Count number of dogs
                         int dogCount = 2;
                         if(lastVaccineButton->text().contains("Prévoir le vaccin groupé")){
@@ -233,6 +236,7 @@ public:
                     color = QColor("#20718e");
                     necessary = {query.value(4).toString()};
                     lastVaccineNecessary = necessary;
+                    lastVaccineDate = query.value(0).toString();
                 }
 
                 else if(type.startsWith("Prévoir l'export")){
@@ -331,6 +335,7 @@ private:
     QPushButton *lastVetButton;
     QPushButton *lastVaccineButton;
     QStringList lastVaccineNecessary;
+    QString lastVaccineDate;
     SavedData *savedData;
 };
 

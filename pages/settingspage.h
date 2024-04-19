@@ -30,6 +30,7 @@ public:
     void showEvent(QShowEvent *event) override {
         QWidget::showEvent(event);
         connect(findChild<QPushButton*>("saveSettingsButton"), &QPushButton::clicked, this, &SettingsPage::SaveSettings);
+        findChild<QTabWidget*>()->setCurrentIndex(0);
 
         findChild<QLabel*>("savedLabel")->hide();
     }
@@ -45,7 +46,7 @@ public:
             font.setPointSize(fontSize);
 
             for(QWidget* c : children){
-                if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c) || qobject_cast<QCheckBox*>(c))){
+                if(!c->objectName().contains("spinbox") && (qobject_cast<QLineEdit*>(c) || qobject_cast<QDateTimeEdit*>(c) || qobject_cast<QComboBox*>(c) || qobject_cast<QCheckBox*>(c) || qobject_cast<QDoubleSpinBox*>(c))){
                     c->setFont(font);
                     c->setStyleSheet("padding:" + QString::number(fontSize) + "px;");
                 }
@@ -91,6 +92,7 @@ public:
         }
 
         EditPage::SetField("maxDogsSpin", savedData->MaxDogs(), this);
+        EditPage::SetField("maxDaysSpin", savedData->MaxDays(), this);
     }
 
     void SetSavedData(SavedData *savedData){this->savedData = savedData;}
@@ -119,6 +121,7 @@ public slots:
         }
 
         savedData->SetMaxDogs(EditPage::GetField("maxDogsSpin", this));
+        savedData->SetMaxDays(EditPage::GetField("maxDaysSpin", this));
     }
 
 private:
