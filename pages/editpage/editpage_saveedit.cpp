@@ -63,9 +63,13 @@ void EditPage::Edit(QString type, QStringList infos){
             SetField("entryDateEdit", infos[1], currentPage);
 
             QString type_prov = crypto->decryptToString(infos[2]).split("_|_")[0];
-            SetField("entryTypeBox", type_prov, currentPage);
+            if(type_prov == "Fourrière" || type_prov == "Abandon")
+                SetField("entryTypeBox", type_prov, currentPage);
 
-            if(type_prov == "Fourrière" || type_prov == "Cession"){
+            else
+                SetField("entryTypeBox", "Autre", currentPage);
+
+            if(type_prov == "Fourrière" || crypto->decryptToString(infos[2]).split("_|_").size() > 1){
                 SetField("otherTypeEdit", crypto->decryptToString(infos[2]).split("_|_")[1], currentPage);
             }
 
@@ -308,9 +312,13 @@ void EditPage::SaveEdit()
         if(type_prov == "Abandon")
             id_people_prov = CreatePersonIfNeeded("AbandonEdit", entryEditPage);
 
-        else{ // Fourrière || Cession
+        else if (type_prov == "Fourrière"){
             type_prov += "_|_" + GetField("otherTypeEdit", entryEditPage);
         }
+
+        else // Autre
+            type_prov = "_|_" + GetField("otherTypeEdit", entryEditPage);
+
 
         // Animal
         QString id_dog = CreateDogIfNeeded("EntryAnimalEdit", entryEditPage);

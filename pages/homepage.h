@@ -113,7 +113,7 @@ public:
                                   "    GROUP BY id_dog "
                                   ") AS LatestVet ON Vet.id_dog = LatestVet.id_dog AND Vet.date = LatestVet.max_date "
                                   "WHERE Vet.reason LIKE 'Vaccin%' "
-                                  "AND Dogs.id_dog NOT IN (SELECT LastestDest.id_dog " // Make sur the dog is not out
+                                  "AND Dogs.id_dog NOT IN (SELECT LastestDest.id_dog " // Make sure the dog is not out
                                       "FROM ( "
                                       "    SELECT id_dog, MAX(date_prov) AS max_date_prov "
                                       "    FROM ES_Registry "
@@ -130,6 +130,7 @@ public:
                                       "    OR LastestDest.type = 'Mort' "
                                       "    OR LastestDest.type LIKE 'Famille d_accueil' "
                                       "))"
+                                  "AND Dogs.id_dog IN (SELECT id_dog from ES_Registry) "
                                   ""
                                   "UNION "
                                   "SELECT :scheduledExportDate AS date, 'Prévoir l''export PDF du registre E/S',  '', strftime('%Y', :lastTimeExport), '' "

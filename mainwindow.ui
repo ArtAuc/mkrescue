@@ -596,7 +596,7 @@ margin-right:30px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>68</width>
+               <width>82</width>
                <height>18</height>
               </rect>
              </property>
@@ -987,7 +987,7 @@ QComboBox QAbstractItemView {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>6</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1012,7 +1012,7 @@ QComboBox QAbstractItemView {
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>2</number>
+                 <number>0</number>
                 </property>
                 <property name="tabBarAutoHide">
                  <bool>false</bool>
@@ -1057,7 +1057,7 @@ QComboBox QAbstractItemView {
                       </item>
                       <item>
                        <property name="text">
-                        <string>Cession</string>
+                        <string>Autre</string>
                        </property>
                       </item>
                      </widget>
@@ -1092,14 +1092,7 @@ QComboBox QAbstractItemView {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="otherTypeEdit">
-                      <property name="enabled">
-                       <bool>true</bool>
-                      </property>
-                      <property name="text">
-                       <string>Lieu (fourrière)</string>
-                      </property>
-                     </widget>
+                     <widget class="QTextEdit" name="otherTypeEdit"/>
                     </item>
                    </layout>
                   </item>
@@ -3222,7 +3215,6 @@ QCheckBox{
   <tabstop>entryTabWidget</tabstop>
   <tabstop>entryTypeBox</tabstop>
   <tabstop>entryDateEdit</tabstop>
-  <tabstop>otherTypeEdit</tabstop>
   <tabstop>prevDestButton</tabstop>
   <tabstop>nextDestButton</tabstop>
   <tabstop>lostTabWidget</tabstop>

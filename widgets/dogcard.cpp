@@ -59,6 +59,10 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
         QString type_prov = crypto->decryptToString(splitted[1]).split("_|_")[0];
         QString date_prov = splitted[0];
 
+        if(type_prov.isEmpty())
+            type_prov = "Arrivée";
+
+
         info1String = type_prov + " : ";
         info1String += QDate::fromString(date_prov, "yyyy-MM-dd").toString("dd/MM/yyyy");
     }
@@ -405,9 +409,9 @@ void DogCard::CreateHistory(){
                 histLabel->setText(dateString + " : <b>Fourrière</b> (" +
                                type_prov.split("_|_")[1] + ")");
 
-            else if(type_prov.startsWith("Cession_|_"))
-                histLabel->setText(dateString + " : <b>Cession</b> (" +
-                               type_prov.split("_|_")[1] + ")");
+            else if(type_prov.contains("_|_"))
+                histLabel->setText(dateString + " : " +
+                               AutoBreak(type_prov.split("_|_")[1], 50).split("\n")[0]);
 
             else
                 histLabel->setText(dateString + " : <b>" +
