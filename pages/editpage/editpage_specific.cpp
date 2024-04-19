@@ -153,6 +153,7 @@ void EditPage::GroupedVet(){
     QWidget *vetEditPage = findChild<QWidget*>("vetEditPage");
     groupedVetIds.clear();
     findChild<QPushButton*>("groupedVetButton")->hide();
+    findChild<QPushButton*>("groupedPdfButton")->show();
 
     for(QWidget *c : vetEditPage->findChildren<QWidget*>()){
         QString name = c->objectName();

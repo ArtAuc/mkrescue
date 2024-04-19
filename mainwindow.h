@@ -50,6 +50,7 @@ public slots:
     void ToggleSatisfiedBoxText();
     void ToggleReasonEdit();
     void ToggleLock(QByteArray h = NULL, QString email = "", QString appPassword = "");
+    void ExportGroupedVet();
 
 private:
     void ExportRegistry(QString type, QString year = "");

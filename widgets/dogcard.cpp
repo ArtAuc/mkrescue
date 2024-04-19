@@ -89,25 +89,7 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     }
 
     else if (typeInfo == "current"){
-        QDate date = QDate::fromString(info2, "yyyy-MM-dd");
-
-        int years = QDate::currentDate().year() - date.year();
-        int months = QDate::currentDate().month() - date.month();
-
-        if (QDate::currentDate().day() < date.day())
-            months--;
-
-        if (months < 0) {
-            years--;
-            months += 12;
-        }
-
-        if (years == 1)
-            info2String = "1 an, ";
-        else if (years > 1)
-            info2String = QString::number(years) + " ans, ";
-
-        info2String += QString::number(months) + " mois";
+        info2String = GetAge(QDate::fromString(info2, "yyyy-MM-dd"));
     }
 
     else if(typeInfo == "care"){

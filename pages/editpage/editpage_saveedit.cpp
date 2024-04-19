@@ -178,9 +178,9 @@ void EditPage::Edit(QString type, QStringList infos){
     else if (type == "vet"){
         groupedVetIds.clear();
         currentPage = findChild<QWidget*>("vetEditPage");
+        findChild<QPushButton*>("groupedPdfButton")->hide();
 
         disconnect(currentPage->findChild<EditDogWidget*>(), nullptr, nullptr, nullptr);
-
 
         for(QWidget *c : currentPage->findChildren<QWidget*>()){
             QString name = c->objectName();

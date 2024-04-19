@@ -96,5 +96,28 @@ inline QStringList UniqueList(QStringList list){
     return set.values();
 }
 
+inline QString GetAge(QDate birth){
+    QString s;
+
+    int years = QDate::currentDate().year() - birth.year();
+    int months = QDate::currentDate().month() - birth.month();
+
+    if (QDate::currentDate().day() < birth.day())
+        months--;
+
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    if (years == 1)
+        s = "1 an, ";
+    else if (years > 1)
+        s = QString::number(years) + " ans, ";
+
+    s += QString::number(months) + " mois";
+
+    return s;
+}
 
 #endif // UTILS_H

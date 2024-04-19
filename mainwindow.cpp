@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->reasonVetAnimalBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ToggleReasonEdit()));
     connect(ui->homePage, SIGNAL(TriggerEditHome(QString,QStringList)), this, SLOT(TriggerEdit(QString,QStringList)));
     connect(ui->groupedVetButton, &QPushButton::clicked, ui->editPage, &EditPage::GroupedVet);
+    connect(ui->groupedPdfButton, &QPushButton::clicked, this, &MainWindow::ExportGroupedVet);
     ui->removeButton->setIcon(QIcon("media/trash.svg"));
     ui->dateVetAnimalEdit->EnableTime();
 

@@ -190,3 +190,126 @@ void MainWindow::ExportRegistry(QString type, QString year){ // type = "entryReg
     savedData->SetLastTimeExport(QDate::currentDate());
     savedData->Save();
 }
+
+void MainWindow::ExportGroupedVet(){
+    QStringList groupedVetIds = ui->editPage->GroupedVetIds();
+
+    QDateTime dateTime = ui->dateVetAnimalEdit->GetDateTime();
+    QString fileName = QFileDialog::getSaveFileName(nullptr, "Exporter un RDV vétérinaire groupé", "RDV_groupe_" + dateTime.toString("dd_MM_yy_hh_mm"), "Fichier PDF (*.pdf)");
+    if(fileName.isEmpty()) {
+        QMessageBox::critical(nullptr, "Erreur d'export du RDV", "Le nom de fichier sélectionné est incorrect.");
+        return;
+    }
+
+    if (!fileName.endsWith(".pdf"))
+        fileName += ".pdf";
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setPageSize(QPageSize::A4);
+    printer.setOutputFileName(fileName);
+    printer.setResolution(300);
+    printer.setPageOrientation(QPageLayout::Portrait);
+    printer.setPageMargins(QMarginsF(5, 5, 5, 5));
+
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        QMessageBox::critical(nullptr, "Erreur", "L'impression PDF a échoué.");
+        return;
+    }
+
+    painter.setPen(Qt::black);
+    QFont titleFont("Arial", 20);
+    titleFont.setBold(true);
+    painter.setFont(titleFont);
+    QSizeF pageSize = printer.pageRect(QPrinter::DevicePixel).size();
+
+    // Get shelter's name
+    QSqlQuery shelterQuery;
+    HandleErrorExec(&shelterQuery, "SELECT last_name FROM People WHERE id_people = -2");
+    shelterQuery.next();
+    QString shelterName = shelterQuery.value(0).toString();
+
+    QString reason = ui->reasonVetAnimalBox->currentText() == "Autre" ? ui->reasonVetAnimalEdit->text() : ui->reasonVetAnimalBox->currentText();
+    QString titleText = "RDV du " + dateTime.toString("dd/MM/yyyy h:mm") + " - " + reason + " - " + shelterName;
+    QRectF titleRect = painter.boundingRect(QRectF(), Qt::AlignCenter, titleText);
+    qreal titleX = (pageSize.width() - titleRect.width()) / 2;
+    painter.drawText(QPointF(titleX, 0.1 * pageSize.height()), titleText);
+    painter.setFont(QFont("Arial", 10));
+
+    qreal lastY = 0.15 * pageSize.height();
+    for(const QString& id_dog : groupedVetIds) {
+        QSqlQuery dogQuery;
+        QString dogQueryStr = "SELECT name, chip, birth, sex, description, sterilized FROM Dogs WHERE id_dog = " + id_dog;
+        HandleErrorExec(&dogQuery, dogQueryStr);
+
+        if (dogQuery.next()) {
+            QString dogName = dogQuery.value(0).toString();
+            QString dogChip = dogQuery.value(1).toString();
+            QString birth = dogQuery.value(2).toDate().toString("dd/MM/yyyy");
+            QString dogSex = dogQuery.value(3).toString();
+            QString dogDescription = dogQuery.value(4).toString();
+            QString sterilized = dogQuery.value(5).toString();
+            if(!sterilized.isEmpty()){
+                if(sterilized == "1")
+                    sterilized = " stérilisé";
+                else
+                    sterilized = " non stérilisé";
+
+                if(dogSex == "Femelle")
+                    sterilized += "e";
+            }
+
+
+            QString ageString = GetAge(QDate::fromString(birth, "dd/MM/yyyy"));
+            QString dogDetails = QString("%1 - %5%7 - %6\n"
+                                         "Né le %2 (%3)\n"
+                                         "Identification : %4")
+                                    .arg(dogName)
+                                    .arg(birth)
+                                    .arg(ageString)
+                                    .arg(dogChip)
+                                    .arg(dogSex)
+                                    .arg(dogDescription)
+                                    .arg(sterilized);
+
+            QSqlQuery vaccineQuery;
+            vaccineQuery.prepare("SELECT Vet.date "
+                                 "FROM Vet "
+                                 "WHERE id_dog = :id "
+                                 "AND reason LIKE 'Vaccin%' "
+                                 "AND Vet.date < DATE('now') "
+                                 "ORDER BY Vet.date DESC");
+
+            vaccineQuery.bindValue(":id", id_dog);
+            HandleErrorExec(&vaccineQuery);
+            if(vaccineQuery.next()){
+                dogDetails += "\nDernier vaccin : " + vaccineQuery.value(0).toDate().toString("dd/MM/yyyy");
+            }
+
+            QStringList dogDetailsLines = dogDetails.split("\n");
+            for (int i = 0; i < dogDetailsLines.size(); ++i) {
+                if (i == 0) {
+                    QFont boldFont = painter.font();
+                    boldFont.setBold(true);
+                    painter.setFont(boldFont);
+                }
+                else {
+                    QFont normalFont = painter.font();
+                    normalFont.setBold(false);
+                    painter.setFont(normalFont);
+                }
+
+
+                lastY = lastY + painter.fontMetrics().height() + 10;
+                painter.drawText(QPointF(0.1 * pageSize.width(), lastY), dogDetailsLines[i]);
+            }
+
+            lastY += 30;
+            if(lastY > 0.8 * pageSize.height()){
+                lastY = 0.15 * pageSize.height();
+                painter.translate(pageSize.width() / 2, 0);
+            }
+        }
+    }
+}
