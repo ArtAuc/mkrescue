@@ -125,7 +125,7 @@ public:
 
         else if(type == "adoptions"){
             hColor = "a86ba2";
-            infoLabel->setText("ADOPTIONS " + QString::number(QDate::currentDate().year()));
+            infoLabel->setText("ADOPTIONS\n" + QString::number(QDate::currentDate().year()));
         }
 
         infoLabel->setStyleSheet("color:#" + hColor + ";");
@@ -133,35 +133,37 @@ public:
 
         layout->addWidget(infoLabel, 1, 0, 1, 1);
 
-        layout->addItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding), 2, 0, 1, 2);
+        if(type == "currentDogs" || type == "currentMembers"){
+            layout->addItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding), 2, 0, 1, 2);
 
-        statGraph = new GraphWidget(hColor);
-        statGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        statGraph->setStyleSheet("background-color:white;");
-        layout->addWidget(statGraph, 3, 0, 3, 1);
+            statGraph = new GraphWidget(hColor);
+            statGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+            statGraph->setStyleSheet("background-color:white;");
+            layout->addWidget(statGraph, 3, 0, 3, 1);
 
 
-        // daysInterval buttons
-        weekButton = new QPushButton();
-        weekButton->setText("Sem.");
-        layout->addWidget(weekButton, 3, 1, 1, 1);
+            // daysInterval buttons
+            weekButton = new QPushButton();
+            weekButton->setText("Sem.");
+            layout->addWidget(weekButton, 3, 1, 1, 1);
 
-        monthButton = new QPushButton();
-        monthButton->setText("Mois");
-        layout->addWidget(monthButton, 4, 1, 1, 1);
+            monthButton = new QPushButton();
+            monthButton->setText("Mois");
+            layout->addWidget(monthButton, 4, 1, 1, 1);
 
-        yearButton = new QPushButton();
-        yearButton->setText("An");
-        layout->addWidget(yearButton, 5, 1, 1, 1);
+            yearButton = new QPushButton();
+            yearButton->setText("An");
+            layout->addWidget(yearButton, 5, 1, 1, 1);
 
-        for(QPushButton *b : findChildren<QPushButton*>()){
-            connect(b, &QPushButton::clicked, this, [=](){
-                SelectDaysInterval(b);
-            });
+            for(QPushButton *b : findChildren<QPushButton*>()){
+                connect(b, &QPushButton::clicked, this, [=](){
+                    SelectDaysInterval(b);
+                });
+            }
+
+
+            SelectDaysInterval(monthButton);
         }
-
-
-        SelectDaysInterval(monthButton);
 
         setStyleSheet("QFrame {border:2px solid #" + hColor + "; border-radius:5px;background-color:white;padding:0;} "
                       "QLabel {border:none;}"
@@ -201,73 +203,81 @@ public:
     void UpdateStat(){
         QSqlQuery query;
 
+        if(type == "currentDogs" || type == "currentMembers"){
+            // Charts
+            std::vector<QPair<QString, int>> points;
 
-        // Charts
-        std::vector<QPair<QString, int>> points;
+            int x = 0;
+            for(QDate date = QDate::currentDate().addDays(-daysInterval * 7); date <= QDate::currentDate(); date = date.addDays(daysInterval)){
+                if(type == "currentDogs"){
+                    query.prepare("SELECT COUNT(*) "
+                                  "FROM Dogs "
+                                  "WHERE id_dog NOT IN "
+                                  "(SELECT LastestDest.id_dog "
+                                  "FROM ( "
+                                  "    SELECT id_dog, MAX(date_prov) AS max_date_prov "
+                                  "    FROM ES_Registry "
+                                  "    WHERE date_prov <= :date "
+                                  "    GROUP BY id_dog "
+                                  ") AS LastestProv "
+                                  "LEFT JOIN ( "
+                                  "    SELECT type, date_prov, id_dog, MAX(date) AS max_date "
+                                  "    FROM Destinations "
+                                  "    WHERE date <= :date "
+                                  "    GROUP BY date_prov, id_dog "
+                                  ") AS LastestDest ON (LastestDest.id_dog = LastestProv.id_dog AND LastestDest.date_prov = LastestProv.max_date_prov) "
+                                  "WHERE ( "
+                                  "    LastestDest.type = 'Adoption' "
+                                  "    OR LastestDest.type = 'Propriétaire' "
+                                  "    OR LastestDest.type = 'Mort' "
+                                  "    OR LastestDest.type LIKE 'Famille d_accueil' "
+                                  "))"
+                                  "AND id_dog IN "
+                                  "(SELECT id_dog FROM ES_Registry WHERE date_prov <= :date)");
+                }
 
-        int x = 0;
-        for(QDate date = QDate::currentDate().addDays(-daysInterval * 7); date <= QDate::currentDate(); date = date.addDays(daysInterval)){
-            if(type == "currentDogs"){
-                query.prepare("SELECT COUNT(*) "
-                              "FROM Dogs "
-                              "WHERE id_dog NOT IN "
-                              "(SELECT LastestDest.id_dog "
-                              "FROM ( "
-                              "    SELECT id_dog, MAX(date_prov) AS max_date_prov "
-                              "    FROM ES_Registry "
-                              "    WHERE date_prov <= :date "
-                              "    GROUP BY id_dog "
-                              ") AS LastestProv "
-                              "LEFT JOIN ( "
-                              "    SELECT type, date_prov, id_dog, MAX(date) AS max_date "
-                              "    FROM Destinations "
-                              "    WHERE date <= :date "
-                              "    GROUP BY date_prov, id_dog "
-                              ") AS LastestDest ON (LastestDest.id_dog = LastestProv.id_dog AND LastestDest.date_prov = LastestProv.max_date_prov) "
-                              "WHERE ( "
-                              "    LastestDest.type = 'Adoption' "
-                              "    OR LastestDest.type = 'Propriétaire' "
-                              "    OR LastestDest.type = 'Mort' "
-                              "    OR LastestDest.type LIKE 'Famille d_accueil' "
-                              "))"
-                              "AND id_dog IN "
-                              "(SELECT id_dog FROM ES_Registry WHERE date_prov <= :date)");
+                else if(type == "currentMembers"){
+                    query.prepare("SELECT COUNT(DISTINCT id_people) "
+                                  "FROM Members "
+                                  "WHERE date(Members.date, '+1 year') > :date "
+                                  "AND date <= :date");
+                }
+
+                query.bindValue(":date", date);
+
+                HandleErrorExec(&query);
+                query.next();
+
+                points.push_back(QPair<QString, int>(date.toString("dd/MM/yyyy"), query.value(0).toInt()));
+
+                x += 1;
             }
 
-            else if(type == "currentMembers"){
-                query.prepare("SELECT COUNT(DISTINCT id_people) "
-                              "FROM Members "
-                              "WHERE date(Members.date, '+1 year') > :date "
-                              "AND date <= :date");
-            }
+            statGraph->setData(points);
 
-            else if(type == "adoptions"){
+            statLabel->setText(QString::number(points[points.size() - 1].second));
+        }
+
+        else{ // Stats without charts
+            if(type == "adoptions"){
                 query.prepare("SELECT COUNT(*) "
                               "FROM Dogs "
                               "WHERE id_dog IN "
                               "(SELECT id_dog "
                               "FROM Destinations "
                               "WHERE strftime('%Y', Destinations.date) = :currentYear "
-                              "AND type = 'Adoption'"
-                              "AND Destinations.date <= :date)");
+                              "AND type = 'Adoption')");
 
-                query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
             }
 
-            query.bindValue(":date", date);
+            query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
 
             HandleErrorExec(&query);
+
             query.next();
 
-            points.push_back(QPair<QString, int>(date.toString("dd/MM/yyyy"), query.value(0).toInt()));
-
-            x += 1;
+            statLabel->setText(query.value(0).toString());
         }
-
-        statGraph->setData(points);
-
-
-        statLabel->setText(QString::number(points[points.size() - 1].second));
     }
 
     void resizeEvent(QResizeEvent *event) override{
@@ -285,7 +295,8 @@ public:
 
             setMaximumHeight(parent->height() / 4);
 
-            statGraph->setMaximumWidth(0.7 * width());
+            if(statGraph != nullptr)
+                statGraph->setMaximumWidth(0.7 * width());
         }
 
     }

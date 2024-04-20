@@ -21,14 +21,18 @@ public:
         if(alertsWidget == nullptr){
             layout()->setContentsMargins(0,0,0,0);
 
-            statVerticalWidget = new QWidget(this);
-            statVerticalWidget->setLayout(new QVBoxLayout());
-            statVerticalWidget->layout()->addWidget(new StatWidget("currentDogs"));
-            statVerticalWidget->layout()->addWidget(new StatWidget("currentMembers"));
-            statVerticalWidget->layout()->addWidget(new StatWidget("adoptions"));
-            statVerticalWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
+            statGridWidget = new QWidget(this);
+            QGridLayout *statGridLayout = new QGridLayout;
+            statGridWidget->setLayout(statGridLayout);
+            statGridLayout->addWidget(new StatWidget("currentDogs"), 0, 0, 1, 2);
+            statGridLayout->addWidget(new StatWidget("currentMembers"), 1, 0, 1, 2);
+            statGridLayout->addWidget(new StatWidget("adoptions"), 2, 0, 1, 1);
+            statGridLayout->addWidget(new StatWidget("adoptions"), 2, 1, 1, 1);
+            statGridLayout->addWidget(new StatWidget("adoptions"), 3, 0, 1, 1);
+            statGridLayout->addWidget(new StatWidget("adoptions"), 3, 1, 1, 1);
+            statGridWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
-            qobject_cast<QHBoxLayout*>(layout())->addWidget(statVerticalWidget);
+            qobject_cast<QHBoxLayout*>(layout())->addWidget(statGridWidget);
 
             alertsWidget = findChild<QWidget*>("homeScrollContents");
             layout()->setSpacing(0);
@@ -49,8 +53,9 @@ public:
 
         if(alertsWidget != nullptr){
             alertsWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
-            statVerticalWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0);
-            statVerticalWidget->setMaximumWidth(width() / 3);
+            statGridWidget->layout()->setContentsMargins(0.03 * width(),0,0.03 * width(),0.03 * height());
+            statGridWidget->layout()->setSpacing(0.03 * width());
+            statGridWidget->setMaximumWidth(width() / 3);
 
 
             for (QPushButton *but : findChildren<QPushButton*>()){
@@ -327,7 +332,7 @@ signals:
     void ExportES(QString year);
 
 private:
-    QWidget *alertsWidget = nullptr, *statVerticalWidget = nullptr;
+    QWidget *alertsWidget = nullptr, *statGridWidget = nullptr;
     int alertDays{};
     QSpacerItem *spacer = nullptr;
     QDate lastTimeExport;
