@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete crypto;
 }
 
 void MainWindow::InitEditWidgets(){
@@ -157,16 +158,12 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         stream >> key;
         crypto->setKey(key);
 
-        db.SetCrypto(crypto);
-        savedData->SetCrypto(crypto, email, appPassword, ui->syncButton);
+        db.Init();
+
+        savedData->Init(email, appPassword, ui->syncButton);
         savedData->Save();
 
-        ui->settingsPage->SetCrypto(crypto);
         ui->loginPage->setContentsMargins(0,0,0,0);
-
-        for(EditPage *c : findChildren<EditPage*>()){
-            c->SetCrypto(crypto);
-        }
 
         ChangePage(ui->menuTree->topLevelItem(0));
         ui->menuTree->topLevelItem(0)->setSelected(true);
@@ -640,7 +637,7 @@ QString MainWindow::ClearUselessBreaks(QString s){
 void MainWindow::Clean(){
     QSqlDatabase::removeDatabase("secondary");
 
-    CleanThread *thread = new CleanThread(crypto);
+    CleanThread *thread = new CleanThread();
 
     QObject::connect(thread, &CleanThread::finished, ui->editPage, &EditPage::FinishedCleaning);
     QObject::connect(thread, &CleanThread::finished, thread, &CleanThread::deleteLater);

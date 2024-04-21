@@ -93,8 +93,7 @@ void SavedData::Save(){
 
 
 
-void SavedData::SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton){
-    this->crypto = crypto;
+void SavedData::Init(QString email, QString appPassword, QToolButton *syncButton){
     this->syncButton = syncButton;
 
     if(!email.isEmpty() && !appPassword.isEmpty()){

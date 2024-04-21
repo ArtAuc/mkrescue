@@ -1,8 +1,7 @@
 #include "dogcard.h"
 
-DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info2, QString description, QString info1, SimpleCrypt *crypto) : DogCard(parent)
+DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QString info2, QString description, QString info1) : DogCard(parent)
 {
-    this->crypto = crypto;
     this->chip = chip;
     this->dogName = name;
     mainWindow = parent;

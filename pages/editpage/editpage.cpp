@@ -189,8 +189,6 @@ void EditPage::AssignIdPeople(QWidget *currentPage){
 
     QSqlQuery query;
     for(EditPeopleWidget *editPeopleWidget : currentPage->findChildren<EditPeopleWidget*>()){
-        editPeopleWidget->SetCrypto(crypto);
-
         query.prepare("SELECT id_people "
                       "FROM People "
                       "WHERE last_name = :last_name "

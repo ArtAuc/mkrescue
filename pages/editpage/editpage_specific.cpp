@@ -143,10 +143,6 @@ void EditPage::AddDestPage(){
     page->ChangeDestType("");
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), page, SLOT(ChangeDestType(QString)));
     connect(page->findChild<QComboBox*>(), SIGNAL(currentTextChanged(QString)), this, SLOT(UpdateDestinationPages(QString)));
-
-    for(EditPeopleWidget *c : findChildren<EditPeopleWidget*>()){
-        c->SetCrypto(crypto);
-    }
 }
 
 void EditPage::GroupedVet(){

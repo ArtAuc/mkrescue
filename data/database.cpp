@@ -315,8 +315,7 @@ void CleanThread::CleanPeople(){
     }
 }
 
-void Database::SetCrypto(SimpleCrypt *crypto){
-    this->crypto = crypto;
+void Database::Init(){
     QSqlQuery query;
     query.prepare("UPDATE People "
                   "SET address = :empty "

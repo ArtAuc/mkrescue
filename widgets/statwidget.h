@@ -128,6 +128,11 @@ public:
             infoLabel->setText("ADOPTIONS\n" + QString::number(QDate::currentDate().year()));
         }
 
+        else if(type == "pound"){
+            hColor = "db759c";
+            infoLabel->setText("FOURRIÈRES\n" + QString::number(QDate::currentDate().year()));
+        }
+
         infoLabel->setStyleSheet("color:#" + hColor + ";");
         infoLabel->setAlignment(Qt::AlignCenter);
 
@@ -267,7 +272,13 @@ public:
                               "FROM Destinations "
                               "WHERE strftime('%Y', Destinations.date) = :currentYear "
                               "AND type = 'Adoption')");
+            }
 
+            else if (type == "pound"){
+                query.prepare("SELECT COUNT(*) "
+                              "FROM ES_Registry "
+                              "WHERE type_prov LIKE 'Fourrière%' "
+                              "AND strftime('%Y', date_prov) = :currentYear");
             }
 
             query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
@@ -301,6 +312,8 @@ public:
 
     }
 
+public:
+
 private:
     QString type;
     QLabel *statLabel = nullptr, *infoLabel = nullptr;
@@ -309,6 +322,5 @@ private:
     QPushButton *weekButton, *monthButton, *yearButton;
     QString hColor;
 };
-
 
 #endif // STATWIDGET_H

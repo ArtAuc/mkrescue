@@ -5,7 +5,6 @@
 #include <QCryptographicHash>
 
 #include "utils.h"
-#include "simplecrypt.h"
 
 class Database
 {
@@ -13,6 +12,7 @@ public:
     Database();
     ~Database();
 
+    void Init();
     void Create();
     void ReorderEntryRegistry();
     void ReorderCareRegistry();
@@ -29,7 +29,6 @@ public:
     void CleanDogs();
     void CleanPeople();
     void MakeRedList();
-    void SetCrypto(SimpleCrypt *crypto);
     static void ChangePassword(QString oldPassword, QString newPassword);
     static bool IsInTable(QString table, QString attribute, QString value);
     QString RemoveAccents(QString s){s = s.toLower()
@@ -49,12 +48,11 @@ public:
     const QString noaccentbegin = "replace(replace(replace(replace(replace(replace(replace(replace(lower(";
     const QString noaccentend = "), 'à','a'), 'ç','c'), 'é','e'), 'è','e'), 'ê','e'), 'ï','i'), 'ô','o'), 'ü','u')";
     QSqlDatabase _database;
-    SimpleCrypt *crypto = nullptr;
 };
 
 class CleanThread : public QThread {
 public:
-    CleanThread(SimpleCrypt *crypto){this->crypto = crypto;}
+    CleanThread(){}
     ~CleanThread(){
     }
 
@@ -80,7 +78,6 @@ public:
 
 private:
     QSqlDatabase threadDb;
-    SimpleCrypt *crypto;
 };
 
 

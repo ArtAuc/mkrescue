@@ -27,7 +27,7 @@ public:
             statGridLayout->addWidget(new StatWidget("currentDogs"), 0, 0, 1, 2);
             statGridLayout->addWidget(new StatWidget("currentMembers"), 1, 0, 1, 2);
             statGridLayout->addWidget(new StatWidget("adoptions"), 2, 0, 1, 1);
-            statGridLayout->addWidget(new StatWidget("adoptions"), 2, 1, 1, 1);
+            statGridLayout->addWidget(new StatWidget("pound"), 2, 1, 1, 1);
             statGridLayout->addWidget(new StatWidget("adoptions"), 3, 0, 1, 1);
             statGridLayout->addWidget(new StatWidget("adoptions"), 3, 1, 1, 1);
             statGridWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");

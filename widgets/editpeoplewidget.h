@@ -11,7 +11,6 @@
 #include <QComboBox>
 #include <QTimer>
 
-#include "simplecrypt.h"
 #include "utils.h"
 
 class EditPeopleWidget : public QWidget
@@ -23,7 +22,6 @@ public:
     void showEvent(QShowEvent *event) override;
     QString GetOldId(){ return oldId; }
     void SetOldId(QString oldId){ this->oldId = oldId; }
-    void SetCrypto(SimpleCrypt *crypto){this->crypto = crypto;}
 
 public slots:
     void ProcessFields(QString s, bool isReview);
@@ -31,7 +29,6 @@ public slots:
 
 private:
     QString oldId = "-1";
-    SimpleCrypt *crypto;
     QStringList cityList, postalCodeList;
     QString previousPhone;
 };

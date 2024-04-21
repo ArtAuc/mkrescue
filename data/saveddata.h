@@ -10,7 +10,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QSslSocket>
 
-#include "simplecrypt.h"
+#include "utils.h"
 
 
 class SavedData : public QObject
@@ -25,7 +25,7 @@ public:
     void SetLastTimeSync(QDateTime dateTime){lastTimeSync = dateTime.toString("yyyy-MM-ddTHH:mm:ss");}
     bool HashExists(){return !accessHash.isEmpty();}
     void SetHash(QByteArray h){accessHash = h.toHex();}
-    void SetCrypto(SimpleCrypt *crypto, QString email, QString appPassword, QToolButton *syncButton);
+    void Init(QString email, QString appPassword, QToolButton *syncButton);
     void Synchronize();
     void SynchronizeWorker();
     QString SynchronizeEmail(QString subject, QString filePath);
@@ -41,7 +41,6 @@ signals:
     void SynchronizationFinished(QStringList errors);
 
 private:
-    SimpleCrypt *crypto = nullptr;
     QString accessHash;
     QString encryptedEmail, encryptedAppPassword;
     QString lastTimeSync, lastTimeExport;

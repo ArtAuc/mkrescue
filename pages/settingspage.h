@@ -15,7 +15,6 @@
 #include <QTimer>
 
 #include "utils.h"
-#include "simplecrypt.h"
 #include "editpage/editpage.h"
 #include "../data/saveddata.h"
 
@@ -34,8 +33,6 @@ public:
 
         findChild<QLabel*>("savedLabel")->hide();
     }
-
-    void SetCrypto(SimpleCrypt *crypto){this->crypto = crypto;}
 
     void resizeEvent(QResizeEvent *event) override{
         QWidget::resizeEvent(event);
@@ -125,7 +122,6 @@ public slots:
     }
 
 private:
-    SimpleCrypt *crypto;
     SavedData *savedData;
 };
 

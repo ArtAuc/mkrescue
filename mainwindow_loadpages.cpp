@@ -26,8 +26,7 @@ void MainWindow::LoadDogCards(QString search){
                                        query.value(2).toString(),
                                        query.value(3).toString(),
                                        query.value(4).toString(),
-                                       query.value(5).toString(),
-                                       crypto);
+                                       query.value(5).toString());
 
         layout->addWidget(dogCard, row, col);
 

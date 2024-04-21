@@ -9,6 +9,7 @@
 #include "widgets/menutree.h"
 #include "widgets/dogcard.h"
 #include "data/saveddata.h"
+#include "widgets/statwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -65,7 +66,6 @@ private:
     QList<QToolButton*> modifyButtons;
     int rowClicked;
     SavedData *savedData;
-    SimpleCrypt *crypto;
     QMovie *syncMovie = nullptr;
     QRect screenGeometry;
 };

@@ -8,6 +8,8 @@
 #include <QFile>
 #include <QDateTime>
 
+#include "simplecrypt.h"
+
 
 inline void HandleErrorExec(QSqlQuery *query, QString queryString = NULL){
     if(queryString.isNull()){
@@ -119,5 +121,7 @@ inline QString GetAge(QDate birth){
 
     return s;
 }
+
+inline SimpleCrypt *crypto;
 
 #endif // UTILS_H
