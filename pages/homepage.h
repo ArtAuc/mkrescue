@@ -26,10 +26,14 @@ public:
             statGridWidget->setLayout(statGridLayout);
             statGridLayout->addWidget(new StatWidget("currentDogs"), 0, 0, 1, 2);
             statGridLayout->addWidget(new StatWidget("currentMembers"), 1, 0, 1, 2);
-            statGridLayout->addWidget(new StatWidget("adoptions"), 2, 0, 1, 1);
-            statGridLayout->addWidget(new StatWidget("pound"), 2, 1, 1, 1);
-            statGridLayout->addWidget(new StatWidget("adoptions"), 3, 0, 1, 1);
-            statGridLayout->addWidget(new StatWidget("adoptions"), 3, 1, 1, 1);
+            statGridLayout->addItem(new QSpacerItem(2, 0, QSizePolicy::Preferred, QSizePolicy::Expanding), 2, 0, 1, 2);
+            yearLabel = new QLabel("EN " + QString::number(QDate::currentDate().year()) + " :");
+            yearLabel->setStyleSheet("background:none;font-weight:bold;");
+            statGridLayout->addWidget(yearLabel, 3, 0, 1, 2, Qt::AlignHCenter | Qt::AlignBottom);
+            statGridLayout->addWidget(new StatWidget("abandons"), 4, 0, 1, 1);
+            statGridLayout->addWidget(new StatWidget("adoptions"), 4, 1, 1, 1);
+            statGridLayout->addWidget(new StatWidget("pound"), 5, 0, 1, 1);
+            statGridLayout->addWidget(new StatWidget("poundLeft"), 5, 1, 1, 1);
             statGridWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
             qobject_cast<QHBoxLayout*>(layout())->addWidget(statGridWidget);
@@ -71,6 +75,10 @@ public:
                 lab->setFont(font);
                 lab->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
+
+            QFont font = yearLabel->font();
+            font.setPointSizeF(0.015 * width());
+            yearLabel->setFont(font);
         }
 
         for(StatWidget *c : findChildren<StatWidget*>()){
@@ -342,6 +350,7 @@ private:
     QStringList lastVaccineNecessary;
     QString lastVaccineDate;
     SavedData *savedData;
+    QLabel *yearLabel;
 };
 
 #endif // HOMEPAGE_H

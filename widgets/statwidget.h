@@ -125,15 +125,25 @@ public:
 
         else if(type == "adoptions"){
             hColor = "a86ba2";
-            infoLabel->setText("ADOPTIONS\n" + QString::number(QDate::currentDate().year()));
+            infoLabel->setText("ADOPTIONS");
         }
 
         else if(type == "pound"){
             hColor = "db759c";
-            infoLabel->setText("FOURRIÈRES\n" + QString::number(QDate::currentDate().year()));
+            infoLabel->setText("FOURRIÈRES");
         }
 
-        infoLabel->setStyleSheet("color:#" + hColor + ";");
+        else if(type == "poundLeft"){
+            hColor = "db759c";
+            infoLabel->setText("FOURRIÈRES\nNON RÉCUPÉRÉES");
+        }
+
+        else if(type == "abandons"){
+            hColor = "a86ba2";
+            infoLabel->setText("ABANDONS");
+        }
+
+        infoLabel->setStyleSheet("color:#" + hColor + ";padding:6px;");
         infoLabel->setAlignment(Qt::AlignCenter);
 
         layout->addWidget(infoLabel, 1, 0, 1, 1);
@@ -272,22 +282,69 @@ public:
                               "FROM Destinations "
                               "WHERE strftime('%Y', Destinations.date) = :currentYear "
                               "AND type = 'Adoption')");
+
+                query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
+
+                HandleErrorExec(&query);
+
+                query.next();
+                statLabel->setText(query.value(0).toString());
             }
 
-            else if (type == "pound"){
-                query.prepare("SELECT COUNT(*) "
+            else if (type.startsWith("pound")){
+                int count = 0;
+
+                if(type == "pound")
+                    query.prepare("SELECT type_prov "
+                                  "FROM ES_Registry "
+                                  "WHERE strftime('%Y', date_prov) = :currentYear");
+
+                else if (type == "poundLeft")
+                    query.prepare("SELECT ES_Registry.type_prov, ES_Registry.date_prov, ES_Registry.id_dog "
+                                  "FROM ES_Registry "
+                                  "LEFT JOIN Destinations ON Destinations.id_dog = ES_Registry.id_dog "
+                                  "WHERE strftime('%Y', ES_Registry.date_prov) = :currentYear "
+                                  "AND Destinations.type != 'Propriétaire' "
+                                  "AND ES_Registry.date_prov = ("
+                                  "SELECT MAX(date_prov) "
+                                  "FROM ES_Registry AS esr "
+                                  "WHERE esr.id_dog = ES_Registry.id_dog "
+                                  "GROUP BY esr.id_dog)");
+
+                query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
+
+                HandleErrorExec(&query);
+
+                while(query.next()){
+                    QString type_prov = crypto->decryptToString(query.value(0).toString());
+                    if(type_prov.startsWith("Fourrière")){
+                        count++;
+                    }
+                }
+
+                statLabel->setText(QString::number(count));
+            }
+
+            else if(type == "abandons"){
+                int count = 0;
+
+                query.prepare("SELECT type_prov "
                               "FROM ES_Registry "
-                              "WHERE type_prov LIKE 'Fourrière%' "
-                              "AND strftime('%Y', date_prov) = :currentYear");
+                              "WHERE strftime('%Y', date_prov) = :currentYear");
+
+                query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
+
+                HandleErrorExec(&query);
+
+                while(query.next()){
+                    QString type_prov = crypto->decryptToString(query.value(0).toString());
+                    if(type_prov.startsWith("Abandon")){
+                        count++;
+                    }
+                }
+
+                statLabel->setText(QString::number(count));
             }
-
-            query.bindValue(":currentYear", QString::number(QDate::currentDate().year()));
-
-            HandleErrorExec(&query);
-
-            query.next();
-
-            statLabel->setText(query.value(0).toString());
         }
     }
 
