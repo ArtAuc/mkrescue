@@ -90,6 +90,7 @@ public slots:
             animation->setEndValue(initialWidth); // Set the initial width when showing the menu
         }
         animation->start(QAbstractAnimation::DeleteWhenStopped);
+        connect(animation, SIGNAL(finished()), parent()->parent(), SLOT(resizeEvent()));
     }
 
 protected:

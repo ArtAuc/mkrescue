@@ -22,7 +22,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void resizeEvent(QResizeEvent *event) override;
     void changeEvent(QEvent *event) override {
         if (event->type() == QEvent::ActivationChange || event->type() == QEvent::WindowStateChange)
             resizeEvent(nullptr);
@@ -30,8 +29,11 @@ public:
         QMainWindow::changeEvent(event);
     }
 
+    void resizeEvent(QResizeEvent *event) override;
+
 
 public slots:
+    void resizeEvent(){resizeEvent(nullptr);}
     void ChangePage(QTreeWidgetItem* item = nullptr);
     void LoadDogCards(QString search = "");
     void LoadEntryRegistry(QString year, QString search = "");

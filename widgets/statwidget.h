@@ -366,7 +366,7 @@ public:
             font.setPointSizeF(0.06 * parent->width());
             statLabel->setFont(font);
 
-            setMaximumHeight(parent->height() / 4);
+            setMaximumHeight(parent->height() / 4.5);
 
             if(statGraph != nullptr)
                 statGraph->setMaximumWidth(0.7 * width());
