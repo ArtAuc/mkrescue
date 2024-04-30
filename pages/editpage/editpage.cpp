@@ -160,12 +160,12 @@ void EditPage::RemoveCurrent(){
             QString queryString = "DELETE FROM Vet "
                                   "WHERE date = :date ";
 
-            if(groupedVetIds.isEmpty()) // Not grouped
+            if(groupedVetIds.isEmpty() && currentNecessary.size() > 2) // Not grouped
                 queryString += " AND id_dog = :id_dog";
 
             query.prepare(queryString);
             query.bindValue(":date", currentNecessary[0]);
-            if(groupedVetIds.isEmpty())
+            if(groupedVetIds.isEmpty() && currentNecessary.size() > 2)
                 query.bindValue(":id_dog", currentNecessary[2]);
         }
 

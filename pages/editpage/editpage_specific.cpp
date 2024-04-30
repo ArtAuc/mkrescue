@@ -191,6 +191,7 @@ void EditPage::GroupedVet(){
 
             QLineEdit *edit = vetEditPage->findChild<QLineEdit*>("dogNameVetAnimalEdit");
             edit->clear();
+            vetEditPage->findChild<QLineEdit*>("chipVetAnimalEdit")->clear();
             edit->setPlaceholderText("");
 
             resizeEvent(nullptr);
