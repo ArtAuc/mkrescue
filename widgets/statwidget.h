@@ -113,6 +113,7 @@ public:
 
 
         infoLabel = new QLabel;
+
         if(type == "currentDogs"){
             hColor = "20718e";
             infoLabel->setText("CHIENS AU REFUGE");
@@ -135,7 +136,7 @@ public:
 
         else if(type == "poundLeft"){
             hColor = "db759c";
-            infoLabel->setText("FOURRIÈRES\nNON RÉCUPÉRÉES");
+            infoLabel->setText("NON RÉCUPÉRÉES");
         }
 
         else if(type == "abandons"){
@@ -178,6 +179,10 @@ public:
 
 
             SelectDaysInterval(monthButton);
+        }
+
+        else{ // Stats without graph
+            infoLabel->setText(infoLabel->text() + "\nEN " + QString::number(QDate::currentDate().year()));
         }
 
         setStyleSheet("QFrame {border:2px solid #" + hColor + "; border-radius:5px;background-color:white;padding:0;} "

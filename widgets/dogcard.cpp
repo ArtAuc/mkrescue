@@ -160,7 +160,7 @@ void DogCard::resizeEvent(QResizeEvent *event){
         layout->setSpacing(height() / 100);
 
         setMaximumSize(QWIDGETSIZE_MAX, 0.95 * parentSize.height());
-        factor = 2;
+        factor = 1.5;
     }
     else{
         setMaximumSize(parentSize / 4);
@@ -174,7 +174,7 @@ void DogCard::resizeEvent(QResizeEvent *event){
         if(c->objectName() == "nameLabel" + chip){
             QFont font = c->font();
             font.setBold(true);
-            font.setPointSizeF(factor * 0.013 * mainWindow->width());
+            font.setPointSizeF(0.013 * factor * mainWindow->width());
             c->setFont(font);
         }
 
@@ -207,7 +207,7 @@ void DogCard::SelectThis(){
 
     layout->removeWidget(detailsButton);
     layout->addWidget(detailsButton, 0, 2);
-    disconnect(detailsButton, SIGNAL(clicked()), 0, 0);
+    disconnect(detailsButton, nullptr, nullptr, nullptr);
     connect(detailsButton, SIGNAL(clicked()), mainWindow, SLOT(UnselectDogCard()));
     detailsButton->setIcon(QIcon("media/cross.png"));
 
@@ -313,7 +313,7 @@ void DogCard::CreateLastVaccine(QWidget *vaccineWidget){
     else
         vaccineEdit->setText("xx/xx/xxxx");
 
-    connect(vaccineEdit, &CustomDateTimeEdit::textEdited, this, [this, vaccineEdit, id_dog](){
+    connect(vaccineEdit, &CustomDateTimeEdit::textChanged, this, [this, vaccineEdit, id_dog](){
         QSqlQuery query;
         query.prepare("DELETE FROM Vet "
                       "WHERE Vet.id_dog = :id "
@@ -322,7 +322,7 @@ void DogCard::CreateLastVaccine(QWidget *vaccineWidget){
         HandleErrorExec(&query);
 
         QDate vaccineDate = QDate::fromString(vaccineEdit->text(), "dd/MM/yyyy");
-        if(vaccineDate.isValid()){
+        if(vaccineDate.isValid() && vaccineDate <= QDate::currentDate()){
             query.prepare("INSERT INTO Vet (id_dog, date, reason) "
                           "VALUES(:id, :date, 'Vaccin')");
             query.bindValue(":id", id_dog);
@@ -384,7 +384,8 @@ void DogCard::CreateHistory(){
                    "SELECT Vet.reason, '', '', '', Vet.date AS date, 'vet', Vet.date, Dogs.id_dog "
                    "FROM Vet "
                    "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
-                   "WHERE Dogs.chip = :chip";
+                   "WHERE Dogs.chip = :chip "
+                   "AND Vet.date LIKE '%T%'";
 
 
     // Sort by descending date

@@ -26,14 +26,14 @@ public:
             statGridWidget->setLayout(statGridLayout);
             statGridLayout->addWidget(new StatWidget("currentDogs"), 0, 0, 1, 2);
             statGridLayout->addWidget(new StatWidget("currentMembers"), 1, 0, 1, 2);
-            statGridLayout->addItem(new QSpacerItem(2, 0, QSizePolicy::Preferred, QSizePolicy::Expanding), 2, 0, 1, 2);
+            /*statGridLayout->addItem(new QSpacerItem(2, 0, QSizePolicy::Preferred, QSizePolicy::Expanding), 2, 0, 1, 2);
             yearLabel = new QLabel("EN " + QString::number(QDate::currentDate().year()) + " :");
             yearLabel->setStyleSheet("background:none;font-weight:bold;");
-            statGridLayout->addWidget(yearLabel, 3, 0, 1, 2, Qt::AlignHCenter | Qt::AlignBottom);
-            statGridLayout->addWidget(new StatWidget("abandons"), 4, 0, 1, 1);
-            statGridLayout->addWidget(new StatWidget("adoptions"), 4, 1, 1, 1);
-            statGridLayout->addWidget(new StatWidget("pound"), 5, 0, 1, 1);
-            statGridLayout->addWidget(new StatWidget("poundLeft"), 5, 1, 1, 1);
+            statGridLayout->addWidget(yearLabel, 3, 0, 1, 2, Qt::AlignHCenter | Qt::AlignBottom);*/
+            statGridLayout->addWidget(new StatWidget("abandons"), 3, 0, 1, 1);
+            statGridLayout->addWidget(new StatWidget("adoptions"), 3, 1, 1, 1);
+            statGridLayout->addWidget(new StatWidget("pound"), 4, 0, 1, 1);
+            statGridLayout->addWidget(new StatWidget("poundLeft"), 4, 1, 1, 1);
             statGridWidget->setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);");
 
             qobject_cast<QHBoxLayout*>(layout())->addWidget(statGridWidget);
@@ -42,9 +42,9 @@ public:
             layout()->setSpacing(0);
 
             setStyleSheet("QWidget#homeScrollContents, QScrollArea {"
-                                        "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);"
-                                        "border: none;"
-                                        "}");
+                            "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 white, stop:1 #fafafa);"
+                            "border: none;"
+                            "}");
 
             alertsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         }
@@ -76,9 +76,9 @@ public:
                 lab->setMaximumWidth(0.8 * findChild<QScrollArea*>()->width());
             }
 
-            QFont font = yearLabel->font();
+            /*QFont font = yearLabel->font();
             font.setPointSizeF(0.015 * width());
-            yearLabel->setFont(font);
+            yearLabel->setFont(font);*/
         }
 
         for(StatWidget *c : findChildren<StatWidget*>()){
@@ -114,6 +114,7 @@ public:
                                   "SELECT Vet.date, 'RDV Vétérinaire', Dogs.name, Vet.reason, Vet.id_dog "
                                   "FROM Vet "
                                   "JOIN Dogs ON Vet.id_dog = Dogs.id_dog "
+                                  "WHERE Vet.date LIKE '%T%' "
                                   "UNION "
                                   ""
                                   "SELECT MAX(DATE(Vet.date, '+1 year'), DATE('now')), 'Prévoir le rappel de vaccin', Dogs.name, '', Vet.id_dog "
