@@ -154,13 +154,16 @@ public slots:
         QRegularExpressionMatch match = rx.match(dateString);
 
         if (match.hasMatch()) {
-            int day = match.captured(1).toInt();
             int month = match.captured(2).toInt();
             int year = match.captured(3).toInt();
-
-            day = qBound(1, day, 31);
             month = qBound(1, month, 12);
             year = qBound(1900, year, 2100);
+
+            int day = match.captured(1).toInt();
+            QDate date(year, month, 1);
+            int daysInMonth = date.daysInMonth();
+            day = qBound(1, day, daysInMonth); // Handle months with less than 31 days
+
 
             dateString = QString("%1/%2/%3").arg(day, 2, 10, QLatin1Char('0'))
                                                .arg(month, 2, 10, QLatin1Char('0'))
