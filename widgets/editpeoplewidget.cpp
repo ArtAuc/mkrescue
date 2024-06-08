@@ -266,7 +266,7 @@ void EditPeopleWidget::LineEditFormat(QString text) {
 
     QString name = lineEdit->objectName();
     if(name.startsWith("lastName"))
-        lineEdit->setText(text.toUpper());
+        text = text.toUpper();
     else if(name.startsWith("firstName") || name.startsWith("city") || name.startsWith("postalCode")){
         QString formattedText;
         QRegularExpression regex("[-\\s]");
@@ -276,16 +276,13 @@ void EditPeopleWidget::LineEditFormat(QString text) {
                 formattedText.append("-");
             formattedText.append(word.left(1).toUpper() + word.mid(1).toLower());
         }
-        lineEdit->setText(formattedText);
+        text = formattedText;
     }
-
-    else if(name.startsWith("email"))
-        lineEdit->setText(text.toLower());
     else if(name.startsWith("phone")) {
         if(previousPhone.isEmpty()) // In case the phone # was added by code
             previousPhone = text;
 
-        if(previousPhone.length() > text.length() && previousPhone[cursorPosition] == ' '){// Removing a space removes the digit before it
+        if(previousPhone.length() > text.length() && previousPhone[cursorPosition] == ' '){ // Removing a space removes the digit before it
             text.remove(cursorPosition - 1, 1);
             cursorPosition -= 2;
         }
@@ -299,8 +296,17 @@ void EditPeopleWidget::LineEditFormat(QString text) {
                 cursorPosition++;
             }
         }
-        lineEdit->setText(formattedText);
+        text = formattedText;
     }
+
+    if(name.startsWith("email"))
+        text = text.toLower();
+
+    else if(text.size() > 0)
+        text[0] = text[0].toUpper();
+
+    lineEdit->setText(text);
+
 
     lineEdit->setCursorPosition(cursorPosition);
 }

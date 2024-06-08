@@ -219,8 +219,14 @@ void EditDogWidget::LineEditFormat(QString text){
                 formattedText.append("-");
             formattedText.append(word.left(1).toUpper() + word.mid(1).toLower());
         }
-        lineEdit->setText(formattedText);
+        text = formattedText;
     }
+
+    if(text.size() > 0)
+        text[0] = text[0].toUpper();
+
+    lineEdit->setText(text);
+
 
     lineEdit->setCursorPosition(cursorPosition);
 }

@@ -120,7 +120,7 @@ void Database::Create()
                "FOREIGN KEY (id_people) REFERENCES People(id_people)"
                ");");
 
-    // Redate empty dates from members, see commit
+    // Redate empty dates from members, see commit f4bbc21
     HandleErrorExec(&query, "UPDATE Members "
                             "SET date = DATE('now') "
                             "WHERE date IS NULL");
