@@ -145,10 +145,7 @@ public:
 
 
 
-            if(alertDays >= 0)
-                queryString += "WHERE Results.date BETWEEN DATE('now') AND DATE('now', '+' || " + QString::number(alertDays) + " || ' day') ";            
-            else
-                queryString += "WHERE Results.date >= DATE('now')";
+            queryString += "WHERE Results.date >= DATE('now')";
 
 
             queryString +="ORDER BY Results.date;";
@@ -180,9 +177,10 @@ public:
                 QString type = query.value(1).toString();
                 QString stylesheet = "QPushButton{padding-top:20px;padding-bottom:20px;margin-bottom:5px;";
                 QStringList necessary;
+                bool addingDate = alertDays < 0 || query.value(0).toDate() < QDate::currentDate().addDays(alertDays);
 
                 if(query.value(0).toDate() == QDate::currentDate()){
-                    stylesheet += "border:2px solid #634049;";
+                    stylesheet += "border:5px solid #634049;";
                     dateString = "AUJOURD'HUI - " + dateString;
                 }
 
@@ -252,7 +250,7 @@ public:
                 }
 
 
-                if(lastDate != dateString){
+                if(lastDate != dateString && addingDate){
                     QLabel *dateLabel = new QLabel(dateString);
                     dateLabel->setAlignment(Qt::AlignCenter);
                     dateLabel->setStyleSheet("font-weight:bold;border-bottom:1px solid #aaa;color:#333;margin:10px;");
@@ -282,7 +280,8 @@ public:
                 }
 
                 but->setStyleSheet(stylesheet);
-                alertsWidget->layout()->addWidget(but);
+                if(addingDate)
+                    alertsWidget->layout()->addWidget(but);
             }
 
             spacer = new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding);
