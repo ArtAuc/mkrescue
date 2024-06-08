@@ -28,7 +28,7 @@ void Database::Create()
                "first_name VARCHAR(255),"
                "address TEXT,"
                "phone VARCHAR(20),"
-               "emai    l VARCHAR(255)"
+               "email VARCHAR(255)"
                ");");
     if(!IsInTable("People", "id_people", "-1"))
         HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "

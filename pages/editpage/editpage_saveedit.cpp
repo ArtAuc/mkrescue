@@ -689,8 +689,5 @@ void EditPage::SaveEdit()
         }
     }
 
-    qDebug() << groupedVetIds;
-
-
     QuitEdit();
 }
