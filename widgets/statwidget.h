@@ -39,16 +39,13 @@ protected:
         painter.translate(20, height() - 20);
         painter.scale(1, -1);
 
-
         if (!data.empty()) {
-
-            qreal xScale = (width() - 40) / (data.size() - 1);
+            qreal xScale = (width() - 40.0) / (data.size() - 1);
             qreal yScale;
-            if(minY == maxY){
+            if(minY == maxY)
                 yScale = 1;
-            }
             else
-                yScale = (height() - 40) / (maxY - minY);
+                yScale = (height() - 40.0) / (maxY - minY);
 
             // Draw graph
             painter.setPen(QPen(color, 2));
