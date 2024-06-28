@@ -262,21 +262,22 @@ void CleanThread::MakeRedList(){
             reasons.append("Abandon de " + query.value(1).toString() + " le " + QDate::fromString(query.value(2).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
         }
 
+        if(reasons.length() > 0){
+            // Single query to insert is way faster
+            QString insertQuery = "INSERT INTO Red_list (id_people, reason) VALUES ";
+            for(int i = 0; i < reasons.length(); i++){
+                insertQuery += "(:id" + QString::number(i) + ", :reason" + QString::number(i) + "), ";
+            }
+            insertQuery.chop(2);
+            query.prepare(insertQuery);
 
-        // Single query to insert is way faster
-        QString insertQuery = "INSERT INTO Red_list (id_people, reason) VALUES ";
-        for(int i = 0; i < reasons.length(); i++){
-            insertQuery += "(:id" + QString::number(i) + ", :reason" + QString::number(i) + "), ";
+            for(int i = 0; i < reasons.length(); i++){
+                query.bindValue(":id" + QString::number(i), id_peoples[i]);
+                query.bindValue(":reason" + QString::number(i), reasons[i]);
+            }
+
+            HandleErrorExec(&query);
         }
-        insertQuery.chop(2);
-        query.prepare(insertQuery);
-
-        for(int i = 0; i < reasons.length(); i++){
-            query.bindValue(":id" + QString::number(i), id_peoples[i]);
-            query.bindValue(":reason" + QString::number(i), reasons[i]);
-        }
-
-        HandleErrorExec(&query);
     }
 }
 
