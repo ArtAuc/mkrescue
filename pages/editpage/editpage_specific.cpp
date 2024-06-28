@@ -41,7 +41,10 @@ void EditPage::ClearAllPages()
 
     for (QWidget* widget : findChildren<QWidget*>()) {
         if (CustomDateTimeEdit *dateEdit = qobject_cast<CustomDateTimeEdit*>(widget)){
-            dateEdit->SetDate(QDate::currentDate());
+            if(dateEdit->Invalidable())
+                dateEdit->SetDate(QDate::fromString(""));
+            else
+                dateEdit->SetDate(QDate::currentDate());
         }
         else if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widget))
             lineEdit->clear();

@@ -54,7 +54,7 @@ void EditPage::resizeEvent(QResizeEvent *event){
     layout()->setContentsMargins(margins);
 
     // Tab header
-    if(lastType == "entry" || lastType == "care" || lastType == "lost" || lastType == "adoptionDemand"){
+    if(lastType == "entry" || lastType == "care" || lastType == "lost" || lastType == "adoptionDemand" || lastType == "sponsors"){
         QTabBar* bar = findChild<QWidget*>(lastType + "EditPage")->findChild<QTabBar*>();
         QFont font = bar->font();
         font.setPointSize(width() * 0.01);
@@ -102,6 +102,8 @@ void EditPage::RemoveCurrent(){
         message = "Voulez-vous supprimer ce RDV Vétérinaire ?";
     else if (lastType == "adoptionDemand")
         message = "Voulez-vous supprimer cette demande d'adoption ?";
+    else if (lastType == "sponsors")
+        message = "Voulez-vous supprimer ce parrainage ?";
 
     reply = QMessageBox::question(nullptr, "Confirmation de suppression", message,
                                               QMessageBox::Yes | QMessageBox::No);
@@ -175,6 +177,14 @@ void EditPage::RemoveCurrent(){
                           "AND id_people = :id_people;");
             query.bindValue(":breed", currentNecessary[0]);
             query.bindValue(":id_people", currentNecessary[1]);
+        }
+
+        else if(lastType == "sponsors"){
+            query.prepare("DELETE FROM Sponsors "
+                          "WHERE id_dog = :id_dog "
+                          "AND id_people = :id_people;");
+            query.bindValue(":id_dog", currentNecessary[1]);
+            query.bindValue(":id_people", currentNecessary[0]);
         }
 
         HandleErrorExec(&query);

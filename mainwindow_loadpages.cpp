@@ -444,7 +444,13 @@ void MainWindow::LoadSponsors(QString search){
         table->setItem(nb, 3, new QTableWidgetItem(query.value(4).toString())); // description
         table->setItem(nb, 4, new QTableWidgetItem(query.value(5).toString() + "€")); // amount
         table->setItem(nb, 5, new QTableWidgetItem(query.value(6).toDate().toString("dd/MM/yyyy"))); // start_date
-        table->setItem(nb, 6, new QTableWidgetItem(query.value(7).toDate().toString("dd/MM/yyyy"))); // end_date
+        QTableWidgetItem *endDateItem;
+        if(query.value(7).toString().isNull())
+            endDateItem = new QTableWidgetItem("__________"); // Blank space to prevent column width display bug
+        else
+            endDateItem = new QTableWidgetItem(query.value(7).toDate().toString("dd/MM/yyyy"));
+
+        table->setItem(nb, 6, endDateItem); // end_date
 
         // Modify icon
         HoverToolButton* modifyButton = new HoverToolButton(table);
@@ -455,7 +461,7 @@ void MainWindow::LoadSponsors(QString search){
         table->item(nb, 7)->setBackground(QColor("#749674"));
         table->setCellWidget(nb, 7, modifyButton);
 
-        QStringList necessary = {query.value(3).toString(), query.value(0).toString()}; // dog_name + last_name
+        QStringList necessary = {query.value(8).toString(), query.value(9).toString()}; // id_people + id_dog
 
         connect(modifyButton, &HoverToolButton::clicked, this, [=](){
             TriggerEdit("sponsors", necessary);

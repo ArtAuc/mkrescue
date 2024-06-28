@@ -572,7 +572,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>12</number>
+         <number>3</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -724,8 +724,8 @@ QCheckBox::indicator:unchecked{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>86</width>
-               <height>84</height>
+               <width>984</width>
+               <height>567</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -992,7 +992,7 @@ QComboBox QAbstractItemView {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>6</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1458,6 +1458,103 @@ QComboBox QAbstractItemView {
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="sponsorsEditPage">
+             <layout class="QVBoxLayout" name="verticalLayout_25">
+              <item>
+               <widget class="QTabWidget" name="sponsorsTabWidget">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="sponsorsTab1">
+                 <attribute name="title">
+                  <string>Chien</string>
+                 </attribute>
+                 <layout class="QGridLayout" name="gridLayout_15">
+                  <item row="0" column="2">
+                   <layout class="QVBoxLayout" name="verticalLayout_28">
+                    <item>
+                     <widget class="QLabel" name="endDateSponsorsLabel">
+                      <property name="text">
+                       <string>DATE DE FIN</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="CustomDateTimeEdit" name="endDateSponsorsEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="0">
+                   <layout class="QVBoxLayout" name="verticalLayout_27">
+                    <item>
+                     <widget class="QLabel" name="beginDateSponsorsLabel">
+                      <property name="text">
+                       <string>DATE DE DÉBUT</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="CustomDateTimeEdit" name="startDateSponsorsEdit"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="3">
+                   <layout class="QVBoxLayout" name="verticalLayout_26">
+                    <item>
+                     <widget class="QLabel" name="amountSponsorsLabel">
+                      <property name="text">
+                       <string>MONTANT PAR MOIS</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_18">
+                      <item>
+                       <widget class="QDoubleSpinBox" name="amountSponsorsEdit">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="maximum">
+                         <double>999.990000000000009</double>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="amountSponsorsBoxLabel">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">qproperty-alignment: AlignCenter
+</string>
+                        </property>
+                        <property name="text">
+                         <string>€</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="sponsorsTab2">
+                 <attribute name="title">
+                  <string>Personne</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_24"/>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="redListEditPage">
              <property name="styleSheet">
               <string notr="true">QLineEdit{
@@ -1697,8 +1794,8 @@ QComboBox QAbstractItemView {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>948</width>
-                   <height>312</height>
+                   <width>68</width>
+                   <height>18</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -3129,8 +3226,14 @@ QCheckBox{
         </widget>
         <widget class="DogRegistry" name="sponsorsPage">
          <layout class="QVBoxLayout" name="verticalLayout_23">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_17">
+           <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="0,0">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <item>
              <widget class="QCheckBox" name="pastSponsorsCheckbox">
               <property name="styleSheet">

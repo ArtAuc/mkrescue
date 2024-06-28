@@ -275,6 +275,26 @@ void EditPage::Edit(QString type, QStringList infos){
         }
     }
 
+    else if (type == "sponsors"){
+        currentPage = findChild<QWidget*>("sponsorsEditPage");
+        findChild<QTabWidget*>("sponsorsTabWidget")->setCurrentIndex(0);
+        if(infos.size() > 11){
+            currentNecessary.append(infos[13]); // id_people
+            currentNecessary.append(infos[14]); // id_dog
+
+            // Infos
+            SetField("startDateSponsorsEdit", infos[11], currentPage);
+            SetField("endDateSponsorsEdit", infos[12], currentPage);
+            SetField("amountSponsorsEdit", infos[10], currentPage);
+
+            // Chien
+            FillAnimalWidget("SponsorsAnimalEdit", infos[5], infos[6], infos[7], infos[8], infos[9], currentPage);
+
+            // Personne
+            FillPeopleWidget("SponsorsEdit", infos[0], infos[1], infos[2], infos[3], infos[4], currentPage);
+        }
+    }
+
     if(infos.size() > 0){
         AssignIdPeople(currentPage);
         AssignIdDog(currentPage);
@@ -685,6 +705,51 @@ void EditPage::SaveEdit()
             query.bindValue(":age", age);
             query.bindValue(":satisfied", satisfied);
             query.bindValue(":infos", infos);
+            HandleErrorExec(&query);
+        }
+    }
+
+    else if(lastType == "sponsors"){
+        QWidget *sponsorsEditPage = findChild<QWidget*>("sponsorsEditPage");
+        QString id_people = CreatePersonIfNeeded("SponsorsEdit", sponsorsEditPage);
+        QString id_dog = CreateDogIfNeeded("SponsorsAnimalEdit", sponsorsEditPage);
+        if(id_dog == "-2")
+            return;
+        QString start_date = GetField("startDateSponsorsEdit", sponsorsEditPage);
+        QString end_date = GetField("endDateSponsorsEdit", sponsorsEditPage);
+        QString amount = GetField("amountSponsorsEdit", sponsorsEditPage);
+
+        if (!currentNecessary.isEmpty()) { // Modifying
+            QString queryString = "UPDATE Sponsors "
+                                  "SET id_dog = :id_dog, "
+                                  "id_people = :id_people, "
+                                  "start_date = :start_date, "
+                                  "end_date = :end_date, "
+                                  "amount = :amount "
+                                  "WHERE id_dog = :id_dog_nec "
+                                  "AND id_people = :id_people_nec;";
+
+            QSqlQuery query;
+            query.prepare(queryString);
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":start_date", start_date);
+            query.bindValue(":end_date", end_date);
+            query.bindValue(":amount", amount);
+            query.bindValue(":id_dog_nec", currentNecessary[1]);
+            query.bindValue(":id_people_nec", currentNecessary[0]);
+            HandleErrorExec(&query);
+        }
+        else { // Creating
+            QSqlQuery query;
+            query.prepare("INSERT INTO Sponsors (id_dog, id_people, start_date, end_date, amount) "
+                          "VALUES (:id_dog, :id_people, :start_date, :end_date, :amount)");
+
+            query.bindValue(":id_dog", id_dog);
+            query.bindValue(":id_people", id_people);
+            query.bindValue(":start_date", start_date);
+            query.bindValue(":end_date", end_date);
+            query.bindValue(":amount", amount);
             HandleErrorExec(&query);
         }
     }

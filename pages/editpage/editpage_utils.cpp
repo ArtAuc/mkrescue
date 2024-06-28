@@ -206,6 +206,17 @@ QString EditPage::CreatePersonIfNeeded(QString nameEnd, QWidget *parent) {
             message += "- Demande d'adoption (" + query.value(0).toString() + ")\n";
         }
 
+        // Sponsors
+        query.prepare("SELECT Dogs.name "
+                      "FROM Sponsors "
+                      "JOIN Dogs ON Dogs.id_dog = Sponsors.id_dog "
+                      "WHERE id_people = :old_id_people");
+        query.bindValue(":old_id_people", old_id_people);
+        HandleErrorExec(&query);
+        while (message.count("\n") < 10 && query.next()) {
+            message += "- Parrainage (" + query.value(0).toString() + ")\n";
+        }
+
         if(message.count("\n") == 10)
             message += "...";
 

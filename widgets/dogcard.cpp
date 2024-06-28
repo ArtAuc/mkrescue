@@ -198,8 +198,8 @@ void DogCard::resizeEvent(QResizeEvent *event){
                                     "border-left: 2px solid gray;"
                                     "border-radius:0px;"
                                  "}");
-
-    sexLabel->setPixmap(sexIcon.scaled(0.02 * factor * mainWindow->width(), 0.02 * factor * mainWindow->width(), Qt::KeepAspectRatio));
+    if(sexLabel)
+        sexLabel->setPixmap(sexIcon.scaled(0.02 * factor * mainWindow->width(), 0.02 * factor * mainWindow->width(), Qt::KeepAspectRatio));
 }
 
 void DogCard::SelectThis(){

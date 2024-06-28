@@ -17,8 +17,6 @@ public:
         connect(this, &CustomDateTimeEdit::editingFinished, this, &CustomDateTimeEdit::CorrectDate);
         connect(this, &CustomDateTimeEdit::textEdited, this, &CustomDateTimeEdit::ReplaceCharacter);
         connect(this, &CustomDateTimeEdit::selectionChanged, this, &CustomDateTimeEdit::HandleSelection);
-
-
     }
 
     void EnableTime() {
@@ -26,6 +24,7 @@ public:
     }
 
     void SetInvalidable() {invalidable = true;}
+    bool Invalidable() {return invalidable;}
 
     bool DateOnly() {return dateOnly;}
 
@@ -48,6 +47,8 @@ public:
             setText(date.toString(displayedFormat));
         else
             setText(date.toString(displayedFormat + " 00:00"));
+
+        CorrectDate();
     }
 
     void keyPressEvent(QKeyEvent *event) override {

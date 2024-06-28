@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->lostAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("lost", {}); });
     connect(ui->vetAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("vet", {}); });
     connect(ui->adoptionDemandAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("adoptionDemand", {}); });
+    connect(ui->sponsorsAddButton, &QToolButton::clicked, this, [=](){ TriggerEdit("sponsors", {}); });
     connect(ui->entryTypeBox, SIGNAL(currentTextChanged(QString)), ui->editPage, SLOT(ChangeEntryType(QString)));
     connect(ui->submitButton, SIGNAL(clicked(bool)), ui->editPage, SLOT(SaveEdit()));
     connect(ui->cancelButton, SIGNAL(clicked(bool)), this, SLOT(ChangePage()));
@@ -129,6 +130,13 @@ void MainWindow::InitEditWidgets(){
 
     ui->adoptionDemandTab2->layout()->addWidget(new EditPeopleWidget("AdoptionDemandEdit"));
 
+    gridLayout = qobject_cast<QGridLayout*>(ui->sponsorsTab1->layout());
+    if(gridLayout){
+        gridLayout->addWidget(new EditDogWidget("SponsorsAnimalEdit"), 1, 0, 1, 4);
+    }
+    ui->sponsorsTab2->layout()->addWidget(new EditPeopleWidget("SponsorsEdit"));
+    ui->endDateSponsorsEdit->SetInvalidable();
+
 
     ui->careTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->entryTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
@@ -136,6 +144,8 @@ void MainWindow::InitEditWidgets(){
     ui->lostTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->adoptionDemandTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
     ui->adoptionDemandTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->sponsorsTab1->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+    ui->sponsorsTab2->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 
 
@@ -189,7 +199,6 @@ void MainWindow::ToggleSatisfiedBoxText(){
         newText = "Non Satisfaite";
     ui->satisfiedAdoptionDemandBox->setText(newText);
 }
-
 
 // Change selected page from stacked widget, based on the selected menu item
 void MainWindow::ChangePage(QTreeWidgetItem* item)
@@ -622,6 +631,38 @@ void MainWindow::TriggerEdit(QString type, QStringList necessary){
 
             query.bindValue(":breed", necessary[0]);
             query.bindValue(":id_people", necessary[1]);
+
+            HandleErrorExec(&query);
+            query.next();
+
+            for(int i = 0; i < query.record().count(); i++)
+                infos.append(query.value(i).toString());
+        }
+
+        else if(type == "sponsors"){
+            query.prepare("SELECT People.last_name, "
+                          "People.first_name, "
+                          "People.address, "
+                          "People.phone, "
+                          "People.email, "
+                          "Dogs.name, "
+                          "Dogs.chip, "
+                          "Dogs.sex, "
+                          "Dogs.birth, "
+                          "Dogs.description, "
+                          "Sponsors.amount, "
+                          "Sponsors.start_date, "
+                          "Sponsors.end_date, "
+                          "Sponsors.id_people, "
+                          "Sponsors.id_dog "
+                          "FROM Sponsors "
+                          "JOIN People ON People.id_people = Sponsors.id_people "
+                          "JOIN Dogs ON Dogs.id_dog = Sponsors.id_dog "
+                          "WHERE People.id_people = :id_people "
+                          "AND Dogs.id_dog = :id_dog");
+
+            query.bindValue(":id_people", necessary[0]);
+            query.bindValue(":id_dog", necessary[1]);
 
             HandleErrorExec(&query);
             query.next();
