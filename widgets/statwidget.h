@@ -305,11 +305,11 @@ public:
                                   "WHERE strftime('%Y', date_prov) = :currentYear");
 
                 else if (type == "poundLeft")
-                    query.prepare("SELECT ES_Registry.type_prov, ES_Registry.date_prov, ES_Registry.id_dog "
+                    query.prepare("SELECT DISTINCT ES_Registry.type_prov, ES_Registry.date_prov, ES_Registry.id_dog "
                                   "FROM ES_Registry "
                                   "LEFT JOIN Destinations ON Destinations.id_dog = ES_Registry.id_dog "
                                   "WHERE strftime('%Y', ES_Registry.date_prov) = :currentYear "
-                                  "AND Destinations.type != 'Propriétaire' "
+                                  "AND (Destinations.type IS NULL OR Destinations.type != 'Propriétaire') "
                                   "AND ES_Registry.date_prov = ("
                                   "SELECT MAX(date_prov) "
                                   "FROM ES_Registry AS esr "
