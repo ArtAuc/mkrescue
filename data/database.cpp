@@ -49,6 +49,13 @@ void Database::Create()
                "compat_dog BOOLEAN,"
                "compat_cat BOOLEAN"
                ");");
+    HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Sponsors ("
+               "id_dog INT REFERENCES Dogs(id_dog),"
+               "id_people INT REFERENCES People(id_people),"
+               "start_date DATE,"
+               "end_date DATE,"
+               "amount DECIMAL(10, 2)"
+               ");");
     HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Members ("
                "id_adhesion INT,"
                "id_people INT,"
@@ -291,7 +298,8 @@ void CleanThread::CleanPeople(){
                                 "Red_list WHERE id_people",
                                 "Members WHERE id_people",
                                 "Lost WHERE id_people",
-                                "Adoption_demand WHERE id_people"
+                                "Adoption_demand WHERE id_people",
+                                "Sponsors WHERE id_people"
                                };
 
     for(QString id : id_peoples){

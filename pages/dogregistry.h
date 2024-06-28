@@ -24,7 +24,13 @@ public:
         }
 
         if(table != nullptr && label1 != nullptr && label2 != nullptr && label3 != nullptr){
-            if(type != "adoptionDemand"){
+            if(type == "sponsors"){
+                table->horizontalHeaderItem(4)->setText("Montant\npar mois");
+                table->horizontalHeaderItem(5)->setText("Date\ndébut");
+                table->horizontalHeaderItem(6)->setText("Date\nfin");
+            }
+
+            else if(type != "adoptionDemand"){
                 table->horizontalHeaderItem(1)->setText("Date\nd'entrée");
                 table->horizontalHeaderItem(3)->setText("Espèce\nSexe");
                 table->horizontalHeaderItem(6)->setText("Date de\nnaissance");
@@ -52,6 +58,12 @@ public:
                 label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1));
                 label2->setMaximumWidth(table->columnWidth(2) + table->columnWidth(3) + table->columnWidth(4));
                 label3->setMaximumWidth(table->columnWidth(5));
+            }
+
+            else if(type == "sponsors"){
+                label1->setMaximumWidth(table->columnWidth(0) + table->columnWidth(1));
+                label2->setMaximumWidth(table->columnWidth(2) + table->columnWidth(3));
+                label3->setMaximumWidth(table->columnWidth(4) + table->columnWidth(5) + table->columnWidth(6));
             }
 
             else{

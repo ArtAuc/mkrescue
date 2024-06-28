@@ -403,3 +403,33 @@ QSqlQuery Database::GetAdoptionDemand(QString search, bool satisfied) {
 
     return query;
 }
+
+QSqlQuery Database::GetSponsors(QString search, bool past) {
+    search = RemoveAccents(search);
+    QSqlQuery query;
+    QString queryString = "SELECT People.last_name, "
+                          "People.first_name, "
+                          "People.phone, "
+                          "Dogs.name, "
+                          "Dogs.description, "
+                          "Sponsors.amount, "
+                          "Sponsors.start_date, "
+                          "Sponsors.end_date "
+                          "FROM Sponsors "
+                          "JOIN People ON People.id_people = Sponsors.id_people "
+                          "JOIN Dogs ON Dogs.id_dog = Sponsors.id_dog "
+                          "WHERE (" + noaccentbegin + "People.last_name" + noaccentend + " LIKE :search OR " + noaccentbegin + "People.first_name" + noaccentend + " LIKE :search OR REPLACE(People.phone, ' ', '') LIKE :search OR " + noaccentbegin + "Dogs.chip" + noaccentend + " LIKE :search "
+                          "OR " + noaccentbegin + "Dogs.description" + noaccentend + " LIKE :search OR " + noaccentbegin + "Dogs.name" + noaccentend + " LIKE :search)";
+
+
+    if(!past) // Remove past sponsors
+        queryString += " AND (Sponsors.end_date >= DATE('now') OR Sponsors.end_date IS NULL);";
+
+    query.prepare(queryString);
+    query.bindValue(":search", search + "%");
+    query.bindValue(":exact", search);
+
+    HandleErrorExec(&query);
+
+    return query;
+}

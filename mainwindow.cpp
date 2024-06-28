@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->foundCheckBox, &QCheckBox::clicked, this, [this]() {LoadLost(ui->searchLine->text());});
     connect(ui->satisfiedCheckBox, &QCheckBox::clicked, this, [this]() {LoadAdoptionDemand(ui->searchLine->text());});
     connect(ui->oldCheckBox, &QCheckBox::clicked, this, [this]() {LoadVet(ui->searchLine->text());});
+    connect(ui->pastSponsorsCheckbox, &QCheckBox::clicked, this, [this]() {LoadSponsors(ui->searchLine->text());});
 
 
     ui->entryRegistryPage->SetType("entry");
@@ -78,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lostPage->SetType("lost");
     ui->vetPage->SetType("vet");
     ui->adoptionDemandPage->SetType("adoptionDemand");
+    ui->sponsorsPage->SetType("sponsors");
 }
 
 
@@ -240,6 +242,10 @@ void MainWindow::ChangePage(QTreeWidgetItem* item)
         stacked->setCurrentWidget(ui->adoptionDemandPage);
         LoadAdoptionDemand();
     }
+    else if (txt == "Parrainage"){
+        stacked->setCurrentWidget(ui->sponsorsPage);
+        LoadSponsors();
+    }
 
     else{
         ui->menuTree->collapseAllExcept(txt);
@@ -348,6 +354,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     ui->foundCheckBox->setFont(checkboxFont);
     checkboxFont.setPointSize(0.01 * ui->adoptionDemandPage->width());
     ui->satisfiedCheckBox->setFont(checkboxFont);
+    checkboxFont.setPointSize(0.01 * ui->sponsorsPage->width());
+    ui->pastSponsorsCheckbox->setFont(checkboxFont);
     checkboxFont.setPointSize(0.01 * ui->vetPage->width());
     ui->oldCheckBox->setFont(checkboxFont);
 
@@ -409,6 +417,8 @@ void MainWindow::Search(QString search){
         LoadVet(search);
     else if(pageName == "adoptionDemandPage")
         LoadAdoptionDemand(search);
+    else if(pageName == "sponsorsPage")
+        LoadSponsors(search);
 
     Registry *registry = findChild<Registry*>(pageName);
     if(registry)

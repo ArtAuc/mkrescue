@@ -43,6 +43,7 @@ public slots:
     void LoadLost(QString search = "");
     void LoadVet(QString search = "");
     void LoadAdoptionDemand(QString search = "");
+    void LoadSponsors(QString search = "");
     void ToggleModifyButtons();
     void Search(QString search = nullptr);
     void TriggerEdit(QString type, QStringList infos);

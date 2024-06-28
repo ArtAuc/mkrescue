@@ -425,3 +425,46 @@ void MainWindow::LoadAdoptionDemand(QString search){
     ui->adoptionDemandPage->resizeEvent(nullptr);
 
 }
+
+void MainWindow::LoadSponsors(QString search){
+    QTableWidget* table = ui->sponsorsTable;
+    table->clearContents();
+    table->setRowCount(0);
+    modifyButtons.clear();
+
+    QSqlQuery query = db.GetSponsors(search, ui->pastSponsorsCheckbox->isChecked());
+
+    while(query.next() && query.record().count() > 0)
+    {
+        int nb = table->rowCount();
+        table->insertRow(nb);
+        table->setItem(nb, 0, new QTableWidgetItem(query.value(0).toString() + " " + query.value(1).toString())); // last_name + first_name
+        table->setItem(nb, 1, new QTableWidgetItem(query.value(2).toString())); // phone
+        table->setItem(nb, 2, new QTableWidgetItem(query.value(3).toString())); // dog_name
+        table->setItem(nb, 3, new QTableWidgetItem(query.value(4).toString())); // description
+        table->setItem(nb, 4, new QTableWidgetItem(query.value(5).toString() + "€")); // amount
+        table->setItem(nb, 5, new QTableWidgetItem(query.value(6).toDate().toString("dd/MM/yyyy"))); // start_date
+        table->setItem(nb, 6, new QTableWidgetItem(query.value(7).toDate().toString("dd/MM/yyyy"))); // end_date
+
+        // Modify icon
+        HoverToolButton* modifyButton = new HoverToolButton(table);
+        modifyButton->setIcon(QIcon("media/modify.svg"));
+        modifyButton->setStyleSheet("background-color:rgba(0,0,0,0);border-style:none;text-align: center;");
+
+        table->setItem(nb, 7, new QTableWidgetItem(""));
+        table->item(nb, 7)->setBackground(QColor("#749674"));
+        table->setCellWidget(nb, 7, modifyButton);
+
+        QStringList necessary = {query.value(3).toString(), query.value(0).toString()}; // dog_name + last_name
+
+        connect(modifyButton, &HoverToolButton::clicked, this, [=](){
+            TriggerEdit("sponsors", necessary);
+        });
+
+        modifyButtons.append(modifyButton);
+    }
+
+    ui->sponsorsPage->showEvent(nullptr);
+    ui->sponsorsPage->resizeEvent(nullptr);
+
+}

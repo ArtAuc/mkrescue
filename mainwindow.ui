@@ -336,6 +336,11 @@ border-right:1px solid #aaa</string>
          </item>
          <item>
           <property name="text">
+           <string>      Parrainage</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>      Animaux perdus</string>
           </property>
           <property name="background">
@@ -567,7 +572,7 @@ margin-right:30px;</string>
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>12</number>
         </property>
         <widget class="HomePage" name="homePage">
          <property name="styleSheet">
@@ -596,7 +601,7 @@ margin-right:30px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>82</width>
+               <width>68</width>
                <height>18</height>
               </rect>
              </property>
@@ -987,7 +992,7 @@ QComboBox QAbstractItemView {
           <item>
            <widget class="QStackedWidget" name="editStacked">
             <property name="currentIndex">
-             <number>0</number>
+             <number>6</number>
             </property>
             <widget class="QWidget" name="entryEditPage">
              <property name="sizePolicy">
@@ -1621,6 +1626,11 @@ QComboBox QAbstractItemView {
                     <item>
                      <property name="text">
                       <string>Espèces</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Internet</string>
                      </property>
                     </item>
                     <item>
@@ -3111,6 +3121,180 @@ QCheckBox{
             <column>
              <property name="text">
               <string>   </string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="DogRegistry" name="sponsorsPage">
+         <layout class="QVBoxLayout" name="verticalLayout_23">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QCheckBox" name="pastSponsorsCheckbox">
+              <property name="styleSheet">
+               <string notr="true">QCheckBox:checked{
+	background-color:#3b4b64;
+}
+
+QCheckBox:unchecked {
+	border: 1px solid gray;
+    background-color: white;
+	color:gray;
+}
+
+QCheckBox::indicator:unchecked{
+		image: url('media/cross.png');
+}
+
+QCheckBox{
+	margin-bottom:10px;
+}</string>
+              </property>
+              <property name="text">
+               <string>Passés</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_12">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="sponsorsLabelLayout">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="sponsorsLabel1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight:bold;
+color:#212834;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="text">
+               <string>PERSONNE</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="sponsorsLabel2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight:bold;
+color:#212834;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="text">
+               <string>CHIEN</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="sponsorsLabel3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-weight:bold;
+color:#212834;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="HoverToolButton" name="sponsorsAddButton">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="sponsorsTable">
+            <column>
+             <property name="text">
+              <string>Nom</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Téléphone</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Nom</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Description</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Montant\npar mois</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Date\ndébut</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Date\nfin</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string/>
              </property>
             </column>
            </widget>

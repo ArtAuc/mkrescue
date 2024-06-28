@@ -25,6 +25,7 @@ public:
     QSqlQuery GetLost(QString search, bool found = false);
     QSqlQuery GetVet(QString search, bool old);
     QSqlQuery GetAdoptionDemand(QString search, bool satisfied = false);
+    QSqlQuery GetSponsors(QString search, bool past = false);
     std::vector<QString> GetRegistryYears(QString type);
     void CleanDogs();
     void CleanPeople();
