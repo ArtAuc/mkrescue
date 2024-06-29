@@ -132,7 +132,8 @@ QString SavedData::SendMembersEmail(QString address, QString firstName, QString 
         QString to = address;
         QString displayFrom = shelterName;
         QString subject = "Rappel d'Adhésion - " + shelterName;
-        QString body = recallMailBody.replace("$prenom_dest", firstName).replace("$nom_fam_dest", lastName).replace("$date_exp", expirationDate).replace("$nom_refuge", shelterName).replace("$telephone_refuge", shelterPhone).replace("$adresse_refuge", crypto->decryptToString(shelterAddress));
+        QString body = recallMailBody;
+        body.replace("$prenom_dest", firstName).replace("$nom_fam_dest", lastName).replace("$date_exp", expirationDate).replace("$nom_refuge", shelterName).replace("$telephone_refuge", shelterPhone).replace("$adresse_refuge", crypto->decryptToString(shelterAddress));
         QString smtpServer = "smtp.gmail.com";
         int port = 465; // Gmail SMTP port
 
