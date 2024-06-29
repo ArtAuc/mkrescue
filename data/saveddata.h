@@ -33,6 +33,9 @@ public:
     void SetMaxDogs(QString maxDogs){this->maxDogs = maxDogs; Save();}
     QString MaxDays(){return maxDays;}
     void SetMaxDays(QString maxDays){this->maxDays = maxDays; Save();}
+    QString SendMembersEmail(QString address, QString firstName, QString lastName, QString expirationDate);
+    void SetShelterInfos(QString name, QString phone, QString address){shelterName = name; shelterPhone = phone; shelterAddress = address;}
+    void SetRecallMailBody(QString txt){recallMailBody = txt;}
 
 public slots:
     void Save();
@@ -49,6 +52,9 @@ private:
     QMovie *syncMovie;
     QString maxDogs = "1";
     QString maxDays = "0";
+    QString shelterName, shelterPhone, shelterAddress;
+    QString recallMailBody = "";
+    QStringList emailsToSend = {};
 };
 
 #endif // SAVEDDATA_H

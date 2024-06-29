@@ -38,6 +38,7 @@ void Database::Create()
         HandleErrorExec(&query, "INSERT INTO People (id_people, last_name, first_name, address, phone, email) "
                    "VALUES (-2, 'Refuge', '', '\n\n ', '', '')"
                    ";");
+
     HandleErrorExec(&query, "CREATE TABLE IF NOT EXISTS Dogs ("
                "id_dog INT PRIMARY KEY,"
                "name VARCHAR(255),"

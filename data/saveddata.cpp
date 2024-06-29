@@ -30,6 +30,11 @@ SavedData::SavedData()
 }
 
 bool SavedData::Load(){
+    QFile bodyFile("recall_email.txt");
+    if (bodyFile.open(QIODevice::ReadOnly)) {
+        recallMailBody = bodyFile.readAll();
+    }
+
     QFile file("save");
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream in(&file);
@@ -123,7 +128,6 @@ void SavedData::SynchronizeWorker(){
     }
 
 
-
     // Prescriptions save
     QDirIterator iterator("prescriptions/", QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while(iterator.hasNext()){
@@ -138,137 +142,80 @@ void SavedData::SynchronizeWorker(){
         }
     }
 
-    emit SynchronizationFinished(errors);
-}
+    // Members recall mails
+    if(recallMailBody != ""){
+        QFile membersFile("members");
+        if(!membersFile.exists()){
+            membersFile.open(QIODevice::WriteOnly);
+            membersFile.close();
+        }
 
-QString SavedData::SynchronizeEmail(QString subject, QString filePath){
-    if(crypto){
-        QString from = crypto->decryptToString(encryptedEmail);
-        QString password = crypto->decryptToString(encryptedAppPassword);
-        QString to = from;
-        subject += " - " + QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
-        QString body = "";
-        QString smtpServer = "smtp.gmail.com";
-        int port = 465; // Gmail SMTP port
+        QStringList alreadySentMails = {};
+        QStringList datesSent = {};
+        membersFile.open(QIODevice::ReadOnly);
+        for(QString line : QString(membersFile.readAll()).split("\n")){
+            QDate date = QDate::fromString(line.split("_|_")[0], "dd/MM/yyyy");
+            if (date.addMonths(2) > QDate::currentDate()){
+                datesSent.append(date.toString("dd/MM/yyyy"));
+                alreadySentMails.append(crypto->decryptToString(line.split("_|_")[1]));
+            }
+        }
 
-        // Establish connection
-         QSslSocket socket;
-         socket.connectToHostEncrypted(smtpServer, port);
-         if (!socket.waitForConnected()) {
-             if(socket.errorString().contains("Host not found"))
-                return "Pas de connexion internet";
-             else
-                return socket.errorString();
-         }
+        membersFile.close();
 
-         // Read initial server response
-         if (!socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
 
-         // Send EHLO command
-         socket.write("EHLO localhost\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
+        for(QString toSend : emailsToSend){
+            QStringList infos = toSend.split("_|_");
+            if(!alreadySentMails.contains(infos[3])){ // Has mail already been sent ?
+                QThread::sleep(5);
+                errors.append(SendMembersEmail(infos[3], infos[1], infos[2], infos[0]));
+                datesSent.append(infos[0]);
+                alreadySentMails.append(infos[3]);
+            }
+        }
 
-         // Login with username and password
-         QString loginCommand = "AUTH LOGIN\r\n";
-         socket.write(loginCommand.toUtf8());
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
+        // Save sent mails to file
+        membersFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+        for(int i = 0; i < datesSent.length(); i++){
+            membersFile.write(QString(datesSent[i] + "_|_" + crypto->encryptToString(alreadySentMails[i]) + "\n").toUtf8());
+        }
 
-         QString username = QByteArray().append(from.toUtf8()).toBase64();
-         QString pass = QByteArray().append(password.toUtf8()).toBase64();
-         socket.write(username.toUtf8() + "\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
+       membersFile.close();
 
-         socket.write(pass.toUtf8() + "\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
-         if(socket.readAll().contains("Username and Password not accepted")){
-             return "Les identifiants de sauvegarde n'ont pas été acceptés.";
-         }
-
-         // Send mail from and to
-         socket.write("MAIL FROM: <" + from.toUtf8() + ">\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
-
-         socket.write("RCPT TO: <" + to.toUtf8() + ">\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
-
-         // Send data
-         socket.write("DATA\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
-
-         // Send mail content
-         QByteArray boundary = "boundary_" + QByteArray::number(QDateTime::currentMSecsSinceEpoch());
-         QString header = "From: " + from + "\r\n"
-                          "To: " + to + "\r\n"
-                          "Subject: " + subject + "\r\n"
-                          "MIME-Version: 1.0\r\n"
-                          "Content-Type: multipart/mixed; boundary=" + boundary + "\r\n"
-                          "\r\n";
-         socket.write(header.toUtf8());
-
-         // Body
-         QString bodyPart = "--" + boundary + "\r\n"
-                            "Content-Type: text/plain; charset=UTF-8\r\n"
-                            "\r\n" +
-                            body +
-                            "\r\n";
-         socket.write(bodyPart.toUtf8());
-
-         // Attachment
-         QFile file(filePath);
-         if (file.open(QIODevice::ReadOnly)) {
-             QString attachmentPart = "--" + boundary + "\r\n"
-                                      "Content-Type: application/octet-stream\r\n"
-                                      "Content-Disposition: attachment; filename=\"" + file.fileName() + ".bs4\"\r\n"
-                                      "\r\n";
-             socket.write(attachmentPart.toUtf8());
-             socket.write(file.readAll().toBase64());
-         }
-         else{
-            return "Fichier " + file.fileName() + " non trouvé.";
-         }
-
-         // End of email
-         QString endPart = "\r\n--" + boundary + "--\r\n.\r\n";
-         socket.write(endPart.toUtf8());
-
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
-
-         // Quit
-         socket.write("QUIT\r\n");
-         if (!socket.waitForBytesWritten() || !socket.waitForReadyRead()) {
-             return socket.errorString();
-         }
-
-        socket.close();
-
-        return "";
     }
 
-    return "Crypto non initialisée";
+    emit SynchronizationFinished(errors);
 }
 
 void SavedData::Synchronize(){
     if(crypto && !synchronizing){
-        // Sync button animation
         synchronizing = true;
+
+        emailsToSend = {};
+        QSqlQuery query;
+        HandleErrorExec(&query, "SELECT result.latest_exp_date, result.first_name, result.last_name, result.email FROM ("
+                                    "SELECT MAX(exp_date) AS latest_exp_date, subquery.first_name, subquery.last_name, subquery.email "
+                                    "FROM ( "
+                                        "SELECT DATE(Members.date, '+1 year') AS exp_date, People.first_name, People.last_name, People.email "
+                                        "FROM People "
+                                        "JOIN Members ON Members.id_people = People.id_people "
+                                        "AND People.email LIKE '%@%.%'"
+                                    ") AS subquery "
+                                    "GROUP BY subquery.email) AS result "
+                                "WHERE result.latest_exp_date BETWEEN DATE('now') AND DATE('now', '+1 month')");
+        while (query.next()) {
+            QString expDate = query.value(0).toDate().toString("dd/MM/yyyy");
+            QString firstName = query.value(1).toString();
+            QString lastName = query.value(2).toString();
+            QString email = query.value(3).toString();
+
+            QString fullNameWithEmail = QString("%1_|_%2_|_%3_|_%4").arg(expDate, firstName, lastName, email);
+
+            emailsToSend.append(fullNameWithEmail);
+        }
+
+
+        // Sync button animation
         syncMovie = new QMovie;
         syncMovie->setFileName("media/sync.gif");
         QObject::connect(syncMovie, &QMovie::frameChanged, [this](){

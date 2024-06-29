@@ -14,6 +14,7 @@ CONFIG += c++17
 SOURCES += \
     data/database.cpp \
     data/database_getregistry.cpp \
+    data/saveddata_email.cpp \
     pages/editpage/editpage_specific.cpp \
     widgets/dogcard.cpp \
     widgets/editdogwidget.cpp \

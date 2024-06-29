@@ -183,6 +183,17 @@ void MainWindow::ToggleLock(QByteArray h, QString email, QString appPassword){
         ui->menuTree->show();
         ui->menuLogoLabel->show();
         resizeEvent(nullptr);
+
+
+        // To send recall mails to members
+        QSqlQuery query;
+        HandleErrorExec(&query, "SELECT last_name, phone, address FROM People WHERE id_people = -2;");
+        query.next();
+        QString shelterName = query.value(0).toString();
+        QString shelterPhone = query.value(1).toString();
+        QString shelterAddress = query.value(2).toString();
+
+        savedData->SetShelterInfos(shelterName, shelterPhone, shelterAddress);
     }
 }
 

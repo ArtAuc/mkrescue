@@ -50,6 +50,8 @@ void EditPage::ClearAllPages()
             lineEdit->clear();
         else if (QComboBox *box = qobject_cast<QComboBox*>(widget))
             box->setCurrentIndex(0);
+        else if (QDoubleSpinBox *box = qobject_cast<QDoubleSpinBox*>(widget))
+            box->setValue(0);
         else if (QTextEdit *textEdit = qobject_cast<QTextEdit*>(widget))
             textEdit->clear();
     }

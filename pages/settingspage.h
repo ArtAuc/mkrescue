@@ -13,6 +13,7 @@
 #include <QDoubleSpinBox>
 #include <QMessageBox>
 #include <QTimer>
+#include <QPlainTextEdit>
 
 #include "utils.h"
 #include "editpage/editpage.h"
@@ -31,7 +32,12 @@ public:
         connect(findChild<QPushButton*>("saveSettingsButton"), &QPushButton::clicked, this, &SettingsPage::SaveSettings);
         findChild<QTabWidget*>()->setCurrentIndex(0);
 
+        bodyTextEdit = findChild<QPlainTextEdit*>("bodyTextEdit");
+
         findChild<QLabel*>("savedLabel")->hide();
+        emailActivatedCheckbox = findChild<QCheckBox*>("bodyCheckBox");
+        disconnect(emailActivatedCheckbox, nullptr, nullptr, nullptr);
+        connect(emailActivatedCheckbox, &QCheckBox::clicked, this, &SettingsPage::SwitchRecallEmail);
     }
 
     void resizeEvent(QResizeEvent *event) override{
@@ -90,6 +96,10 @@ public:
 
         EditPage::SetField("maxDogsSpin", savedData->MaxDogs(), this);
         EditPage::SetField("maxDaysSpin", savedData->MaxDays(), this);
+
+        QFile bodyFile("recall_email.txt");
+        emailActivatedCheckbox->setChecked(bodyFile.exists());
+        SwitchRecallEmail();
     }
 
     void SetSavedData(SavedData *savedData){this->savedData = savedData;}
@@ -97,15 +107,22 @@ public:
 
 public slots:
     void SaveSettings(){
+        // Save file
         QSqlQuery query;
         query.prepare("INSERT OR REPLACE INTO People "
                       "(id_people, last_name, phone, address, first_name, email) "
                       "VALUES (-2, :name, :phone, :address, '', '');");
-        query.bindValue(":name", EditPage::GetField("nameShelterEdit", this));
-        query.bindValue(":phone", EditPage::GetField("phoneShelterEdit", this));
-        query.bindValue(":address",crypto->encryptToString(EditPage::GetField("addressShelterEdit", this) + "\n" +
-                                                            EditPage::GetField("address2ShelterEdit", this) + "\n" +
-                                                            EditPage::GetField("postalCodeShelterEdit", this) + " " + EditPage::GetField("cityShelterEdit", this)));
+        QString shelterName = EditPage::GetField("nameShelterEdit", this);
+        QString shelterPhone = EditPage::GetField("phoneShelterEdit", this);
+        QString shelterAddress = crypto->encryptToString(EditPage::GetField("addressShelterEdit", this) + "\n" +
+                                                         EditPage::GetField("address2ShelterEdit", this) + "\n" +
+                                                         EditPage::GetField("postalCodeShelterEdit", this) + " " + EditPage::GetField("cityShelterEdit", this));
+
+        savedData->SetShelterInfos(shelterName, shelterPhone, shelterAddress);
+
+        query.bindValue(":name", shelterName);
+        query.bindValue(":phone", shelterPhone);
+        query.bindValue(":address", shelterAddress);
 
         if(!query.exec()){
             QMessageBox::critical(nullptr, "Erreur", "Erreur dans la sauvegarde des informations sur le refuge");
@@ -119,10 +136,48 @@ public slots:
 
         savedData->SetMaxDogs(EditPage::GetField("maxDogsSpin", this));
         savedData->SetMaxDays(EditPage::GetField("maxDaysSpin", this));
+
+        QFile bodyFile("recall_email.txt");
+        if(emailActivatedCheckbox->isChecked() && bodyFile.open(QIODevice::WriteOnly)){
+            bodyFile.write(bodyTextEdit->toPlainText().toUtf8());
+            savedData->SetRecallMailBody(bodyTextEdit->toPlainText().toUtf8());
+        }
+        else{
+            savedData->SetRecallMailBody("");
+            bodyFile.remove();
+        }
+    }
+
+    void SwitchRecallEmail(){
+        QFile bodyFile("recall_email.txt");
+        if(emailActivatedCheckbox->isChecked()){
+            emailActivatedCheckbox->setText("Rappel activé");
+
+            if(bodyFile.exists() && bodyFile.open(QIODevice::ReadOnly)){
+                bodyTextEdit->setPlainText(QString::fromUtf8(bodyFile.readAll()));
+            }
+            else{
+                bodyTextEdit->setPlainText("Bonjour $prenom_dest $nom_fam_dest,\n\n"
+                                           "Nous vous écrivons pour vous rappeler que votre adhésion à $nom_refuge arrive à son terme le $date_exp.\n\n"
+                                           "Votre adhésion nous permet de continuer le sauvetage et le soin des chiens, elle est essentielle pour notre association. "
+                                           "Si vous avez des questions ou rencontrez des difficultés pour le renouvellement de votre adhésion, n'hésitez pas à nous contacter par téléphone au $telephone_refuge ou à venir nous voir directement.\n\n"
+                                           "Merci pour votre engagement,\n"
+                                           "$nom_refuge\n"
+                                           "$adresse_refuge");
+            }
+        }
+
+        else{
+            emailActivatedCheckbox->setText("Rappel désactivé");
+        }
+
+        findChild<QWidget*>("bodyWidget")->setVisible(emailActivatedCheckbox->isChecked());
     }
 
 private:
     SavedData *savedData;
+    QCheckBox *emailActivatedCheckbox;
+    QPlainTextEdit *bodyTextEdit;
 };
 
 #endif // SETTINGSPAGE_H
