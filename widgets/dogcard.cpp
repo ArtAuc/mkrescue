@@ -387,6 +387,14 @@ void DogCard::CreateHistory(){
                    "WHERE Dogs.chip = :chip "
                    "AND Vet.date LIKE '%T%'";
 
+    // Sponsor
+    queryString += " UNION "
+                   "SELECT Sponsors.end_date, People.last_name, People.first_name, People.phone, Sponsors.start_date AS date, 'sponsors', People.id_people, Dogs.id_dog "
+                   "FROM Sponsors "
+                   "JOIN Dogs ON Sponsors.id_dog = Dogs.id_dog "
+                   "JOIN People ON Sponsors.id_people = People.id_people "
+                   "WHERE Dogs.chip = :chip";
+
 
     // Sort by descending date
     queryString = "SELECT * FROM (" + queryString + ") AS Results "
@@ -452,13 +460,22 @@ void DogCard::CreateHistory(){
             colorString = "#2cc09d";
         }
 
+        else if(type == "sponsors"){
+            QString endDateString(QDate::fromString(query.value(0).toString(), "yyyy-MM-dd").toString("dd/MM/yyyy"));
+            histLabel->setText(dateString +
+                               QString(endDateString.isEmpty() ? "" : (" au " + endDateString)) +
+                                " : <b>Parrainage</b> (" +
+                               (query.value(1).toString() + " " + query.value(2).toString() + " " + query.value(3).toString()).trimmed() + ")");
+
+            colorString = "#d3ed8c";
+        }
+
         // Handle clicking on hyperlink
         QStringList necessary = {query.value(6).toString(), query.value(7).toString()};
 
         if(type == "destination")
             type = "entry";
         connect(histLabel, &ClickableLabel::clicked, this, [this, type, necessary](){emit ClickedHistory(type, necessary);});
-
 
 
         histLabel->setStyleSheet("QLabel{"
