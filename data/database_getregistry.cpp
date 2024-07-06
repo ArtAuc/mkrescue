@@ -45,7 +45,7 @@ QSqlQuery Database::GetDogs(QString type, QString search){
                 "    GROUP BY id_dog "
                 ") AS MaxProv ON ES_Registry.id_dog = MaxProv.id_dog AND ES_Registry.date_prov = MaxProv.max_date_prov "
                 "JOIN ( "
-                "    SELECT id_dog, MAX(date_prov) AS max_date, type "
+                "    SELECT id_dog, MAX(date) AS max_date, type "
                 "    FROM Destinations "
                 "    GROUP BY id_dog, type "
                 ") AS MaxDest ON Dogs.id_dog = MaxDest.id_dog "

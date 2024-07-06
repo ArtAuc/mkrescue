@@ -145,61 +145,62 @@ DogCard::DogCard(QWidget *parent, QString chip, QString name, QString sex, QStri
     layout->addWidget(detailsButton, 5, 2);
 
 
-
     nameLabel->setObjectName("nameLabel" + chip);
 
     setLayout(layout);
 }
 
 void DogCard::resizeEvent(QResizeEvent *event){
-    QFrame::resizeEvent(event);
+    if(sexLabel){
+        QFrame::resizeEvent(event);
 
-    float factor;
-    QSize parentSize = qobject_cast<QWidget*>(parent()->parent())->size();
-    if(selected){
-        layout->setSpacing(height() / 100);
+        float factor;
+        QSize parentSize = qobject_cast<QWidget*>(parent()->parent())->size();
+        if(selected){
+            layout->setSpacing(height() / 100);
 
-        setMaximumSize(QWIDGETSIZE_MAX, 0.95 * parentSize.height());
-        factor = 1.5;
-    }
-    else{
-        setMaximumSize(parentSize / 4);
-        factor = 1;
-    }
-
-
-    nameSexWidget->setMaximumWidth(parentSize.width() / 4);
-
-    for(QWidget *c : findChildren<QWidget*>()){
-        if(c->objectName() == "nameLabel" + chip){
-            QFont font = c->font();
-            font.setBold(true);
-            font.setPointSizeF(0.013 * factor * mainWindow->width());
-            c->setFont(font);
+            setMaximumSize(QWIDGETSIZE_MAX, 0.95 * parentSize.height());
+            factor = 1.5;
+        }
+        else{
+            setMaximumSize(parentSize / 4);
+            factor = 1;
         }
 
-        else if (qobject_cast<QLabel*>(c)){
-            QFont font = c->font();
-            font.setPointSize(0.01 * mainWindow->width());
-            c->setFont(font);
+
+        nameSexWidget->setMaximumWidth(parentSize.width() / 4);
+
+        for(QWidget *c : findChildren<QWidget*>()){
+            if(c->objectName() == "nameLabel" + chip){
+                QFont font = c->font();
+                font.setBold(true);
+                font.setPointSizeF(0.013 * factor * mainWindow->width());
+                c->setFont(font);
+            }
+
+            else if (qobject_cast<QLabel*>(c)){
+                QFont font = c->font();
+                font.setPointSize(0.01 * mainWindow->width());
+                c->setFont(font);
+            }
+
+            if (qobject_cast<TriStateCheckBox*>(c) || qobject_cast<QPushButton*>(c) || qobject_cast<CustomDateTimeEdit*>(c)){
+                QFont font = c->font();
+                font.setPointSizeF(0.008 * mainWindow->width());
+                c->setFont(font);
+            }
         }
 
-        if (qobject_cast<TriStateCheckBox*>(c) || qobject_cast<QPushButton*>(c) || qobject_cast<CustomDateTimeEdit*>(c)){
-            QFont font = c->font();
-            font.setPointSizeF(0.008 * mainWindow->width());
-            c->setFont(font);
-        }
-    }
+        historyScroll->setStyleSheet("QScrollArea{"
+                                        "background-color:white;"
+                                        "margin-left:30px;"
+                                        "padding-left:30px;"
+                                        "border-left: 2px solid gray;"
+                                        "border-radius:0px;"
+                                     "}");
 
-    historyScroll->setStyleSheet("QScrollArea{"
-                                    "background-color:white;"
-                                    "margin-left:30px;"
-                                    "padding-left:30px;"
-                                    "border-left: 2px solid gray;"
-                                    "border-radius:0px;"
-                                 "}");
-    if(sexLabel)
         sexLabel->setPixmap(sexIcon.scaled(0.02 * factor * mainWindow->width(), 0.02 * factor * mainWindow->width(), Qt::KeepAspectRatio));
+    }
 }
 
 void DogCard::SelectThis(){
