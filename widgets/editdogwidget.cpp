@@ -208,6 +208,10 @@ void EditDogWidget::ProcessFields(QString s, bool isPreview){
 
 void EditDogWidget::LineEditFormat(QString text){
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
+
+    if(qobject_cast<CustomDateTimeEdit*>(lineEdit))
+        return;
+
     int cursorPosition = lineEdit->cursorPosition();
 
     if(lineEdit->objectName().startsWith("dogName")){
