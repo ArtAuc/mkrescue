@@ -18,25 +18,26 @@ void MainWindow::LoadDogCards(QString search){
     QSqlQuery query = db.GetDogs(type, search);
 
     QGridLayout *layout = qobject_cast<QGridLayout*>(ui->dogCardsContent->layout());
-    while(query.next() && query.value(0).toString() != "")
+    while(query.next())
     {
-        DogCard *dogCard = new DogCard(this,
-                                       query.value(0).toString(),
-                                       query.value(1).toString(),
-                                       query.value(2).toString(),
-                                       query.value(3).toString(),
-                                       query.value(4).toString(),
-                                       query.value(5).toString());
+        if(query.value(0).toString() != ""){
+            DogCard *dogCard = new DogCard(this,
+                                           query.value(0).toString(),
+                                           query.value(1).toString(),
+                                           query.value(2).toString(),
+                                           query.value(3).toString(),
+                                           query.value(4).toString(),
+                                           query.value(5).toString());
 
-        layout->addWidget(dogCard, row, col);
+            layout->addWidget(dogCard, row, col);
 
-        col += 1;
-        if(col > 2){
-            col = 0;
-            row += 1;
+            col += 1;
+            if(col > 2){
+                col = 0;
+                row += 1;
+            }
         }
     }
-
 
     resizeEvent(nullptr);
 }
