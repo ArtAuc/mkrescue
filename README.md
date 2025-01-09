@@ -16,16 +16,22 @@ MKRescue allows to create and modify multiple registries:
 * Boarding
 * Patrons
 
+<img src="https://github.com/ArtAuc/mkrescue/blob/main/readme-media/entry_registry.gif?raw=true">
+
 ## Statistics
 Statistics about the shelter are easily accessible on the homepage. The number 
 of animals currently present, current memberships and other metrics are displayed 
-and can be interacted with
+and can be interacted with.
+
+<img src="https://github.com/ArtAuc/mkrescue/blob/main/readme-media/stats.png?raw=true" width="200" alt="Statistics Image">
 
 ## Encryption
 
 MKRescue uses [SimpleCrypt](https://wiki.qt.io/Simple_encryption_with_SimpleCrypt) to 
 securely store the application's sensitive data. It allows the user to choose a password for 
 encryption and decryption of the database.
+
+<img src="https://github.com/ArtAuc/mkrescue/blob/main/readme-media/lockscreen.gif?raw=true">
 
 ## Network Synchronization
 
